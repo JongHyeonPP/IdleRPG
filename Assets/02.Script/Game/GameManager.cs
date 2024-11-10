@@ -34,13 +34,24 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator WaitAndInvokeOnDataLoadComplete()
     {
-        yield return new WaitForSeconds(1f);
+        float elapsedTime = 0f;
+        float minWaitTime = 1f;
+
+        while (gameData==null || elapsedTime < minWaitTime)
+        {
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
         OnDataLoadComplete?.Invoke();
     }
+
+
     public void AutoSaveStart()
     {
         StartCoroutine(AutoSaveCoroutine());
     }
+
     private IEnumerator AutoSaveCoroutine()
     {
         while (true)
@@ -51,10 +62,12 @@ public class GameManager : MonoBehaviour
             Debug.Log("Game data saved:\n" + serializedData);
         }
     }
+
     public async void SaveGameDataToCloud()
     {
         await DataManager.SaveToCloudAsync("GameData", gameData);
     }
+
     public void LoadGameData()
     {
         gameData = DataManager.LoadFromPlayerPrefs<GameData>("GameData");
