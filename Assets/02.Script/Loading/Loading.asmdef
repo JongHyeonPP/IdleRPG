@@ -1,0 +1,19 @@
+{
+    "name": "Loading",
+    "rootNamespace": "",
+    "references": [
+        "Account",
+        "Unity.TextMeshPro",
+        "Utility",
+        "Game"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

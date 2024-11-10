@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "238420971634",
+    "firebase_url": "https://idlerpg-713f0-default-rtdb.firebaseio.com",
+    "project_id": "idlerpg-713f0",
+    "storage_bucket": "idlerpg-713f0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:238420971634:android:4b2a71edd34c508a8332eb",
+        "android_client_info": {
+          "package_name": "com.OPJH.IdleRPG"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrzJ8RFtOY5ZmiYn9m6TuiJmhi5jYDE70"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

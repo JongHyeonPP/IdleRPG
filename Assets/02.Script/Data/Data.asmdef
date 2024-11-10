@@ -1,0 +1,19 @@
+{
+    "name": "Account",
+    "rootNamespace": "",
+    "references": [
+        "GUID:be0d2672886cc45b2bcea5a5053a5347",
+        "GUID:1ed07ff861e5f468287b0baef844706d",
+        "GUID:fe25561d224ed4743af4c60938a59d0b",
+        "GUID:5540e30183c82e84b954c033c388e06c"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
