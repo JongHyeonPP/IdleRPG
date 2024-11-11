@@ -13,7 +13,6 @@ public class GameManager : MonoBehaviour
     public static int mainStageNum;
     public static StageType stageType;
     public static Action OnDataLoadComplete;
-
     private void Awake()
     {
         if (instance == null)

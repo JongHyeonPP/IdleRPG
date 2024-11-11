@@ -52,7 +52,6 @@ public class PlayerContoller : Attackable
     private void DefaultAttack()
     {
         SkillBehaviour(1, SkillType.Damage, SkillRange.Target);
-        Debug.Log("Defualt Attack To " + target.name);
     }
 
     protected override ICharacterStatus GetStatus()
