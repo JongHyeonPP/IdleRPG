@@ -2,7 +2,7 @@ using UnityEngine;
 
 public interface ICharacterStatus
 {
-    int Power { get; set; }
+    int Power { get; set; }//³É
     int HpRecover { get; set; }
     int Critical { get; set; }
     int CriticalDamage { get; set; }
