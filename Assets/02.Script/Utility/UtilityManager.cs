@@ -1,6 +1,11 @@
+using EnumCollection;
+using Newtonsoft.Json;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class UtilityManager : MonoBehaviour
 {
@@ -51,5 +56,14 @@ public class UtilityManager : MonoBehaviour
         {
             _ui.gameObject.SetActive(false);
         }
+    }
+    public static TEnum ParseEnum<TEnum>(string value) where TEnum : struct, Enum
+    {
+        if (Enum.TryParse(value, true, out TEnum result))
+        {
+            return result;
+        }
+        Debug.LogWarning($"Invalid enum value '{value}' for type '{typeof(TEnum)}'. Returning default value.");
+        return default;
     }
 }

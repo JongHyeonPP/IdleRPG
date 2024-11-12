@@ -22,7 +22,7 @@ public class UiManager : MonoBehaviour
         upperUi.SetActive(true);
         nameText.gameObject.SetActive(true);
         duplicateLoginPanel.SetActive(false);
-        DataManager.OnDetectDuplicateLogin += OnDetectDuplicateLogin;
+        NetworkManager.OnDetectDuplicateLogin += OnDetectDuplicateLogin;
     }
 
     private void OnDetectDuplicateLogin()
@@ -32,7 +32,7 @@ public class UiManager : MonoBehaviour
 
     private void Start()
     {
-        nameText.text = DataManager.userName;
+        nameText.text = GameManager.userName;
     }
     public void OnSaveButtonClicked()
     {

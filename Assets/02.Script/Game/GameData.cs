@@ -1,14 +1,17 @@
 using System;
 using System.Collections.Generic;
+using EnumCollection;
+using Newtonsoft.Json;
 [Serializable]
 public class GameData
 {
     public int gold;
-    public int dia;
     public int level;
     public Dictionary<string, int> skillLevel = new();
     public Dictionary<string, int> weaponLevel = new();
-    public Dictionary<string, int> statLevel_0 = new();
-    public Dictionary<string, int> statLevel_1 = new();
-    string weaponId;
+    [JsonConverter(typeof(StatusTypeDictionaryConverter))]
+    public Dictionary<StatusType, int> statLevel_0 = new();
+    [JsonConverter(typeof(StatusTypeDictionaryConverter))]
+    public Dictionary<StatusType, int> statLevel_1 = new();
+    public string weaponId;
 }

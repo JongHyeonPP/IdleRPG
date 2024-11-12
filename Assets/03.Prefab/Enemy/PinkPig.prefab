@@ -129,7 +129,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4141470672631272322}
   - component: {fileID: 7380750666260612257}
-  - component: {fileID: 3753677312568874531}
   m_Layer: 0
   m_Name: PinkPig
   m_TagString: Untagged
@@ -175,15 +174,3 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &3753677312568874531
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7835531869370486025}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fe2a974df1dcfc498faa4b110b3888c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

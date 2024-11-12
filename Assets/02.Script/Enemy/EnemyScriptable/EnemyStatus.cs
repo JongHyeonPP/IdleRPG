@@ -4,6 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "EnemyStatus", menuName = "ScriptableObjects/Enemy Status")]
 public class EnemyStatus : ScriptableObject, ICharacterStatus
 {
+    [SerializeField] private int maxHp = 100;
     [SerializeField] private int power = 10;
     [SerializeField] private int hpRecover = 0;
     [SerializeField] private int critical = 0;
@@ -14,6 +15,7 @@ public class EnemyStatus : ScriptableObject, ICharacterStatus
     [SerializeField] private int evasion = 0;
     public GameObject prefab;
 
+    public int MaxHp { get => maxHp; set => maxHp = value; }
     public int Power { get => power; set => power = value; }
     public int HpRecover { get => hpRecover; set => hpRecover = value; }
     public int Critical { get => critical; set => critical = value; }

@@ -12,7 +12,7 @@ public class BattleManager : MonoBehaviour
     [SerializeField] EnemyPool pool_0;
     [SerializeField] EnemyPool pool_1;
     [SerializeField] Transform spawnSpot;
-    [SerializeField] PlayerContoller controller;
+    PlayerContoller controller;
     [SerializeField] List<BackgroundPiece> pieces;
 
     EnemyController[] enemies = new EnemyController[enemyBundleNum];
@@ -31,6 +31,7 @@ public class BattleManager : MonoBehaviour
 
     private void Start()
     {
+        controller = GameManager.instance.controller;
         StartBattle();
         GameManager.instance.AutoSaveStart();
     }
@@ -173,5 +174,9 @@ public class BattleManager : MonoBehaviour
             enemyNum = 4;
         }
         return enemyNum;
+    }
+    public void UpdownTest(bool isUp)
+    {
+        GameManager.instance.ChangeStatLevel(StatusType.Power, 0, isUp);
     }
 }

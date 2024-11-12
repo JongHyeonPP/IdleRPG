@@ -15,16 +15,12 @@ public class LoadingManager : MonoBehaviour
     Coroutine blinkCoroutine;
     private void Awake()
     {
-        DataManager.OnAuthenticationComplete += UnderTextLoadGameData;
+        GameManager.OnAuthenticationComplete += UnderTextLoadGameData;
         GameManager.OnDataLoadComplete += PrepareMainScene;
         //progressBar.fillAmount = 0f;
         blinkCoroutine = StartCoroutine(BlinkTapToStart());
         loadingText.gameObject.SetActive(false);
         underText.gameObject.SetActive(false);
-    }
-    private void Start()
-    {
-        
     }
     private void PrepareMainScene()
     {
@@ -40,11 +36,10 @@ public class LoadingManager : MonoBehaviour
     {
         underText.gameObject.SetActive(true);
         underText.text = "구글 로그인 중";
-        DataManager.instance.LoadGoogleAuth();
+        GameManager.instance.LoadGoogleAuth();
     }
     private IEnumerator LoadMainScene()
     {
-        // 메인 씬을 비동기적으로 로드하되, 활성화는 보류합니다.
         asyncLoad = SceneManager.LoadSceneAsync("Battle");
         asyncLoad.allowSceneActivation = false;
 
@@ -63,12 +58,9 @@ public class LoadingManager : MonoBehaviour
     }
     private void GoToMainScene()
     {
-        if (DataManager.isLogin)
+        if (asyncLoad != null)
         {
-            if (asyncLoad != null)
-            {
-                asyncLoad.allowSceneActivation = true;
-            }
+            asyncLoad.allowSceneActivation = true;
         }
     }
 

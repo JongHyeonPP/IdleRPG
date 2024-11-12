@@ -12,8 +12,8 @@ namespace EnumCollection
     {
         Self, Target
     }
-    public enum StageType
+    public enum StatusType
     {
-        Main
+        MaxHp, Power, HpReCover, Critical, CriticalDamage, Mana, ManaRecover, Accuracy, Evasion
     }
 }

@@ -18,6 +18,7 @@ public class PlayerStatus : MonoBehaviour, ICharacterStatus
     [SerializeField] private float goldAscend;
     [SerializeField] private float expAscend;
 
+    public int MaxHp { get => maxHp; set => maxHp = value; }
     public int Power { get => power; set => power = value; }
     public int HpRecover { get => hpRecover; set => hpRecover = value; }
     public int Critical { get => critical; set => critical = value; }
