@@ -1,0 +1,15 @@
+.StartLabel {
+    position: absolute;
+    justify-content: flex-start;
+    bottom: 372px;
+    left: auto;
+    display: flex;
+    transition-duration: 1s;
+}
+
+.StartLabel-Blink {
+    bottom: 372px;
+    color: rgba(27, 27, 27, 0.54);
+    transition-duration: 1s;
+}
+ClickReceiver

@@ -1,0 +1,9 @@
+.StartLabel {
+    bottom: 234px;
+    transition-duration: 1s;
+}
+
+.StartLabel-Blink {
+    color: rgba(27, 27, 27, 0.53);
+    transition-duration: 1s;
+}

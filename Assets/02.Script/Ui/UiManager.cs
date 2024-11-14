@@ -1,9 +1,9 @@
 using TMPro;
 using UnityEngine;
 
-public class UiManager : MonoBehaviour
+public class StartMainUI : MonoBehaviour
 {
-    public static UiManager instance;
+    public static StartMainUI instance;
     [SerializeField] GameObject upperUi;
     [SerializeField] GameObject canvasPerm;
     [SerializeField] GameObject duplicateLoginPanel;

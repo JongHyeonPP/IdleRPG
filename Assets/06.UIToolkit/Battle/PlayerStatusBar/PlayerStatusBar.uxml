@@ -1,0 +1,21 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:VisualElement name="Root" style="flex-grow: 1; align-items: center; font-size: 44px;">
+        <engine:VisualElement name="HorizontalGroup" style="flex-grow: 0; justify-content: flex-start; position: absolute; height: 116px; width: 100%; background-color: rgba(255, 255, 255, 0); align-items: center; flex-direction: row; top: 32px; flex-shrink: 0; align-content: flex-start; flex-wrap: nowrap; margin-left: 0; display: flex; visibility: visible; align-self: flex-start; left: 18px;">
+            <engine:VisualElement name="VisualElement" style="flex-grow: 0; background-color: rgb(0, 0, 0); background-size: 100px 100px; flex-shrink: 0; height: 160px; width: 160px;" />
+            <engine:VisualElement name="HorizontalGroup" style="flex-grow: 0; justify-content: flex-start; position: relative; height: 133px; width: 849px; background-color: rgb(255, 255, 255); align-items: center; flex-direction: row; top: 0; flex-shrink: 0; align-content: flex-start; flex-wrap: nowrap; margin-left: 0; padding-left: 42px;">
+                <engine:VisualElement name="VisualElement" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); background-size: 100px 100px; flex-shrink: 0; height: 120px; width: 296px; flex-direction: row; align-items: center;">
+                    <engine:VisualElement style="flex-grow: 0; background-color: rgb(0, 0, 0); background-size: 100px 100px; flex-shrink: 0; height: 50px; width: 50px;" />
+                    <engine:Label text="Label" />
+                </engine:VisualElement>
+                <engine:VisualElement name="VisualElement" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); background-size: 100px 100px; flex-shrink: 0; height: 120px; width: 296px; flex-direction: row; align-items: center;">
+                    <engine:VisualElement style="flex-grow: 0; background-color: rgb(0, 0, 0); background-size: 100px 100px; flex-shrink: 0; height: 50px; width: 50px;" />
+                    <engine:Label text="Label" />
+                </engine:VisualElement>
+                <engine:VisualElement name="VisualElement" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); background-size: 100px 100px; flex-shrink: 0; height: 120px; width: 296px; flex-direction: row; align-items: center;">
+                    <engine:VisualElement style="flex-grow: 0; background-color: rgb(0, 0, 0); background-size: 100px 100px; flex-shrink: 0; height: 50px; width: 50px;" />
+                    <engine:Label text="Label" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+        </engine:VisualElement>
+    </engine:VisualElement>
+</engine:UXML>

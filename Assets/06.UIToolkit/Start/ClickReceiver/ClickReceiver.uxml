@@ -1,0 +1,8 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/06.UIToolkit/Start/StartMain/StartMain.uss?fileID=7433441132597879392&amp;guid=57f92e915e21962408fd48d4f0150311&amp;type=3#StartMain" />
+    <engine:VisualElement name="Root" style="-unity-font-definition: url(&quot;project://database/Assets/05.Font/Maplestory%20Bold.ttf?fileID=12800000&amp;guid=cb734c07d35dbf549a5a6fce9ebf42b1&amp;type=3#Maplestory Bold&quot;); background-color: rgba(255, 255, 255, 0); width: 100%; height: 100%; font-size: 130px;">
+        <engine:VisualElement name="ClickReceiver" style="width: 100%; height: 100%; position: relative; justify-content: flex-end; align-items: center;">
+            <engine:Label text="Tap To Start" name="StartLabel" enabled="true" class="StartLabel" />
+        </engine:VisualElement>
+    </engine:VisualElement>
+</engine:UXML>
