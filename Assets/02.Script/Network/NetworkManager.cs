@@ -2,19 +2,17 @@ using Firebase.Database;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
-
+//네트워크(Firebase:Realtime)의 역할을 담당한다.
 public class NetworkManager : MonoBehaviour
 {
     public static NetworkManager instance;
-    public static event Action OnDetectDuplicateLogin;
-    private DatabaseReference fbRef;
-    private string userId;
-    private string deviceId;
-    private bool isNetworkAvailable = true;
-    private Coroutine networkCheckCoroutine;
-
+    public static event Action OnDetectDuplicateLogin;//중복 로그인 탐지했을 때 발생시킬 델리게이트
+    private DatabaseReference _fbRef;//firebase 루트 레퍼런트
+    private string _userId;//구글 아이디
+    private string _deviceId;//기기 아이디
+    private bool _isNetworkAvailable = true;//네트워크가 연결돼 있는가
+    private Coroutine _networkCheckCoroutine;//네트워크가 연결돼있는지 지속적으로 검사하는 코루틴
     private void Awake()
     {
         if (!instance)
@@ -22,22 +20,22 @@ public class NetworkManager : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(instance);
         }
-        deviceId = SystemInfo.deviceUniqueIdentifier;
-        fbRef = FirebaseDatabase.DefaultInstance.RootReference;
+        _deviceId = SystemInfo.deviceUniqueIdentifier;
+        _fbRef = FirebaseDatabase.DefaultInstance.RootReference;
         GameManager.OnAuthenticationComplete += OnAutenticationComplete;
     }
-
+    //구글 인증이 됐다면 콜백되어 userId를 기반으로 Firebase에 연동한다.
     private void OnAutenticationComplete()
     {
-        userId = GameManager.userId;
+        _userId = GameManager.userId;
         ListenForDeviceChange();
         UpdateLoginStatus();
-        networkCheckCoroutine ??= StartCoroutine(CheckNetworkStatusCoroutine());
+        _networkCheckCoroutine ??= StartCoroutine(CheckNetworkStatusCoroutine());
     }
-
+    //본인의 구글 아이디의 기기값을 리스닝해서 해당 값이 변경되면 일어날 일을 정의
     private void ListenForDeviceChange()
     {
-        fbRef.Child("Users").Child(userId).Child("deviceId").ValueChanged += (sender, args) =>
+        _fbRef.Child("Users").Child(_userId).Child("deviceId").ValueChanged += (sender, args) =>
         {
             if (args.DatabaseError != null)
             {
@@ -51,13 +49,13 @@ public class NetworkManager : MonoBehaviour
             }
         };
     }
-
+    //로그인 정보(1. 게임 중인지 2. 기기 ID, 3. 언제 로그인 했는지)를 갱신
     private async void UpdateLoginStatus()
     {
-        DatabaseReference userRef = fbRef.Child("Users").Child(userId);
+        DatabaseReference userRef = _fbRef.Child("Users").Child(_userId);
 
         // 서버 타임스탬프 요청
-        var timestampRef = fbRef.Database.GetReference(".info/serverTimeOffset");
+        var timestampRef = _fbRef.Database.GetReference(".info/serverTimeOffset");
         await timestampRef.GetValueAsync().ContinueWith(task =>
         {
             if (task.IsFaulted)
@@ -72,7 +70,7 @@ public class NetworkManager : MonoBehaviour
                 var updates = new Dictionary<string, object>
                 {
                     { "isLoggedIn", true },
-                    { "deviceId",  deviceId},
+                    { "deviceId",  _deviceId},
                     { "lastLoginTime", ServerValue.Timestamp }
                 };
                 userRef.UpdateChildrenAsync(updates);
@@ -87,20 +85,20 @@ public class NetworkManager : MonoBehaviour
         await userRef.Child("isLoggedIn").OnDisconnect().SetValue(disconnect);
         
     }
-
+    //네트워크가 끊겼을 때 일어날 일들을 정의
     private IEnumerator CheckNetworkStatusCoroutine()
     {
         while (true)
         {
-            if (Application.internetReachability == NetworkReachability.NotReachable && isNetworkAvailable)
+            if (Application.internetReachability == NetworkReachability.NotReachable && _isNetworkAvailable)
             {
                 Debug.Log("Network connection lost!");
-                isNetworkAvailable = false;
+                _isNetworkAvailable = false;
             }
-            else if (Application.internetReachability != NetworkReachability.NotReachable && !isNetworkAvailable)
+            else if (Application.internetReachability != NetworkReachability.NotReachable && !_isNetworkAvailable)
             {
                 Debug.Log("Network connection restored!");
-                isNetworkAvailable = true;
+                _isNetworkAvailable = true;
             }
 
             yield return new WaitForSeconds(1f);

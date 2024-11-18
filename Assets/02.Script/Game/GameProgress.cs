@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class GameProgress : MonoBehaviour
 {
-    string currentStage;
-    string lastStage;
-    float stageProgress;
+    string _currentStage;
+    string _lastStage;
+    float _stageProgress;
 }

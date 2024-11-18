@@ -607,7 +607,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0f4066e98d30734c9ea1af22d8f2e39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controller: {fileID: 0}
 --- !u!4 &1048825963
 Transform:
   m_ObjectHideFlags: 0
@@ -806,7 +805,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 132c7d0a0b10e90408e33ec6a1ce7f40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startManager: {fileID: 1624992623}
+  _startManager: {fileID: 1624992623}
 --- !u!1 &1473486413
 GameObject:
   m_ObjectHideFlags: 0

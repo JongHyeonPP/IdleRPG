@@ -2751,6 +2751,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   anim: {fileID: 1486366457088973459}
+  _status: {fileID: 7233560315477797491}
 --- !u!114 &7233560315477797491
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2764,17 +2765,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skills: []
-  maxHp: 0
-  power: 0
-  hpRecover: 0
-  critical: 0
-  criticalDamage: 0
-  mana: 0
-  manaRecover: 0
-  accuracy: 0
-  evasion: 0
-  goldAscend: 0
-  expAscend: 0
+  _maxHp: 0
+  _power: 0
+  _hpRecover: 0
+  _critical: 0
+  _criticalDamage: 0
+  _mana: 0
+  _manaRecover: 0
+  _accuracy: 0
+  _evasion: 0
+  _goldAscend: 0
+  _expAscend: 0
 --- !u!1 &5753613333888926557
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,28 +4,29 @@ using System.Collections;
 
 public class StartMainUI : MonoBehaviour
 {
-    private Label loadingLabel;
-    private Label bottomLabel;
+    private Label _loadingLabel;
+    private Label _bottomLabel;
     private void Awake()
     {
         // UI Element 설정
         var root = GetComponent<UIDocument>().rootVisualElement;
-        loadingLabel = root.Q<Label>("LoadingLabel");
-        bottomLabel = root.Q<Label>("BottomLabel");
+        _loadingLabel = root.Q<Label>("LoadingLabel");
+        _bottomLabel = root.Q<Label>("BottomLabel");
 
         // UI 초기 상태 설정
-        loadingLabel.style.visibility = Visibility.Hidden;
-        bottomLabel.style.visibility = Visibility.Hidden;
+        _loadingLabel.style.visibility = Visibility.Hidden;
+        _bottomLabel.style.visibility = Visibility.Hidden;
     }
-    public void InitLabel()
+    //메인 씬을 로드 중이라고 띄운다.
+    public void LoadingLebelSet()
     {
-        loadingLabel.style.visibility = Visibility.Visible;
-        bottomLabel.style.visibility = Visibility.Hidden;
+        _loadingLabel.style.visibility = Visibility.Visible;
+        _bottomLabel.style.visibility = Visibility.Hidden;
     }
-
+    //진행 상황을 보여주는 좌측 하단 UI에 정보를 넣는다.
     public void SetBottomLabelText(string text)
     {
-        bottomLabel.text = text;
-        bottomLabel.style.visibility = Visibility.Visible;
+        _bottomLabel.text = text;
+        _bottomLabel.style.visibility = Visibility.Visible;
     }
 }

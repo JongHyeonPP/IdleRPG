@@ -2,17 +2,18 @@ using UnityEngine;
 
 public class EnemyController : Attackable
 {
-    public EnemyPool pool;
-    public EnemyStatus status;
-    private void Start()
-    {
-        hp = status.MaxHp;
-    }
+    private EnemyPool _pool;
+    protected EnemyStatus _status;
     protected override ICharacterStatus GetStatus()
     {
-        return status;
+        return _status;
     }
-
+    public void SetEnemyInfo(EnemyPool pool, EnemyStatus status)
+    {
+        _pool = pool;
+        _status = status;
+        hp = _status.MaxHp;
+    }
     private void OnDead()
     {
 

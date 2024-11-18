@@ -5,29 +5,29 @@ public class PlayerStatus : MonoBehaviour, ICharacterStatus
 {
     public List<Skill> skills = new();
 
-    [SerializeField] private int maxHp;
-    [SerializeField] private int power;
-    [SerializeField] private int hpRecover;
-    [SerializeField] private int critical;
-    [SerializeField] private int criticalDamage;
-    [SerializeField] private int mana;
-    [SerializeField] private int manaRecover;
-    [SerializeField] private int accuracy;
-    [SerializeField] private int evasion;
+    [SerializeField] private int _maxHp;
+    [SerializeField] private int _power;
+    [SerializeField] private int _hpRecover;
+    [SerializeField] private int _critical;
+    [SerializeField] private int _criticalDamage;
+    [SerializeField] private int _mana;
+    [SerializeField] private int _manaRecover;
+    [SerializeField] private int _accuracy;
+    [SerializeField] private int _evasion;
 
-    [SerializeField] private float goldAscend;
-    [SerializeField] private float expAscend;
+    [SerializeField] private float _goldAscend;
+    [SerializeField] private float _expAscend;
 
-    public int MaxHp { get => maxHp; set => maxHp = value; }
-    public int Power { get => power; set => power = value; }
-    public int HpRecover { get => hpRecover; set => hpRecover = value; }
-    public int Critical { get => critical; set => critical = value; }
-    public int CriticalDamage { get => criticalDamage; set => criticalDamage = value; }
-    public int Mana { get => mana; set => mana = value; }
-    public int ManaRecover { get => manaRecover; set => manaRecover = value; }
-    public int Accuracy { get => accuracy; set => accuracy = value; }
-    public int Evasion { get => evasion; set => evasion = value; }
+    public int MaxHp { get => _maxHp; set => _maxHp = value; }
+    public int Power { get => _power; set => _power = value; }
+    public int HpRecover { get => _hpRecover; set => _hpRecover = value; }
+    public int Critical { get => _critical; set => _critical = value; }
+    public int CriticalDamage { get => _criticalDamage; set => _criticalDamage = value; }
+    public int Mana { get => _mana; set => _mana = value; }
+    public int ManaRecover { get => _manaRecover; set => _manaRecover = value; }
+    public int Accuracy { get => _accuracy; set => _accuracy = value; }
+    public int Evasion { get => _evasion; set => _evasion = value; }
 
-    public float GoldAscend => goldAscend;
-    public float ExpAscend => expAscend;
+    public float GoldAscend => _goldAscend;
+    public float ExpAscend => _expAscend;
 }

@@ -51,7 +51,7 @@ public class DataManager : MonoBehaviour
         await SaveToCloudAsync(new Dictionary<string, object>() { { key, data } });
     }
 
-    // 클라우드 로드
+    //클라우드의 데이터를 일괄 로드하는 메서드. 한 번에 로드하는 것이 비용적으로 저렴함.
     public static async Task<Dictionary<string, T>> LoadFromCloudAsync<T>(IEnumerable<string> keys)
     {
         try
@@ -82,6 +82,7 @@ public class DataManager : MonoBehaviour
             return null;
         }
     }
+    //클라우드의 데이터를 하나만 로드하는 메서드
     public static async Task<T> LoadFromCloudAsync<T>(string key)
     {
         var result = await LoadFromCloudAsync<T>(new List<string> { key });

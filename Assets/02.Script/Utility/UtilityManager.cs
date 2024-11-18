@@ -7,63 +7,36 @@ using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
-public class UtilityManager : MonoBehaviour
+//단순 계산인데 자주 쓰는 기능들 모아놓기
+public class UtilityManager
 {
-    public static bool CalculateProbability(float _probability)
+    //probability의 확률로 true를 반환
+    //ex) 0.2 => 20%의 확률로 true, 80%의 확률로 false 반환
+    public static bool CalculateProbability(float probability)
     {
-        return Random.Range(0f, 1f) <= Mathf.Clamp(_probability, 0f, 1f);
+        return Random.Range(0f, 1f) <= Mathf.Clamp(probability, 0f, 1f);
     }
-    public static IEnumerator FadeUi(MaskableGraphic _ui, float _duration, bool _isFadeIn, float _targetAlpha = -1)
+    //확률로 들어온 숫자들의 합을 기준으로 특정 인덱스를 반환한다
+    //ex) 0.2, 0.8 => 20%의 확률로 0, 80%의 확률로 1을 반환
+    //ex) 60, 40 => 60%의 확률로 0, 40%의 확률로 1을 반환
+    public static int AllocateProbability(params float[] probabilities)
     {
-        _ui.gameObject.SetActive(true);
-        Color originalColor = _ui.color;
-
-        // 초기 알파 값 설정
-        float startAlpha = _isFadeIn ? 0f : 1f;
-
-        // 최종 알파 값 결정
-        float endAlpha;
-        if (_targetAlpha != -1)
+        float total = 0f;
+        foreach (float prob in probabilities)
         {
-            // targetAlpha가 설정된 경우
-            endAlpha = Mathf.Clamp01(_targetAlpha);
+            total += prob;
         }
-        else
+        float randomValue = Random.Range(0f, total);
+        float cumulative = 0f;
+
+        for (int i = 0; i < probabilities.Length; i++)
         {
-            // targetAlpha가 설정되지 않은 경우 기본 동작
-            endAlpha = _isFadeIn ? 1f : 0f;
+            cumulative += probabilities[i];
+            if (randomValue < cumulative)
+            {
+                return i;
+            }
         }
-
-        originalColor.a = startAlpha;
-        _ui.color = originalColor;
-
-        float elapsedTime = 0f;
-
-        while (elapsedTime < _duration)
-        {
-            elapsedTime += Time.deltaTime;
-            float alpha = Mathf.Lerp(startAlpha, endAlpha, elapsedTime / _duration);
-            _ui.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
-            yield return null;
-        }
-
-        // 확실히 alpha가 설정된 값으로 되도록 보장
-        originalColor.a = endAlpha;
-        _ui.color = originalColor;
-
-        // 페이드 아웃이 끝났을 때 UI를 비활성화
-        if (!_isFadeIn && endAlpha == 0f)
-        {
-            _ui.gameObject.SetActive(false);
-        }
-    }
-    public static TEnum ParseEnum<TEnum>(string value) where TEnum : struct, Enum
-    {
-        if (Enum.TryParse(value, true, out TEnum result))
-        {
-            return result;
-        }
-        Debug.LogWarning($"Invalid enum value '{value}' for type '{typeof(TEnum)}'. Returning default value.");
-        return default;
+        return 0;
     }
 }

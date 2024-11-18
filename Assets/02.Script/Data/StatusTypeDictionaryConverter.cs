@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
+//Json Convert 과정에서 특정 타입을 변환할 수 있도록 어트리뷰트 정의
 public class StatusTypeDictionaryConverter : JsonConverter<Dictionary<StatusType, int>>
 {
     public override void WriteJson(JsonWriter writer, Dictionary<StatusType, int> value, JsonSerializer serializer)

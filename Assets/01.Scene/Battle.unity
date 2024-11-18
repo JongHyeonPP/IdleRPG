@@ -1201,6 +1201,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6264821236132016997, guid: 05f8a3828d9908e40b77bac5508a6755, type: 3}
   m_PrefabInstance: {fileID: 931570587}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &931570589 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 233544357725443477, guid: 05f8a3828d9908e40b77bac5508a6755, type: 3}
+  m_PrefabInstance: {fileID: 931570587}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1286545298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfb8d7a70a474f34c9f4972cf2d1a335, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &972747024 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2487377199923928025, guid: 05f8a3828d9908e40b77bac5508a6755, type: 3}
@@ -1430,17 +1441,6 @@ MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1286545298}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dfb8d7a70a474f34c9f4972cf2d1a335, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1286545300 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 233544357725443477, guid: 05f8a3828d9908e40b77bac5508a6755, type: 3}
-  m_PrefabInstance: {fileID: 931570587}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1286545298}
   m_Enabled: 1
@@ -2062,12 +2062,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   storage: {fileID: 1967182437}
-  pool_0: {fileID: 2080100920}
-  pool_1: {fileID: 249662685}
-  spawnSpot: {fileID: 2029961166}
-  pieces:
+  _pool_0: {fileID: 2080100920}
+  _pool_1: {fileID: 249662685}
+  _spawnSpot: {fileID: 2029961166}
+  _pieces:
   - {fileID: 1943143936072147939}
-  - {fileID: 1286545300}
+  - {fileID: 931570589}
 --- !u!1 &1538267134
 GameObject:
   m_ObjectHideFlags: 0
@@ -2748,10 +2748,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0395cc3c938e4134c863941073b43bfa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  upperUi: {fileID: 1807988060}
-  canvasPerm: {fileID: 0}
-  duplicateLoginPanel: {fileID: 213849775}
-  nameText: {fileID: 1142325080}
+  _upperUi: {fileID: 1807988060}
+  _duplicateLoginPanel: {fileID: 213849775}
+  _nameText: {fileID: 1142325080}
 --- !u!4 &2073642853
 Transform:
   m_ObjectHideFlags: 0

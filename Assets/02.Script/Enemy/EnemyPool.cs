@@ -4,31 +4,30 @@ using UnityEngine;
 
 public class EnemyPool : MonoBehaviour
 {
-    public Queue<EnemyController> pool { get; private set; } = null;
-    private EnemyStatus enemyStatus;
-    protected int poolSize;
-
-    public void InitializePool(EnemyStatus _poolObject, int _poolSize = 10)
+    public Queue<EnemyController> pool { get; private set; } = null;//적을 보관하는 풀
+    private EnemyStatus _enemyStatus;//현재 사용하고 있는 적의 정보
+    private int _poolSize;//풀의 크기
+    //받은 EnemyStatus를 기반으로 Pool을 할당하고 사용할 
+    public void InitializePool(EnemyStatus enemyStatus, int poolSize = 10)
     {
         pool = new();
-        enemyStatus = _poolObject;
-        poolSize = _poolSize;
-        for (int i = 0; i < poolSize; i++)
+        _enemyStatus = enemyStatus;
+        _poolSize = poolSize;
+        for (int i = 0; i < _poolSize; i++)
         {
             pool.Enqueue(InstantiateEnemy());
         }
     }
-
+    //적 오브젝트를 생성해서 pool에게 반환한다.
     private EnemyController InstantiateEnemy()
     {
-        GameObject obj = Instantiate(enemyStatus.prefab);
+        GameObject obj = Instantiate(_enemyStatus.prefab);
         EnemyController controller = obj.AddComponent<EnemyController>();
-        controller.status = enemyStatus;
         obj.SetActive(false);
-        controller.pool = this;
+        controller.SetEnemyInfo(this, _enemyStatus);
         return controller;
     }
-
+    //풀에서 오브젝트 하나 반환한다.
     public EnemyController GetFromPool()
     {
         if (pool.Count > 0)
@@ -42,17 +41,18 @@ public class EnemyPool : MonoBehaviour
             return InstantiateEnemy();
         }
     }
-
+    //풀에 오브젝트 반환한다.
     public void ReturnToPool(EnemyController obj)
     {
         obj.gameObject.SetActive(false);
         pool.Enqueue(obj);
     }
+    //스테이지 이동하는 시점이나 처음 풀을 사용할 때 풀을 비운다.
     public void ClearPool()
     {
         if (pool == null)
             return;
-        enemyStatus = null;
+        _enemyStatus = null;
         while (pool.Count > 0)
         {
             EnemyController enemy = pool.Dequeue();
@@ -60,5 +60,4 @@ public class EnemyPool : MonoBehaviour
         }
         pool = null;
     }
-
 }
