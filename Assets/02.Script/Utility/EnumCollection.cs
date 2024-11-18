@@ -14,6 +14,6 @@ namespace EnumCollection
     }
     public enum StatusType
     {
-        MaxHp, Power, HpReCover, Critical, CriticalDamage, Mana, ManaRecover, Accuracy, Evasion
+        MaxHp, Power, HpRecover, Critical, CriticalDamage, Mana, ManaRecover, Accuracy, Evasion
     }
 }

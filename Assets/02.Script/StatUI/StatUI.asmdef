@@ -1,0 +1,16 @@
+{
+    "name": "StatUI",
+    "rootNamespace": "",
+    "references": [
+        "GUID:100c3acede156dc499b847f75b6a4d53"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

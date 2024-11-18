@@ -56,10 +56,10 @@ public class GameManager : MonoBehaviour
     private void InitPlayer()
     {
         controller = GameObject.FindWithTag("Player").GetComponent<PlayerContoller>();
-        foreach (var x in gameData.statLevel_0)
+        foreach (var x in gameData.statLevel_Gold)
         {
         }
-        foreach (var x in gameData.statLevel_1)
+        foreach (var x in gameData.statLevel_StatPoint)
         {
         }
     }
@@ -111,8 +111,8 @@ public class GameManager : MonoBehaviour
                 gold = 0,
                 skillLevel = new Dictionary<string, int>(),
                 weaponNum = new Dictionary<string, int>(),
-                statLevel_0 = new Dictionary<StatusType, int>(),
-                statLevel_1 = new Dictionary<StatusType, int>()
+                statLevel_Gold = new Dictionary<StatusType, int>(),
+                statLevel_StatPoint = new Dictionary<StatusType, int>()
             };
         }
 
@@ -155,10 +155,10 @@ public class GameManager : MonoBehaviour
         gameData.weaponNum[weaponName]+=amount;
         Debug.Log($"Weapon {weaponName} : {gameData.weaponNum[weaponName]}");
     }
-    //해당 스킬의 레벨을 1 올리는 메서드, statIndex 0은 골드로 강화한 스탯, statIndex 1은 레벨업으로 강화한 스탯
+    //해당 스텟의 레벨을 1 올리는 메서드, statIndex 0은 골드로 강화한 스탯, statIndex 1은 레벨업으로 강화한 스탯
     public void ChangeStatLevel(StatusType statusType, int statIndex)
     {
-        var statDictionary = statIndex == 0 ? gameData.statLevel_0 : gameData.statLevel_1;
+        var statDictionary = statIndex == 0 ? gameData.statLevel_Gold : gameData.statLevel_StatPoint;
 
         if (!statDictionary.ContainsKey(statusType))
         {
