@@ -8,4 +8,5 @@
             <engine:Label text="Loading..." name="LoadingLabel" />
         </engine:VisualElement>
     </engine:VisualElement>
+    <engine:VisualElement style="flex-grow: 1;" />
 </engine:UXML>

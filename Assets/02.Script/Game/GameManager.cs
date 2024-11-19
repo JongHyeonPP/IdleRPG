@@ -56,12 +56,9 @@ public class GameManager : MonoBehaviour
     private void InitPlayer()
     {
         controller = GameObject.FindWithTag("Player").GetComponent<PlayerContoller>();
-        foreach (var x in gameData.statLevel_Gold)
-        {
-        }
-        foreach (var x in gameData.statLevel_StatPoint)
-        {
-        }
+        controller.InitDefaultStatus();
+        controller.SetStatus(gameData.statLevel_Gold);
+        controller.SetStatus(gameData.statLevel_StatPoint);
     }
     //데이터 로드 시간이 너무 짧으면 과정 연출이 애매해져서 최소 시간 할당했음.
     private IEnumerator WaitAndInvokeOnDataLoadComplete()
@@ -88,8 +85,6 @@ public class GameManager : MonoBehaviour
         {
             yield return new WaitForSeconds(_saveInterval);
             DataManager.SaveToPlayerPrefs("GameData", gameData);
-            string serializedData = JsonConvert.SerializeObject(gameData, Formatting.Indented);
-            Debug.Log("Game data saved:\n" + serializedData);
         }
     }
     //클라우드에 현재 진행 중인 게임의 정보를 모두 저장하는 메서드. 저장하는 데이터들을 기반으로 진행 상황을 온전히 복원할 수 있어야 한다.

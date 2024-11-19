@@ -1,9 +1,8 @@
 {
-    "name": "Character",
+    "name": "Skill",
     "rootNamespace": "",
     "references": [
-        "GUID:c1f3ac597cd61d64e994b094eaa1fa95",
-        "GUID:3e1d693f5a7dfdb479cea34a3256a93b"
+        "GUID:c1f3ac597cd61d64e994b094eaa1fa95"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

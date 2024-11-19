@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public interface ICharacterStatus
@@ -11,4 +13,5 @@ public interface ICharacterStatus
     int ManaRecover { get; set; }
     int Accuracy { get; set; }
     int Evasion { get; set; }
+    List<Skill> Skills { get; set; }
 }

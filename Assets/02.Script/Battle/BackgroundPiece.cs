@@ -8,7 +8,7 @@ public class BackgroundPiece : MonoBehaviour
         transform.Translate(Vector2.left*Time.deltaTime*speed);
         if (transform.position.x < -20f)
         {
-            transform.localPosition += Vector3.right * 64f;
+            transform.localPosition += Vector3.right * 63.98f;
         }
     }
 }

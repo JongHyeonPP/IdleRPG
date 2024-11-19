@@ -12,15 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d86c58796157b2c4cb71662e31cd283c, type: 3}
   m_Name: PinkPig
   m_EditorClassIdentifier: 
-  power: 0
-  hpRecover: 0
-  critical: 0
-  criticalDamage: 0
-  mana: 0
-  manaRecover: 0
-  accuracy: 0
-  evasion: 0
+  _maxHp: 30
+  _power: 10
+  _hpRecover: 0
+  _critical: 0
+  _criticalDamage: 0
+  _mana: 0
+  _manaRecover: 0
+  _accuracy: 0
+  _evasion: 0
   prefab: {fileID: 7835531869370486025, guid: 529ae65dba653b24b81c70505263f2c8, type: 3}
-  goldAscend: 0
-  expAscend: 0
+  gold: 0
+  exp: 0
   skillNames: []

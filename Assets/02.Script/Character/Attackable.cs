@@ -2,6 +2,7 @@ using EnumCollection;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
 
@@ -12,10 +13,10 @@ public abstract class Attackable : MonoBehaviour
     public Animator anim;
     protected int hp;
     //private Dictionary<> tempEffect = new();
+    private Coroutine attackCoroutine;
     protected void SkillBehaviour(int skillValue, SkillType type, SkillRange range, int targetNum = 1, float preDelay = 0.5f, float postDelay=0.5f)
     {
         StartCoroutine(AnimBehaviour(skillValue, type, range, targetNum, preDelay, postDelay));
-        
     }
     private IEnumerator AnimBehaviour(int skillValue, SkillType type, SkillRange range, int targetNum, float preDelay, float postDelay)
     {
@@ -31,6 +32,10 @@ public abstract class Attackable : MonoBehaviour
         VisualEffectToTarget(targets);
         yield return new WaitForSeconds(postDelay);
     }
+    public void StartAttack()
+    {
+        attackCoroutine = StartCoroutine(AttackRoop());
+    }
     private void ActiveSkillToTarget(List<Attackable> targets, int skillValue, SkillType skillType)
     {
         ICharacterStatus myStatus = GetStatus();
@@ -42,8 +47,17 @@ public abstract class Attackable : MonoBehaviour
             //일련의 계산 진행
             target.ReceiveSkill(calcedValue, skillType);
         }
+        if (target.hp == 0)
+        {
+            StartCoroutine(TargetKill());
+        }
     }
-
+    private IEnumerator TargetKill()
+    {
+        StopCoroutine(attackCoroutine);
+        yield return new WaitForSeconds(0.5f);
+        target = null;
+    }
     private void ReceiveSkill(int calcedValue, SkillType skillType)
     {
         switch (skillType)
@@ -55,8 +69,11 @@ public abstract class Attackable : MonoBehaviour
             case SkillType.Heal:
                 break;
         }
+        if (hp == 0)
+        {
+            OnDead();
+        }
     }
-
     private void VisualEffectToTarget(List<Attackable> targets)
     {
     
@@ -72,5 +89,38 @@ public abstract class Attackable : MonoBehaviour
         }
         return result;
     }
+    //AttackTerm 간격마다 우선 순위에 있는 스킬 사용
+    protected IEnumerator AttackRoop()
+    {
+        ICharacterStatus _status = GetStatus();
+        while (true)
+        {
+            bool isActiveSkill = false;
+            foreach (Skill skill in _status.Skills)
+            {
+                if (skill.IsSkillAble())
+                {
+                    SkillData data = skill.data;
+                    ActiveSkill(data.name, data.value[0], data.range, data.range);
+                    isActiveSkill = true;
+                }
+            }
+            if (!isActiveSkill)
+            {
+                if (target)
+                    DefaultAttack();
+            }
+            yield return new WaitForSeconds(attackTerm);
+        }
+    }
+    private void DefaultAttack()
+    {
+        SkillBehaviour(1, SkillType.Damage, SkillRange.Target);
+    }
     protected abstract ICharacterStatus GetStatus();
+    protected abstract void OnDead();
+    private void ActiveSkill(string _skillName, float _value, float _range, float type)
+    {
+        Debug.Log("Skill : " + _skillName);
+    }
 }

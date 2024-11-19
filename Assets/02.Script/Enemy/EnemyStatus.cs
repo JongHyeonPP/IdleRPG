@@ -32,4 +32,6 @@ public class EnemyStatus : ScriptableObject, ICharacterStatus
     public float Gold=> gold;
     public float Exp => exp;
     public List<string> SkillNames => skillNames;
+
+    public List<Skill> Skills { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 }

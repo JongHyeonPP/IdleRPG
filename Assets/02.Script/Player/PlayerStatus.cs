@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class PlayerStatus : MonoBehaviour, ICharacterStatus
 {
-    public List<Skill> skills = new();
 
     [SerializeField] private int _maxHp;
     [SerializeField] private int _power;
@@ -14,9 +13,9 @@ public class PlayerStatus : MonoBehaviour, ICharacterStatus
     [SerializeField] private int _manaRecover;
     [SerializeField] private int _accuracy;
     [SerializeField] private int _evasion;
-
-    [SerializeField] private float _goldAscend;
-    [SerializeField] private float _expAscend;
+    [SerializeField] private int _goldAscend;
+    [SerializeField] private int _expAscend;
+    [SerializeField] private List<Skill> _skills = new();
 
     public int MaxHp { get => _maxHp; set => _maxHp = value; }
     public int Power { get => _power; set => _power = value; }
@@ -27,7 +26,7 @@ public class PlayerStatus : MonoBehaviour, ICharacterStatus
     public int ManaRecover { get => _manaRecover; set => _manaRecover = value; }
     public int Accuracy { get => _accuracy; set => _accuracy = value; }
     public int Evasion { get => _evasion; set => _evasion = value; }
-
-    public float GoldAscend => _goldAscend;
-    public float ExpAscend => _expAscend;
+    public int GoldAscend { get => _goldAscend; set => _goldAscend = value; }
+    public int ExpAscend { get => _expAscend; set => _expAscend = value; }
+    public List<Skill> Skills { get => _skills; set => _skills = value; }
 }
