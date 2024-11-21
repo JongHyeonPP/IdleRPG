@@ -1,12 +1,18 @@
 using System;
 using UnityEngine;
 
-public class EnemyController : Attackable
+public class EnemyController : Attackable, IMoveByPlayer
 {
-    private EnemyPool _pool;
-    protected EnemyStatus _status;
-    private EnemyController[] _enemies;
-    private int _indexInPool;
+    private EnemyPool _pool;//비활성화 시 들어갈 풀
+    private EnemyController[] _enemies;//활성화 시 들어갈 배열
+    private int _indexInArr;//배열에서의 인덱스
+    protected EnemyStatus _status;//전투에 사용할 스탯
+    public Transform Transform => transform;
+
+    private void Start()
+    {
+        MediatorManager<IMoveByPlayer>.RegisterMediator(this);
+    }
     protected override ICharacterStatus GetStatus()
     {
         return _status;
@@ -19,15 +25,15 @@ public class EnemyController : Attackable
     }
     protected override void OnDead()
     {
-        _enemies[_indexInPool] = null;
+        _enemies[_indexInArr] = null;
         _enemies = null;
-        _indexInPool = -1;
+        _indexInArr = -1;
         _pool.ReturnToPool(this);
+        BattleBroker.OnEnemyDead?.Invoke(transform.position);
     }
-
     public void SetCurrentInfo(EnemyController[] enemies, int indexInPool)
     {
         _enemies = enemies;
-        _indexInPool = indexInPool;
+        _indexInArr = indexInPool;
     }
 }

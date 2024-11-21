@@ -9,8 +9,8 @@ public class StartManager : MonoBehaviour
     [SerializeField] StartMainUI startMainUI;//S
     private void Awake()
     {
-        GameManager.OnAuthenticationComplete += UnderTextLoadGameData;
-        GameManager.OnDataLoadComplete += PrepareBattleScene;
+        StartBroker.OnAuthenticationComplete += UnderTextLoadGameData;
+        StartBroker.OnDataLoadComplete += PrepareBattleScene;
     }
     //Battle 씬을 로드 중이라고 띄우고 Battle 씬을 로드하는 코루틴을 호출한다.
     private void PrepareBattleScene()

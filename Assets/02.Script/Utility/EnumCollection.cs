@@ -16,4 +16,8 @@ namespace EnumCollection
     {
         MaxHp, Power, HpRecover, Critical, CriticalDamage, Mana, ManaRecover, Accuracy, Evasion, GoldAscend, ExpAscend
     }
+    public enum DropType
+    {
+        Gold, Exp
+    }
 }

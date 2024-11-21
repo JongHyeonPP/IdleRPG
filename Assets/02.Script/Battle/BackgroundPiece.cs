@@ -1,11 +1,15 @@
 using UnityEngine;
 
-public class BackgroundPiece : MonoBehaviour
+public class BackgroundPiece : MonoBehaviour, IMoveByPlayer
 {
-    
-    public void Move(float speed)
+    public Transform Transform => transform;
+
+    private void Start()
     {
-        transform.Translate(Vector2.left*Time.deltaTime*speed);
+        MediatorManager<IMoveByPlayer>.RegisterMediator(this);
+    }
+    private void Update()
+    {
         if (transform.position.x < -20f)
         {
             transform.localPosition += Vector3.right * 63.98f;

@@ -7,6 +7,7 @@ public class GameData
 {
     public int gold;
     public int level;
+    public int exp;
     public Dictionary<string, int> skillLevel = new();
     public Dictionary<string, int> weaponNum = new();
     [JsonConverter(typeof(StatusTypeDictionaryConverter))]

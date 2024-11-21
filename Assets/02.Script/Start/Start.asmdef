@@ -3,9 +3,9 @@
     "rootNamespace": "",
     "references": [
         "Account",
-        "Unity.TextMeshPro",
         "Utility",
-        "Game"
+        "Game",
+        "Broker"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5444313332824086974}
   - component: {fileID: 7712351157666273572}
+  - component: {fileID: 3268616700332397864}
   m_Layer: 0
   m_Name: PlayerStatusBarUI
   m_TagString: Untagged
@@ -51,3 +52,15 @@ MonoBehaviour:
   m_WorldSpaceSizeMode: 1
   m_WorldSpaceWidth: 1920
   m_WorldSpaceHeight: 1080
+--- !u!114 &3268616700332397864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 552981695046943972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 520f839c2647979469a28c4d0bfca3b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

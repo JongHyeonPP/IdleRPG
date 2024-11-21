@@ -11,7 +11,7 @@ public class ClickReceiverUI: MonoBehaviour
     private void Awake()
     {
         // UI Element 설정
-        var _root = GetComponent<UIDocument>().rootVisualElement;
+        VisualElement _root = GetComponent<UIDocument>().rootVisualElement;
         _clickReceiver = _root.Q<VisualElement>("ClickReceiver");
         _startLabel = _root.Q<Label>("StartLabel");
         // 클릭 리시버에 클릭 이벤트 연결
@@ -56,5 +56,4 @@ public class ClickReceiverUI: MonoBehaviour
 
         gameObject.SetActive(false);
     }
-
 }
