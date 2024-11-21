@@ -36,6 +36,7 @@ public class EnemyPool : MonoBehaviour
         {
             EnemyController enemy = pool.Dequeue();
             enemy.gameObject.SetActive(true);
+            enemy.hp = _enemyStatus.MaxHp;
             return enemy;
         }
         else

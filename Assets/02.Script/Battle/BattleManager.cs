@@ -9,12 +9,18 @@ public class BattleManager : MonoBehaviour
     
     public static BattleManager instance;
 
+    [Header("Enemy Pool")]
     [SerializeField] EnemyStorage storage;//적들의 정보를 일괄적으로 보관하고 있는 장소
     //두 가지 적이 섞여 나오도록 오브젝트 풀을 두 가지 생성
-    [SerializeField] EnemyPool _pool_0;
-    [SerializeField] EnemyPool _pool_1;
+    [SerializeField] EnemyPool _ePool0;
+    [SerializeField] EnemyPool _ePool1;
+    [SerializeField] DropPool _dPool;
     [SerializeField] Transform _spawnSpot;//풀링된 오브젝트가 활성화되면서 나올 위치 정보
     [SerializeField] Transform _poolParent;//비활성화 돼 풀에 들어간 오브젝트가 들어갈 공간
+    [Header("Drop Pool")]
+    [SerializeField] GameObject _goldPrefab;
+    [SerializeField] GameObject _expPrefab;
+    [Header("Etc")]
     PlayerContoller _controller;//GameManager로부터 얻어온 controller 정보
     [SerializeField] List<BackgroundPiece> _pieces;//위치를 지속적으로 변경하면서 보일 배경 이미지들
     private EnemyController[] _enemies = null;//현재 나와서 전투 대기 중인 적들 정보
@@ -32,11 +38,10 @@ public class BattleManager : MonoBehaviour
             instance = this;
         }
     }
-
     private void Start()
     {
         _controller = GameManager.controller;
-        _pool_0.poolParent = _pool_1.poolParent = _poolParent;
+        _ePool0.poolParent = _ePool1.poolParent = _poolParent;
         StartBattle();
         GameManager.instance.AutoSaveStart();
     }
@@ -48,6 +53,7 @@ public class BattleManager : MonoBehaviour
         _currentTargetIndex = 0;
         InitPools();
         StartCoroutine(BattleLoop());
+        BattleBroker.OnEnemyDead += OnEnemyDead;
     }
 
     private IEnumerator BattleLoop()
@@ -81,7 +87,7 @@ public class BattleManager : MonoBehaviour
             else
             {
                 _controller.MoveState(true);
-                EnemyBackgroundMove();
+                MoveByPlayer();
                 isMove = true;
             }
         }
@@ -107,27 +113,24 @@ public class BattleManager : MonoBehaviour
             _currentTargetIndex++;
         }
     }
-    public void EnemyBackgroundMove()
+    public void MoveByPlayer()
     {
-        foreach (EnemyController enemy in _enemies)
+        List<IMoveByPlayer> ros = MediatorManager<IMoveByPlayer>.GetRegisteredObjects();
+        foreach (IMoveByPlayer ro in ros)
         {
-            if (enemy)
-                enemy.transform.Translate(speed * Time.deltaTime * Vector2.left);
-        }
-        foreach (var x in _pieces)
-        {
-            x.Move(speed);
+            if (ro.Transform.gameObject.activeSelf)
+                ro.Transform.Translate(speed * Time.deltaTime * Vector2.left);
         }
     }
     //풀을 비우고 새로운 적들을 생성해서 풀에 할당한다.
     public void InitPools()
     {
-        _pool_0.ClearPool();
-        _pool_1.ClearPool();
+        _ePool0.ClearPool();
+        _ePool1.ClearPool();
         switch (GameManager.mainStageNum)
         {
             case 0:
-                _pool_0.InitializePool(storage.pinkPig);
+                _ePool0.InitializePool(storage.pinkPig);
                 break;
         }
     }
@@ -175,15 +178,15 @@ public class BattleManager : MonoBehaviour
     // 두 개의 풀에서 EnemyController 객체를 가져오는 메서드
     private EnemyController GetEnemyFromPool()
     {
-        if (_pool_1.pool == null)
+        if (_ePool1.pool == null)
         {
             // pool_1이 없을 때 pool_0에서만 선택
-            return _pool_0.GetFromPool();
+            return _ePool0.GetFromPool();
         }
         else
         {
             // 두 풀에서 50% 확률로 선택
-            return UtilityManager.CalculateProbability(0.5f) ? _pool_0.GetFromPool() : _pool_1.GetFromPool();
+            return UtilityManager.CalculateProbability(0.5f) ? _ePool0.GetFromPool() : _ePool1.GetFromPool();
         }
     }
 
@@ -194,7 +197,7 @@ public class BattleManager : MonoBehaviour
         enemy.transform.localPosition = new Vector2(_enemySpace * index, 0);
     }
 
-    private static int DetermineEnemyNum()
+    private int DetermineEnemyNum()
     {
         int enemyNum = 0;
         int stageNum = GameManager.mainStageNum;
@@ -211,5 +214,20 @@ public class BattleManager : MonoBehaviour
             enemyNum = 5;
         }
         return enemyNum;
+    }
+    private void OnEnemyDead(Vector3 position)
+    {
+        DropBase dropBase;
+        switch (UtilityManager.CalculateProbability(1f))
+        {
+            case true:
+                dropBase = _dPool.GetFromPool<GoldDrop>();
+                break;
+            case false:
+                dropBase = _dPool.GetFromPool<ExpDrop>();
+                break;
+        }
+        dropBase.transform.position = position + Vector3.up * 0.2f;
+        dropBase.AddForceDiagonally();
     }
 }

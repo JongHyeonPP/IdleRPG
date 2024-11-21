@@ -2,16 +2,14 @@ using EnumCollection;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.SocialPlatforms;
 
 public abstract class Attackable : MonoBehaviour
 {
     public Attackable target;
     protected float attackTerm = 1f;
     public Animator anim;
-    protected int hp;
+    public int hp;
     //private Dictionary<> tempEffect = new();
     private Coroutine attackCoroutine;
     protected void SkillBehaviour(int skillValue, SkillType type, SkillRange range, int targetNum = 1, float preDelay = 0.5f, float postDelay=0.5f)
@@ -64,7 +62,6 @@ public abstract class Attackable : MonoBehaviour
         {
             case SkillType.Damage:
                 hp = Mathf.Max(hp-calcedValue, 0);
-                Debug.Log(hp);
                 break;
             case SkillType.Heal:
                 break;

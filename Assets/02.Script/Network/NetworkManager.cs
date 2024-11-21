@@ -7,7 +7,7 @@ using UnityEngine;
 public class NetworkManager : MonoBehaviour
 {
     public static NetworkManager instance;
-    public static event Action OnDetectDuplicateLogin;//중복 로그인 탐지했을 때 발생시킬 델리게이트
+
     private DatabaseReference _fbRef;//firebase 루트 레퍼런트
     private string _userId;//구글 아이디
     private string _deviceId;//기기 아이디
@@ -22,7 +22,7 @@ public class NetworkManager : MonoBehaviour
         }
         _deviceId = SystemInfo.deviceUniqueIdentifier;
         _fbRef = FirebaseDatabase.DefaultInstance.RootReference;
-        GameManager.OnAuthenticationComplete += OnAutenticationComplete;
+        StartBroker.OnAuthenticationComplete += OnAutenticationComplete;
     }
     //구글 인증이 됐다면 콜백되어 userId를 기반으로 Firebase에 연동한다.
     private void OnAutenticationComplete()
@@ -45,7 +45,7 @@ public class NetworkManager : MonoBehaviour
 
             if (args.Snapshot.Exists && args.Snapshot.Value.ToString() != SystemInfo.deviceUniqueIdentifier)
             {
-                OnDetectDuplicateLogin?.Invoke();
+                StartBroker.OnDetectDuplicateLogin?.Invoke();
             }
         };
     }
