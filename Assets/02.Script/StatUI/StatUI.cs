@@ -27,45 +27,89 @@ public class StatUI : MonoBehaviour
     private void Start()
     {
         _gameManager = GameManager.instance;
-      
-
         var root = GetComponent<UIDocument>().rootVisualElement;
         _scrollView = root.Q<VisualElement>("StatScrollView");
         _content = _scrollView.Q<VisualElement>("unity-content-container");
-
-        _content.RegisterCallback<PointerDownEvent>(OnScrollDown);
-        _content.RegisterCallback<PointerMoveEvent>(OnScrollMove);
-        _content.RegisterCallback<PointerUpEvent>(OnScrollUp);
+        _scrollView.RegisterCallback<PointerDownEvent>(OnScrollDown);
+        _scrollView.RegisterCallback<PointerMoveEvent>(OnScrollMove);
+        _scrollView.RegisterCallback<PointerUpEvent>(OnScrollUp);
+        _scrollView.RegisterCallback<PointerLeaveEvent>(evt =>
+        {
+            _isDragging = false;
+        });
         foreach (var stat in _activeStats)
         {
             InitializeStatUI(root, stat);
         }
-
     }
 
     private void OnScrollDown(PointerDownEvent evt)
     {
         _isDragging = true;
-        _lastMousePosition = evt.position; 
-        evt.StopPropagation(); 
+        _lastMousePosition = evt.position;
     }
 
     private void OnScrollMove(PointerMoveEvent evt)
     {
-        if (_isDragging)
+        if (!_isDragging) return;
+
+        Vector2 delta = (Vector2)evt.position - _lastMousePosition;
+
+        float currentY = _content.transform.position.y;
+
+        float newY = currentY + delta.y;
+
+        float minY = -1250;    
+        float maxY = 50;
+        if (newY > maxY) 
         {
-          
-            Vector2 delta = (Vector2)evt.position - _lastMousePosition;
-
-            _content.transform.position = new Vector3(_content.transform.position.x, _content.transform.position.y - delta.y, 0);
-
-            _lastMousePosition = evt.position;
+            newY = maxY;
+            StartCoroutine(SmoothMoveToOriginalY(-50)); 
         }
-    }
+        else if(newY<minY)
+        {
+            newY = minY;
+            StartCoroutine(SmoothMoveToOriginalY(-1150));
+        }
 
+        _content.transform.position = new Vector3(
+            _content.transform.position.x,
+            newY,
+            0
+        );
+
+        _lastMousePosition = evt.position;
+       
+    }
+    private IEnumerator SmoothMoveToOriginalY(float targetY)
+    {
+        float duration = 0.5f; 
+        float elapsed = 0f;
+
+        Vector3 startPosition = _content.transform.position;
+        Vector3 targetPosition = new Vector3(
+            _content.transform.position.x,
+            targetY,
+            0
+        );
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            _content.transform.position = Vector3.Lerp(
+                startPosition,
+                targetPosition,
+                elapsed / duration
+            );
+            yield return null;
+        }
+
+        _content.transform.position = targetPosition; 
+    }
     private void OnScrollUp(PointerUpEvent evt)
     {
-        _isDragging = false; 
+        _isDragging = false;
+        evt.StopPropagation();
     }
 
 
@@ -79,8 +123,12 @@ public class StatUI : MonoBehaviour
 
         button.RegisterCallback<PointerDownEvent>(evt => OnPointerDown(stat),TrickleDown.TrickleDown);
         button.RegisterCallback<PointerUpEvent>(evt => OnPointerUp(), TrickleDown.TrickleDown);
-       
+        if (!_gameManager.gameData.statLevel_Gold.ContainsKey(stat))
+        {
+            _gameManager.gameData.statLevel_Gold[stat] = 1; 
+        }
 
+        levelLabel.text = $"Level: {_gameManager.gameData.statLevel_Gold[stat]}";
     }
     
 
@@ -98,6 +146,7 @@ public class StatUI : MonoBehaviour
         {
             StopCoroutine(_incrementCoroutine);
             _incrementCoroutine = null;
+             DataManager.SaveToPlayerPrefs("GameData",_gameManager.gameData);
         }
     }
 
@@ -113,19 +162,14 @@ public class StatUI : MonoBehaviour
     
     private void IncrementStat(StatusType stat)
     {
-      //  _gameManager.ChangeStatLevel(stat,0);
-        Debug.Log(stat + "¿Ã¶ù´Ù1");
+        _gameManager.gameData.statLevel_Gold[stat]++;
         UpdateStatLevelLabel(stat);
     }
 
     private void UpdateStatLevelLabel(StatusType stat)
     {
-        var levelLabel = _statElements[stat] as Label;
-        if (levelLabel != null)
-        {
-            levelLabel.text = $"Level ";
-            Debug.Log(stat + "¿Ã¶ù´Ù");
-        }
+        var levelLabel = (Label)_statElements[stat];
+        levelLabel.text = $"Level: {_gameManager.gameData.statLevel_Gold[stat]}";
     }
     private void UpdateStatRiseLabel(StatusType stat)
     {
