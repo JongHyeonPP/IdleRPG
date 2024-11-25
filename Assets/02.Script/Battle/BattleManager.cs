@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class BattleManager : MonoBehaviour
 {
-    
+
     public static BattleManager instance;
 
     [Header("Enemy Pool")]
@@ -25,12 +25,14 @@ public class BattleManager : MonoBehaviour
     [SerializeField] List<BackgroundPiece> _pieces;//위치를 지속적으로 변경하면서 보일 배경 이미지들
     private EnemyController[] _enemies = null;//현재 나와서 전투 대기 중인 적들 정보
     private int _lastEnemyIndex;//_enemies 배열 중 끝에 있는 적의 인덱스
-    private float enemyPlayerDistance = 1.5f;//멈춰서 공격하는 시점의 적과 나의 간격
+    private float enemyPlayerDistance = 1f;//멈춰서 공격하는 시점의 적과 나의 간격
     private bool isMove;//캐릭터가 움직이고 있는지. 실제로는 적들과 배경이 움직이고 있는지라고 할 수 있다.
     private float speed = 3f;//움직이는 속도
     private float _enemySpace = 1f;// enemies의 배열 한 칸당 실제로 떨어지게 되는 x 간격
     private int _enemyBundleNum = 10;//적이 위치할 수 있는 배열의 크기. 실제로 적이 몇 명 할당될지는 DetermineEnemyNum가 정의한다.
     private int _currentTargetIndex;//현재 마주보고 있는 캐릭터
+
+    private GameData _gameData;
     private void Awake()
     {
         if (instance == null)
@@ -44,6 +46,8 @@ public class BattleManager : MonoBehaviour
         _ePool0.poolParent = _ePool1.poolParent = _poolParent;
         StartBattle();
         GameManager.instance.AutoSaveStart();
+        _gameData = GameManager.instance.gameData;
+
     }
 
     public void StartBattle()
@@ -95,7 +99,7 @@ public class BattleManager : MonoBehaviour
     void NoTargetCase()
     {
         //할당된 적을 다 처치했으면 다시 할당한다.
-        if (_enemies == null ||_currentTargetIndex>=_lastEnemyIndex)
+        if (_enemies == null || _currentTargetIndex >= _lastEnemyIndex)
         {
             _enemies = MakeEnemies();
             _currentTargetIndex = 0;
@@ -123,7 +127,7 @@ public class BattleManager : MonoBehaviour
         }
     }
     //풀을 비우고 새로운 적들을 생성해서 풀에 할당한다.
-    public void InitPools()
+    private void InitPools()
     {
         _ePool0.ClearPool();
         _ePool1.ClearPool();
@@ -133,6 +137,24 @@ public class BattleManager : MonoBehaviour
                 _ePool0.InitializePool(storage.pinkPig);
                 break;
         }
+    }
+    private int DetermineEnemyNum()
+    {
+        int enemyNum = 0;
+        int stageNum = GameManager.mainStageNum;
+        if (stageNum == 0)
+        {
+            enemyNum = 4;
+        }
+        else if (stageNum <= 5)
+        {
+            enemyNum = 4;
+        }
+        else
+        {
+            enemyNum = 5;
+        }
+        return enemyNum;
     }
     // 활성화된 적들 반환
     public EnemyController[] MakeEnemies()
@@ -197,28 +219,11 @@ public class BattleManager : MonoBehaviour
         enemy.transform.localPosition = new Vector2(_enemySpace * index, 0);
     }
 
-    private int DetermineEnemyNum()
-    {
-        int enemyNum = 0;
-        int stageNum = GameManager.mainStageNum;
-        if (stageNum == 0)
-        {
-            enemyNum = 4;
-        }
-        else if (stageNum <= 5)
-        {
-            enemyNum = 4;
-        }
-        else
-        {
-            enemyNum = 5;
-        }
-        return enemyNum;
-    }
+
     private void OnEnemyDead(Vector3 position)
     {
         DropBase dropBase;
-        switch (UtilityManager.CalculateProbability(1f))
+        switch (UtilityManager.CalculateProbability(0.5f))
         {
             case true:
                 dropBase = _dPool.GetFromPool<GoldDrop>();
@@ -229,5 +234,62 @@ public class BattleManager : MonoBehaviour
         }
         dropBase.transform.position = position + Vector3.up * 0.2f;
         dropBase.AddForceDiagonally();
+    }
+    //MainStageNum을 변경하고 거기에 맞는 적들과 배경을 세팅한다.
+    private void ChangeMainStage(int stageNum)
+    {
+        Background background;
+        switch (stageNum / 5)
+        {
+            case 0: // 0~4
+                background = Background.Beach;
+                break;
+            case 1: // 5~9
+                background = Background.Cave;
+                break;
+            case 2: // 10~14
+                background = Background.Desert;
+                break;
+            case 3: // 15~19
+                background = Background.DesertRuins;
+                break;
+            case 4: // 20~24
+                background = Background.ElfCity;
+                break;
+            case 5: // 25~29
+                background = Background.Forest;
+                break;
+            case 6: // 30~34
+                background = Background.IceField;
+                break;
+            case 7: // 35~39
+                background = Background.Lava;
+                break;
+            case 8: // 40~44
+                background = Background.MysteriousForest;
+                break;
+            case 9: // 45~49
+                background = Background.Plains;
+                break;
+            case 10: // 50~54
+                background = Background.RedRock;
+                break;
+            case 11: // 55~59
+                background = Background.Ruins;
+                break;
+            case 12: // 60~64
+                background = Background.Swamp;
+                break;
+            case 13: // 65~69
+                background = Background.VineForest;
+                break;
+            default: // 70 이상
+                background = Background.WinterForest; // 기본값 또는 원하는 값
+                break;
+        }
+        foreach (BackgroundPiece piece in _pieces)
+        {
+            piece.ChangeBackground(background);
+        }
     }
 }

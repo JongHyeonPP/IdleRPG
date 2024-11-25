@@ -9,6 +9,7 @@ using GooglePlayGames;
 using GooglePlayGames.BasicApi;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
+using UnityEngine.Playables;
 
 public class GameManager : MonoBehaviour
 {
@@ -17,11 +18,10 @@ public class GameManager : MonoBehaviour
     public int dia;//유료 재화 - 뽑기
     public int emerald;//유료 재화 - 강화
     private float _saveInterval = 10f;//로컬 데이터에 자동 저장하는 간격(초)
-    public static int mainStageNum;//메인 전투 스테이지가 몇인지
     public static PlayerContoller controller { get; private set; }//전투하는 플레이어, GameManager.controller를 싱글톤처럼 사용하기 위함
     public static string userId { get; private set; }//구글 인증을 통해 나온 유저의 아이디
     public static string userName { get; private set; }//인게임에서 변경 가능한 플레이어의 이름
-
+    public static int mainStageNum;//메인 전투 스테이지가 몇인지
     private void Awake()
     {
         if (instance == null)
@@ -34,8 +34,6 @@ public class GameManager : MonoBehaviour
                 LoadGameData();
                 StartCoroutine(WaitAndInvokeOnDataLoadComplete());
             };
-            BattleBroker.OnGoldGain += GetGoldByDrop;
-            BattleBroker.OnExpGain += GetExpByDrop;
             //Battle에 최초 진입하면 플레이어의 스탯 등의 정보값을 초기화한다.
             SceneManager.sceneLoaded += (scene, mode) =>
             {
@@ -50,17 +48,10 @@ public class GameManager : MonoBehaviour
             Destroy(this);
         }
     }
-
-    private void GetExpByDrop()
+    private void Start()
     {
-        //mainStageNum
-        gameData.exp += 10;
-    }
-
-    private void GetGoldByDrop()
-    {
-        //mainStageNum
-        gameData.gold += 10;
+        BattleBroker.OnGoldGain += GetGoldByDrop;
+        BattleBroker.OnExpGain += GetExpByDrop;
     }
 
     //ProcessAuthentication 과정은 비동기적으로 실행된다.
@@ -153,8 +144,34 @@ public class GameManager : MonoBehaviour
             StartBroker.OnAuthenticationComplete?.Invoke();
         }       
     }
+    private void GetGoldByDrop()
+    {
+        //mainStageNum
+        gameData.gold += 10 * (mainStageNum + 1);
+    }
+    private void GetExpByDrop()
+    {
+        //mainStageNum
+        gameData.exp += 10 * (mainStageNum + 1);
+        if (gameData.exp >= GetNeedExp())
+        {
+            gameData.exp = 0;
+            gameData.level++;
+            BattleBroker.OnLevelUp();
+        }
+    }
     public float GetExpPercent()
     {
-        return gameData.exp / 100f;
+        return Math.Clamp(gameData.exp / GetNeedExp(), 0f, 1f);
+    }
+
+    private float GetNeedExp()
+    {
+        return gameData.level * 100f;
+    }
+    //MainStageNum을 변경하고 거기에 맞는 적들과 배경을 세팅한다.
+    private void ChangeMainStage(int stageNum)
+    {
+        mainStageNum = stageNum;
     }
 }

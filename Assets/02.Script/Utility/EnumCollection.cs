@@ -2,7 +2,9 @@ namespace EnumCollection
 {
     public enum Background
     {
-        Plain
+        Beach, Cave, Desert, DesertRuins, ElfCity,Forest,
+        IceField, Lava, MysteriousForest, Plains, RedRock,
+        Ruins, Swamp,VineForest, WinterForest
     }
     public enum SkillType
     {

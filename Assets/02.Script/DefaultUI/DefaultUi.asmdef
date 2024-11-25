@@ -2,8 +2,9 @@
     "name": "Ui",
     "rootNamespace": "",
     "references": [
-        "Broker",
-        "Game"
+        "EventControl",
+        "Game",
+        ""
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

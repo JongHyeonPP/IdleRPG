@@ -15,6 +15,6 @@ public abstract class DropBase : MonoBehaviour, IMoveByPlayer
     }
     public void AddForceDiagonally()
     {
-        _rb.AddForce(new Vector2(100f, 150f));
+        _rb.AddForce(new Vector2(50f, 150f));
     }
 }

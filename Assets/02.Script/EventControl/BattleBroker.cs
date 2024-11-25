@@ -8,8 +8,12 @@ public static class BattleBroker
     public static Action OnGoldGain;
     //ExpDrop과 닿았을 때 
     public static Action OnExpGain;
-    //UI에 골드 적용 <전체 골드량>
-    public static Action<int> ApplyGoldToUi;
-    //UI에 경험치 적용 <경험치 비율>
-    public static Action<float> ApplyExpToUi;
+    //ExpDrop과 닿았을 때 
+    public static Action OnDiaGain;
+    //ExpDrop과 닿았을 때 
+    public static Action OnEmeraldGain;
+    //이름 바꿨을 때
+    public static Action OnSetName;
+    //레벨업 됐을 때
+    public static Action OnLevelUp;
 }
