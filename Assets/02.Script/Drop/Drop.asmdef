@@ -3,7 +3,8 @@
     "rootNamespace": "",
     "references": [
         "Broker",
-        "Utility"
+        "Utility",
+        "EventControl"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

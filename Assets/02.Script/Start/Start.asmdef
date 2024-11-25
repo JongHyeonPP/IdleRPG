@@ -2,10 +2,9 @@
     "name": "Loading",
     "rootNamespace": "",
     "references": [
-        "Account",
         "Utility",
         "Game",
-        "Broker"
+        "EventControl"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -9,7 +9,6 @@ public static class MediatorManager<T> where T : class
         if (!mediators.Contains(mediator))
         {
             mediators.Add(mediator);
-            UnityEngine.Debug.Log($"{mediator.GetType().Name}가 등록되었습니다.");
         }
     }
 
