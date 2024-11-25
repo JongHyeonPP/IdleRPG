@@ -163,6 +163,7 @@ public class StatUI : MonoBehaviour
     private void IncrementStat(StatusType stat)
     {
         _gameManager.gameData.statLevel_Gold[stat]++;
+        BattleBroker.OnStatusChange(stat, 1);
         UpdateStatLevelLabel(stat);
     }
 

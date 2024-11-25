@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using EnumCollection;
 public static class BattleBroker
 {
     //적이 죽었을 때 아이템 드랍. <적 위치>
@@ -16,4 +17,6 @@ public static class BattleBroker
     public static Action OnSetName;
     //레벨업 됐을 때
     public static Action OnLevelUp;
+    //능력치 적용
+    public static Action<StatusType, int> OnStatusChange;
 }

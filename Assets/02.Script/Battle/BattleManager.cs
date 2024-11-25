@@ -17,9 +17,6 @@ public class BattleManager : MonoBehaviour
     [SerializeField] DropPool _dPool;
     [SerializeField] Transform _spawnSpot;//풀링된 오브젝트가 활성화되면서 나올 위치 정보
     [SerializeField] Transform _poolParent;//비활성화 돼 풀에 들어간 오브젝트가 들어갈 공간
-    [Header("Drop Pool")]
-    [SerializeField] GameObject _goldPrefab;
-    [SerializeField] GameObject _expPrefab;
     [Header("Etc")]
     PlayerContoller _controller;//GameManager로부터 얻어온 controller 정보
     [SerializeField] List<BackgroundPiece> _pieces;//위치를 지속적으로 변경하면서 보일 배경 이미지들

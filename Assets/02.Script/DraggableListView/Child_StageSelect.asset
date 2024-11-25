@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Child_StageSelect
   m_EditorClassIdentifier: 
   itemTemplate: {fileID: 9197481963319205126, guid: 6fd9c9c8b9f8f5d47a34f34db3962668, type: 3}
-  count: 3
+  count: 10
   itemHeight: 150
   margin: 10

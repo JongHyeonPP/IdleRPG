@@ -9,10 +9,45 @@ public class PlayerContoller : Attackable
     [SerializeField] private PlayerStatus _status;//플레이어의 능력치
     private void Start()
     {
-
+        BattleBroker.OnStatusChange += OnStatusChange;
     }
-    //움직임을 멈추고 공격 코루틴을 시작한다.
-    
+    private void OnStatusChange(StatusType type, int value)
+    {
+        switch (type)
+        {
+            case StatusType.MaxHp:
+                _status.MaxHp += value;
+                break;
+            case StatusType.Power:
+                _status.Power += value;
+                break;
+            case StatusType.HpRecover:
+                _status.HpRecover += value;
+                break;
+            case StatusType.Critical:
+                _status.Critical += value;
+                break;
+            case StatusType.CriticalDamage:
+                _status.CriticalDamage += value;
+                break;
+            case StatusType.Accuracy:
+                _status.Accuracy += value;
+                break;
+            case StatusType.Evasion:
+                _status.Evasion += value;
+                break;
+            case StatusType.GoldAscend:
+                _status.GoldAscend += value;
+                break;
+            case StatusType.ExpAscend:
+                _status.ExpAscend += value;
+                break;
+            default:
+                Debug.Log($"{type.ToString()} is invalid type");
+                break;
+        }
+    }
+
     public void ChangeWeapon()//0 : Melee, 1 : Bow, 2 : Magic
     {
 
@@ -28,7 +63,7 @@ public class PlayerContoller : Attackable
 
     //사용할 스킬이 없을 때 기본 공격을 사용한다.
 
-    //캐릭터의 Status를 인터페이스의 형태로 반환
+    //캐릭터의 Statu인터페이스의 형태로 반환
     protected override ICharacterStatus GetStatus()
     {
         return _status;

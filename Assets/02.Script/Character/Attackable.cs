@@ -39,6 +39,7 @@ public abstract class Attackable : MonoBehaviour
         ICharacterStatus myStatus = GetStatus();
         int calcedValue = skillValue;
         calcedValue *= myStatus.Power;
+        Debug.Log("Attack Log");
         foreach (var target in targets)
         {
             ICharacterStatus targetStatus = target.GetStatus();
