@@ -2,9 +2,9 @@ namespace EnumCollection
 {
     public enum Background
     {
-        Beach, Cave, Desert, DesertRuins, ElfCity,Forest,
-        IceField, Lava, MysteriousForest, Plains, RedRock,
-        Ruins, Swamp,VineForest, WinterForest
+        Plains, Forest, Beach, Ruins, ElfCity,
+        MysteriousForest, WinterForest, VineForest,Swamp, IceField,
+        DesertRuins, Cave, Desert, RedRock, Lava
     }
     public enum SkillType
     {
@@ -21,5 +21,13 @@ namespace EnumCollection
     public enum DropType
     {
         Gold, Exp
+    }
+    public enum EquipGrade
+    {
+        Noraml
+    }
+    public enum EquipType
+    {
+        Weapon, Accessory
     }
 }

@@ -36,4 +36,8 @@ public class EnemyController : Attackable, IMoveByPlayer
         _enemies = enemies;
         _indexInArr = indexInPool;
     }
+    private void OnDestroy()
+    {
+        Debug.Log("Destroy : " + name);
+    }
 }

@@ -4,7 +4,9 @@
     "references": [
         "EventControl",
         "Game",
-        ""
+        "PlayerStatusBar",
+        "StatUI",
+        "StageSelect"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

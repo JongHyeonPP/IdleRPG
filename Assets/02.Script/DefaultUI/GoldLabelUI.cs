@@ -1,14 +1,13 @@
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.UIElements;
 public class GoldLabelUI : MonoBehaviour
 {
-    private VisualElement _root;
+    public VisualElement root { get; private set; }
     private Label _goldLabel;
-    void Start()
+    void Awake()
     {
-        _root = GetComponent<UIDocument>().rootVisualElement;
-        _goldLabel = _root.Q<Label>("GoldLabel");
+        root = GetComponent<UIDocument>().rootVisualElement;
+        _goldLabel = root.Q<Label>("GoldLabel");
         BattleBroker.OnGoldGain += SetGold;
         SetGold();
     }

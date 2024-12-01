@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class BattleManager : MonoBehaviour
 {
@@ -10,11 +11,12 @@ public class BattleManager : MonoBehaviour
     public static BattleManager instance;
 
     [Header("Enemy Pool")]
-    [SerializeField] EnemyStorage storage;//적들의 정보를 일괄적으로 보관하고 있는 장소
     //두 가지 적이 섞여 나오도록 오브젝트 풀을 두 가지 생성
     [SerializeField] EnemyPool _ePool0;
     [SerializeField] EnemyPool _ePool1;
     [SerializeField] DropPool _dPool;
+    [SerializeField] HashSet<GoldDrop> activeGold = new();
+    [SerializeField] HashSet<ExpDrop> activeExp = new();
     [SerializeField] Transform _spawnSpot;//풀링된 오브젝트가 활성화되면서 나올 위치 정보
     [SerializeField] Transform _poolParent;//비활성화 돼 풀에 들어간 오브젝트가 들어갈 공간
     [Header("Etc")]
@@ -30,6 +32,8 @@ public class BattleManager : MonoBehaviour
     private int _currentTargetIndex;//현재 마주보고 있는 캐릭터
 
     private GameData _gameData;
+
+    private StageInfo currentStageInfo;
     private void Awake()
     {
         if (instance == null)
@@ -41,10 +45,12 @@ public class BattleManager : MonoBehaviour
     {
         _controller = GameManager.controller;
         _ePool0.poolParent = _ePool1.poolParent = _poolParent;
-        StartBattle();
         GameManager.instance.AutoSaveStart();
         _gameData = GameManager.instance.gameData;
-
+        BattleBroker.OnMainStageChange += OnChangeMainStage;
+        currentStageInfo = StageManager.instance.GetStageInfo(GameManager.instance.gameData.currentStageNum);
+        StartBattle();
+        
     }
 
     public void StartBattle()
@@ -128,38 +134,29 @@ public class BattleManager : MonoBehaviour
     {
         _ePool0.ClearPool();
         _ePool1.ClearPool();
-        switch (GameManager.mainStageNum)
-        {
-            case 0:
-                _ePool0.InitializePool(storage.pinkPig);
-                break;
-        }
+        if (currentStageInfo.enemy_0)
+            _ePool0.InitializePool(currentStageInfo.enemy_0);
+        if (currentStageInfo.enemy_1)
+            _ePool0.InitializePool(currentStageInfo.enemy_1);
     }
-    private int DetermineEnemyNum()
+    private void ClearActiveEnemy()
     {
-        int enemyNum = 0;
-        int stageNum = GameManager.mainStageNum;
-        if (stageNum == 0)
+        foreach (var enemy in _enemies)
         {
-            enemyNum = 4;
+            if (enemy)
+            {
+                MediatorManager<IMoveByPlayer>.UnregisterMediator(enemy);
+                Destroy(enemy.gameObject);
+            }
         }
-        else if (stageNum <= 5)
-        {
-            enemyNum = 4;
-        }
-        else
-        {
-            enemyNum = 5;
-        }
-        return enemyNum;
+        _enemies = null;
     }
     // 활성화된 적들 반환
     public EnemyController[] MakeEnemies()
     {
         EnemyController[] result = new EnemyController[_enemyBundleNum];
         int currentNum = 0; // 현재 적이 얼마나 생겼는지
-        int enemyNum = DetermineEnemyNum();
-
+        int enemyNum = currentStageInfo.enemyNum;
         int index = 0; // 적이 배열에 들어간 인덱스
 
         while (currentNum < enemyNum)
@@ -223,67 +220,48 @@ public class BattleManager : MonoBehaviour
         switch (UtilityManager.CalculateProbability(0.5f))
         {
             case true:
-                dropBase = _dPool.GetFromPool<GoldDrop>();
+                var dropGold = _dPool.GetFromPool<GoldDrop>();
+                activeGold.Add(dropGold);
+                dropBase = dropGold;
                 break;
             case false:
-                dropBase = _dPool.GetFromPool<ExpDrop>();
+                var dropExp = _dPool.GetFromPool<ExpDrop>();
+                activeExp.Add(dropExp);
+                dropBase = dropExp;
                 break;
         }
         dropBase.transform.position = position + Vector3.up * 0.2f;
         dropBase.AddForceDiagonally();
     }
     //MainStageNum을 변경하고 거기에 맞는 적들과 배경을 세팅한다.
-    private void ChangeMainStage(int stageNum)
+    private void OnChangeMainStage(int stageNum)
     {
-        Background background;
-        switch (stageNum / 5)
+        currentStageInfo = StageManager.instance.GetStageInfo(stageNum);
+        ClearActiveDrop();
+        ChangeBackground();
+        ClearActiveEnemy();
+        InitPools();
+    }
+
+    private void ClearActiveDrop()
+    {
+        //Exp
+        foreach (ExpDrop x in activeExp)
         {
-            case 0: // 0~4
-                background = Background.Beach;
-                break;
-            case 1: // 5~9
-                background = Background.Cave;
-                break;
-            case 2: // 10~14
-                background = Background.Desert;
-                break;
-            case 3: // 15~19
-                background = Background.DesertRuins;
-                break;
-            case 4: // 20~24
-                background = Background.ElfCity;
-                break;
-            case 5: // 25~29
-                background = Background.Forest;
-                break;
-            case 6: // 30~34
-                background = Background.IceField;
-                break;
-            case 7: // 35~39
-                background = Background.Lava;
-                break;
-            case 8: // 40~44
-                background = Background.MysteriousForest;
-                break;
-            case 9: // 45~49
-                background = Background.Plains;
-                break;
-            case 10: // 50~54
-                background = Background.RedRock;
-                break;
-            case 11: // 55~59
-                background = Background.Ruins;
-                break;
-            case 12: // 60~64
-                background = Background.Swamp;
-                break;
-            case 13: // 65~69
-                background = Background.VineForest;
-                break;
-            default: // 70 이상
-                background = Background.WinterForest; // 기본값 또는 원하는 값
-                break;
+            _dPool.ReturnToPool(x);
         }
+        activeExp.Clear();
+        //Gold
+        foreach (GoldDrop x in activeGold)
+        {
+            _dPool.ReturnToPool(x);
+        }
+        activeGold.Clear();
+    }
+
+    private void ChangeBackground()
+    {
+        Background background = currentStageInfo.background;
         foreach (BackgroundPiece piece in _pieces)
         {
             piece.ChangeBackground(background);

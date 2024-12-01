@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
     public static PlayerContoller controller { get; private set; }//전투하는 플레이어, GameManager.controller를 싱글톤처럼 사용하기 위함
     public static string userId { get; private set; }//구글 인증을 통해 나온 유저의 아이디
     public static string userName { get; private set; }//인게임에서 변경 가능한 플레이어의 이름
-    public static int mainStageNum;//메인 전투 스테이지가 몇인지
+    private int _mainStageNum;//메인 전투 스테이지가 몇인지
     private void Awake()
     {
         if (instance == null)
@@ -52,6 +52,7 @@ public class GameManager : MonoBehaviour
     {
         BattleBroker.OnGoldGain += GetGoldByDrop;
         BattleBroker.OnExpGain += GetExpByDrop;
+        BattleBroker.OnMainStageChange += ChangeMainStage;
     }
 
     //ProcessAuthentication 과정은 비동기적으로 실행된다.
@@ -147,12 +148,12 @@ public class GameManager : MonoBehaviour
     private void GetGoldByDrop()
     {
         //mainStageNum
-        gameData.gold += 10 * (mainStageNum + 1);
+        gameData.gold += 10 * (_mainStageNum + 1);
     }
     private void GetExpByDrop()
     {
         //mainStageNum
-        gameData.exp += 10 * (mainStageNum + 1);
+        gameData.exp += 10 * (_mainStageNum + 1);
         if (gameData.exp >= GetNeedExp())
         {
             gameData.exp = 0;
@@ -172,6 +173,7 @@ public class GameManager : MonoBehaviour
     //MainStageNum을 변경하고 거기에 맞는 적들과 배경을 세팅한다.
     private void ChangeMainStage(int stageNum)
     {
-        mainStageNum = stageNum;
+        _mainStageNum = stageNum;
+        gameData.currentStageNum = stageNum;
     }
 }

@@ -23,11 +23,14 @@ public class StatUI : MonoBehaviour
         StatusType.CriticalDamage
     };
     private Dictionary<StatusType, VisualElement> _statElements = new();
-   
+    public VisualElement root { get; private set; }
+    private void Awake()
+    {
+        root = GetComponent<UIDocument>().rootVisualElement;
+    }
     private void Start()
     {
         _gameManager = GameManager.instance;
-        var root = GetComponent<UIDocument>().rootVisualElement;
         _scrollView = root.Q<VisualElement>("StatScrollView");
         _content = _scrollView.Q<VisualElement>("unity-content-container");
         _scrollView.RegisterCallback<PointerDownEvent>(OnScrollDown);

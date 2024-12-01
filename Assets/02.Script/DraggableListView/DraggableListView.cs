@@ -1,138 +1,128 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class ListViewBase : MonoBehaviour
+public class DraggableListView : MonoBehaviour
 {
-    //상속 공통
-    private ListView listView;
-    private ScrollView scrollView; // ScrollView를 저장할 변수
-    private bool isDragging = false; // 드래그 상태 확인
-    private Vector2 previousScrollOffset; // 이전 스크롤 위치 저장
-    private readonly List<int> items = new();
-    [SerializeField] LVItemController controller;
+    private ListView _listView;
+    private VisualElement _root;
+    private ScrollView _scrollView;
+    private bool _isDragging = false;
+    private Vector2 _previousScrollOffset;
+    public List<IListViewItem> items { get; private set; }
+    [SerializeField] LVItemController _controller;
+    [SerializeField] private float _scrollSpeed = 1f;
+    private void Awake()
+    {
+        _root = GetComponent<UIDocument>().rootVisualElement;
+        _controller.draggableLV = this;
+
+        SetListView();
+        SetDragEvents();
+    }
     void Start()
     {
-        // UI Document의 rootVisualElement 가져오기
-        var root = GetComponent<UIDocument>().rootVisualElement;
+        
+    }
 
-        // ListView 가져오기 (UI Builder에서 생성한 경우)
-        listView = root.Q<ListView>("ListView");
+    private void SetListView()
+    {
+        _listView = _root.Q<ListView>("ListView");
+        _listView.makeItem = MakeItem;
+        _listView.bindItem = BindItem;
+        _listView.selectionType = SelectionType.Single;
+        _listView.Rebuild();
 
-        for (int i = 0; i < controller.count; i++)
-        {
-            items.Add(i);
-        }
-        // ListView 초기화
-        listView.itemsSource = items; // 데이터 소스
-        listView.makeItem = MakeItem; // 새 UI 아이템 생성
-        listView.bindItem = BindItem; // UI와 데이터 바인딩
-        listView.fixedItemHeight = controller.itemHeight; // 각 아이템의 높이 설정
-        listView.selectionType = SelectionType.Single; // 선택 유형 설정
-
-        listView.Rebuild();
-        // ScrollView 가져오기
-        scrollView = listView.Q<ScrollView>();
-        if (scrollView == null)
+        _scrollView = _listView.Q<ScrollView>();
+        if (_scrollView == null)
         {
             Debug.LogError("ScrollView could not be found!");
             return;
         }
-        scrollView.verticalScrollerVisibility = ScrollerVisibility.Hidden;
-        SetDragEvents();
+
+        _scrollView.verticalScrollerVisibility = ScrollerVisibility.Hidden;
     }
 
     void Update()
     {
-        // 터치 입력 처리
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
 
             if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
             {
-                isDragging = false; // 터치가 끝난 경우 상태 해제
-                Debug.Log("Pointer up detected (Touch API)!");
+                _isDragging = false;
             }
         }
 
-        // 마우스 입력 처리 (에디터 또는 PC 환경)
         if (Input.GetMouseButtonUp(0))
         {
-            isDragging = false; // 눌림 상태 해제
-            Debug.Log("Pointer up detected (Mouse)!");
+            _isDragging = false;
         }
     }
 
     private void SetDragEvents()
     {
-        // 마우스 또는 터치 눌림 상태 확인
-        scrollView.RegisterCallback<PointerDownEvent>(evt =>
+        _scrollView.RegisterCallback<PointerDownEvent>(evt =>
         {
             if (evt.isPrimary)
             {
-                isDragging = true; // 드래그 시작
-                previousScrollOffset = scrollView.scrollOffset; // 시작 위치 저장
-                evt.StopPropagation(); // 이벤트 전파 중단
+                _isDragging = true;
+                _previousScrollOffset = _scrollView.scrollOffset;
+                evt.StopPropagation();
             }
         });
 
-        // 드래그 종료
-        scrollView.RegisterCallback<PointerUpEvent>(evt =>
+        _scrollView.RegisterCallback<PointerUpEvent>(evt =>
         {
             if (evt.isPrimary)
             {
-                isDragging = false; // 드래그 종료
-                evt.StopPropagation(); // 이벤트 전파 중단
+                _isDragging = false;
+                evt.StopPropagation();
             }
         });
 
-        // 드래그 이동
-        scrollView.RegisterCallback<PointerMoveEvent>(evt =>
+        _scrollView.RegisterCallback<PointerMoveEvent>(evt =>
         {
-            if (isDragging)
+            if (_isDragging)
             {
-                Vector2 newScrollOffset = previousScrollOffset + new Vector2(0, -evt.deltaPosition.y * 0.5f);
-
-                // 스크롤 위치 제한
+                Vector2 newScrollOffset = _previousScrollOffset + new Vector2(0, -evt.deltaPosition.y * _scrollSpeed);
                 newScrollOffset.y = Mathf.Clamp(
                     newScrollOffset.y,
                     0,
-                    scrollView.contentContainer.resolvedStyle.height - scrollView.resolvedStyle.height
+                    _scrollView.contentContainer.resolvedStyle.height - _scrollView.resolvedStyle.height
                 );
 
-                // 새로운 스크롤 위치 적용
-                scrollView.scrollOffset = newScrollOffset;
-                previousScrollOffset = newScrollOffset;
+                _scrollView.scrollOffset = newScrollOffset;
+                _previousScrollOffset = newScrollOffset;
 
-                evt.StopPropagation(); // 이벤트 전파 중단
+                evt.StopPropagation();
             }
         });
     }
 
-    // 새 UI 아이템 생성
     private VisualElement MakeItem()
     {
-        return controller.GetTemplate();
+        return _controller.GetTemplate();
     }
 
-    // 데이터와 UI 바인딩
     private void BindItem(VisualElement element, int index)
     {
-        controller.BindItem(element, index);
+        _controller.BindItem(element, index);
+        element.RegisterCallback<FocusEvent>(evt => evt.StopPropagation());
     }
-    public void AddItem(int newItem)
-    {
-        items.Add(newItem);
-        listView.Rebuild();
-    }
-    void UpdateItems(List<int> newItems)
-    {
-        // 기존 데이터를 새 데이터로 교체
-        items.Clear();
-        items.AddRange(newItems);
 
-        // ListView를 새로고침
-        listView.Rebuild();
+    //public void AddItem(int index)
+    //{
+    //    items.Add(controller.GetLVItem(index));
+    //    listView.Rebuild();
+    //}
+
+    public void ChangeItems(List<IListViewItem> newItems)
+    {
+        _listView.itemsSource =items = newItems;
+        _listView.Rebuild();
     }
+
 }
