@@ -60,7 +60,8 @@ public class EnemyPool : MonoBehaviour
         while (pool.Count > 0)
         {
             EnemyController enemy = pool.Dequeue();
-            Destroy(enemy);
+            MediatorManager<IMoveByPlayer>.UnregisterMediator(enemy);
+            Destroy(enemy.gameObject);
         }
         pool = null;
     }

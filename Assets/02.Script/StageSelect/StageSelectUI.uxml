@@ -1,0 +1,14 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:Template name="DraggableListView" src="project://database/Assets/02.Script/DraggableListView/DraggableListView.uxml?fileID=9197481963319205126&amp;guid=16efd8942fa594c479915add42228bc9&amp;type=3#DraggableListView" />
+    <engine:VisualElement name="StageSelectUI" style="flex-grow: 0; background-color: rgb(255, 245, 155); height: 1600px; width: 1010px; bottom: -438px; align-items: center; padding-top: 36px; align-self: center;">
+        <engine:Label text="지역 선택" style="font-size: 83px;" />
+        <engine:VisualElement name="Line" style="flex-grow: 0; width: 80%; height: 7px; background-color: rgb(0, 0, 0); top: 13px;" />
+        <engine:VisualElement name="StageStatus" style="flex-grow: 0; flex-direction: row; align-items: center; height: 355px; margin-top: 0; padding-top: 222px;">
+            <engine:Button name="LeftButton" style="left: 530px; width: 70px; height: 70px; top: -130px; background-image: url(&quot;project://database/Assets/UI%20Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-3753015318093942961&amp;guid=c452b210c4d264840bb45134163f30ea&amp;type=3#arrow-left&quot;);" />
+            <engine:VisualElement name="BackgroundImage" style="flex-grow: 0; top: -127px; background-image: url(&quot;project://database/Assets/Asset/2DScrollingBattleBG/Background/Plains/BG_Plains.png?fileID=2800000&amp;guid=b490d7150caa33746a014fcb3604eafd&amp;type=3#BG_Plains&quot;); flex-shrink: 0; height: 677px; width: 1840px; scale: 0.4 0.4;" />
+            <engine:Button name="RightButton" style="width: 70px; height: 70px; background-image: url(&quot;project://database/Assets/UI%20Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-4521532143779581420&amp;guid=c452b210c4d264840bb45134163f30ea&amp;type=3#arrow-right&quot;); right: 530px; top: -130px;" />
+        </engine:VisualElement>
+        <engine:Instance template="DraggableListView" style="top: 0; height: 843px;" />
+        <engine:Button text="X" name="ExitButton" style="bottom: -297px; width: 120px; height: 120px; background-color: rgb(255, 64, 64); font-size: 60px;" />
+    </engine:VisualElement>
+</engine:UXML>

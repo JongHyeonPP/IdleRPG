@@ -1,10 +1,5 @@
-using EnumCollection;
-using Newtonsoft.Json;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using Background = EnumCollection.Background;
 using Random = UnityEngine.Random;
 
 //단순 계산인데 자주 쓰는 기능들 모아놓기

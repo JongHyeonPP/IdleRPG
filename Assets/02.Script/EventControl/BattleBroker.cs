@@ -21,4 +21,6 @@ public static class BattleBroker
     public static Action<StatusType, int> OnStatusChange;
     //무기장착
     public static Action<object> OnEquipWeapon;
+    //스테이지 변경
+    public static Action<int> OnMainStageChange;
 }
