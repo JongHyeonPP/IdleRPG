@@ -22,4 +22,20 @@ namespace EnumCollection
     {
         Gold, Exp
     }
+    public enum WeaponRarity
+    {
+        Common,
+        Uncommon,
+        Rare,
+        Unique,
+        Legendary,
+        Mythic
+    }
+    public enum WeaponType
+    {
+        Sword,
+        Bow,
+        Staff
+    }
+
 }

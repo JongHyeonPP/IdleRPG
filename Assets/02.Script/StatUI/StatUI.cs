@@ -42,7 +42,7 @@ public class StatUI : MonoBehaviour
             InitializeStatUI(root, stat);
         }
     }
-
+    #region Scrollview
     private void OnScrollDown(PointerDownEvent evt)
     {
         _isDragging = true;
@@ -111,13 +111,13 @@ public class StatUI : MonoBehaviour
         _isDragging = false;
         evt.StopPropagation();
     }
-
+    #endregion
 
     private void InitializeStatUI(VisualElement root, StatusType stat)
     {
         var button = root.Q<Button>($"{stat}Button");
         var levelLabel = root.Q<Label>($"{stat}Level");
-        var riseLabel = root.Q<Label>($"{stat}rise");
+        var riseLabel = root.Q<Label>($"{stat}Rise");
     
         _statElements[stat] = levelLabel;
 
@@ -127,17 +127,27 @@ public class StatUI : MonoBehaviour
         {
             _gameManager.gameData.statLevel_Gold[stat] = 1; 
         }
-
-        levelLabel.text = $"Level: {_gameManager.gameData.statLevel_Gold[stat]}";
+        int currentLevel = _gameManager.gameData.statLevel_Gold[stat];
+        UpdateStatText(stat, currentLevel);
     }
     
 
     private void OnPointerDown(StatusType stat)
     {
+        int currentLevel = _gameManager.gameData.statLevel_Gold[stat]; 
+        int requiredGold = FomulaManager.GetGoldRequired(currentLevel); 
+
+        if (_gameManager.gameData.gold < requiredGold) 
+        {
+           Debug.Log("골드가 없습니다.");
+           return; 
+        }
+        _gameManager.gameData.gold -= requiredGold;
         if (_incrementCoroutine == null)
         {
             _incrementCoroutine = StartCoroutine(IncreaseLevelContinuously(stat));
         }
+       
     }
 
     private void OnPointerUp()
@@ -146,7 +156,7 @@ public class StatUI : MonoBehaviour
         {
             StopCoroutine(_incrementCoroutine);
             _incrementCoroutine = null;
-             DataManager.SaveToPlayerPrefs("GameData",_gameManager.gameData);
+            DataManager.SaveToPlayerPrefs("GameData", _gameManager.gameData);
         }
     }
 
@@ -164,16 +174,19 @@ public class StatUI : MonoBehaviour
     {
         _gameManager.gameData.statLevel_Gold[stat]++;
         BattleBroker.OnStatusChange(stat, 1);
-        UpdateStatLevelLabel(stat);
+        UpdateStatText(stat, _gameManager.gameData.statLevel_Gold[stat]);
     }
 
-    private void UpdateStatLevelLabel(StatusType stat)
+    private void UpdateStatText(StatusType stat, int level)
     {
         var levelLabel = (Label)_statElements[stat];
-        levelLabel.text = $"Level: {_gameManager.gameData.statLevel_Gold[stat]}";
-    }
-    private void UpdateStatRiseLabel(StatusType stat)
-    {
-        
+        var riseLabel = _scrollView.Q<Label>($"{stat}Rise");
+        var button = _scrollView.Q<Button>($"{stat}Button");
+
+        levelLabel.text = $"Level: {level}";
+
+        riseLabel.text = FomulaManager.GetStatRiseText(level, stat);
+
+        button.text = $"{FomulaManager.GetGoldRequired(level)}";
     }
 }

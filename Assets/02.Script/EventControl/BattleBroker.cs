@@ -19,4 +19,6 @@ public static class BattleBroker
     public static Action OnLevelUp;
     //능력치 적용
     public static Action<StatusType, int> OnStatusChange;
+    //무기장착
+    public static Action<object> OnEquipWeapon;
 }

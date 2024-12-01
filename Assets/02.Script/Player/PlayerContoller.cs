@@ -50,7 +50,7 @@ public class PlayerContoller : Attackable
 
     public void ChangeWeapon()//0 : Melee, 1 : Bow, 2 : Magic
     {
-
+       
     }
 
     //애니메이터의 움직임 변화

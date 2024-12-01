@@ -1,15 +1,15 @@
 using UnityEngine;
-
+using EnumCollection;
+using UnityEngine.VFX;
 public class Weapon : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-    }
+    private WeaponData _weaponData;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
+    //»ö±òÀÌÆåÆ® ºÎ¿©
+
+    
+
+
+
 }
