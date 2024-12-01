@@ -1,17 +1,15 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <engine:VisualElement style="flex-grow: 1;">
-        <engine:ScrollView name="WeaponScrollView" style="position: absolute; top: 1252px; left: -4px; width: 1134px; height: 570px; translate: -14px 293px; scale: 1 2; background-color: rgb(70, 30, 3);" />
-        <engine:VisualElement name="MixElement" style="flex-grow: 1; position: absolute; width: 100%; height: 90px; bottom: 246px; background-color: rgb(137, 106, 91);">
-            <engine:Button text="Mix" name="MixButton" style="border-left-color: rgb(238, 236, 235); border-right-color: rgb(238, 236, 235); border-top-color: rgb(238, 236, 235); border-bottom-color: rgb(238, 236, 235); scale: 1 1; translate: 0 5px; background-size: 100% 100%; font-size: 60px; top: -4px; width: 300px; left: 405px;" />
-        </engine:VisualElement>
-        <engine:VisualElement name="WeaponInfo" style="flex-grow: 1; scale: 0.7 0.9; background-color: rgb(125, 68, 49); display: none;">
-            <engine:VisualElement name="WeaponImg" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); width: 300px; height: 100px; left: 370px; scale: 1 0.3; top: -240px;" />
-            <engine:Label text="Label" name="Rarity" style="top: -483px; width: 809px; height: 100px; left: 123px; font-size: 80px; -unity-text-align: upper-center; display: flex;" />
-            <engine:Label text="Label" name="Power" style="width: 809px; height: 200px; font-size: 80px; top: -350px;" />
-            <engine:Label text="Label" name="CriticalDamage" style="width: 809px; height: 200px; font-size: 80px; top: -330px;" />
-            <engine:Label text="Label" name="Critical" style="width: 809px; height: 200px; font-size: 80px; top: -310px;" />
-            <engine:Button text="장착" name="EquipButton" style="bottom: 188px; width: 300px; height: 100px; top: -240px; left: 174px; font-size: 70px; background-color: rgb(243, 243, 243);" />
-            <engine:Button text="강화" name="ReinforceButton" style="bottom: 188px; width: 300px; height: 100px; top: -341px; left: 615px; font-size: 70px; background-color: rgb(226, 22, 22);" />
-        </engine:VisualElement>
+    <engine:ScrollView name="WeaponScrollView" style="position: absolute; top: 1252px; left: -4px; width: 1134px; height: 570px; translate: -14px 293px; scale: 1 2; background-color: rgb(70, 30, 3);" />
+    <engine:VisualElement name="MixElement" style="flex-grow: 1; position: absolute; width: 100%; height: 90px; bottom: 246px; background-color: rgb(137, 106, 91);">
+        <engine:Button text="Mix" name="MixButton" style="border-left-color: rgb(238, 236, 235); border-right-color: rgb(238, 236, 235); border-top-color: rgb(238, 236, 235); border-bottom-color: rgb(238, 236, 235); scale: 1 1; translate: 0 5px; background-size: 100% 100%; font-size: 60px; top: -4px; width: 300px; left: 405px;" />
+    </engine:VisualElement>
+    <engine:VisualElement name="WeaponInfo" style="flex-grow: 1; scale: 0.7 0.9; background-color: rgb(125, 68, 49); display: none;">
+        <engine:VisualElement name="WeaponImg" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); width: 300px; height: 100px; left: 370px; scale: 1 0.3; top: -240px;" />
+        <engine:Label text="Label" name="Rarity" style="top: -483px; width: 809px; height: 100px; left: 123px; font-size: 80px; -unity-text-align: upper-center; display: flex;" />
+        <engine:Label text="Label" name="Power" style="width: 809px; height: 200px; font-size: 80px; top: -350px;" />
+        <engine:Label text="Label" name="CriticalDamage" style="width: 809px; height: 200px; font-size: 80px; top: -330px;" />
+        <engine:Label text="Label" name="Critical" style="width: 809px; height: 200px; font-size: 80px; top: -310px;" />
+        <engine:Button text="장착" name="EquipButton" style="bottom: 188px; width: 300px; height: 100px; top: -240px; left: 174px; font-size: 70px; background-color: rgb(243, 243, 243);" />
+        <engine:Button text="강화" name="ReinforceButton" style="bottom: 188px; width: 300px; height: 100px; top: -341px; left: 615px; font-size: 70px; background-color: rgb(226, 22, 22);" />
     </engine:VisualElement>
 </engine:UXML>
