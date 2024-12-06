@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] StatUI _statUI;
     [SerializeField] StageSelectUI _stageSelectUI;
     [SerializeField] StageSelectBackground _stageSelectBackground;
+    
     void Start()
     {
         _stageSelectUI.gameObject.SetActive(true);
@@ -17,5 +18,6 @@ public class UIManager : MonoBehaviour
         _statUI.root.style.display = DisplayStyle.Flex;
         _stageSelectUI.root.style.display = DisplayStyle.None;
         _stageSelectBackground.root.style.display = DisplayStyle.None;
+        
     }
 }

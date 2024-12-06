@@ -35,6 +35,7 @@ namespace EnumCollection
     {
         Sword,
         Bow,
-        Staff
+        Staff,
+        Shield
     }
 }

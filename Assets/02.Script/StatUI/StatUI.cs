@@ -24,15 +24,18 @@ public class StatUI : MonoBehaviour
     };
     private Dictionary<StatusType, VisualElement> _statElements = new();
     public VisualElement root { get; private set; }
+
     private void Awake()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
+        _scrollView = root.Q<VisualElement>("StatScrollView");
+        _content = _scrollView.Q<VisualElement>("unity-content-container");
     }
+
     private void Start()
     {
         _gameManager = GameManager.instance;
-        _scrollView = root.Q<VisualElement>("StatScrollView");
-        _content = _scrollView.Q<VisualElement>("unity-content-container");
+     
         _scrollView.RegisterCallback<PointerDownEvent>(OnScrollDown);
         _scrollView.RegisterCallback<PointerMoveEvent>(OnScrollMove);
         _scrollView.RegisterCallback<PointerUpEvent>(OnScrollUp);
@@ -44,6 +47,16 @@ public class StatUI : MonoBehaviour
         {
             InitializeStatUI(root, stat);
         }
+    }
+    public void HideStatUI()
+    {
+        _scrollView.style.display = DisplayStyle.None;
+      
+    }
+    public void ShowStatUI()
+    {
+        _scrollView.style.display = DisplayStyle.Flex;
+       
     }
     #region Scrollview
     private void OnScrollDown(PointerDownEvent evt)
@@ -62,17 +75,17 @@ public class StatUI : MonoBehaviour
 
         float newY = currentY + delta.y;
 
-        float minY = -1250;    
-        float maxY = 50;
+        float minY = -1150;    
+        float maxY = -50;
         if (newY > maxY) 
         {
             newY = maxY;
-            StartCoroutine(SmoothMoveToOriginalY(-50)); 
+            StartCoroutine(SmoothMoveToOriginalY(maxY)); 
         }
         else if(newY<minY)
         {
             newY = minY;
-            StartCoroutine(SmoothMoveToOriginalY(-1150));
+            StartCoroutine(SmoothMoveToOriginalY(minY));
         }
 
         _content.transform.position = new Vector3(

@@ -1,13 +1,9 @@
 {
-    "name": "Ui",
+    "name": "MainUI",
     "rootNamespace": "",
     "references": [
-        "EventControl",
-        "Game",
-        "PlayerStatusBar",
-        "StatUI",
-        "StageSelect",
-        "Item"
+        "Item",
+        "StatUI"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

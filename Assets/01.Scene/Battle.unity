@@ -946,6 +946,7 @@ MonoBehaviour:
   _statUI: {fileID: 1028201835222079776}
   _stageSelectUI: {fileID: 2547666926395390982}
   _stageSelectBackground: {fileID: 207283625}
+  _weaponUI: {fileID: 1674538202}
 --- !u!114 &1626239345 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3498917213053944046, guid: 3f7e43f0ac842e642bb8bb4931b203f6, type: 3}
