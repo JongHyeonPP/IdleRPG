@@ -9,7 +9,7 @@ public class EnemyPool : MonoBehaviour
     private EnemyStatus _enemyStatus;//현재 사용하고 있는 적의 정보
     private int _poolSize;//풀의 크기
     //받은 EnemyStatus를 기반으로 Pool을 할당하고 사용할 
-    public void InitializePool(EnemyStatus enemyStatus, int poolSize = 10)
+    public void InitializePool(EnemyStatus enemyStatus, int poolSize)
     {
         pool = new();
         _enemyStatus = enemyStatus;
@@ -32,17 +32,19 @@ public class EnemyPool : MonoBehaviour
     //풀에서 오브젝트 하나 반환한다.
     public EnemyController GetFromPool()
     {
+        EnemyController enemy;
         if (pool.Count > 0)
         {
-            EnemyController enemy = pool.Dequeue();
+            enemy = pool.Dequeue();
             enemy.gameObject.SetActive(true);
             enemy.hp = _enemyStatus.MaxHp;
-            return enemy;
         }
         else
         {
-            return InstantiateEnemy();
+            enemy = InstantiateEnemy();
         }
+        enemy.gameObject.SetActive(true);
+        return enemy;
     }
     //풀에 오브젝트 반환한다.
     public void ReturnToPool(EnemyController enemy)

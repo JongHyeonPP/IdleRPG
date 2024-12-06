@@ -5,7 +5,6 @@ public class GoldDrop : DropBase
 {
     void Awake()
     {
-        MediatorManager<IMoveByPlayer>.RegisterMediator(this);
         dropType = DropType.Gold;
     }
 

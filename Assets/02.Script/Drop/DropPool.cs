@@ -70,23 +70,23 @@ public class DropPool : MonoBehaviour
     public T GetFromPool<T>() where T : DropBase
     {
         Queue<T> pool = GetPool<T>();
-
+        T result;
         if (pool == null)
         {
             Debug.LogError($"{typeof(T).Name}에 대한 풀을 찾을 수 없습니다.");
-            return null;
         }
-
         if (pool.Count > 0)
         {
             T drop = pool.Dequeue();
             drop.gameObject.SetActive(true);
-            return drop;
+            result = drop;
         }
         else
         {
-            return InstantiateDrop<T>(GetParent<T>());
+            result = InstantiateDrop<T>(GetParent<T>());
         }
+        MediatorManager<IMoveByPlayer>.RegisterMediator(result);
+        return result;
     }
 
     // 풀에 오브젝트 반환
@@ -103,6 +103,7 @@ public class DropPool : MonoBehaviour
 
         drop.gameObject.SetActive(false);
         drop.transform.SetParent(GetParent<T>());
+        MediatorManager<IMoveByPlayer>.UnregisterMediator(drop);
         pool.Enqueue(drop);
     }
 

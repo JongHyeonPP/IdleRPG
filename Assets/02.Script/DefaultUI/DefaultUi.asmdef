@@ -6,7 +6,8 @@
         "Game",
         "PlayerStatusBar",
         "StatUI",
-        "StageSelect"
+        "StageSelect",
+        "BossTimer"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -10,7 +10,20 @@ public class GoldLabelUI : MonoBehaviour
         _goldLabel = root.Q<Label>("GoldLabel");
         BattleBroker.OnGoldGain += SetGold;
         SetGold();
+        BattleBroker.OnStageEnter += OnStageEnter;
+        BattleBroker.OnBossEnter += OnBossEnter;
     }
+
+    private void OnBossEnter()
+    {
+        root.style.display = DisplayStyle.None;
+    }
+
+    private void OnStageEnter()
+    {
+        root.style.display = DisplayStyle.Flex;
+    }
+
     private void SetGold()
     {
         _goldLabel.text = GameManager.instance.gameData.gold.ToString();

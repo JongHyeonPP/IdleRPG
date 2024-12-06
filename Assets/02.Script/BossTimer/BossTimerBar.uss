@@ -1,0 +1,6 @@
+.unity-progress-bar__container {
+    min-height: 50px;
+    max-height: 50px;
+    min-width: 101.5%;
+    max-width: 101.5%;
+}

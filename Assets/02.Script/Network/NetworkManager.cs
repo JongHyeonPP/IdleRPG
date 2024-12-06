@@ -27,7 +27,7 @@ public class NetworkManager : MonoBehaviour
     //구글 인증이 됐다면 콜백되어 userId를 기반으로 Firebase에 연동한다.
     private void OnAutenticationComplete()
     {
-        _userId = GameManager.userId;
+        _userId = GameManager.instance.userId;
         ListenForDeviceChange();
         UpdateLoginStatus();
         _networkCheckCoroutine ??= StartCoroutine(CheckNetworkStatusCoroutine());

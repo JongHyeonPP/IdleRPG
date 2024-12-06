@@ -18,10 +18,9 @@ public class GameManager : MonoBehaviour
     public int dia;//유료 재화 - 뽑기
     public int emerald;//유료 재화 - 강화
     private float _saveInterval = 10f;//로컬 데이터에 자동 저장하는 간격(초)
-    public static PlayerContoller controller { get; private set; }//전투하는 플레이어, GameManager.controller를 싱글톤처럼 사용하기 위함
-    public static string userId { get; private set; }//구글 인증을 통해 나온 유저의 아이디
-    public static string userName { get; private set; }//인게임에서 변경 가능한 플레이어의 이름
-    private int _mainStageNum;//메인 전투 스테이지가 몇인지
+    public static PlayerController controller { get; private set; }//전투하는 플레이어, GameManager.controller를 싱글톤처럼 사용하기 위함
+    public string userId { get; private set; }//구글 인증을 통해 나온 유저의 아이디
+    public string userName { get; private set; }//인게임에서 변경 가능한 플레이어의 이름
     private void Awake()
     {
         if (instance == null)
@@ -52,7 +51,7 @@ public class GameManager : MonoBehaviour
     {
         BattleBroker.OnGoldGain += GetGoldByDrop;
         BattleBroker.OnExpGain += GetExpByDrop;
-        BattleBroker.OnMainStageChange += ChangeMainStage;
+        BattleBroker.OnStageChange += OnStageChange;
     }
 
     //ProcessAuthentication 과정은 비동기적으로 실행된다.
@@ -60,7 +59,7 @@ public class GameManager : MonoBehaviour
     //Controller를 찾고 전투에 필요한 정보들을 세팅한다.
     private void InitPlayer()
     {
-        controller = GameObject.FindWithTag("Player").GetComponent<PlayerContoller>();
+        controller = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
         controller.InitDefaultStatus();
         controller.SetStatus(gameData.statLevel_Gold);
         controller.SetStatus(gameData.statLevel_StatPoint);
@@ -89,9 +88,15 @@ public class GameManager : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(_saveInterval);
-            DataManager.SaveToPlayerPrefs("GameData", gameData);
+            SaveLocalData();
         }
     }
+
+    public void SaveLocalData()
+    {
+        DataManager.SaveToPlayerPrefs("GameData", gameData);
+    }
+
     //클라우드에 현재 진행 중인 게임의 정보를 모두 저장하는 메서드. 저장하는 데이터들을 기반으로 진행 상황을 온전히 복원할 수 있어야 한다.
     public async void SaveGameDataToCloud()
     {
@@ -148,12 +153,12 @@ public class GameManager : MonoBehaviour
     private void GetGoldByDrop()
     {
         //mainStageNum
-        gameData.gold += 10 * (_mainStageNum + 1);
+        gameData.gold += 10 * (gameData.currentStageNum + 1);
     }
     private void GetExpByDrop()
     {
         //mainStageNum
-        gameData.exp += 10 * (_mainStageNum + 1);
+        gameData.exp += 10 * (gameData.currentStageNum + 1);
         if (gameData.exp >= GetNeedExp())
         {
             gameData.exp = 0;
@@ -171,9 +176,15 @@ public class GameManager : MonoBehaviour
         return gameData.level * 100f;
     }
     //MainStageNum을 변경하고 거기에 맞는 적들과 배경을 세팅한다.
-    private void ChangeMainStage(int stageNum)
+    private void OnStageChange(int stageNum)
     {
-        _mainStageNum = stageNum;
         gameData.currentStageNum = stageNum;
+        SaveLocalData();
+    }
+    public void GoToNextStage()
+    {
+        gameData.currentStageNum++;
+        gameData.maxStageNum = Mathf.Max(gameData.currentStageNum, gameData.maxStageNum);
+        SaveLocalData();
     }
 }

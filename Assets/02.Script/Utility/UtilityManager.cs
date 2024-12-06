@@ -1,5 +1,4 @@
 using UnityEngine;
-using Background = EnumCollection.Background;
 using Random = UnityEngine.Random;
 
 //단순 계산인데 자주 쓰는 기능들 모아놓기

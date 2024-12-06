@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class BackgroundPiece : MonoBehaviour, IMoveByPlayer
 {
-    public Transform Transform => transform;
-
     // 배경 오브젝트들
     [SerializeField] private GameObject plainObject;
     [SerializeField] private GameObject beachObject;
@@ -29,7 +27,7 @@ public class BackgroundPiece : MonoBehaviour, IMoveByPlayer
     // 현재 활성화된 배경 오브젝트
     private GameObject currentBackground;
 
-    private void Start()
+    private void Awake()
     {
         // Mediator 등록
         MediatorManager<IMoveByPlayer>.RegisterMediator(this);
@@ -89,5 +87,10 @@ public class BackgroundPiece : MonoBehaviour, IMoveByPlayer
         {
             Debug.LogWarning($"Background '{newBackground}' does not have a valid GameObject.");
         }
+    }
+
+    public void MoveByCharacter(Vector3 translation)
+    {
+        transform.Translate(translation);
     }
 }

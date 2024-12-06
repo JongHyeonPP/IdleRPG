@@ -21,11 +21,6 @@ public class DraggableListView : MonoBehaviour
         SetListView();
         SetDragEvents();
     }
-    void Start()
-    {
-        
-    }
-
     private void SetListView()
     {
         _listView = _root.Q<ListView>("ListView");
@@ -125,4 +120,8 @@ public class DraggableListView : MonoBehaviour
         _listView.Rebuild();
     }
 
+    public void RebuildLV()
+    {
+        _listView.Rebuild();
+    }
 }

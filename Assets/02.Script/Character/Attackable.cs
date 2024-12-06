@@ -1,7 +1,7 @@
 using EnumCollection;
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using UnityEngine;
 
 public abstract class Attackable : MonoBehaviour
@@ -9,16 +9,17 @@ public abstract class Attackable : MonoBehaviour
     public Attackable target;
     protected float attackTerm = 1f;
     public Animator anim;
-    public int hp;
+    public BigInteger hp;
     //private Dictionary<> tempEffect = new();
-    private Coroutine attackCoroutine;
-    protected void SkillBehaviour(int skillValue, SkillType type, SkillRange range, int targetNum = 1, float preDelay = 0.5f, float postDelay=0.5f)
+    protected Coroutine attackCoroutine;
+    public bool isDead;
+    protected void SkillBehaviour(int skillValue, SkillType type, SkillRange range, int targetNum = 1, float preDelay = 0.1f, float postDelay=0.2f)
     {
         StartCoroutine(AnimBehaviour(skillValue, type, range, targetNum, preDelay, postDelay));
     }
     private IEnumerator AnimBehaviour(int skillValue, SkillType type, SkillRange range, int targetNum, float preDelay, float postDelay)
     {
-        yield return new WaitForSeconds(preDelay);
+        
         switch (type)
         {
             default:
@@ -26,7 +27,7 @@ public abstract class Attackable : MonoBehaviour
                 break;
         }
         List<Attackable> targets = GetTargets(range, targetNum);
-        ActiveSkillToTarget(targets, skillValue, type);
+        StartCoroutine( ActiveSkillToTarget(targets, skillValue, type,preDelay));
         VisualEffectToTarget(targets);
         yield return new WaitForSeconds(postDelay);
     }
@@ -34,10 +35,16 @@ public abstract class Attackable : MonoBehaviour
     {
         attackCoroutine = StartCoroutine(AttackRoop());
     }
-    private void ActiveSkillToTarget(List<Attackable> targets, int skillValue, SkillType skillType)
+    public void StopAttack()
     {
+        target = null;
+        StopAllCoroutines();
+    }
+    private IEnumerator ActiveSkillToTarget(List<Attackable> targets, int skillValue, SkillType skillType, float preDelay)
+    {
+        yield return new WaitForSeconds(preDelay);
         ICharacterStatus myStatus = GetStatus();
-        int calcedValue = skillValue;
+        BigInteger calcedValue = skillValue;
         calcedValue *= myStatus.Power;
         Debug.Log("Attack Log");
         foreach (var target in targets)
@@ -57,12 +64,15 @@ public abstract class Attackable : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         target = null;
     }
-    private void ReceiveSkill(int calcedValue, SkillType skillType)
+    private void ReceiveSkill(BigInteger calcedValue, SkillType skillType)
     {
         switch (skillType)
         {
             case SkillType.Damage:
-                hp = Mathf.Max(hp-calcedValue, 0);
+                hp = hp - calcedValue;
+                if (hp < 0)
+                    hp = 0;
+                Debug.Log("HP = " + hp);
                 break;
             case SkillType.Heal:
                 break;
@@ -94,13 +104,16 @@ public abstract class Attackable : MonoBehaviour
         while (true)
         {
             bool isActiveSkill = false;
-            foreach (Skill skill in _status.Skills)
+            if (_status.Skills != null)
             {
-                if (skill.IsSkillAble())
+                foreach (Skill skill in _status.Skills)
                 {
-                    SkillData data = skill.data;
-                    ActiveSkill(data.name, data.value[0], data.range, data.range);
-                    isActiveSkill = true;
+                    if (skill.IsSkillAble())
+                    {
+                        SkillData data = skill.data;
+                        ActiveSkill(data.name, data.value[0], data.range, data.range);
+                        isActiveSkill = true;
+                    }
                 }
             }
             if (!isActiveSkill)

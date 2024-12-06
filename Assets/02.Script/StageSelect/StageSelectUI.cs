@@ -2,9 +2,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using Background = EnumCollection.Background;
 using System;
-using NUnit;
 using System.Collections.Generic;
-using System.Linq;
 
 public class StageSelectUI : MonoBehaviour
 {
@@ -30,16 +28,12 @@ public class StageSelectUI : MonoBehaviour
         rightButton.RegisterCallback<ClickEvent>(OnRightButtonClick);
         root.style.display = DisplayStyle.None;
 
-        // Ensure backgroundSprites length matches backgrounds length
-        if (backgroundSprites.Length != backgrounds.Length)
-        {
-            Debug.LogError("The number of backgroundSprites does not match the number of Background enums.");
-        }
+        BattleBroker.OnStageChange += OnStageChange;
         
     }
     private void Start()
     {
-        ChangePage(0);
+        ChangePage(GameManager.instance.gameData.currentStageNum / 20);
     }
 
     private void OnExitButtonClick(ClickEvent evt)
@@ -49,6 +43,7 @@ public class StageSelectUI : MonoBehaviour
     public void ToggleUi(bool isOn)
     {
         root.style.display = background.root.style.display = isOn ? DisplayStyle.Flex : DisplayStyle.None;
+        _draggableLV.RebuildLV();
     }
     private void OnLeftButtonClick(ClickEvent evt)
     {
@@ -76,5 +71,10 @@ public class StageSelectUI : MonoBehaviour
         List<IListViewItem> items = StageManager.instance.GetStageInfosAsItem(start, 20);
 
         _draggableLV.ChangeItems(items);
+    }
+    private void OnStageChange(int stage)
+    {
+        ChangePage(stage / 20);
+        ToggleUi(false);
     }
 }
