@@ -7,7 +7,6 @@ using UnityEngine;
 using Newtonsoft.Json;
 public class DataManager : MonoBehaviour
 {
-    
     public static DataManager instance;
     
     private void Awake()

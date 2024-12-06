@@ -44,7 +44,7 @@ public class PlayerStatusBarUI : MonoBehaviour
     }
     private void SetName()
     {
-        _nameLabel.text = GameManager.userName;
+        _nameLabel.text = GameManager.instance.userName;
     }
     private void SetEmerald()
     {

@@ -1,9 +1,11 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <engine:VisualElement name="CurrentStageUI" focusable="true" style="flex-grow: 0; flex-direction: row; justify-content: center; background-color: rgba(0, 0, 0, 0.8); width: 600px; align-self: center; height: 131px; top: 204px;">
-        <engine:VisualElement name="Left" picking-mode="Ignore" style="flex-grow: 0.35;" />
-        <engine:VisualElement name="Center" picking-mode="Ignore" style="flex-grow: 1;">
-            <engine:Label text="Stage 61" name="StageNumLabel" picking-mode="Ignore" style="-unity-text-align: upper-center; font-size: 28px; color: rgb(255, 255, 255);" />
-            <engine:Label text="검은 숲 1" name="StageNameLabel" picking-mode="Ignore" style="-unity-text-align: middle-center; font-size: 46px; color: rgb(255, 255, 255); flex-grow: 0;" />
+        <engine:VisualElement name="StageSelectEnter" picking-mode="Ignore" style="flex-grow: 1; flex-direction: row;">
+            <engine:VisualElement name="Left" picking-mode="Ignore" style="flex-grow: 0; position: relative; height: 100%; width: 90px;" />
+            <engine:VisualElement name="VisualElement" style="flex-grow: 1;">
+                <engine:Label text="Stage 61" name="StageNumLabel" picking-mode="Ignore" style="-unity-text-align: upper-center; font-size: 28px; color: rgb(255, 255, 255);" />
+                <engine:Label text="검은 숲 1" name="StageNameLabel" picking-mode="Ignore" style="-unity-text-align: middle-center; font-size: 46px; color: rgb(255, 255, 255); flex-grow: 0;" />
+            </engine:VisualElement>
         </engine:VisualElement>
         <engine:VisualElement name="BossEnter" picking-mode="Ignore" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0.5); flex-shrink: 0;">
             <engine:VisualElement style="flex-grow: 1;" />

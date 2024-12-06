@@ -15,9 +15,8 @@ MonoBehaviour:
   stageNum: 27
   stageName: Unset Stage
   background: 1
-  equipGrade: 0
-  equipType: 0
   dropProb: 0
-  enemy_0: {fileID: 11400000, guid: 6071fbb2f6628724e97e0a3d7a9f9fb0, type: 2}
-  enemy_1: {fileID: 0}
+  enemy_0: {fileID: 11400000, guid: d4d2d6e8c650b074cbc3e50ed331271f, type: 2}
+  enemy_1: {fileID: 11400000, guid: e9c194a4d53a25a42b6cdffad1344bc6, type: 2}
+  boss: {fileID: 11400000, guid: dfc92d145436b16438914a273d015d5a, type: 2}
   enemyNum: 4

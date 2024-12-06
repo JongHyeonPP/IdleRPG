@@ -16,4 +16,5 @@ public class GameData
     public Dictionary<StatusType, int> statLevel_StatPoint = new();
     public string weaponId;
     public int currentStageNum;
+    public int maxStageNum;
 }

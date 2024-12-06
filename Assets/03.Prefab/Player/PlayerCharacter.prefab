@@ -2277,7 +2277,7 @@ SortingGroup:
   m_Enabled: 1
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingOrder: 101
   m_SortAtRoot: 0
 --- !u!95 &1486366457088973459
 Animator:
@@ -2752,6 +2752,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   anim: {fileID: 1486366457088973459}
+  hp: 0
   _status: {fileID: 7233560315477797491}
 --- !u!114 &7233560315477797491
 MonoBehaviour:

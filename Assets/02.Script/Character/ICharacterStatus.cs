@@ -1,15 +1,16 @@
 using System.Collections.Generic;
+using System.Numerics;
 
 public interface ICharacterStatus
 {
-    int MaxHp { get; set; }
-    int Power { get; set; }
-    int HpRecover { get; set; }
-    int Critical { get; set; }
-    int CriticalDamage { get; set; }
-    int Mana { get; set; }
-    int ManaRecover { get; set; }
-    int Accuracy { get; set; }
-    int Evasion { get; set; }
-    List<Skill> Skills { get; set; }
+    BigInteger MaxHp { get; }
+    BigInteger Power { get; }
+    BigInteger HpRecover { get; }
+    float Critical { get; }
+    float CriticalDamage { get; }
+    int Mana { get; }
+    int ManaRecover { get; }
+    float Accuracy { get; }
+    float Evasion { get; }
+    List<Skill> Skills { get; }
 }

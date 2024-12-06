@@ -3,8 +3,8 @@ namespace EnumCollection
     public enum Background
     {
         Plains, Forest, Beach, Ruins, ElfCity,
-        MysteriousForest, WinterForest, VineForest,Swamp, IceField,
-        DesertRuins, Cave, Desert, RedRock, Lava
+        MysteriousForest, VineForest,Swamp, WinterForest, Cave, 
+        DesertRuins, IceField, RedRock, Desert, Lava
     }
     public enum SkillType
     {
@@ -37,5 +37,9 @@ namespace EnumCollection
         Bow,
         Staff,
         Shield
+    }
+    public enum BattleType
+    {
+        Default, Boss, None
     }
 }

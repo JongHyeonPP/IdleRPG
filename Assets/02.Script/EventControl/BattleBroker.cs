@@ -22,5 +22,13 @@ public static class BattleBroker
     //무기장착
     public static Action<object> OnEquipWeapon;
     //스테이지 변경
-    public static Action<int> OnMainStageChange;
+    public static Action<int> OnStageChange;
+    //일반 스테이지 입장
+    public static Action OnStageEnter;
+    //보스 스테이지 입장
+    public static Action OnBossEnter;
+    //플레이어의 콜라이더를 얻는다
+    public static Func<Collider2D> GetPlayerCollider;
+    //플레이어가 죽었을 때
+    public static Action OnPlayerDead;
 }

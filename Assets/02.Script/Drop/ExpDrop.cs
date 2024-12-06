@@ -5,7 +5,6 @@ public class ExpDrop : DropBase
 {
     void Awake()
     {
-        MediatorManager<IMoveByPlayer>.RegisterMediator(this);
         dropType = DropType.Gold;
     }
     private void OnTriggerEnter2D(Collider2D collision)
