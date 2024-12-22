@@ -115,7 +115,7 @@ public class GameManager : MonoBehaviour
             {
                 gold = 0,
                 skillLevel = new Dictionary<string, int>(),
-                weaponNum = new Dictionary<string, int>(),
+                weaponNum = new Dictionary<int, int>(),
                 statLevel_Gold = new Dictionary<StatusType, int>(),
                 statLevel_StatPoint = new Dictionary<StatusType, int>()
 

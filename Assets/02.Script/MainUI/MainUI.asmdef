@@ -3,7 +3,9 @@
     "rootNamespace": "",
     "references": [
         "Item",
-        "StatUI"
+        "StatUI",
+        "DraggableListView",
+        "EventControl"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

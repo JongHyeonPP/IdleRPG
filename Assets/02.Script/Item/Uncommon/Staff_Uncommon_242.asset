@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1f613b878f275b44d8fc49262ca519ac, type: 3}
-  m_Name: Sword_Uncommon_205
+  m_Name: Staff_Uncommon_242
   m_EditorClassIdentifier: 
-  _weaponType: 0
+  _weaponType: 2
   _weaponRarity: 1
   _power: 1
   _criticalDamage: 1
@@ -20,3 +20,4 @@ MonoBehaviour:
   _weaponSprite: {fileID: 21300000, guid: 5d146494dac5544c8bbfd426f29a9110, type: 3}
   _textureSize: {x: 1, y: 1}
   _uID: 205
+  _weaponName: "\uACAC\uC2B5\uC790\uC6A9 \uC2A4\uD0DC\uD504"

@@ -268,7 +268,7 @@ GameObject:
   m_Component:
   - component: {fileID: 504335964}
   - component: {fileID: 504335966}
-  - component: {fileID: 504335965}
+  - component: {fileID: 504335967}
   m_Layer: 0
   m_Name: WeaponBook
   m_TagString: Untagged
@@ -291,19 +291,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1568853945}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &504335965
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 504335963}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 822302d73708b5b409db5c2116aa21c8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  uiDocument: {fileID: 0}
 --- !u!114 &504335966
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -323,6 +310,27 @@ MonoBehaviour:
   m_WorldSpaceSizeMode: 1
   m_WorldSpaceWidth: 1920
   m_WorldSpaceHeight: 1080
+--- !u!114 &504335967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 504335963}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31e8357799da3224db9bacaa3183b151, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _weaponBook:
+  - {fileID: 11400000, guid: 4a58a5fd2e7b61e498dc73080971909d, type: 2}
+  - {fileID: 11400000, guid: 6e2e40f6f647be447b00ae494ee4015c, type: 2}
+  - {fileID: 11400000, guid: 36949b7c8397d9f40a4c20ccf7926d21, type: 2}
+  - {fileID: 11400000, guid: e88aadac448d24141a31955ecd7e64c5, type: 2}
+  - {fileID: 11400000, guid: f9591e6d41c5bae41bb34b9424036cf6, type: 2}
+  - {fileID: 11400000, guid: 26300ca7ce009f94d8cedd726e8597ef, type: 2}
+  - {fileID: 11400000, guid: dd53213713ca66e4fa88628d12cd7f7d, type: 2}
+  - {fileID: 11400000, guid: 04e31877b747b0a45a5d40a5ad9e7da1, type: 2}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -541,9 +549,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d647834eefc6a254bb97172503338d77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _weaponUI: {fileID: 882636926}
-  _statUI: {fileID: 692957477}
-  _weaponBook: {fileID: 504335965}
 --- !u!114 &659835878
 MonoBehaviour:
   m_ObjectHideFlags: 0

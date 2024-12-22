@@ -9,12 +9,11 @@ public class GameData
     public int level;
     public int exp;
     public Dictionary<string, int> skillLevel = new();
-    public Dictionary<string, int> weaponNum = new();
+    public Dictionary<int, int> weaponNum = new();
     [JsonConverter(typeof(StatusTypeDictionaryConverter))]
     public Dictionary<StatusType, int> statLevel_Gold = new();
     [JsonConverter(typeof(StatusTypeDictionaryConverter))]
     public Dictionary<StatusType, int> statLevel_StatPoint = new();
-    public string weaponId;
     public int currentStageNum;
     public int maxStageNum;
 }

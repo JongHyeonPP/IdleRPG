@@ -2,11 +2,12 @@
     <engine:ScrollView name="WeaponScrollView" style="position: absolute; top: 1252px; left: -4px; width: 1134px; height: 570px; translate: -14px 293px; scale: 1 2; background-color: rgb(70, 30, 3);" />
     <engine:VisualElement name="WeaponInfo" style="flex-grow: 1; scale: 0.7 0.9; background-color: rgb(125, 68, 49); display: none;">
         <engine:VisualElement name="WeaponImg" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); width: 300px; height: 100px; left: 370px; scale: 1 0.3; top: -240px;" />
-        <engine:Label text="Label" name="Rarity" style="top: -483px; width: 809px; height: 100px; left: 123px; font-size: 80px; -unity-text-align: upper-center; display: flex;" />
+        <engine:Label text="Label" name="Rarity" style="top: -621px; width: 809px; height: 100px; left: 123px; font-size: 80px; -unity-text-align: upper-center; display: flex;" />
         <engine:Label text="Label" name="Power" style="width: 809px; height: 200px; font-size: 80px; top: -350px;" />
         <engine:Label text="Label" name="CriticalDamage" style="width: 809px; height: 200px; font-size: 80px; top: -330px;" />
         <engine:Label text="Label" name="Critical" style="width: 809px; height: 200px; font-size: 80px; top: -310px;" />
         <engine:Button text="장착" name="EquipButton" style="bottom: 188px; width: 300px; height: 100px; top: -240px; left: 174px; font-size: 70px; background-color: rgb(243, 243, 243);" />
         <engine:Button text="강화" name="ReinforceButton" style="bottom: 188px; width: 300px; height: 100px; top: -341px; left: 615px; font-size: 70px; background-color: rgb(226, 22, 22);" />
+        <engine:Label text="Label" name="Name" style="top: -1388px; width: 809px; height: 100px; left: 123px; font-size: 80px; -unity-text-align: upper-center; display: flex;" />
     </engine:VisualElement>
 </engine:UXML>

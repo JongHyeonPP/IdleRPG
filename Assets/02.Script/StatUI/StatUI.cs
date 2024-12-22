@@ -6,14 +6,11 @@ using UnityEngine.UIElements;
 using Button = UnityEngine.UIElements.Button;
 using EnumCollection;
 
-public class StatUI : MonoBehaviour
+public class StatUI : DraggableScrollView
 {
     private GameManager _gameManager;
     private Coroutine _incrementCoroutine;
-    private VisualElement _scrollView;
-    private bool _isDragging = false;
-    private Vector2 _lastMousePosition;
-    private VisualElement _content;
+    
     private readonly StatusType[] _activeStats =
     {
         StatusType.Power,
@@ -24,110 +21,28 @@ public class StatUI : MonoBehaviour
     };
     private Dictionary<StatusType, VisualElement> _statElements = new();
     public VisualElement root { get; private set; }
-
-    private void Awake()
+    protected override float MinY => -1150;
+    protected override float MaxY => -50f;
+    protected override void Awake()
     {
-        root = GetComponent<UIDocument>().rootVisualElement;
-        _scrollView = root.Q<VisualElement>("StatScrollView");
-        _content = _scrollView.Q<VisualElement>("unity-content-container");
+        _scrollviewName = "StatScrollView";
+        base.Awake();
+
     }
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         _gameManager = GameManager.instance;
      
-        _scrollView.RegisterCallback<PointerDownEvent>(OnScrollDown);
-        _scrollView.RegisterCallback<PointerMoveEvent>(OnScrollMove);
-        _scrollView.RegisterCallback<PointerUpEvent>(OnScrollUp);
-        _scrollView.RegisterCallback<PointerLeaveEvent>(evt =>
-        {
-            _isDragging = false;
-        });
+        
         foreach (var stat in _activeStats)
         {
             InitializeStatUI(root, stat);
         }
     }
-    public void HideStatUI()
-    {
-        _scrollView.style.display = DisplayStyle.None;
-      
-    }
-    public void ShowStatUI()
-    {
-        _scrollView.style.display = DisplayStyle.Flex;
-       
-    }
-    #region Scrollview
-    private void OnScrollDown(PointerDownEvent evt)
-    {
-        _isDragging = true;
-        _lastMousePosition = evt.position;
-    }
-
-    private void OnScrollMove(PointerMoveEvent evt)
-    {
-        if (!_isDragging) return;
-
-        Vector2 delta = (Vector2)evt.position - _lastMousePosition;
-
-        float currentY = _content.transform.position.y;
-
-        float newY = currentY + delta.y;
-
-        float minY = -1150;    
-        float maxY = -50;
-        if (newY > maxY) 
-        {
-            newY = maxY;
-            StartCoroutine(SmoothMoveToOriginalY(maxY)); 
-        }
-        else if(newY<minY)
-        {
-            newY = minY;
-            StartCoroutine(SmoothMoveToOriginalY(minY));
-        }
-
-        _content.transform.position = new Vector3(
-            _content.transform.position.x,
-            newY,
-            0
-        );
-
-        _lastMousePosition = evt.position;
-       
-    }
-    private IEnumerator SmoothMoveToOriginalY(float targetY)
-    {
-        float duration = 0.5f; 
-        float elapsed = 0f;
-
-        Vector3 startPosition = _content.transform.position;
-        Vector3 targetPosition = new Vector3(
-            _content.transform.position.x,
-            targetY,
-            0
-        );
-
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            _content.transform.position = Vector3.Lerp(
-                startPosition,
-                targetPosition,
-                elapsed / duration
-            );
-            yield return null;
-        }
-
-        _content.transform.position = targetPosition; 
-    }
-    private void OnScrollUp(PointerUpEvent evt)
-    {
-        _isDragging = false;
-        evt.StopPropagation();
-    }
-    #endregion
+ 
+  
 
     private void InitializeStatUI(VisualElement root, StatusType stat)
     {
@@ -148,7 +63,7 @@ public class StatUI : MonoBehaviour
     }
     
 
-    private void OnPointerDown(StatusType stat)
+    private void OnPointerDown(StatusType stat)//스텟버튼누르기
     {
         int currentLevel = _gameManager.gameData.statLevel_Gold[stat]; 
         int requiredGold = FomulaManager.GetGoldRequired(currentLevel); 
@@ -166,7 +81,7 @@ public class StatUI : MonoBehaviour
        
     }
 
-    private void OnPointerUp()
+    private void OnPointerUp()//버튼떼서 데이터저장
     {
         if (_incrementCoroutine != null)
         {
@@ -205,4 +120,32 @@ public class StatUI : MonoBehaviour
 
         button.text = $"{FomulaManager.GetGoldRequired(level)}";
     }
+    #region UIChange
+    private void OnEnable()
+    {
+        BattleBroker.OnUIChange += HandleUIChange;
+    }
+
+    private void OnDisable()
+    {
+        BattleBroker.OnUIChange -= HandleUIChange;
+    }
+    private void HandleUIChange(int uiType)
+    {
+        if (uiType == 1)
+            ShowStatUI();
+        else
+            HideStatUI();
+    }
+    public void HideStatUI()
+    {
+        _scrollView.style.display = DisplayStyle.None;
+
+    }
+    public void ShowStatUI()
+    {
+        _scrollView.style.display = DisplayStyle.Flex;
+
+    }
+    #endregion
 }

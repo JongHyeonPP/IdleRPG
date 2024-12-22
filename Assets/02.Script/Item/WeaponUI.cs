@@ -5,56 +5,35 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class WeaponUI : MonoBehaviour
+public class WeaponUI : DraggableScrollView
 {
     [SerializeField] private List<WeaponData> _weaponDataList;
-    private VisualElement _scrollView;
-    private bool _isDragging = false;
-    private Vector2 _lastMousePosition;
-    private VisualElement _content;
+   
 
     private VisualElement _weaponInfo;
     private VisualElement _weaponImage;
     private Label _weaponRarity;
+    private Label _weaponName;
     private Label _powerLabel;
     private Label _criticalDamageLabel;
     private Label _criticalLabel;
     private WeaponData _currentWeapon;
     private Dictionary<int, int> _weaponCounts = new Dictionary<int, int>();
+    protected override float MinY => -2250;
+    protected override float MaxY => 50f;
     private void Awake()
     {
-        var root = GetComponent<UIDocument>().rootVisualElement;
-        _scrollView = root.Q<VisualElement>("WeaponScrollView");
-       
+        _scrollviewName = "WeaponScrollView";
+        base.Awake();
         _weaponInfo = root.Q<VisualElement>("WeaponInfo");
-
-        InitScrollView(root);
         CreateWeaponButtons(_scrollView);
         InitWeaponInfo(root);
         _weaponInfo.RegisterCallback<PointerDownEvent>(OnClose);
-     
     }
-    
-    public void HideWeaponUI()
-    {
-        _scrollView.style.display = DisplayStyle.None;
-        _weaponInfo.style.display = DisplayStyle.None;
-    }
-    public void ShowWeaponUI()
-    {
-        _scrollView.style.display = DisplayStyle.Flex;
-        //킬때마다 무기개수 초기화
-    }
+ 
+
     #region Init
-    private void InitScrollView(VisualElement root)
-    {
-        
-        _content = _scrollView.Q<VisualElement>("unity-content-container");
-        _scrollView.RegisterCallback<PointerDownEvent>(OnScrollDown);
-        _scrollView.RegisterCallback<PointerMoveEvent>(OnScrollMove);
-        _scrollView.RegisterCallback<PointerUpEvent>(OnScrollUp);
-        _scrollView.RegisterCallback<PointerLeaveEvent>(evt => { _isDragging = false; });
-    }
+   
     private void CreateWeaponButtons(VisualElement root)
     {
         int rows = 13;
@@ -158,6 +137,7 @@ public class WeaponUI : MonoBehaviour
        
         _weaponImage = _weaponInfo.Q<VisualElement>("WeaponImg");
         _weaponRarity = _weaponInfo.Q<Label>("Rarity");
+        _weaponName = _weaponInfo.Q<Label>("Name");
         _powerLabel = _weaponInfo.Q<Label>("Power");
         _criticalDamageLabel = _weaponInfo.Q<Label>("CriticalDamage");
         _criticalLabel = _weaponInfo.Q<Label>("Critical");
@@ -175,30 +155,37 @@ public class WeaponUI : MonoBehaviour
         var weaponImageTexture = weaponData.WeaponSprite.texture;
         var weaponImageStyle = new StyleBackground(weaponImageTexture);
         _weaponImage.style.backgroundImage = weaponImageStyle;
-        _weaponRarity.text = $"{weaponData.WeaponRarity}/{weaponData.WeaponType}";
-
+        _weaponRarity.text = $"[{weaponData.WeaponType}]";
+        _weaponName.text = $"{weaponData.WeaponName}";
         switch (weaponData.WeaponRarity)
         {
             case WeaponRarity.Common:
                 _weaponRarity.style.color = new StyleColor(Color.gray);
+                _weaponName.style.color = new StyleColor(Color.gray);
                 break;
             case WeaponRarity.Uncommon:
                 _weaponRarity.style.color = new StyleColor(new Color(0.5f, 0.75f, 1f));
+                _weaponName.style.color = new StyleColor(new Color(0.5f, 0.75f, 1f));
                 break;
             case WeaponRarity.Rare:
                 _weaponRarity.style.color = new StyleColor(Color.magenta);
+                _weaponName.style.color = new StyleColor(Color.magenta);
                 break;
             case WeaponRarity.Unique:
                 _weaponRarity.style.color = new StyleColor(Color.green);
+                _weaponName.style.color = new StyleColor(Color.green);
                 break;
             case WeaponRarity.Legendary:
                 _weaponRarity.style.color = new StyleColor(Color.yellow);
+                _weaponName.style.color = new StyleColor(Color.yellow);
                 break;
             case WeaponRarity.Mythic:
                 _weaponRarity.style.color = new StyleColor(new Color(0f, 0f, 0.5f));
+                _weaponName.style.color = new StyleColor(new Color(0f, 0f, 0.5f));
                 break;
             default:
                 _weaponRarity.style.color = new StyleColor(Color.white);
+                _weaponName.style.color = new StyleColor(Color.white);
                 break;
         }
         _powerLabel.text = $"공격력: {weaponData.Power}";
@@ -207,78 +194,36 @@ public class WeaponUI : MonoBehaviour
 
     }
     #endregion
-    #region Scrollview
-    private void OnScrollDown(PointerDownEvent evt)
+  
+
+    #region UIChange
+    private void OnEnable()
     {
-        _isDragging = true;
-        _lastMousePosition = evt.position;
+        BattleBroker.OnUIChange += HandleUIChange;
     }
 
-    private void OnScrollMove(PointerMoveEvent evt)
+    private void OnDisable()
     {
-        if (!_isDragging) return;
-
-        Vector2 delta = (Vector2)evt.position - _lastMousePosition;
-
-        float currentY = _content.transform.position.y;
-
-        float newY = currentY + delta.y;
-
-        float minY = -2250;
-        float maxY = 50;
-        if (newY > maxY)
-        {
-            newY = maxY;
-            StartCoroutine(SmoothMoveToOriginalY(maxY));
-        }
-        else if (newY < minY)
-        {
-            newY = minY;
-            StartCoroutine(SmoothMoveToOriginalY(minY));
-        }
-
-        _content.transform.position = new Vector3(
-            _content.transform.position.x,
-            newY,
-            0
-        );
-
-        _lastMousePosition = evt.position;
-
+        BattleBroker.OnUIChange -= HandleUIChange;
     }
-    private IEnumerator SmoothMoveToOriginalY(float targetY)
+    private void HandleUIChange(int uiType)
     {
-        float duration = 0.5f;
-        float elapsed = 0f;
-
-        Vector3 startPosition = _content.transform.position;
-        Vector3 targetPosition = new Vector3(
-            _content.transform.position.x,
-            targetY,
-            0
-        );
-
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            _content.transform.position = Vector3.Lerp(
-                startPosition,
-                targetPosition,
-                elapsed / duration
-            );
-            yield return null;
-        }
-
-        _content.transform.position = targetPosition;
+        if (uiType == 2)
+            ShowWeaponUI();
+        else
+            HideWeaponUI();
     }
-    private void OnScrollUp(PointerUpEvent evt)
+    public void HideWeaponUI()
     {
-        _isDragging = false;
-        evt.StopPropagation();
+        _scrollView.style.display = DisplayStyle.None;
+        _weaponInfo.style.display = DisplayStyle.None;
+    }
+    public void ShowWeaponUI()
+    {
+        _scrollView.style.display = DisplayStyle.Flex;
+        //킬때마다 무기개수 초기화
     }
     #endregion
-   
-  
     private void Equip()
     {
         if (_currentWeapon != null)
@@ -292,7 +237,6 @@ public class WeaponUI : MonoBehaviour
 
         if (weaponCount <= 0)
         {
-            Debug.Log("강화할 무기가 없습니다.");
             return; 
         }
 

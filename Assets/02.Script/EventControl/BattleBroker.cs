@@ -31,4 +31,6 @@ public static class BattleBroker
     public static Func<Collider2D> GetPlayerCollider;
     //플레이어가 죽었을 때
     public static Action OnPlayerDead;
+    //UI변경
+    public static Action<int> OnUIChange;
 }

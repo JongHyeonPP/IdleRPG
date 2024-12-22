@@ -33,7 +33,7 @@ namespace EnumCollection
     }
     public enum WeaponType
     {
-        Sword,
+        MeleeWeapon,
         Bow,
         Staff,
         Shield

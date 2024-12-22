@@ -20,3 +20,4 @@ MonoBehaviour:
   _weaponSprite: {fileID: 21300000, guid: b703d7727b08947219074023baf91225, type: 3}
   _textureSize: {x: 1, y: 1}
   _uID: 220
+  _weaponName: "\uAC15\uCCA0 \uD65C"
