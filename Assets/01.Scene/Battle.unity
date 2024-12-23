@@ -119,6 +119,50 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &46760833
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 46760835}
+  - component: {fileID: 46760834}
+  m_Layer: 0
+  m_Name: EnemyStatusManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &46760834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 46760833}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79cf0dfa07e7136488360697fbf89adc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &46760835
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 46760833}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &75507726
 GameObject:
   m_ObjectHideFlags: 0
@@ -946,7 +990,6 @@ MonoBehaviour:
   _statUI: {fileID: 1028201835222079776}
   _stageSelectUI: {fileID: 2547666926395390982}
   _stageSelectBackground: {fileID: 207283625}
-  _weaponUI: {fileID: 1674538202}
 --- !u!114 &1626239345 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3498917213053944046, guid: 3f7e43f0ac842e642bb8bb4931b203f6, type: 3}
@@ -1927,6 +1970,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: StageSelectUI
       objectReference: {fileID: 0}
+    - target: {fileID: 6728990680268467832, guid: 110a770b0b7b6e041bbf3cb6d47d751b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2154,3 +2201,4 @@ SceneRoots:
   - {fileID: 8174793624457602197}
   - {fileID: 46971554242330402}
   - {fileID: 543667610}
+  - {fileID: 46760835}
