@@ -15,4 +15,13 @@ public class ExpDrop : DropBase
             dropPool.ReturnToPool(this);
         }
     }
+    public override void StartDropMove()
+    {
+        _rb.AddForce(new Vector2(100f, 300f));
+    }
+
+    public override void MoveByCharacter(Vector3 translation)
+    {
+        transform.Translate(translation);
+    }
 }

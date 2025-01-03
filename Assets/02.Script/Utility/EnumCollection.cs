@@ -2,13 +2,16 @@ namespace EnumCollection
 {
     public enum Background
     {
-        Plains, Forest, Beach, Ruins, ElfCity,
-        MysteriousForest, VineForest,Swamp, WinterForest, Cave, 
+        Plains, Forest, Beach, Ruins, MysteriousForest,
+        VineForest, Swamp, Cave, WinterForest, ElfCity,
         DesertRuins, IceField, RedRock, Desert, Lava
     }
     public enum SkillType
     {
-        Damage, Heal, 
+        //To Enemy
+        Damage,
+        //To Ally       
+        Heal, AttBuff
     }
     public enum SkillRange
     {
@@ -16,7 +19,14 @@ namespace EnumCollection
     }
     public enum StatusType
     {
-        MaxHp, Power, HpRecover, Critical, CriticalDamage, Mana, ManaRecover, Accuracy, Evasion, GoldAscend, ExpAscend
+        //°ñµå, ¹«±â·Î Âï´Â ½ºÅÈ
+        MaxHp, Power, HpRecover, Critical, CriticalDamage,
+        //¹«±â·Î¸¸ ¾ò´Â ½ºÅÈ
+       Resist, Penetration,
+       //ÄÚ½ºÆ¬ È¿°ú
+       GoldAscend, ExpAscend,
+       //µüÈ÷ ÂïÀ» ÀÏ ¾øÀ½
+        MaxMp, MpRecover
     }
     public enum DropType
     {
@@ -41,5 +51,9 @@ namespace EnumCollection
     public enum BattleType
     {
         Default, Boss, None
+    }
+    public enum SkillCoolType
+    {
+        ByAtt, ByTime
     }
 }

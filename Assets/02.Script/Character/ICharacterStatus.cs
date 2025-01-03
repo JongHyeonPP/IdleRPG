@@ -8,9 +8,7 @@ public interface ICharacterStatus
     BigInteger HpRecover { get; }
     float Critical { get; }
     float CriticalDamage { get; }
-    int Mana { get; }
-    int ManaRecover { get; }
-    float Accuracy { get; }
-    float Evasion { get; }
-    List<Skill> Skills { get; }
+    float Resist { get; }
+    float Penetration { get; }
+    List<SkillInBattle> Skills { get; }
 }

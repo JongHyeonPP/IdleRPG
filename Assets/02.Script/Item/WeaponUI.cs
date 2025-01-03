@@ -283,7 +283,7 @@ public class WeaponUI : MonoBehaviour
     {
         if (_currentWeapon != null)
         {
-            BattleBroker.OnEquipWeapon?.Invoke(_currentWeapon);   
+            PlayerBroker.OnEquipWeapon?.Invoke(_currentWeapon);   
         }
     }
     private void Reinforce(int weaponID)

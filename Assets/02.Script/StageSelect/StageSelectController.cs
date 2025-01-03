@@ -17,7 +17,7 @@ public class StageSelectController : LVItemController
         Button moveButton = element.Q<Button>("MoveButton");
         //VisualElement 설정
         titleLabel.text = stageInfo.stageName;
-        if (GameManager.instance.gameData.maxStageNum >= stageNum)//오픈된 스테이지라면
+        if (StartBroker.GetGameData().maxStageNum >= stageNum)//오픈된 스테이지라면
         {
             stageLabel.style.display = infoLabel.style.display = moveButton.style.display = DisplayStyle.Flex;
             lockGroup.style.display = DisplayStyle.None;
@@ -49,9 +49,5 @@ public class StageSelectController : LVItemController
             Debug.Log("Move To Stage" + index);
             BattleBroker.OnStageChange(index);
         }
-    }
-    public override ILVItem GetLVItem()
-    {
-        return new StageSelectItem();
     }
 }

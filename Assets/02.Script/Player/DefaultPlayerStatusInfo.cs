@@ -6,9 +6,9 @@ public class DefaultPlayerStatusInfo
     public readonly int critical = 10;
     public readonly int criticalDamage = 0;
     public readonly int maxMana = 10;
-    public readonly int manaRecover = 1;
-    public readonly int accuracy = 0;
-    public readonly int evasion = 0;
-    public readonly int goldAscend = 0;
-    public readonly int expAscend = 0;
+    public readonly float manaRecover = 3;
+    //public readonly int resist = 0;
+    //public readonly int penetration = 0;
+    //public readonly float goldAscend = 0;
+    //public readonly float expAscend = 0;
 }

@@ -13,7 +13,6 @@ public class StageSelectUI : MonoBehaviour
     private VisualElement backgroundImage;
 
     [SerializeField] private Sprite[] backgroundSprites;
-    [SerializeField] private StageSelectBackground background;
     private void Awake()
     {
         // Background 배열 초기화
@@ -26,10 +25,7 @@ public class StageSelectUI : MonoBehaviour
         exitButton.RegisterCallback<ClickEvent>(OnExitButtonClick);
         leftButton.RegisterCallback<ClickEvent>(OnLeftButtonClick);
         rightButton.RegisterCallback<ClickEvent>(OnRightButtonClick);
-        root.style.display = DisplayStyle.None;
-
         BattleBroker.OnStageChange += OnStageChange;
-        
     }
     private void Start()
     {
@@ -42,8 +38,17 @@ public class StageSelectUI : MonoBehaviour
     }
     public void ToggleUi(bool isOn)
     {
-        root.style.display = background.root.style.display = isOn ? DisplayStyle.Flex : DisplayStyle.None;
-        _draggableLV.RebuildLV();
+        if (isOn)
+        {
+            root.style.visibility = Visibility.Visible;
+            UIBroker.ActiveTranslucent(root, false);
+        }
+        else
+        {
+            root.style.visibility = Visibility.Visible;
+            UIBroker.InactiveCurrentUI();
+        }
+        
     }
     private void OnLeftButtonClick(ClickEvent evt)
     {
@@ -68,7 +73,7 @@ public class StageSelectUI : MonoBehaviour
         Sprite sprite = backgroundSprites[index];
         backgroundImage.style.backgroundImage = new StyleBackground(sprite.texture);
         int start = index * 20;
-        List<IListViewItem> items = StageManager.instance.GetStageInfosAsItem(start, 20);
+        List<IListViewItem> items = StageInfoContainer.instance.GetStageInfosAsItem(start, 20);
 
         _draggableLV.ChangeItems(items);
     }

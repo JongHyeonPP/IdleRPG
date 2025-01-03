@@ -1,0 +1,22 @@
+.CategoriSelectButton {
+    width: 45%;
+    height: 70%;
+    margin-left: 20px;
+    margin-right: 20px;
+    background-color: rgb(106, 106, 106);
+}
+
+.EquipSlotPadding {
+    width: 200px;
+    height: 200px;
+    align-self: center;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: flex-start;
+    margin-right: 170px;
+    margin-left: 170px;
+}
+
+.LabelSetPadding {
+    padding-bottom: 9px;
+}

@@ -10,6 +10,7 @@ using GooglePlayGames.BasicApi;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using UnityEngine.Playables;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
@@ -49,6 +50,7 @@ public class GameManager : MonoBehaviour
     }
     private void Start()
     {
+        StartBroker.GetGameData += () => gameData;
         BattleBroker.OnGoldGain += GetGoldByDrop;
         BattleBroker.OnExpGain += GetExpByDrop;
         BattleBroker.OnStageChange += OnStageChange;
@@ -124,6 +126,7 @@ public class GameManager : MonoBehaviour
         userName = PlayerPrefs.GetString("Name");
         string serializedData = JsonConvert.SerializeObject(gameData, Formatting.Indented);
         Debug.Log("Game data loaded:\n" + serializedData);
+        gameData.maxStageNum = 299;
     }
 
     //구글 인증을 진행한다.
@@ -152,19 +155,22 @@ public class GameManager : MonoBehaviour
     }
     private void GetGoldByDrop()
     {
-        //mainStageNum
-        gameData.gold += 10 * (gameData.currentStageNum + 1);
+        int value = 10 * (gameData.currentStageNum + 1) + Random.Range(0,3);
+        gameData.gold += value;
+        BattleBroker.OnCurrencyInBattle?.Invoke(DropType.Gold, value);
     }
     private void GetExpByDrop()
     {
+        int value = 10 * (gameData.currentStageNum + 1);
         //mainStageNum
-        gameData.exp += 10 * (gameData.currentStageNum + 1);
+        gameData.exp += value;
         if (gameData.exp >= GetNeedExp())
         {
             gameData.exp = 0;
             gameData.level++;
-            BattleBroker.OnLevelUp();
+            PlayerBroker.OnSetLevel(gameData.level);
         }
+        BattleBroker.OnCurrencyInBattle(DropType.Exp, value);
     }
     public float GetExpPercent()
     {
@@ -175,7 +181,7 @@ public class GameManager : MonoBehaviour
     {
         return gameData.level * 100f;
     }
-    //MainStageNum을 변경하고 거기에 맞는 적들과 배경을 세팅한다.
+    
     private void OnStageChange(int stageNum)
     {
         gameData.currentStageNum = stageNum;

@@ -15,5 +15,4 @@ public abstract class LVItemController:MonoBehaviour
     }
 
     public abstract void BindItem(VisualElement element, int index);
-    public abstract ILVItem GetLVItem();
 }

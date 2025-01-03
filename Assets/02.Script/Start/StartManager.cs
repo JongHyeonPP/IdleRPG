@@ -11,6 +11,7 @@ public class StartManager : MonoBehaviour
     {
         StartBroker.OnAuthenticationComplete += UnderTextLoadGameData;
         StartBroker.OnDataLoadComplete += PrepareBattleScene;
+        StartBroker.OnMoveBattleScene += OnMoveBattleScene;
     }
     //Battle 씬을 로드 중이라고 띄우고 Battle 씬을 로드하는 코루틴을 호출한다.
     private void PrepareBattleScene()
@@ -39,7 +40,8 @@ public class StartManager : MonoBehaviour
         {
             yield return null;
         }
-        GoToBattleScene();
+        StartBroker.OnMoveBattleScene();
+        StartBroker.OnMoveBattleScene = null;
     }
     //화면을 터치했을 때 구글 로그인을 유도한다.
     public void OnClickedStartImage()
@@ -47,10 +49,12 @@ public class StartManager : MonoBehaviour
         GoogleAuthLoad();
     }
     //Battle 씬으로 이동한다.
-    private void GoToBattleScene()
+    private void OnMoveBattleScene()
     {
         if (_asyncLoad != null)
         {
+            StartBroker.OnAuthenticationComplete = null;
+            StartBroker.OnDataLoadComplete = null;
             _asyncLoad.allowSceneActivation = true;
         }
     }

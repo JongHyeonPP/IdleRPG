@@ -2,18 +2,45 @@ using EnumCollection;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using UnityEngine;
 
 public class PlayerController : Attackable
 {
     [SerializeField] private PlayerStatus _status;//플레이어의 능력치
     private CapsuleCollider2D _collider;//플레이어의 콜라이더
-    private void Start()
+    private float _mp;
+    private void Awake()
+    {
+        InitEvent();
+        StartCoroutine(MpGainRoop());
+    }
+
+    private void InitEvent()
     {
         _collider = GetComponent<CapsuleCollider2D>();
-        BattleBroker.OnStatusChange += OnStatusChange;
-        BattleBroker.GetPlayerCollider = () => _collider;
+        PlayerBroker.OnStatusChange += OnStatusChange;
+        BattleBroker.OnBossTimeLimit += OnDead;
+        PlayerBroker.GetPlayerController += () => this;
+        BattleBroker.OnStageEnter += OnStageEnter;
+        BattleBroker.OnBossEnter += OnBossEnter;
     }
+
+    private void OnBossEnter()
+    {
+        hp = _status.MaxHp;
+        _mp = 0;
+        StopAttack();
+        anim.SetTrigger("Revive");
+    }
+    private void OnStageEnter()
+    {
+        hp = _status.MaxHp;
+        _mp = 0;
+        StopAttack();
+        PlayerBroker.OnPlayerHpChanged(1f);
+    }
+
     private void OnStatusChange(StatusType type, int value)
     {
         switch (type)
@@ -33,11 +60,11 @@ public class PlayerController : Attackable
             case StatusType.CriticalDamage:
                 _status.CriticalDamage += value;
                 break;
-            case StatusType.Accuracy:
-                _status.Accuracy += value;
+            case StatusType.Resist:
+                _status.Resist += value;
                 break;
-            case StatusType.Evasion:
-                _status.Evasion += value;
+            case StatusType.Penetration:
+                _status.Penetration += value;
                 break;
             case StatusType.GoldAscend:
                 _status.GoldAscend += value;
@@ -62,12 +89,8 @@ public class PlayerController : Attackable
         //0.5가 열심히 뛰는 것, 0이 멈춘 것.
         anim.SetFloat("RunState", _isMove ? 0.5f : 0f);
     }
-    //스킬을 사용한다.
-
-    //사용할 스킬이 없을 때 기본 공격을 사용한다.
-
     //캐릭터의 Statu인터페이스의 형태로 반환
-    protected override ICharacterStatus GetStatus()
+    public override ICharacterStatus GetStatus()
     {
         return _status;
     }
@@ -80,12 +103,12 @@ public class PlayerController : Attackable
         _status.HpRecover = defaultStatus.hpRecover;
         _status.Critical = defaultStatus.critical;
         _status.CriticalDamage = defaultStatus.criticalDamage;
-        _status.Mana = defaultStatus.maxMana;
-        _status.ManaRecover = defaultStatus.manaRecover;
-        _status.Accuracy = defaultStatus.accuracy;
-        _status.Evasion = defaultStatus.evasion;
-        _status.GoldAscend = defaultStatus.goldAscend;
-        _status.ExpAscend = defaultStatus.expAscend;
+        _status.MaxMp = defaultStatus.maxMana;
+        _status.MpRecover = defaultStatus.manaRecover;
+        _status.Resist = 0;
+        _status.Penetration = 0;
+        _status.GoldAscend = 0;
+        _status.ExpAscend = 0;
     }
     //스탯 업그레이드 정보를 플레이어의 스탯에 일괄적으로 적용한다.
     public void SetStatus(Dictionary<StatusType, int> statLevel)
@@ -97,10 +120,10 @@ public class PlayerController : Attackable
         { StatusType.HpRecover, value => _status.HpRecover += value },
         { StatusType.Critical, value => _status.Critical += value },
         { StatusType.CriticalDamage, value => _status.CriticalDamage += value },
-        { StatusType.Mana, value => _status.Mana += value },
-        { StatusType.ManaRecover, value => _status.ManaRecover += value },
-        { StatusType.Accuracy, value => _status.Accuracy += value },
-        { StatusType.Evasion, value => _status.Evasion += value },
+        { StatusType.MaxMp, value => _status.MaxMp += value },
+        { StatusType.MpRecover, value => _status.MpRecover += value },
+        { StatusType.Resist, value => _status.Resist += value },
+        { StatusType.Penetration, value => _status.Penetration += value },
         { StatusType.GoldAscend, value => _status.GoldAscend += value },
         { StatusType.ExpAscend, value => _status.ExpAscend += value },
     };
@@ -113,14 +136,10 @@ public class PlayerController : Attackable
             }
         }
     }
-    public void SetHpMaxHP()
-    {
-        hp = _status.MaxHp;
-    }
     protected override void OnDead()
     {
         anim.SetTrigger("Die");
-        BattleBroker.OnPlayerDead();
+        PlayerBroker.OnPlayerDead();
         StopCoroutine(attackCoroutine);
         StartCoroutine(DeadAfterWhile());
     }
@@ -129,5 +148,34 @@ public class PlayerController : Attackable
         yield return new WaitForSeconds(1f);
         BattleBroker.OnStageEnter();
         anim.SetTrigger("Revive");
+    }
+
+    protected override void OnReceiveDamage()
+    {
+        // 로그로 계산
+        double logValue1 = BigInteger.Log(hp);
+        double logValue2 = BigInteger.Log(_status.MaxHp);
+
+        // 차이를 계산
+        double logDifference = logValue1 - logValue2;
+        float ratio = (float)Math.Exp(logDifference); // e^(ln(비율)) = 실제 비율
+        Debug.Log(ratio);
+        PlayerBroker.OnPlayerHpChanged(ratio);
+    }
+    private IEnumerator MpGainRoop()
+    {
+        while (true) // 무한 반복
+        {
+            if (_mp < _status.MaxMp) // 최대 MP를 초과하지 않도록 제한
+            {
+                // 매 프레임마다 1초에 1씩 증가하도록 Time.deltaTime 사용
+                _mp += _status.MpRecover * Time.deltaTime;
+                _mp = Mathf.Min(_mp, _status.MaxMp); // 최대 MP를 초과하지 않도록 클램프
+
+                // MP 변화 이벤트 호출 (비율로 전달)
+                PlayerBroker.OnPlayerMpChanged?.Invoke(_mp / _status.MaxMp);
+            }
+            yield return null; // 다음 프레임까지 대기
+        }
     }
 }

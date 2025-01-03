@@ -1,0 +1,9 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:VisualElement name="EquipSlot" style="flex-grow: 0; width: 100%; height: 100%; position: absolute; align-self: center; background-color: rgb(65, 65, 65); top: 0; left: 0; font-size: 39px;">
+        <engine:VisualElement name="TextVertical" style="flex-grow: 0; position: relative; top: -137px; align-items: center;">
+            <engine:Label text="장착 무기" name="CategoriLabel" />
+            <engine:Label text="마검-스틱스" name="NameLabel" />
+        </engine:VisualElement>
+        <engine:VisualElement name="EquipIcon" style="flex-grow: 1; background-image: resource(&apos;Addons/Ver300/0_Unit/0_Sprite/8_Weapons/0_Sword/New_Weapon_01&apos;); position: absolute; width: 100%; height: 100%;" />
+    </engine:VisualElement>
+</engine:UXML>

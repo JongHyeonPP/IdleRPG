@@ -6,7 +6,7 @@ public class EquipController : MonoBehaviour
 
     private void Start()
     {
-        BattleBroker.OnEquipWeapon += EquipWeapon;
+        PlayerBroker.OnEquipWeapon += EquipWeapon;
     }
 
     private void EquipWeapon(object weaponData)

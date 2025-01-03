@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c31b40e68dba4f940b964bda9134eed3, type: 3}
+  m_Name: PriceInfo
+  m_EditorClassIdentifier: 
+  _commonSkillEmerald: 0f0000001e0000002d0000003c0000004b000000
+  _uncommonSkillEmerald: 1e0000003c0000005a0000007800000096000000
+  _rareSkillEmerald: 2d0000005a00000087000000b4000000e1000000
+  _uniqueSkillEmerald: 3c00000078000000b4000000f00000002c010000
+  _legendarySkillEmerald: 4b00000096000000e10000002c01000077010000
+  _mythicSkillEmerald: 5a000000b40000000e01000068010000c2010000
+  _commonSkillPiece: 020000000400000006000000080000000a000000
+  _uncommonSkillPiece: 020000000400000006000000080000000a000000
+  _rareSkillPiece: 020000000400000006000000080000000a000000
+  _uniqueSkillPiece: 020000000400000006000000080000000a000000
+  _legendarySkillPiece: 0100000002000000040000000600000008000000
+  _mythicSkillPiece: 0100000002000000040000000600000008000000
+  _commonWeaponPrice: 
+  _uncommonSWeaponPrice: 
+  _rareWeaponPrice: 
+  _uniqueWeaponPrice: 
+  _legendaryWeaponPrice: 
+  _mythicWeaponPrice: 
+  _companionPrice: 

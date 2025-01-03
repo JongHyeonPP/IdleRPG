@@ -12,13 +12,13 @@ public class EnemyStatusManager:MonoBehaviour
     
     //일반몹과 보스몹이 갖는 스탯
     public BigInteger maxHp { get; private set; }
-    public float evasion { get; private set; }
+    public float resist { get; private set; }
 
     //보스몹에게만 의미있는 스탯
     public BigInteger power { get; private set; }
     public float critical { get; private set; }
     public float criticalDamage { get; private set; }
-    public float accuracy { get; private set; }
+    public float resistPenetration { get; private set; }
 
     //스테이지와 상관없이 결정되는 스탯
     public int mana { get; private set; }
@@ -48,25 +48,25 @@ public class EnemyStatusManager:MonoBehaviour
     private void OnStageEnter()
     {
         maxHp = GetMaxHp_Default();
-        evasion = GetEvasion_Default();
+        resist = GetEvasion_Default();
         power = hpRecover = mana = manaRecover = 0;
-        critical = criticalDamage = accuracy = 0f;
+        critical = criticalDamage = resistPenetration = 0f;
     }
     private void OnBossEnter()
     {
         maxHp = GetMaxHp_Boss();
-        evasion = GetEvasion_Boss();
+        resist = GetResist_Boss();
         power = GetPower_Boss();
         critical = GetCritical_Boss();
         criticalDamage = GetCriticalDamage_Boss();
-        accuracy = GetAccuracy_Boss();
+        resistPenetration = GetResistPenetration_Boss();
         mana = 100;
         manaRecover = 10;
         hpRecover = 0;
     }
     private int GetMaxHp_Default()
     {
-        return 10;
+        return 100;
     }
     private float GetEvasion_Default()
     {
@@ -74,9 +74,9 @@ public class EnemyStatusManager:MonoBehaviour
     }
     private int GetMaxHp_Boss()
     {
-        return 100;
+        return 1000;
     }
-    private float GetEvasion_Boss()
+    private float GetResist_Boss()
     {
         return 0f;
     }
@@ -92,7 +92,7 @@ public class EnemyStatusManager:MonoBehaviour
     {
         return 0f;
     }
-    private float GetAccuracy_Boss()
+    private float GetResistPenetration_Boss()
     {
         return 0f;
     }

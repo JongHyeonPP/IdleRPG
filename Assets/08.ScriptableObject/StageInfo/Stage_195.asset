@@ -16,7 +16,7 @@ MonoBehaviour:
   stageName: Unset Stage
   background: 9
   dropProb: 0
-  enemy_0: {fileID: 0}
-  enemy_1: {fileID: 0}
-  boss: {fileID: 0}
+  enemy_0: {fileID: 11400000, guid: ccd08b9c0d6c41f4eb2940cfcc32224e, type: 2}
+  enemy_1: {fileID: 11400000, guid: 033aef067ca38524595a09e7c2bc1bf0, type: 2}
+  boss: {fileID: 11400000, guid: 9463f3d7669bea243acad4aca9dca4a2, type: 2}
   enemyNum: 4

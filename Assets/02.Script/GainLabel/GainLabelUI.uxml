@@ -1,0 +1,10 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:Template name="GainLabelPiece" src="project://database/Assets/02.Script/GainLabel/GainLabelPiece.uxml?fileID=9197481963319205126&amp;guid=4faccd76bc23a0f4f8cf6c6834bf36cf&amp;type=3#GainLabelPiece" />
+    <engine:VisualElement name="Vertical" style="flex-grow: 1; align-self: flex-start; justify-content: center; margin-bottom: 0; flex-direction: column-reverse; bottom: 592px; flex-shrink: 0;">
+        <engine:Instance template="GainLabelPiece" name="TemplateContainer" />
+        <engine:Instance template="GainLabelPiece" name="TemplateContainer" style="transform-origin: left bottom; scale: 0.9 0.9;" />
+        <engine:Instance template="GainLabelPiece" style="transform-origin: left bottom; scale: 0.8 0.8; margin-bottom: -10px;" />
+        <engine:Instance template="GainLabelPiece" name="TemplateContainer" style="scale: 0.7 0.7; transform-origin: left bottom; margin-bottom: -21px;" />
+        <engine:Instance template="GainLabelPiece" style="scale: 0.6 0.6; transform-origin: left bottom; margin-bottom: -30px;" />
+    </engine:VisualElement>
+</engine:UXML>

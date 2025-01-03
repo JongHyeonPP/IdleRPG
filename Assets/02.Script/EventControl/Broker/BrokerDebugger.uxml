@@ -1,0 +1,10 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:VisualElement name="BrokerDebugger" style="flex-grow: 0; background-color: rgb(255, 255, 255); background-image: url(&quot;project://database/Assets/07.Texture/Editor/Pororo.png?fileID=2800000&amp;guid=4c7d82efae249cb44bd2d2680ac88392&amp;type=3#Pororo&quot;); justify-content: flex-start; width: 100%; height: 100%;">
+        <engine:VisualElement name="BlackBackground" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0.67); background-size: 100% 100%; height: 100%; width: 269px;" />
+        <engine:VisualElement name="ButtonParent" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); background-size: 172% 100%; height: 38px; width: 188px; position: absolute; align-self: flex-end; flex-direction: row; right: 5px; top: 5px;">
+            <engine:Button text="Expand" name="ExpandButton" style="flex-grow: 1; margin-right: 5px;" />
+            <engine:Button text="Collapse" name="CollapseButton" style="flex-grow: 1; margin-left: 5px;" />
+        </engine:VisualElement>
+        <engine:Button text="Refresh" name="RefreshButton" style="flex-grow: 0; margin-left: 5px; background-size: 100px 100%; width: 95px; position: absolute; transform-origin: center; translate: 0 0; bottom: 14px; right: 18px; height: 43px;" />
+    </engine:VisualElement>
+</engine:UXML>

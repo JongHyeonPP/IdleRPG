@@ -1,0 +1,4 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/02.Script/Player/HpBar.uss?fileID=7433441132597879392&amp;guid=3f8e595841db70b45b4ace9d0d8cf1f8&amp;type=3#HpBar" />
+    <engine:ProgressBar value="0.22" name="HpBar" high-value="1" style="width: 180px; align-self: center;" />
+</engine:UXML>

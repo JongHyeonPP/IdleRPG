@@ -7,7 +7,12 @@
         "PlayerStatusBar",
         "StatUI",
         "StageSelect",
-        "Item"
+        "Item",
+        "BossTimer",
+        "GainLabel",
+        "DuplicateLogin",
+        "TotalStatus",
+        "Skill"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -1,6 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 using UnityEngine.UIElements;
 
 public class DraggableListView : MonoBehaviour
@@ -17,9 +20,8 @@ public class DraggableListView : MonoBehaviour
     {
         _root = GetComponent<UIDocument>().rootVisualElement;
         _controller.draggableLV = this;
-
         SetListView();
-        SetDragEvents();
+        SetEvents();
     }
     private void SetListView()
     {
@@ -41,6 +43,8 @@ public class DraggableListView : MonoBehaviour
 
     void Update()
     {
+        // 모바일 플랫폼(Android/iOS)에서 터치 입력 처리
+#if UNITY_ANDROID || UNITY_IOS
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
@@ -50,14 +54,18 @@ public class DraggableListView : MonoBehaviour
                 _isDragging = false;
             }
         }
+#endif
 
+        // Windows 플랫폼에서 마우스 입력 처리
+#if UNITY_EDITOR_WIN
         if (Input.GetMouseButtonUp(0))
-        {
-            _isDragging = false;
-        }
+    {
+        _isDragging = false;
+    }
+#endif
     }
 
-    private void SetDragEvents()
+    private void SetEvents()
     {
         _scrollView.RegisterCallback<PointerDownEvent>(evt =>
         {
@@ -107,21 +115,14 @@ public class DraggableListView : MonoBehaviour
         _controller.BindItem(element, index);
         element.RegisterCallback<FocusEvent>(evt => evt.StopPropagation());
     }
-
     //public void AddItem(int index)
     //{
     //    items.Add(controller.GetLVItem(index));
     //    listView.Rebuild();
     //}
-
     public void ChangeItems(List<IListViewItem> newItems)
     {
         _listView.itemsSource =items = newItems;
-        _listView.Rebuild();
-    }
-
-    public void RebuildLV()
-    {
         _listView.Rebuild();
     }
 }
