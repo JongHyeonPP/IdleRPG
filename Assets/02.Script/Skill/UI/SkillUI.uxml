@@ -1,0 +1,10 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:Template name="DraggableListView" src="project://database/Assets/02.Script/DraggableListView/DraggableListView.uxml?fileID=9197481963319205126&amp;guid=16efd8942fa594c479915add42228bc9&amp;type=3#DraggableListView" />
+    <engine:Template name="SkillInBattlePanel" src="project://database/Assets/02.Script/Skill/UI/SkillInBattlePanel.uxml?fileID=9197481963319205126&amp;guid=3a4a0f43f63911d43a476db57df2b1ed&amp;type=3#SkillInBattlePanel" />
+    <engine:VisualElement name="SkillUI" style="flex-grow: 1; flex-direction: column-reverse;">
+        <engine:VisualElement name="SKillDataPanel" style="flex-grow: 0; background-color: rgb(255, 165, 71); height: 951px;">
+            <engine:Instance template="DraggableListView" style="flex-grow: 1; height: 1427px;" />
+        </engine:VisualElement>
+        <engine:Instance template="SkillInBattlePanel" />
+    </engine:VisualElement>
+</engine:UXML>

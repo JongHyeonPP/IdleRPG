@@ -16,6 +16,7 @@ public class GameData
     [JsonConverter(typeof(StatusTypeDictionaryConverter))]
     public Dictionary<StatusType, int> statLevel_StatPoint = new();
     public string weaponId;
+    public string[] skillIdArr = new string[10];
     public int currentStageNum;
     public int maxStageNum;
 }

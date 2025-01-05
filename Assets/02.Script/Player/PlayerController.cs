@@ -10,12 +10,33 @@ public class PlayerController : Attackable
     [SerializeField] private PlayerStatus _status;//플레이어의 능력치
     private CapsuleCollider2D _collider;//플레이어의 콜라이더
     private float _mp;
+    private SkillInBattle[] skillInBattleArr = new SkillInBattle[10];
+    private Weapon weapon;
     private void Awake()
     {
         InitEvent();
         StartCoroutine(MpGainRoop());
     }
+    private void Start()
+    {
+        SetWeapon();
+        SetSkillSkillsInBattle();
+    }
+    private void SetSkillSkillsInBattle()
+    {
+        string[] skillIdArr =  StartBroker.GetGameData().skillIdArr;
+        for (int i = 0; i < skillIdArr.Length; i++)
+        {
+            string skillId = skillIdArr[i];
+            SkillData skillData = SkillManager.instance.GetSkillData(skillId);
+            SkillInBattle skillInBattle = new(skillData);
+            skillInBattleArr[i] = skillInBattle;
+        }
+    }
+    private void SetWeapon()
+    {
 
+    }
     private void InitEvent()
     {
         _collider = GetComponent<CapsuleCollider2D>();
@@ -25,7 +46,6 @@ public class PlayerController : Attackable
         BattleBroker.OnStageEnter += OnStageEnter;
         BattleBroker.OnBossEnter += OnBossEnter;
     }
-
     private void OnBossEnter()
     {
         hp = _status.MaxHp;

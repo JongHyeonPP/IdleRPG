@@ -113,16 +113,13 @@ public class GameManager : MonoBehaviour
         if (gameData == null)
         {
             Debug.Log("No saved game data found. Initializing default values.");
-            gameData = new GameData
-            {
-                gold = 0,
-                skillLevel = new Dictionary<string, int>(),
-                weaponNum = new Dictionary<string, int>(),
-                statLevel_Gold = new Dictionary<StatusType, int>(),
-                statLevel_StatPoint = new Dictionary<StatusType, int>()
-
-            };
+            gameData = new GameData();
         }
+        gameData.skillLevel ??= new();
+        gameData.weaponNum ??= new();
+        gameData.statLevel_Gold ??= new();
+        gameData.statLevel_StatPoint ??= new();
+        gameData.skillIdArr ??= new string[10];
         userName = PlayerPrefs.GetString("Name");
         string serializedData = JsonConvert.SerializeObject(gameData, Formatting.Indented);
         Debug.Log("Game data loaded:\n" + serializedData);

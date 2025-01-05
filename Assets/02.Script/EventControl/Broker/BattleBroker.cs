@@ -25,10 +25,9 @@ public static class BattleBroker
     public static Action OnBossClear;
     //BattleManager에 있는 BattleType을 얻는다
     public static Func<BattleType> GetBattleType;
-
     //보스 HP 변경 시 비율 전달
     public static Action<float> OnBossHpChanged;
-
     //전투에서 무엇을 얼마나 얻었는지, 왼쪽에 줄줄이 띄우기 위함
     public static Action<DropType, int> OnCurrencyInBattle;
+    public static Action<string, int> OnSkillLevelChange;//Skill Id, Skill Level
 }

@@ -113,9 +113,9 @@ public abstract class Attackable : MonoBehaviour
             {
                 foreach (SkillInBattle skill in _status.Skills)
                 {
-                    if (skill.IsSkillAble())
+                    if (skill.IsSkillAble)
                     {
-                        SkillData data = skill.data;
+                        SkillData data = skill.skillData;
                         ActiveSkill(data.name, data.value[0], data.range, data.range);
                         isActiveSkill = true;
                     }

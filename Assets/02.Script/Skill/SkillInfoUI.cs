@@ -1,3 +1,4 @@
+using EnumCollection;
 using System;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -18,7 +19,8 @@ public class SkillInfoUI : MonoBehaviour
     private Label currencyLabel;
     private ProgressBar levelProgressBar;
     //이벤트를 위한 필드
-
+    private Button upgradeButton;  
+    private Button equipButton;  
     private void Awake()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
@@ -33,6 +35,11 @@ public class SkillInfoUI : MonoBehaviour
         mpLabel = root.Q<Label>("MpLabel");
         currencyLabel = root.Q<Label>("CurrencyLabel");
         levelProgressBar = root.Q<ProgressBar>("LevelProgressBar");
+        upgradeButton = root.Q<Button>("UpgradeButton");
+        equipButton = root.Q<Button>("EquipButton");
+        //EventSet
+        upgradeButton.RegisterCallback<ClickEvent>(click => OnUpgradeButtonClick());
+        equipButton.RegisterCallback<ClickEvent>(click => OnEquipButtonClick());
     }
     public void DataInfoSet(SkillData skillData)
     {
@@ -48,24 +55,30 @@ public class SkillInfoUI : MonoBehaviour
         complexLabel.text = skillData.complex;
         switch (skillData.skillCoolType)
         {
-            case EnumCollection.SkillCoolType.ByAtt:
+            case SkillCoolType.ByAtt:
                 coolTypeLabel.text = "필요공격수";
                 coolNumLabel.text = skillData.coolAttack.ToString();
                 break;
-            case EnumCollection.SkillCoolType.ByTime:
+            case SkillCoolType.ByTime:
                 coolTypeLabel.text = "대기시간";
                 coolNumLabel.text = skillData.cooltime.ToString("F0");
                 break;
         }
         mpLabel.text = skillData.requireMp.ToString();
         currencyLabel.text = PriceManager.instance.GetRequireEmerald_Skill(skillData.rarity, level).ToString();
-        //levelProgressBar.
     }
-
     internal void ActiveUI(SkillData skillData)
     {
         root.style.display = DisplayStyle.Flex;
         UIBroker.ActiveTranslucent(root, true);
         DataInfoSet(skillData);
+    }
+    public void OnUpgradeButtonClick()
+    {
+        Debug.Log("UC");
+    }
+    public void OnEquipButtonClick()
+    {
+        Debug.Log("EC");
     }
 }
