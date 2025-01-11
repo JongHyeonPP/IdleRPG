@@ -1,0 +1,7 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/02.Script/Store/StoreUI.uss?fileID=7433441132597879392&amp;guid=e89f383d8b3d1ee478f7771aa663724d&amp;type=3#StoreUI" />
+    <engine:VisualElement name="WeaponSlot" style="flex-grow: 1;">
+        <engine:VisualElement name="WeaponIcon" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/Asset/Skill_Icon_Pack/addons/addon_03.png?fileID=2800000&amp;guid=020e0c43942a74545b041db021bed4e4&amp;type=3#addon_03&quot;);" />
+        <engine:Label text="어쩔티비발톱" name="WeaponName" style="color: rgb(255, 255, 255); font-size: 50px; -unity-text-align: upper-center;" />
+    </engine:VisualElement>
+</engine:UXML>
