@@ -234,12 +234,11 @@ public class WeaponUI : DraggableScrollView
     private void Reinforce(int weaponID)
     {
         int weaponCount = GetWeaponCount(weaponID);
-
         if (weaponCount <= 0)
         {
+
             return; 
         }
-
         _weaponCounts[weaponID]--;
     }
     private void OnClose(PointerDownEvent evt)
