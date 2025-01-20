@@ -93,4 +93,8 @@ public class BackgroundPiece : MonoBehaviour, IMoveByPlayer
     {
         transform.Translate(translation);
     }
+    private void OnDestroy()
+    {
+        MediatorManager<IMoveByPlayer>.UnregisterMediator(this);
+    }
 }

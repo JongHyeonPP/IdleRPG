@@ -1,6 +1,6 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/02.Script/PlayerStatusBar/PlayerStatusBar.uss?fileID=7433441132597879392&amp;guid=fded8449aec465f4aa09fb9f1924df2e&amp;type=3#PlayerStatusBar" />
-    <engine:VisualElement name="PlayerStatusBar" style="flex-grow: 1; align-items: center; font-size: 44px; top: 30px;">
+    <engine:VisualElement name="PlayerStatusBar" style="flex-grow: 1; align-items: center; font-size: 44px; top: 82px;">
         <engine:VisualElement name="HorizontalGroup" style="flex-grow: 0; justify-content: flex-start; position: relative; height: 107px; width: 97%; background-color: rgba(255, 255, 255, 0); align-items: center; flex-direction: row-reverse; top: 13px; flex-shrink: 0; align-content: flex-start; flex-wrap: nowrap; margin-left: 0; display: flex; visibility: visible; align-self: flex-start; left: 18px;">
             <engine:VisualElement name="VerticalGroup" style="flex-grow: 1; justify-content: flex-start;">
                 <engine:VisualElement name="HorizontalGroup" style="flex-grow: 0; justify-content: flex-start; position: relative; height: 119px; width: 100%; background-color: rgb(255, 255, 255); align-items: center; flex-direction: row; top: 0; flex-shrink: 0; align-content: flex-start; flex-wrap: nowrap; margin-left: 0; padding-left: 42px;">

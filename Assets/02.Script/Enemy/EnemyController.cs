@@ -1,13 +1,16 @@
+using EnumCollection;
 using System;
 using System.Collections;
+using System.Numerics;
 using UnityEngine;
+using Vector3 = UnityEngine.Vector3;
 
 public class EnemyController : Attackable, IMoveByPlayer
 {
     private EnemyPool _pool;//비활성화 시 들어갈 풀
     private EnemyController[] _enemies;//활성화 시 들어갈 배열
     private int _indexInArr;//배열에서의 인덱스
-    protected EnemyStatus _status;//전투에 사용할 스탯
+    [SerializeField]private EnemyStatus _status;//전투에 사용할 스탯
     private SpriteRenderer _bodyRenderer;//몸체의 스프라이트 렌더러
     private float deadDuration = 1f;//죽는데 걸리는 시간
     private void Start()
@@ -16,7 +19,7 @@ public class EnemyController : Attackable, IMoveByPlayer
         anim = GetComponent<Animator>();
         _bodyRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
     }
-    protected override ICharacterStatus GetStatus()
+    public override ICharacterStatus GetStatus()
     {
         return _status;
     }
@@ -71,5 +74,22 @@ public class EnemyController : Attackable, IMoveByPlayer
             yield return null;
         }
     }
+    protected override void OnReceiveDamage()
+    {
+        if (BattleBroker.GetBattleType()==BattleType.Boss)
+        {
+            // 로그로 계산
+            double logValue1 = BigInteger.Log(hp);
+            double logValue2 = BigInteger.Log(_status.MaxHp);
 
+            // 차이를 계산
+            double logDifference = logValue1 - logValue2;
+            float ratio = (float)Math.Exp(logDifference); // e^(ln(비율)) = 실제 비율
+            BattleBroker.OnBossHpChanged(ratio);
+        }
+    }
+    private void OnDestroy()
+    {
+        MediatorManager<IMoveByPlayer>.UnregisterMediator(this);
+    }
 }

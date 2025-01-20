@@ -1,0 +1,21 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:VisualElement name="DataContorlPanel" style="flex-grow: 0; flex-direction: row; height: 78px; align-items: flex-start; margin-left: 18px;">
+        <engine:Label text="Level" name="DataLabel" style="font-size: 33px; -unity-text-align: middle-left; height: 41px;" />
+        <engine:TextField placeholder-text="Value" style="width: 72px; -unity-text-align: upper-center; margin-left: 18px; height: 36px; margin-top: 6px;" />
+        <engine:VisualElement name="ButtonPanel" style="flex-grow: 1; flex-direction: row-reverse; position: absolute; align-items: center; justify-content: flex-end; left: auto; top: auto; right: 20px; height: 48px;">
+            <engine:VisualElement style="flex-grow: 1;" />
+            <engine:Label text="2" name="ValueLabel" enable-rich-text="false" picking-mode="Ignore" style="font-size: 31px; -unity-text-align: middle-right; white-space: pre; flex-wrap: nowrap; text-overflow: clip; width: 30px;" />
+            <engine:VisualElement name="ChangeButtonParent" style="flex-grow: 1; flex-direction: row; padding-right: 0;">
+                <engine:VisualElement name="PlusVe" style="flex-grow: 1; width: 40px; background-color: rgb(111, 111, 111); margin-right: 2px;">
+                    <engine:Label text="+" style="flex-grow: 0; -unity-text-align: middle-center; font-size: 33px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+                </engine:VisualElement>
+                <engine:VisualElement name="MinusVe" style="flex-grow: 1; height: 40px; width: 40px; background-color: rgb(111, 111, 111); margin-right: 0; margin-left: 2px;">
+                    <engine:Label text="-" style="flex-grow: 0; -unity-text-align: middle-center; font-size: 33px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+            <engine:VisualElement name="SetVe" style="flex-grow: 1; width: 73px; height: 45px; background-color: rgb(111, 111, 111); margin-right: 7px;">
+                <engine:Label text="Set&#10;Value" style="-unity-text-align: middle-center; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; width: 100%; height: 100%;" />
+            </engine:VisualElement>
+        </engine:VisualElement>
+    </engine:VisualElement>
+</engine:UXML>

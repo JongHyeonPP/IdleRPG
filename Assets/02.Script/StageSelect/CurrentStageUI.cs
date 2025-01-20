@@ -33,7 +33,7 @@ public class CurrentStageUI : MonoBehaviour
 
     private void OnStageChange(int stageNum)
     {
-        StageInfo info = StageManager.instance.GetStageInfo(stageNum);
+        StageInfo info = StageInfoManager.instance.GetStageInfo(stageNum);
         _stageNameLabel.text = info.stageName;
         _stageNumLabel.text = $"Stage {info.stageNum}";
     }

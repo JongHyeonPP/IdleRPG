@@ -1,0 +1,23 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:Template name="CurrencyPanel" src="project://database/Assets/02.Script/TotalDebugger/CurrencyCategoriPanel.uxml?fileID=9197481963319205126&amp;guid=57025d13b2b6f0b4da9a40a812493358&amp;type=3#CurrencyCategoriPanel" />
+    <engine:Template name="SkillCategoriPanel" src="project://database/Assets/02.Script/TotalDebugger/SkillCategoriPanel.uxml?fileID=9197481963319205126&amp;guid=afcce273fcc77274ba79aba8d216ede1&amp;type=3#SkillCategoriPanel" />
+    <engine:Template name="MaterialCategoriPanel" src="project://database/Assets/02.Script/TotalDebugger/MaterialCategoriPanel.uxml?fileID=9197481963319205126&amp;guid=b38a715f2ff085340ae0f915edcf55b4&amp;type=3#MaterialCategoriPanel" />
+    <engine:VisualElement name="LoadedPanel" style="height: 100%; flex-direction: column; background-color: rgb(115, 115, 115);">
+        <engine:VisualElement name="CategoriPanel" style="flex-grow: 0; height: 47px; flex-direction: row; align-items: center; margin-left: 11px;">
+            <engine:Button text="Currency" name="CurrencyButton" focusable="false" style="width: 100px; height: 30px;" />
+            <engine:Button text="Status" name="StatusButton" focusable="false" style="width: 100px; height: 30px;" />
+            <engine:Button text="Weapon" name="WeaponButton" focusable="false" style="width: 100px; height: 30px;" />
+            <engine:Button text="Skill" name="SkillButton" focusable="false" style="width: 100px; height: 30px;" />
+            <engine:Button text="Material" name="MaterialButton" focusable="false" style="width: 100px; height: 30px;" />
+        </engine:VisualElement>
+        <engine:VisualElement name="PanelParent" style="flex-grow: 0; height: 80%;">
+            <engine:Instance template="CurrencyPanel" name="CurrencyCategoriPanel" style="height: 100%; display: none; position: absolute; width: 100%;" />
+            <engine:Instance template="SkillCategoriPanel" name="SkillCategoriPanel" style="height: 100%; position: absolute; display: none; width: 100%;" />
+            <engine:Instance template="MaterialCategoriPanel" name="MaterialCategoriPanel" style="height: 100%; position: absolute; display: flex; width: 100%;" />
+        </engine:VisualElement>
+        <engine:VisualElement name="BottomPadding" style="flex-grow: 1; background-color: rgb(58, 58, 58);" />
+    </engine:VisualElement>
+    <engine:VisualElement name="UnloadedNotify" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; background-color: rgb(89, 89, 89); align-items: center; justify-content: center; display: none;">
+        <engine:Label text="데이터가 로드되지 않았습니다." style="font-size: 39px; color: rgb(255, 255, 255);" />
+    </engine:VisualElement>
+</engine:UXML>

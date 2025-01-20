@@ -10,7 +10,7 @@ public class TurnOffToBlack : MonoBehaviour
     {
         _root = GetComponent<UIDocument>().rootVisualElement;
         rootChild = _root.Q<VisualElement>("TurnOffToBlack");
-        BattleBroker.OnPlayerDead += OnPlayerDead;
+        PlayerBroker.OnPlayerDead += OnPlayerDead;
     }
     private void TurnOnOff(bool isOn)
     {

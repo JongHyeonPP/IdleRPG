@@ -24,6 +24,7 @@ public class EnemyPool : MonoBehaviour
     {
         GameObject obj = Instantiate(_enemyStatus.prefab);
         obj.transform.SetParent(poolParent);
+        obj.transform.localScale = Vector3.one * 0.8f;
         EnemyController controller = obj.AddComponent<EnemyController>();
         obj.SetActive(false);
         controller.SetEnemyInfo(this, _enemyStatus);

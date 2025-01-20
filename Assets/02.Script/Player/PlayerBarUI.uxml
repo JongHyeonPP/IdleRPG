@@ -1,0 +1,9 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:Template name="HpBar" src="project://database/Assets/02.Script/Player/HpBar.uxml?fileID=9197481963319205126&amp;guid=ebf4510ccf8a72144b8af3b174968faf&amp;type=3#HpBar" />
+    <engine:Template name="MpBar" src="project://database/Assets/02.Script/Player/MpBar.uxml?fileID=9197481963319205126&amp;guid=2b643dc22a7ba76469150b2d795ce27d&amp;type=3#MpBar" />
+    <Style src="project://database/Assets/02.Script/Player/PlayerBarUI.uss?fileID=7433441132597879392&amp;guid=d240d33fd4db67a4ca757cdf0d2a3e11&amp;type=3#PlayerBarUI" />
+    <engine:VisualElement name="Vertical" style="flex-grow: 0; width: 0; align-self: center; bottom: 1263px; position: absolute; left: 173px; align-items: center; transform-origin: center; height: 83px;">
+        <engine:Instance template="HpBar" name="HpBar" style="align-self: center;" />
+        <engine:Instance template="MpBar" name="MpBar" style="align-self: center;" />
+    </engine:VisualElement>
+</engine:UXML>

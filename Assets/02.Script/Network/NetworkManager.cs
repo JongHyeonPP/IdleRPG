@@ -23,6 +23,7 @@ public class NetworkManager : MonoBehaviour
         _deviceId = SystemInfo.deviceUniqueIdentifier;
         _fbRef = FirebaseDatabase.DefaultInstance.RootReference;
         StartBroker.OnAuthenticationComplete += OnAutenticationComplete;
+        StartBroker.OnMoveBattleScene += ListenForDeviceChange;
     }
     //구글 인증이 됐다면 콜백되어 userId를 기반으로 Firebase에 연동한다.
     private void OnAutenticationComplete()

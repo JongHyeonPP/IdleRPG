@@ -62,8 +62,8 @@ MonoBehaviour:
   plainObject: {fileID: 3302133710001009244}
   beachObject: {fileID: 8200759305592260889}
   caveObject: {fileID: 6224144869690815789}
-  desertObject: {fileID: 6179574044759941385}
-  desertRuinsObject: {fileID: 2734540892361272009}
+  desertObject: {fileID: 2734540892361272009}
+  desertRuinsObject: {fileID: 6179574044759941385}
   elfCityObject: {fileID: 8350207994477909409}
   forestObject: {fileID: 3400167258112059077}
   iceFieldObject: {fileID: 6288053321309246817}
@@ -883,7 +883,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8868303119862581872, guid: 372ab199da579e64f92b1d82b4ad071d, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1183,7 +1183,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8868303119862581872, guid: 72bdb66726ee9bf4692bea84b324c84a, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -22,15 +22,14 @@ public class BattleManager : MonoBehaviour
     [SerializeField] List<BackgroundPiece> _pieces;//위치를 지속적으로 변경하면서 보일 배경 이미지들
     private EnemyController[] _enemies = null;//현재 나와서 전투 대기 중인 적들 정보
     private int _lastEnemyIndex;//_enemies 배열 중 끝에 있는 적의 인덱스
-    private float _enemyPlayerDistance = 0.7f;//멈춰서 공격하는 시점의 적과 나의 간격
-    private float _bossPlayerDistance = 1.3f;//멈춰서 공격하는 시점의 보스와 나의 간격
+    private float _enemyPlayerDistance = 1f;//멈춰서 공격하는 시점의 적과 나의 간격
+    private float _bossPlayerDistance = 2f;//멈춰서 공격하는 시점의 보스와 나의 간격
     private bool _isMove;//캐릭터가 움직이고 있는지. 실제로는 적들과 배경이 움직이고 있는지라고 할 수 있다.
     private float _speed = 2.5f;//움직이는 속도
     private float _enemySpace = 1f;// enemies의 배열 한 칸당 실제로 떨어지게 되는 x 간격
     private int _enemyBundleNum = 10;//적이 위치할 수 있는 배열의 크기. 실제로 적이 몇 명 할당될지는 DetermineEnemyNum가 정의한다.
     private int _currentTargetIndex;//현재 마주보고 있는 캐릭터의 enemies에서의 인덱스
     private bool isBattleActive = false; // 전투 루프 활성화 여부
-    private GameData _gameData;//세이브 로드에 사용하는 게임 데이터
 
     private StageInfo currentStageInfo;//현재 진행 중인 스테이지의 전투 정보... 적 종류, 개수, 스테이지 이름...
     private BattleType battleType;//전투의 타입. Default, Boss, Die
@@ -48,11 +47,10 @@ public class BattleManager : MonoBehaviour
         _controller = GameManager.controller;
         _ePool0.poolParent = _ePool1.poolParent = _poolParent;
         GameManager.instance.AutoSaveStart();
-        _gameData = GameManager.instance.gameData;
         SetEvent();
         _isMove = true;
         _controller.MoveState(true);
-        BattleBroker.OnStageChange(GameManager.instance.gameData.currentStageNum);
+        BattleBroker.OnStageChange(StartBroker.GetGameData().currentStageNum);
         isBattleActive = true;
     }
 
@@ -63,7 +61,8 @@ public class BattleManager : MonoBehaviour
         BattleBroker.OnStageChange += OnStageChange;
         BattleBroker.OnBossEnter += OnBossEnter;
         BattleBroker.OnEnemyDead += OnEnemyDead;
-        BattleBroker.OnPlayerDead += OnPlayerDead;
+        PlayerBroker.OnPlayerDead += OnPlayerDead;
+        BattleBroker.GetBattleType += ()=>battleType;
     }
 
     private void OnPlayerDead()
@@ -132,7 +131,8 @@ public class BattleManager : MonoBehaviour
             switch (battleType)
             {
                 case BattleType.Default:
-                    //EnemyStatusManager.instance.SetStageStatus();
+                    //
+                    //Manager.instance.SetStageStatus();
                     _enemies = MakeDefaultEnemies();
                     break;
                 case BattleType.Boss:
@@ -172,7 +172,7 @@ public class BattleManager : MonoBehaviour
     }
     private void OnStageChange(int stageNum)
     {
-        currentStageInfo = StageManager.instance.GetStageInfo(stageNum);
+        currentStageInfo = StageInfoManager.instance.GetStageInfo(stageNum);
         BattleBroker.OnStageEnter();
     }
     private void OnStageEnter()
@@ -186,7 +186,6 @@ public class BattleManager : MonoBehaviour
 
     private void OnBossEnter()
     {
-        _controller.SetHpMaxHP();
         ClearEntireBattle();
         InitBossPools();
         battleType = BattleType.Boss;
@@ -198,7 +197,6 @@ public class BattleManager : MonoBehaviour
         ClearActiveDrop();
         if (_enemies != null)
             ClearActiveEnemy();
-        _controller.StopAttack();
         isBattleActive = false; // 전투 루프 비활성화
     }
 
@@ -297,6 +295,7 @@ public class BattleManager : MonoBehaviour
         if (battleType == BattleType.Boss)
         {
             OnBossStageClear();
+           BattleBroker.OnBossClear?.Invoke();
         }
     }
 
@@ -312,19 +311,19 @@ public class BattleManager : MonoBehaviour
     private IEnumerator StageEnterAfterWhile()
     {
         yield return new WaitForSeconds(1.5f);
-        BattleBroker.OnStageChange(GameManager.instance.gameData.currentStageNum);
+        BattleBroker.OnStageChange(StartBroker.GetGameData().currentStageNum);
     }
 
     private void DropItem(Vector3 position)
     {
         DropBase dropBase;
-        if (UtilityManager.CalculateProbability(0.5f))
+        if (UtilityManager.CalculateProbability(1f))
         {
             var dropGold = _dPool.GetFromPool<GoldDrop>();
             activeGold.Add(dropGold);
             dropBase = dropGold;
             dropBase.transform.position = position + Vector3.up * 0.5f;
-            dropBase.StartBounceMove();
+            dropBase.StartDropMove();
         }
         else
         {
@@ -332,10 +331,8 @@ public class BattleManager : MonoBehaviour
             activeExp.Add(dropExp);
             dropBase = dropExp;
             dropBase.transform.position = position + Vector3.up * 0.2f;
-            dropBase.StartInflictForce();
+            dropBase.StartDropMove();
         }
-
-        dropBase.IgnorePlayerCollider();
     }
 
     private void ClearActiveDrop()
@@ -365,4 +362,22 @@ public class BattleManager : MonoBehaviour
         }
         _enemies = null;
     }
+    private void OnDestroy()
+    {
+        ClearEvent();
+    }
+
+    private void ClearEvent()
+    {
+        // BattleBroker 이벤트 해제
+        BattleBroker.OnStageEnter -= OnStageEnter;
+        BattleBroker.OnStageChange -= OnStageChange;
+        BattleBroker.OnBossEnter -= OnBossEnter;
+        BattleBroker.OnEnemyDead -= OnEnemyDead;
+        BattleBroker.GetBattleType -= () => battleType;
+
+        // PlayerBroker 이벤트 해제
+        PlayerBroker.OnPlayerDead -= OnPlayerDead;
+    }
+
 }

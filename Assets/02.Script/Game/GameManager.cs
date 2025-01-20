@@ -10,6 +10,7 @@ using GooglePlayGames.BasicApi;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using UnityEngine.Playables;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
@@ -49,8 +50,7 @@ public class GameManager : MonoBehaviour
     }
     private void Start()
     {
-        BattleBroker.OnGoldGain += GetGoldByDrop;
-        BattleBroker.OnExpGain += GetExpByDrop;
+        StartBroker.GetGameData += () => gameData;
         BattleBroker.OnStageChange += OnStageChange;
     }
 
@@ -111,6 +111,7 @@ public class GameManager : MonoBehaviour
         if (gameData == null)
         {
             Debug.Log("No saved game data found. Initializing default values.");
+<<<<<<< HEAD
             gameData = new GameData
             {
                 gold = 0,
@@ -120,7 +121,19 @@ public class GameManager : MonoBehaviour
                 statLevel_StatPoint = new Dictionary<StatusType, int>()
 
             };
+=======
+            gameData = new();
+>>>>>>> JongHyeon
         }
+        if (gameData.level < 1)
+        {
+            gameData.level = 1;
+        }
+        gameData.skillLevel ??= new();
+        gameData.weaponNum ??= new();
+        gameData.statLevel_Gold ??= new();
+        gameData.statLevel_StatPoint ??= new();
+        gameData.equipedSkillArr ??= new string[10];
         userName = PlayerPrefs.GetString("Name");
         string serializedData = JsonConvert.SerializeObject(gameData, Formatting.Indented);
         Debug.Log("Game data loaded:\n" + serializedData);
@@ -150,32 +163,36 @@ public class GameManager : MonoBehaviour
             StartBroker.OnAuthenticationComplete?.Invoke();
         }       
     }
-    private void GetGoldByDrop()
+    public void GetGoldByDrop()
     {
-        //mainStageNum
-        gameData.gold += 10 * (gameData.currentStageNum + 1);
+        int value = 10 * (gameData.currentStageNum + 1) + Random.Range(0,3);
+        gameData.gold += value;
+        BattleBroker.OnGoldSet();
+        BattleBroker.OnCurrencyInBattle?.Invoke(DropType.Gold, value);
     }
-    private void GetExpByDrop()
+    public void GetExpByDrop()
     {
+        int value = 10 * (gameData.currentStageNum + 1);
         //mainStageNum
-        gameData.exp += 10 * (gameData.currentStageNum + 1);
+        gameData.exp += value;
         if (gameData.exp >= GetNeedExp())
         {
             gameData.exp = 0;
             gameData.level++;
-            BattleBroker.OnLevelUp();
         }
+        BattleBroker.OnLevelExpSet();
+        BattleBroker.OnCurrencyInBattle(DropType.Exp, value);
     }
     public float GetExpPercent()
     {
-        return Math.Clamp(gameData.exp / GetNeedExp(), 0f, 1f);
+        return Math.Clamp((float)(gameData.exp / GetNeedExp()), 0, 1);
     }
 
-    private float GetNeedExp()
+    private int GetNeedExp()
     {
-        return gameData.level * 100f;
+        return gameData.level * 100;
     }
-    //MainStageNum을 변경하고 거기에 맞는 적들과 배경을 세팅한다.
+    
     private void OnStageChange(int stageNum)
     {
         gameData.currentStageNum = stageNum;

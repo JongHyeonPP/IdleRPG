@@ -1,0 +1,11 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:VisualElement name="PlayerSpriteArea" style="flex-grow: 0; width: 100%; height: 100%; position: absolute; align-self: center; background-color: rgb(65, 65, 65); top: 0; left: 0; font-size: 39px; color: rgb(255, 255, 255);">
+        <engine:VisualElement name="TextVertical" style="flex-grow: 0; position: relative; top: 0; align-items: center;">
+            <engine:Label text="Lv.243" name="LevelLabel" style="-unity-text-align: upper-center;" />
+            <engine:VisualElement name="NameArea" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.36); width: 176px; align-items: center;">
+                <engine:Label text="종종종현" name="NameLabel" />
+            </engine:VisualElement>
+        </engine:VisualElement>
+        <engine:VisualElement style="flex-grow: 0; width: 296px; align-self: center; justify-content: center; height: 298px; background-image: url(&quot;project://database/Assets/07.Texture/PlayerRenderTexture.renderTexture?fileID=8400000&amp;guid=702b6e7164ab6d7439554990f2b5d509&amp;type=2#PlayerRenderTexture&quot;);" />
+    </engine:VisualElement>
+</engine:UXML>

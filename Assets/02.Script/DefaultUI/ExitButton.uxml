@@ -1,0 +1,3 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:Button text="X" name="ExitButton" focusable="false" style="width: 150px; height: 150px; background-color: rgb(255, 64, 64); font-size: 104px; color: rgb(255, 255, 255);" />
+</engine:UXML>

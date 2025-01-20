@@ -1,0 +1,35 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:Template name="EquipSlot" src="project://database/Assets/02.Script/TotalStatus/EquipSlot.uxml?fileID=9197481963319205126&amp;guid=d885f3cb5474a964fa6f4956167ea844&amp;type=3#EquipSlot" />
+    <engine:Template name="PlayerSpriteArea" src="project://database/Assets/02.Script/TotalStatus/PlayerSpriteArea.uxml?fileID=9197481963319205126&amp;guid=9b608c6dd5e0b1c409a6262a7b6a1cba&amp;type=3#PlayerSpriteArea" />
+    <engine:Template name="StatusLabelSet" src="project://database/Assets/02.Script/TotalStatus/StatusLabelSet.uxml?fileID=9197481963319205126&amp;guid=13e50ef98a86b9947ba1c46ebbba897e&amp;type=3#StatusLabelSet" />
+    <Style src="project://database/Assets/02.Script/TotalStatus/TotalStatusUI.uss?fileID=7433441132597879392&amp;guid=c84266722f293744b9c1f06e7424d726&amp;type=3#TotalStatusUI" />
+    <engine:VisualElement name="TotalStatusUI" style="flex-grow: 0; position: absolute; background-color: rgb(152, 97, 6); align-self: center; width: 985px; height: 1633px; bottom: 321px; font-size: 39px; color: rgb(255, 255, 255);">
+        <engine:VisualElement name="TopArea" style="flex-grow: 0; height: 113px; background-color: rgba(0, 0, 0, 0.36); flex-direction: row; justify-content: center; align-items: center;">
+            <engine:Button text="기본 정보" name="StatusButton" focusable="false" class="CategoriSelectButton" />
+            <engine:Button text="외형" name="AppearanceButton" focusable="false" class="CategoriSelectButton" />
+        </engine:VisualElement>
+        <engine:VisualElement name="MiddleArea" style="flex-grow: 0; height: 556px;">
+            <engine:VisualElement name="MiddleHorizontal" style="flex-grow: 0; justify-content: center; align-items: center; flex-direction: row; top: 201px; height: 326px;">
+                <engine:Instance template="EquipSlot" name="WeaponSlot" class="EquipSlotPadding" />
+                <engine:Instance template="PlayerSpriteArea" name="PlayerArea" style="height: 562px; width: 154px;" />
+                <engine:Instance template="EquipSlot" name="AccessoriesSlot" class="EquipSlotPadding" />
+            </engine:VisualElement>
+        </engine:VisualElement>
+        <engine:VisualElement name="BottomArea" style="flex-grow: 0; height: 56%; width: 94%; align-items: flex-start; align-self: center; background-color: rgba(0, 0, 0, 0.48);">
+            <engine:VisualElement name="SetVertical" style="flex-grow: 0; height: 100%; width: 100%; align-items: flex-start; align-self: center; background-color: rgba(0, 0, 0, 0); padding-top: 35px; padding-left: 61px; padding-right: 64px;">
+                <engine:Instance template="StatusLabelSet" name="PowerSet" class="LabelSetPadding" style="width: 100%;" />
+                <engine:Instance template="StatusLabelSet" name="MaxHpSet" class="LabelSetPadding" style="width: 100%;" />
+                <engine:Instance template="StatusLabelSet" name="HpRecoverSet" class="LabelSetPadding" style="width: 100%;" />
+                <engine:Instance template="StatusLabelSet" name="CriticalSet" class="LabelSetPadding" style="width: 100%;" />
+                <engine:Instance template="StatusLabelSet" name="CriticalDamageSet" class="LabelSetPadding" style="width: 100%;" />
+                <engine:Instance template="StatusLabelSet" name="MaxMpSet" class="LabelSetPadding" style="width: 100%;" />
+                <engine:Instance template="StatusLabelSet" name="MpRecoverSet" class="LabelSetPadding" style="width: 100%;" />
+                <engine:Instance template="StatusLabelSet" name="ResistSet" class="LabelSetPadding" style="width: 100%;" />
+                <engine:Instance template="StatusLabelSet" name="PenetrationSet" class="LabelSetPadding" style="width: 100%;" />
+                <engine:Instance template="StatusLabelSet" name="GoldAscendSet" class="LabelSetPadding" style="width: 100%;" />
+                <engine:Instance template="StatusLabelSet" name="ExpAscendSet" class="LabelSetPadding" style="width: 100%;" />
+            </engine:VisualElement>
+        </engine:VisualElement>
+        <engine:Button text="X" name="ExitButton" style="position: absolute; width: 150px; height: 150px; font-size: 105px; background-color: rgb(255, 0, 0); align-self: center; bottom: -191px;" />
+    </engine:VisualElement>
+</engine:UXML>

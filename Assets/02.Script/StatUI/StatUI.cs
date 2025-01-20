@@ -104,7 +104,7 @@ public class StatUI : DraggableScrollView
     private void IncrementStat(StatusType stat)
     {
         _gameManager.gameData.statLevel_Gold[stat]++;
-        BattleBroker.OnStatusChange(stat, 1);
+        PlayerBroker.OnStatusChange(stat, 1);
         UpdateStatText(stat, _gameManager.gameData.statLevel_Gold[stat]);
     }
 

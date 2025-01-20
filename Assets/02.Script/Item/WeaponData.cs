@@ -4,7 +4,7 @@ using EnumCollection;
 public class WeaponData : ScriptableObject
 {
     [SerializeField] private WeaponType _weaponType;
-    [SerializeField] private WeaponRarity _weaponRarity;
+    [SerializeField] private Rarity _weaponRarity;
     [SerializeField] private int _power;
     [SerializeField] private int _criticalDamage;
     [SerializeField] private int _critical;
@@ -13,7 +13,7 @@ public class WeaponData : ScriptableObject
     [SerializeField] private int _uID;
     [SerializeField] private string _weaponName;
     public WeaponType WeaponType => _weaponType;
-    public WeaponRarity WeaponRarity => _weaponRarity;
+    public Rarity WeaponRarity => _weaponRarity;
     public int Power => _power;
     public int CriticalDamage => _criticalDamage;
     public int Critical => _critical;

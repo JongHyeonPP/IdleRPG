@@ -2,6 +2,7 @@
     "name": "EventControl",
     "rootNamespace": "",
     "references": [
+        "GUID:61689c4e0b9d39d46afcb27de82ad45a",
         "GUID:c1f3ac597cd61d64e994b094eaa1fa95"
     ],
     "includePlatforms": [],
