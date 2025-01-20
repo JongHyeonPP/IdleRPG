@@ -1,104 +1,111 @@
+using EnumCollection;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class SkillUI : MonoBehaviour
 {
-    [SerializeField] DraggableListView _draggableLV;
     public VisualElement root { get; private set; }
-    private ScrollView _skillScrollView;
-    private bool _isDragging = false;
-    private Vector2 _previousScrollOffset;
-    [SerializeField] private float _scrollSpeed = 1f; // 드래그 속도
+    private FlexibleListView _flexibleLV;
+    private VisualElement _equipBackground;
+    private Button _acquisitionButton;
+    private Button _playerSelectButton;
+    private Button _partySelectButton;
+    [SerializeField] SkillAcquireUI skillAcquireUI;
+    //ButtonColor
+    private readonly Color inactiveColor = new(0f, 0.36f, 0.51f);
+    private readonly Color activeColor = new(0.04f, 0.24f, 0.32f);
+    //Fragment
+    private Dictionary<Rarity, Label> fragmentDict = new();
     private void Awake()
     {
+        _flexibleLV = GetComponent<FlexibleListView>();
         root = GetComponent<UIDocument>().rootVisualElement;
+        _equipBackground = root.Q<VisualElement>("EquipBackground");
+        _acquisitionButton = root.Q<Button>("AcquisitionButton");
+        _playerSelectButton = root.Q<Button>("PlayerSelectButton");
+        _partySelectButton = root.Q<Button>("PartySelectButton");
+        skillAcquireUI.gameObject.SetActive(true);
+        BattleBroker.OnSkillLevelSet += OnSkillLevelChange;
+        BattleBroker.OnFragmentSet += OnFragmentSet;
+    }
+
+    private void OnFragmentSet(Rarity rarity, int num)
+    {
+        fragmentDict[rarity].text = num.ToString();
+    }
+
+    private void OnSkillLevelChange(string skillId, int level)
+    {
+        _flexibleLV.listView.Rebuild();
     }
 
     private void Start()
     {
-        SetSkillData();
-        SetSkillInBattle();
+        OnPlayerSelectButtonClicked();
+        ToggleEquipBackground(false);
+        _equipBackground.RegisterCallback<ClickEvent>(evt => {
+            ToggleEquipBackground(false);
+        });
+        InitFragmentGrid();
+        // 버튼 클릭 이벤트 등록
+        _acquisitionButton.RegisterCallback<ClickEvent>(evt=>OnAcquisitionButtonClicked());
+        _playerSelectButton.RegisterCallback<ClickEvent>(evt=>OnPlayerSelectButtonClicked());
+        _partySelectButton.RegisterCallback<ClickEvent>(evt=>OnPartySelectButtonClicked());
     }
 
-    private void SetSkillData()
+    private void InitFragmentGrid()
     {
-        List<IListViewItem> itemList = SkillManager.instance.GetSkillDataAsItem();
-        _draggableLV.ChangeItems(itemList);
-    }
-    private void SetSkillInBattle()
-    {
-        VisualElement skillInBattlePanel = root.Q<VisualElement>("SkillInBattlePanel");
-        VisualElement container = skillInBattlePanel.Q<VisualElement>("unity-content-container");
-        for (int i = 0; i < container.childCount; i++)
+        VisualElement fragmentGrid = root.Q<VisualElement>("FragmentGrid");
+        Rarity[] rarityArr = (Rarity[])Enum.GetValues(typeof(Rarity));
+        foreach (Rarity rarity in rarityArr)
         {
-            VisualElement child = container.ElementAt(i);
-
-            // 클릭 이벤트 등록
-            child.RegisterCallback<ClickEvent>(evt =>
-            {
-                OnSkillInBattleClicked(child);
-            });
+            InitFragment(rarity);
         }
-
-        _skillScrollView = skillInBattlePanel.Q<ScrollView>();
-        if (_skillScrollView == null)
+        void InitFragment(Rarity rarity)
         {
-            Debug.LogError("Skill ScrollView not found!");
-            return;
+            VisualElement fragment = fragmentGrid.Q<VisualElement>($"Fragment{rarity}");
+            VisualElement iconVe = fragment.Q<VisualElement>("IconVe");
+            Label numLabel = fragment.Q<Label>("NumLabel");
+            fragmentDict.Add(rarity, numLabel);
+            if (!StartBroker.GetGameData().skillFragment.TryGetValue(rarity, out int value))
+            {
+                value = 0;
+            }
+            numLabel.text = value.ToString();
         }
-        SetScrollViewDragEvents();
     }
-    private void OnSkillInBattleClicked(VisualElement clickedChild)
-    {
-        // 클릭된 요소에 대해 필요한 작업 수행
-        Debug.Log($"Clicked child name: {clickedChild.name}");
 
-        // 예: 선택된 스킬을 활성화하거나 세부 정보를 표시
-        // 추가 작업을 이곳에서 처리
+    private void OnPlayerSelectButtonClicked()
+    {
+        List<IListViewItem> itemList = SkillManager.instance.GetSkillDataListAsItem(true);
+        _flexibleLV.ChangeItems(itemList);
+        _playerSelectButton.style.backgroundColor = activeColor;
+        _partySelectButton.style.backgroundColor = inactiveColor;
     }
-    private void SetScrollViewDragEvents()
+    private void OnPartySelectButtonClicked()
     {
-        // PointerDownEvent: 드래그 시작
-        _skillScrollView.RegisterCallback<PointerDownEvent>(evt =>
+        List<IListViewItem> itemList = SkillManager.instance.GetSkillDataListAsItem(false);
+        _flexibleLV.ChangeItems(itemList);
+        _partySelectButton.style.backgroundColor = activeColor;
+        _playerSelectButton.style.backgroundColor = inactiveColor;
+    }
+
+    public void ToggleEquipBackground(bool isActive)
+    {
+        if (isActive)
         {
-            if (evt.isPrimary)
-            {
-                _isDragging = true;
-                _previousScrollOffset = _skillScrollView.scrollOffset;
-                evt.StopPropagation();
-            }
-        });
-
-        // PointerMoveEvent: 드래그 중
-        _skillScrollView.RegisterCallback<PointerMoveEvent>(evt =>
+            _equipBackground.style.display = DisplayStyle.Flex;
+        }
+        else
         {
-            if (_isDragging)
-            {
-                // X축 스크롤 오프셋 계산
-                Vector2 newScrollOffset = _previousScrollOffset + new Vector2(-evt.deltaPosition.x * _scrollSpeed, 0);
-                newScrollOffset.x = Mathf.Clamp(
-                    newScrollOffset.x,
-                    0,
-                    _skillScrollView.contentContainer.resolvedStyle.width - _skillScrollView.resolvedStyle.width
-                );
-
-                // 새로운 스크롤 오프셋 적용
-                _skillScrollView.scrollOffset = newScrollOffset;
-                _previousScrollOffset = newScrollOffset;
-
-                evt.StopPropagation();
-            }
-        });
-
-        // PointerUpEvent: 드래그 종료
-        _skillScrollView.RegisterCallback<PointerUpEvent>(evt =>
-        {
-            if (evt.isPrimary)
-            {
-                _isDragging = false;
-                evt.StopPropagation();
-            }
-        });
+            _equipBackground.style.display = DisplayStyle.None;
+        }
+    }
+    // 버튼 클릭 시 실행되는 메서드
+    private void OnAcquisitionButtonClicked()
+    {
+        skillAcquireUI.ActiveUI();
     }
 }

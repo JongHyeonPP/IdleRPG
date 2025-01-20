@@ -12,13 +12,16 @@ public class UIManager : MonoBehaviour
     [SerializeField] DuplicateLoginUI _duplicateLoginUI;
     [SerializeField] TotalStatusUI _totalStatusUI;
     [SerializeField] SkillInfoUI _skillInfoUI;
-    
+    [SerializeField] WeaponUI _weaponUI;
     void Start()
     {
         _stageSelectUI.gameObject.SetActive(true);
         _stageSelectBackground.gameObject.SetActive(true);
         _duplicateLoginUI.gameObject.SetActive(true);
         _totalStatusUI.gameObject.SetActive(true);
+        _skillInfoUI.gameObject.SetActive(true);
+        _weaponUI.gameObject.SetActive(true);
+        _statUI.gameObject.SetActive(true);
         _playerStatusBarUI.root.style.display = DisplayStyle.Flex;
         _goldLabelUI.root.style.display = DisplayStyle.Flex;
         _statUI.root.style.display = DisplayStyle.Flex;

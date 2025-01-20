@@ -92,11 +92,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 6728990680268467832}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a843bf01ee06dcb45aa560d89e3a9289, type: 3}
+  m_Script: {fileID: 11500000, guid: 92fce378b6ea86d468ce56b43549bb95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _controller: {fileID: 6170235044210406654}
   _scrollSpeed: 1
+  _controller: {fileID: 6170235044210406654}
 --- !u!114 &6170235044210406654
 MonoBehaviour:
   m_ObjectHideFlags: 0

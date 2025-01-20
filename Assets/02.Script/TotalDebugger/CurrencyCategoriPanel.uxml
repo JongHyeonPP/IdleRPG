@@ -1,0 +1,10 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:Template name="DataControlItem" src="project://database/Assets/02.Script/TotalDebugger/DataPanel_0.uxml?fileID=9197481963319205126&amp;guid=672383c259035ae4ea889d37f8869baa&amp;type=3#DataPanel_0" />
+    <engine:VisualElement name="CurrencyPanel" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.4); padding-top: 13px; position: absolute; width: 100%; height: 100%;">
+        <engine:Instance template="DataControlItem" name="LevelPanel" />
+        <engine:Instance template="DataControlItem" name="GoldPanel" />
+        <engine:Instance template="DataControlItem" name="DiaPanel" />
+        <engine:Instance template="DataControlItem" name="EmeraldPanel" />
+        <engine:Instance template="DataControlItem" name="MaxStagePanel" />
+    </engine:VisualElement>
+</engine:UXML>

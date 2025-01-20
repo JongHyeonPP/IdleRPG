@@ -93,8 +93,8 @@ public class TotalStatusUI : MonoBehaviour
         _levelLabel = area.Q<Label>("LevelLabel");
         _nameLabel = area.Q<Label>("NameLabel");
         PlayerBroker.OnSetName += SetName;
-        PlayerBroker.OnSetLevel += SetLevel;
-        SetLevel(GameManager.instance.gameData.level);
+        BattleBroker.OnLevelExpSet += SetLevel;
+        SetLevel();
         SetName(GameManager.instance.userName);
     }
     private void TopAreaInit()
@@ -112,9 +112,9 @@ public class TotalStatusUI : MonoBehaviour
     {
         _nameLabel.text = name;
     }
-    private void SetLevel(int level)
+    private void SetLevel()
     {
-        _levelLabel.text = $"Lv. {level}";
+        _levelLabel.text = $"Lv. {GameManager.instance.gameData.level}";
     }
     public void ActiveTotalStatusUI()
     {

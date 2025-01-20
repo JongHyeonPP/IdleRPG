@@ -4,7 +4,12 @@ using UnityEngine.UIElements;
 
 public class SkillListController : LVItemController
 {
-    [SerializeField] SkillInfoUI skillInfoUI;
+    [SerializeField] SkillInfoUI _skillInfoUI;
+    private GameData _gameData;
+    private void Start()
+    {
+       _gameData = StartBroker.GetGameData();
+    }
     public override void BindItem(VisualElement element, int index)
     {
         IListViewItem item = draggableLV.items[index];
@@ -13,22 +18,36 @@ public class SkillListController : LVItemController
         {
             SkillData skillData = skillDataSet.dataSet[i];
             VisualElement dataRootParent = element.Q<VisualElement>($"SkillData_{i}");
-            Label nameLabel = dataRootParent.Q<Label>("NameLabel");
-            nameLabel.text = skillData.name;
-            ProgressBar containProgressBar = dataRootParent.Q<ProgressBar>("ContainProgressBar");
-            GameData gameData = StartBroker.GetGameData();
-            if (!gameData.skillCount.TryGetValue(skillData.name, out int skillCount))
+            if (!_gameData.skillLevel.TryGetValue(skillData.name, out int skillLevel))
             {
-                skillCount = 0;
+                skillLevel = 0;
             }
-            int requirePiece = PriceManager.instance.GetRequirePiece_Skill(skillData.rarity, skillCount);
-            containProgressBar.title = $"{skillCount}/{requirePiece}";
+            VisualElement unacquired = dataRootParent.Q<VisualElement>("Unacquired");
+            VisualElement acquired = dataRootParent.Q<VisualElement>("Acquired");
+            if (skillLevel == 0)
+            {
+                acquired.style.display = DisplayStyle.None;
+                unacquired.style.display = DisplayStyle.Flex;
+            }
+            else if (skillLevel > 0)
+            {
+                acquired.style.display = DisplayStyle.Flex;
+                unacquired.style.display = DisplayStyle.None;
+
+                Label nameLabel = dataRootParent.Q<Label>("NameLabel");
+                Label levelLabel = dataRootParent.Q<Label>("LevelLabel");
+                nameLabel.text = skillData.name;
+                levelLabel.text = $"Lv.{skillLevel}";
+                ProgressBar containProgressBar = dataRootParent.Q<ProgressBar>("ContainProgressBar");
+                VisualElement skillIcon = dataRootParent.Q<VisualElement>("SkillIcon");
+                skillIcon.style.backgroundImage = new(skillData.iconSprite);
+            }
             VisualElement clickVe = dataRootParent.Q<VisualElement>("ClickVe");
             clickVe.RegisterCallback<ClickEvent>(evt =>
             {
-                skillInfoUI.ActiveUI(skillData);
+                if (!draggableLV._isDragging)
+                    _skillInfoUI.ActiveUI(skillData, skillLevel);
             });
-            clickVe.style.backgroundImage = new(skillData.icon);
         }
     }
 }

@@ -51,8 +51,6 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         StartBroker.GetGameData += () => gameData;
-        BattleBroker.OnGoldGain += GetGoldByDrop;
-        BattleBroker.OnExpGain += GetExpByDrop;
         BattleBroker.OnStageChange += OnStageChange;
     }
 
@@ -113,17 +111,20 @@ public class GameManager : MonoBehaviour
         if (gameData == null)
         {
             Debug.Log("No saved game data found. Initializing default values.");
-            gameData = new GameData();
+            gameData = new();
+        }
+        if (gameData.level < 1)
+        {
+            gameData.level = 1;
         }
         gameData.skillLevel ??= new();
         gameData.weaponNum ??= new();
         gameData.statLevel_Gold ??= new();
         gameData.statLevel_StatPoint ??= new();
-        gameData.skillIdArr ??= new string[10];
+        gameData.equipedSkillArr ??= new string[10];
         userName = PlayerPrefs.GetString("Name");
         string serializedData = JsonConvert.SerializeObject(gameData, Formatting.Indented);
         Debug.Log("Game data loaded:\n" + serializedData);
-        gameData.maxStageNum = 299;
     }
 
     //구글 인증을 진행한다.
@@ -150,13 +151,14 @@ public class GameManager : MonoBehaviour
             StartBroker.OnAuthenticationComplete?.Invoke();
         }       
     }
-    private void GetGoldByDrop()
+    public void GetGoldByDrop()
     {
         int value = 10 * (gameData.currentStageNum + 1) + Random.Range(0,3);
         gameData.gold += value;
+        BattleBroker.OnGoldSet();
         BattleBroker.OnCurrencyInBattle?.Invoke(DropType.Gold, value);
     }
-    private void GetExpByDrop()
+    public void GetExpByDrop()
     {
         int value = 10 * (gameData.currentStageNum + 1);
         //mainStageNum
@@ -165,18 +167,18 @@ public class GameManager : MonoBehaviour
         {
             gameData.exp = 0;
             gameData.level++;
-            PlayerBroker.OnSetLevel(gameData.level);
         }
+        BattleBroker.OnLevelExpSet();
         BattleBroker.OnCurrencyInBattle(DropType.Exp, value);
     }
     public float GetExpPercent()
     {
-        return Math.Clamp(gameData.exp / GetNeedExp(), 0f, 1f);
+        return Math.Clamp((float)(gameData.exp / GetNeedExp()), 0, 1);
     }
 
-    private float GetNeedExp()
+    private int GetNeedExp()
     {
-        return gameData.level * 100f;
+        return gameData.level * 100;
     }
     
     private void OnStageChange(int stageNum)

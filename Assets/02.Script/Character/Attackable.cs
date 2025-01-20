@@ -14,11 +14,21 @@ public abstract class Attackable : MonoBehaviour
     //private Dictionary<> tempEffect = new();
     protected Coroutine attackCoroutine;
     public bool isDead;
+    protected EquipedSkill[] skillInBattleArr = new EquipedSkill[10];
+    private void DefaultAttack()
+    {
+        SkillBehaviour(1, SkillType.Damage, SkillRange.Target);
+    }
+    private void ActiveSkill(string _skillName, float _value, float _range, float type)
+    {
+        Debug.Log("Skill : " + _skillName);
+        SkillBehaviour(1, SkillType.Damage, SkillRange.Target);
+    }
     protected void SkillBehaviour(int skillValue, SkillType type, SkillRange range, int targetNum = 1, float preDelay = 0.2f, float postDelay = 0.2f)
     {
-        StartCoroutine(AnimBehaviour(skillValue, type, range, targetNum, preDelay, postDelay));
+        StartCoroutine(SkillBehaviorCoroutine(skillValue, type, range, targetNum, preDelay, postDelay));
     }
-    private IEnumerator AnimBehaviour(int skillValue, SkillType type, SkillRange range, int targetNum, float preDelay, float postDelay)
+    private IEnumerator SkillBehaviorCoroutine(int skillValue, SkillType type, SkillRange range, int targetNum, float preDelay, float postDelay)
     {
 
         switch (type)
@@ -109,16 +119,16 @@ public abstract class Attackable : MonoBehaviour
         while (true)
         {
             bool isActiveSkill = false;
-            if (_status.Skills != null)
+            foreach (EquipedSkill skill in skillInBattleArr)
             {
-                foreach (SkillInBattle skill in _status.Skills)
+                if (skill == null)
+                    continue;
+                if (skill.IsSkillAble)
                 {
-                    if (skill.IsSkillAble)
-                    {
-                        SkillData data = skill.skillData;
-                        ActiveSkill(data.name, data.value[0], data.range, data.range);
-                        isActiveSkill = true;
-                    }
+                    SkillData data = skill.skillData;
+                    ActiveSkill(data.name, data.value[0], data.range, data.range);
+                    isActiveSkill = true;
+                    break;
                 }
             }
             if (!isActiveSkill)
@@ -129,15 +139,8 @@ public abstract class Attackable : MonoBehaviour
             yield return new WaitForSeconds(attackTerm);
         }
     }
-    private void DefaultAttack()
-    {
-        SkillBehaviour(1, SkillType.Damage, SkillRange.Target);
-    }
     public abstract ICharacterStatus GetStatus();
     protected abstract void OnDead();
     protected abstract void OnReceiveDamage();
-    private void ActiveSkill(string _skillName, float _value, float _range, float type)
-    {
-        Debug.Log("Skill : " + _skillName);
-    }
+
 }

@@ -3,13 +3,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "PriceInfo", menuName = "ScriptableObjects/PriceInfo")]
 public class PriceInfo : ScriptableObject
 {
-    [Header("Skill_Emerald")]
-    public int[] _commonSkillEmerald;
-    public int[] _uncommonSkillEmerald;
-    public int[] _rareSkillEmerald;
-    public int[] _uniqueSkillEmerald;
-    public int[] _legendarySkillEmerald;
-    public int[] _mythicSkillEmerald;
     [Header("Skill_Piece")]
     public int[] _commonSkillPiece;
     public int[] _uncommonSkillPiece;

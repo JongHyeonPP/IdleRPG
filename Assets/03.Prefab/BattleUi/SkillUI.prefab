@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 8129201785741373427}
   - component: {fileID: 4130507394480058446}
   - component: {fileID: 3706953290884195722}
-  - component: {fileID: 1978575451978138884}
   - component: {fileID: 4488745040482298338}
+  - component: {fileID: 3191552274732172908}
   m_Layer: 0
   m_Name: SkillUI
   m_TagString: Untagged
@@ -50,7 +50,7 @@ MonoBehaviour:
   m_PanelSettings: {fileID: 11400000, guid: f2f0eb129a3062647b27e4d7a574aeaa, type: 2}
   m_ParentUI: {fileID: 0}
   sourceAsset: {fileID: 9197481963319205126, guid: 8a2646ad555d203469196cc62a19f229, type: 3}
-  m_SortingOrder: 2.1
+  m_SortingOrder: 3
   m_WorldSpaceSizeMode: 1
   m_WorldSpaceWidth: 1920
   m_WorldSpaceHeight: 1080
@@ -67,21 +67,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _itemTemplate: {fileID: 9197481963319205126, guid: 0dff791914ca2c54aa09adb866860a54, type: 3}
-  skillInfoUI: {fileID: 0}
---- !u!114 &1978575451978138884
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3473520005284205408}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a843bf01ee06dcb45aa560d89e3a9289, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _controller: {fileID: 3706953290884195722}
-  _scrollSpeed: 1
+  _skillInfoUI: {fileID: 0}
 --- !u!114 &4488745040482298338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -94,4 +80,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 061a96f3f1e3bc14892b16a88c553bc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _draggableLV: {fileID: 1978575451978138884}
+  _draggableLV: {fileID: 3191552274732172908}
+  skillAcquireUI: {fileID: 0}
+--- !u!114 &3191552274732172908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3473520005284205408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92fce378b6ea86d468ce56b43549bb95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _scrollSpeed: 1
+  _controller: {fileID: 3706953290884195722}

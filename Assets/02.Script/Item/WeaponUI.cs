@@ -116,22 +116,22 @@ public class WeaponUI : MonoBehaviour
             {
                 switch (weaponData.WeaponRarity)
                 {
-                    case WeaponRarity.Common:
+                    case Rarity.Common:
                         button.style.backgroundColor = new StyleColor(Color.gray);
                         break;
-                    case WeaponRarity.Uncommon:
+                    case Rarity.Uncommon:
                         button.style.backgroundColor = new StyleColor(new Color(0.5f, 0.75f, 1f));
                         break;
-                    case WeaponRarity.Rare:
+                    case Rarity.Rare:
                         button.style.backgroundColor = new StyleColor(Color.magenta);
                         break;
-                    case WeaponRarity.Unique:
+                    case Rarity.Unique:
                         button.style.backgroundColor = new StyleColor(Color.green);
                         break;
-                    case WeaponRarity.Legendary:
+                    case Rarity.Legendary:
                         button.style.backgroundColor = new StyleColor(Color.yellow);
                         break;
-                    case WeaponRarity.Mythic:
+                    case Rarity.Mythic:
                         button.style.backgroundColor = new StyleColor(new Color(0f, 0f, 0.5f));
                         break;
                     default:
@@ -179,22 +179,22 @@ public class WeaponUI : MonoBehaviour
 
         switch (weaponData.WeaponRarity)
         {
-            case WeaponRarity.Common:
+            case Rarity.Common:
                 _weaponRarity.style.color = new StyleColor(Color.gray);
                 break;
-            case WeaponRarity.Uncommon:
+            case Rarity.Uncommon:
                 _weaponRarity.style.color = new StyleColor(new Color(0.5f, 0.75f, 1f));
                 break;
-            case WeaponRarity.Rare:
+            case Rarity.Rare:
                 _weaponRarity.style.color = new StyleColor(Color.magenta);
                 break;
-            case WeaponRarity.Unique:
+            case Rarity.Unique:
                 _weaponRarity.style.color = new StyleColor(Color.green);
                 break;
-            case WeaponRarity.Legendary:
+            case Rarity.Legendary:
                 _weaponRarity.style.color = new StyleColor(Color.yellow);
                 break;
-            case WeaponRarity.Mythic:
+            case Rarity.Mythic:
                 _weaponRarity.style.color = new StyleColor(new Color(0f, 0f, 0.5f));
                 break;
             default:

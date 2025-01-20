@@ -11,7 +11,7 @@ public class ExpDrop : DropBase
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            BattleBroker.OnExpGain();
+            GameManager.instance.GetExpByDrop();
             dropPool.ReturnToPool(this);
         }
     }

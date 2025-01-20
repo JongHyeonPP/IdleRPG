@@ -10,5 +10,4 @@ public interface ICharacterStatus
     float CriticalDamage { get; }
     float Resist { get; }
     float Penetration { get; }
-    List<SkillInBattle> Skills { get; }
 }

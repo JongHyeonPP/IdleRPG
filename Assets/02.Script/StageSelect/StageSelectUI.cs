@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 public class StageSelectUI : MonoBehaviour
 {
-    [SerializeField] DraggableListView _draggableLV;
+    [SerializeField] FlexibleListView _draggableLV;
     public VisualElement root { get; private set; }
     private Background[] backgrounds;
     private int _currentIndex; // 현재 Background의 인덱스
@@ -73,7 +73,7 @@ public class StageSelectUI : MonoBehaviour
         Sprite sprite = backgroundSprites[index];
         backgroundImage.style.backgroundImage = new StyleBackground(sprite.texture);
         int start = index * 20;
-        List<IListViewItem> items = StageInfoContainer.instance.GetStageInfosAsItem(start, 20);
+        List<IListViewItem> items = StageInfoManager.instance.GetStageInfosAsItem(start, 20);
 
         _draggableLV.ChangeItems(items);
     }

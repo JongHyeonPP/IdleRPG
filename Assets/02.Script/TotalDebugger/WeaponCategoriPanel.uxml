@@ -1,0 +1,5 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:VisualElement name="CurrencyPanel" style="flex-grow: 1; background-color: rgba(96, 96, 96, 0); padding-top: 13px; position: absolute; width: 100%; height: 90%;">
+        <engine:ScrollView />
+    </engine:VisualElement>
+</engine:UXML>

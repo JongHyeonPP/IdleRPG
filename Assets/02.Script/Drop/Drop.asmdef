@@ -3,7 +3,8 @@
     "rootNamespace": "",
     "references": [
         "Utility",
-        "EventControl"
+        "EventControl",
+        "Game"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

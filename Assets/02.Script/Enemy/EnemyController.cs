@@ -88,4 +88,8 @@ public class EnemyController : Attackable, IMoveByPlayer
             BattleBroker.OnBossHpChanged(ratio);
         }
     }
+    private void OnDestroy()
+    {
+        MediatorManager<IMoveByPlayer>.UnregisterMediator(this);
+    }
 }

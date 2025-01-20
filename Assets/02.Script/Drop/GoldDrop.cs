@@ -21,7 +21,7 @@ public class GoldDrop : DropBase
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            BattleBroker.OnGoldGain();
+            GameManager.instance.GetGoldByDrop();
             dropPool.ReturnToPool(this);
         }
         else if (collision.gameObject.CompareTag("Wall"))

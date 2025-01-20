@@ -6,7 +6,7 @@ using System.Collections;
 public class StartManager : MonoBehaviour
 {
     private AsyncOperation _asyncLoad;//비동기 씬 로드의 진행 상황
-    [SerializeField] StartMainUI startMainUI;//S
+    [SerializeField] StartMainUI startMainUI;
     private void Awake()
     {
         StartBroker.OnAuthenticationComplete += UnderTextLoadGameData;

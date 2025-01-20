@@ -1,0 +1,4 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/02.Script/SceneControl/FadeInSceneChange.uss?fileID=7433441132597879392&amp;guid=567d91ec2bb018f4891dfac9fddb5ba2&amp;type=3#FadeInSceneChange" />
+    <engine:VisualElement name="FadeInSceneChange" class="fade-out" style="transition-timing-function: ease;" />
+</engine:UXML>

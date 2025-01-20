@@ -19,6 +19,6 @@ public static class PlayerBroker
     public static Action OnPlayerDead;
     //이름 바꿨을 때
     public static Action<string> OnSetName;
-    //레벨업 됐을 때
-    public static Action<int> OnSetLevel;
+    //스킬업 했을 때, <스킬 ID, 장착 인덱스>
+    public static Action<string, int> OnSkillChanged;
 }

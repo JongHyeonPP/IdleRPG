@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 
 public abstract class LVItemController:MonoBehaviour
 {
-    public DraggableListView draggableLV { protected get; set; }
+    public FlexibleListView draggableLV { protected get; set; }
     [SerializeField] private VisualTreeAsset _itemTemplate; // VisualTreeAsset ¿øº»
 
     public VisualElement GetTemplate()

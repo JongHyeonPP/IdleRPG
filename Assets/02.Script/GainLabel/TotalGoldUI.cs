@@ -8,7 +8,8 @@ public class TotalLabelUI : MonoBehaviour
     {
         root = GetComponent<UIDocument>().rootVisualElement;
         _goldLabel = root.Q<Label>("GoldLabel");
-        
+
+        BattleBroker.OnGoldSet += SetGold;
         SetGold();
         BattleBroker.OnStageEnter += OnStageEnter;
         BattleBroker.OnBossEnter += OnBossEnter;
@@ -16,14 +17,12 @@ public class TotalLabelUI : MonoBehaviour
 
     private void OnBossEnter()
     {
-        root.style.display = DisplayStyle.None;
-        BattleBroker.OnGoldGain -= SetGold;
+        root.style.display = DisplayStyle.None; 
     }
 
     private void OnStageEnter()
     {
         root.style.display = DisplayStyle.Flex;
-        BattleBroker.OnGoldGain += SetGold;
     }
 
     private void SetGold()

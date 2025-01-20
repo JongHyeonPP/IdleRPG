@@ -10,7 +10,7 @@ public class PlayerController : Attackable
     [SerializeField] private PlayerStatus _status;//플레이어의 능력치
     private CapsuleCollider2D _collider;//플레이어의 콜라이더
     private float _mp;
-    private SkillInBattle[] skillInBattleArr = new SkillInBattle[10];
+
     private Weapon weapon;
     private void Awake()
     {
@@ -21,15 +21,18 @@ public class PlayerController : Attackable
     {
         SetWeapon();
         SetSkillSkillsInBattle();
+        PlayerBroker.OnSkillChanged += OnSkillChanged;
     }
     private void SetSkillSkillsInBattle()
     {
-        string[] skillIdArr =  StartBroker.GetGameData().skillIdArr;
+        string[] skillIdArr = StartBroker.GetGameData().equipedSkillArr;
         for (int i = 0; i < skillIdArr.Length; i++)
         {
             string skillId = skillIdArr[i];
+            if (skillId == null)
+                continue;
             SkillData skillData = SkillManager.instance.GetSkillData(skillId);
-            SkillInBattle skillInBattle = new(skillData);
+            EquipedSkill skillInBattle = new(skillData);
             skillInBattleArr[i] = skillInBattle;
         }
     }
@@ -42,10 +45,13 @@ public class PlayerController : Attackable
         _collider = GetComponent<CapsuleCollider2D>();
         PlayerBroker.OnStatusChange += OnStatusChange;
         BattleBroker.OnBossTimeLimit += OnDead;
-        PlayerBroker.GetPlayerController += () => this;
+        PlayerBroker.GetPlayerController += GetPlayerController;
         BattleBroker.OnStageEnter += OnStageEnter;
         BattleBroker.OnBossEnter += OnBossEnter;
     }
+
+    private PlayerController GetPlayerController() => this;
+
     private void OnBossEnter()
     {
         hp = _status.MaxHp;
@@ -100,7 +106,7 @@ public class PlayerController : Attackable
 
     public void ChangeWeapon()//0 : Melee, 1 : Bow, 2 : Magic
     {
-       
+
     }
 
     //애니메이터의 움직임 변화
@@ -197,5 +203,27 @@ public class PlayerController : Attackable
             }
             yield return null; // 다음 프레임까지 대기
         }
+    }
+    private void OnSkillChanged(string skillId, int index)
+    {
+        EquipedSkill currentSkill = new(SkillManager.instance.GetSkillData(skillId));
+        skillInBattleArr[index] = currentSkill;
+    }
+    private void OnDestroy()
+    {
+        ClearEvent();
+    }
+
+    private void ClearEvent()
+    {
+        // PlayerBroker 이벤트 해제
+        PlayerBroker.OnStatusChange -= OnStatusChange;
+        PlayerBroker.OnSkillChanged -= OnSkillChanged;
+        PlayerBroker.GetPlayerController -= GetPlayerController;
+
+        // BattleBroker 이벤트 해제
+        BattleBroker.OnBossTimeLimit -= OnDead;
+        BattleBroker.OnStageEnter -= OnStageEnter;
+        BattleBroker.OnBossEnter -= OnBossEnter;
     }
 }

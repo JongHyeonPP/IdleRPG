@@ -1,10 +1,10 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <engine:VisualElement name="SkillInfoUI" picking-mode="Ignore" style="flex-grow: 1; justify-content: center; align-items: center;">
-        <engine:VisualElement name="Vertical" style="flex-grow: 0; height: 865px; width: 992px; background-color: rgb(96, 72, 50);">
+        <engine:VisualElement name="Vertical" style="flex-grow: 0; height: 840px; width: 992px; background-color: rgb(96, 72, 50);">
             <engine:VisualElement name="Upper" style="flex-grow: 0.3; padding-top: 60px; padding-left: 60px; flex-direction: row;">
                 <engine:VisualElement name="SkillIconArea" style="flex-grow: 0; flex-shrink: 0; width: 200px; height: 200px; background-image: none;">
                     <engine:VisualElement name="SkillIcon" style="flex-grow: 0; flex-shrink: 0; width: 200px; height: 200px; background-image: url(&quot;project://database/Assets/Asset/Skill_Icon_Pack/red/red_01.PNG?fileID=2800000&amp;guid=275a5bfa4f581a5459d5535d663454ef&amp;type=3#red_01&quot;); justify-content: flex-end;">
-                        <engine:Label text="Lv.1" name="LevelLabel" style="color: rgb(255, 255, 255); font-size: 40px;" />
+                        <engine:Label text="Lv.1" name="LevelLabel" style="color: rgb(255, 255, 255); font-size: 40px; margin-left: 14px;" />
                     </engine:VisualElement>
                     <engine:ProgressBar value="22" title="5/2" name="LevelProgressBar" style="padding-top: 13px;" />
                 </engine:VisualElement>
@@ -20,28 +20,39 @@
                 <engine:VisualElement name="ComplexArea" style="flex-grow: 0; padding-left: 20px; padding-top: 20px; background-color: rgba(0, 0, 0, 0.31); height: 226px;">
                     <engine:Label text="범위 3 이내의 적 모두에게&#10; 공격력의 400%로 1회 공격" name="ComplexLabel" style="color: rgb(255, 255, 255); font-size: 41px;" />
                 </engine:VisualElement>
-                <engine:VisualElement name="VisualElement" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); margin-right: 10px; flex-direction: row; font-size: 34px; padding-top: 29px;">
-                    <engine:VisualElement name="CoolArea" style="flex-grow: 1; position: absolute; width: 440px; background-color: rgba(0, 0, 0, 0.31); flex-direction: row; color: rgb(255, 255, 255);">
+                <engine:VisualElement name="VisualElement" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); margin-right: 0; flex-direction: row; font-size: 34px; padding-top: 29px; justify-content: center;">
+                    <engine:VisualElement name="CoolArea" style="flex-grow: 1; position: relative; width: 440px; background-color: rgba(0, 0, 0, 0.31); flex-direction: row; color: rgb(255, 255, 255); height: 60px;">
                         <engine:Label text="필요공격수" name="CoolTypeLabel" style="flex-grow: 1; padding-left: 49px;" />
                         <engine:Label text="12" name="CoolNumLabel" style="flex-grow: 0; margin-right: 70px;" />
                     </engine:VisualElement>
-                    <engine:VisualElement name="MpArea" style="flex-grow: 1; position: absolute; right: -11px; width: 440px; background-color: rgba(0, 0, 0, 0.31); flex-direction: row; color: rgb(255, 255, 255);">
+                    <engine:VisualElement name="MpArea" style="flex-grow: 1; position: relative; right: -11px; width: 440px; background-color: rgba(0, 0, 0, 0.31); flex-direction: row; color: rgb(255, 255, 255); height: 60px;">
                         <engine:Label text="MP 소모" name="Label" style="flex-grow: 1; padding-left: 49px;" />
                         <engine:Label text="12" name="MpLabel" style="flex-grow: 0; margin-right: 70px;" />
                     </engine:VisualElement>
                 </engine:VisualElement>
             </engine:VisualElement>
-            <engine:VisualElement name="Bottom" style="flex-grow: 0; flex-direction: row; height: 142px; padding-bottom: 0; margin-bottom: 56px; margin-left: 60px; margin-right: 60px; padding-top: 16px; color: rgb(255, 255, 255); font-size: 32px;">
-                <engine:Button name="UpgradeButton" style="flex-grow: 1; margin-right: 43px; width: 80px; background-color: rgb(238, 161, 0); align-items: center;">
-                    <engine:Label text="강화" name="UpgradeLabel" style="margin-top: -8px;" />
-                    <engine:VisualElement name="VisualElement" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0.31); width: 290px; justify-content: center; height: 45px;">
-                        <engine:VisualElement name="CurrencyIcon" style="flex-grow: 1; width: 30px; height: 30px; background-image: none; background-color: rgb(0, 0, 0); position: absolute; margin-left: 7px;" />
-                        <engine:Label text="15" name="CurrencyLabel" style="background-size: 70% 100%; background-color: rgba(0, 0, 0, 0);" />
+            <engine:VisualElement name="Bottom" picking-mode="Ignore" style="flex-grow: 0; flex-direction: row; height: 142px; color: rgb(255, 255, 255); font-size: 32px; visibility: visible; display: flex; justify-content: center;">
+                <engine:VisualElement name="OwnPanel" picking-mode="Ignore" style="flex-grow: 1; width: 892px; height: 127px; flex-direction: row; position: absolute; top: -23px; display: flex;">
+                    <engine:VisualElement name="UpgradePanel" style="flex-grow: 1; width: 80px;">
+                        <engine:Button name="UpgradeButton" style="flex-grow: 1; margin-right: 43px; width: 100%; background-color: rgb(238, 161, 0); align-items: center; position: absolute; display: none;">
+                            <engine:Label text="강화" name="UpgradeLabel" style="margin-top: -8px; font-size: 40px; height: 53px;" />
+                            <engine:VisualElement name="FragmentPanel" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0.31); width: 298px; justify-content: center; height: 55px; flex-direction: row; align-items: center; flex-shrink: 0;">
+                                <engine:VisualElement name="FragmentIcon" style="flex-grow: 0; width: 40px; height: 40px; background-image: none; background-color: rgb(0, 0, 0); position: relative; flex-shrink: 0; margin-left: -18px;" />
+                                <engine:Label text="15" name="FragmentLabel" style="background-size: 70% 100%; background-color: rgba(0, 0, 0, 0); left: 15px; font-size: 43px;" />
+                            </engine:VisualElement>
+                        </engine:Button>
+                        <engine:Label text="최대 레벨" name="MaxLevelLabel" style="margin-top: 0; font-size: 40px; height: 100%; position: absolute; width: 100%; -unity-text-align: middle-center;" />
                     </engine:VisualElement>
-                </engine:Button>
-                <engine:Button name="EquipButton" style="flex-grow: 1; margin-left: 43px; width: 80px; background-color: rgb(238, 161, 0); justify-content: center;">
-                    <engine:Label text="슬롯 장착" name="EquipLabel" />
-                </engine:Button>
+                    <engine:Button name="EquipButton" style="flex-grow: 1; margin-left: 43px; width: 80px; background-color: rgb(238, 161, 0); justify-content: center;">
+                        <engine:Label text="슬롯 장착" name="EquipLabel" style="font-size: 40px;" />
+                    </engine:Button>
+                </engine:VisualElement>
+                <engine:VisualElement name="DisownPanel" picking-mode="Ignore" style="flex-grow: 1; width: 892px; height: 127px; flex-direction: row; position: absolute; top: -23px; display: none;">
+                    <engine:Label text="미습득 스킬" style="width: 80px; flex-grow: 1; -unity-text-align: middle-center;" />
+                    <engine:Button name="AcquireButton" style="flex-grow: 1; margin-left: 43px; width: 80px; background-color: rgb(238, 161, 0); justify-content: center;">
+                        <engine:Label text="스킬습득 이동" name="AcquireLabel" picking-mode="Ignore" />
+                    </engine:Button>
+                </engine:VisualElement>
             </engine:VisualElement>
         </engine:VisualElement>
     </engine:VisualElement>

@@ -172,7 +172,7 @@ public class BattleManager : MonoBehaviour
     }
     private void OnStageChange(int stageNum)
     {
-        currentStageInfo = StageInfoContainer.instance.GetStageInfo(stageNum);
+        currentStageInfo = StageInfoManager.instance.GetStageInfo(stageNum);
         BattleBroker.OnStageEnter();
     }
     private void OnStageEnter()
@@ -362,4 +362,22 @@ public class BattleManager : MonoBehaviour
         }
         _enemies = null;
     }
+    private void OnDestroy()
+    {
+        ClearEvent();
+    }
+
+    private void ClearEvent()
+    {
+        // BattleBroker 이벤트 해제
+        BattleBroker.OnStageEnter -= OnStageEnter;
+        BattleBroker.OnStageChange -= OnStageChange;
+        BattleBroker.OnBossEnter -= OnBossEnter;
+        BattleBroker.OnEnemyDead -= OnEnemyDead;
+        BattleBroker.GetBattleType -= () => battleType;
+
+        // PlayerBroker 이벤트 해제
+        PlayerBroker.OnPlayerDead -= OnPlayerDead;
+    }
+
 }

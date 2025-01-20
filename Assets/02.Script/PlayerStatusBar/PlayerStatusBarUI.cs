@@ -22,14 +22,14 @@ public class PlayerStatusBarUI : MonoBehaviour
         _nameLabel = root.Q<Label>("NameLabel");
         _emeraldLabel = root.Q<Label>("EmeraldLabel");
         _diaLabel = root.Q<Label>("DiaLabel");
-        BattleBroker.OnDiaGain += SetDia;
-        BattleBroker.OnEmeraldGain += SetEmerald;
+
         PlayerBroker.OnSetName += SetName;
-        BattleBroker.OnExpGain += SetExp;
-        PlayerBroker.OnSetLevel += SetLevel;
-        SetLevel(GameManager.instance.gameData.level);
+        BattleBroker.OnDiaSet += SetDia;
+        BattleBroker.OnEmeraldSet += SetEmerald;
+        BattleBroker.OnLevelExpSet += SetLevelExp;
+        OnSetLevel(GameManager.instance.gameData.level);
         SetName(GameManager.instance.userName);
-        SetExp();
+        SetLevelExp();
         SetDia();
         SetEmerald();
         VisualElement playerImage = root.Q<VisualElement>("PlayerImage");
@@ -38,13 +38,14 @@ public class PlayerStatusBarUI : MonoBehaviour
             _totalStatusUI.ActiveTotalStatusUI();
         });
     }
-    private void SetExp()
+    private void SetLevelExp()
     {
         float value = GameManager.instance.GetExpPercent();
         _expBar.value = value;
         _expBar.title = (value*100f).ToString("F2");
+        _levelLabel.text = $"Lv. {GameManager.instance.gameData.level}";
     }
-    private void SetLevel(int level)
+    private void OnSetLevel(int level)
     {
         _levelLabel.text = $"Lv. {level}";
     }

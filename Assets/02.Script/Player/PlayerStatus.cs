@@ -13,7 +13,7 @@ public class PlayerStatus : MonoBehaviour, ICharacterStatus
     [SerializeField] private float _criticalDamage;
     [SerializeField] private float _resist;
     [SerializeField] private float _penetration;
-    [SerializeField] private List<SkillInBattle> _skills = new();
+    [SerializeField] private List<EquipedSkill> _skills = new();
     //상속받지 않음
     [SerializeField] private float _maxMp;
     [SerializeField] private float _manaRecover;
@@ -28,7 +28,7 @@ public class PlayerStatus : MonoBehaviour, ICharacterStatus
     public float CriticalDamage { get => _criticalDamage; set => _criticalDamage = value; }
     public float Resist { get => _resist; set => _resist = value; }
     public float Penetration { get => _penetration; set => _penetration = value; }
-    public List<SkillInBattle> Skills { get => _skills; set => _skills = value; }
+    public List<EquipedSkill> Skills { get => _skills; set => _skills = value; }
     public float MaxMp { get => _maxMp; set => _maxMp = value; }
     public float MpRecover { get => _manaRecover; set => _manaRecover = value; }
     public float GoldAscend { get => _goldAscend; set => _goldAscend = value; }

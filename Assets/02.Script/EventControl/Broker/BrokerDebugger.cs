@@ -20,7 +20,7 @@ public class BrokerDebugger : EditorWindow
     public void CreateGUI()
     {
         // UXML 파일 로드
-        var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/02.Script/EventControl/BrokerDebugger.uxml");
+        var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/02.Script/EventControl/Broker/BrokerDebugger.uxml");
 
         if (visualTree != null)
         {
@@ -75,7 +75,7 @@ public class BrokerDebugger : EditorWindow
     {
 
         // UXML에서 "BlackBackground"라는 이름의 컨테이너 검색
-        var targetContainer = rootVisualElement.Q<VisualElement>("BlackBackground");
+        VisualElement targetContainer = rootVisualElement.Q<VisualElement>("BlackBackground");
         if (targetContainer == null)
         {
             Debug.LogWarning("Target container not found. Ensure it exists in the UXML file.");

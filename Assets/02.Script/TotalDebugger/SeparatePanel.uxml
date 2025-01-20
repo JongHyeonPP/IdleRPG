@@ -1,0 +1,5 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:VisualElement name="SeparatePanel" style="flex-grow: 0; height: 45px; width: 95%; align-self: center;">
+        <engine:Label text="Fragment" name="SeprateLabel" style="background-color: rgba(0, 0, 0, 0.46); color: rgb(255, 255, 255); font-size: 24px; -unity-text-align: middle-center; height: 38px; margin-top: 0; padding-top: 0;" />
+    </engine:VisualElement>
+</engine:UXML>

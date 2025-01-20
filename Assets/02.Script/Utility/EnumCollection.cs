@@ -32,7 +32,7 @@ namespace EnumCollection
     {
         Gold, Exp
     }
-    public enum WeaponRarity
+    public enum Rarity
     {
         Common,
         Uncommon,

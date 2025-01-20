@@ -8,10 +8,11 @@ public class SkillData : ScriptableObject
 {
     [Header("Info")]
     public string skillName;
-    public Sprite icon;
+    public Sprite iconSprite;
     public string simple;
     public string complex;
-    public WeaponRarity rarity;
+    public Rarity rarity;
+    public bool isPlayerSkill;
 
     [Header("ToActive")]
     public SkillCoolType skillCoolType;//or by attack
