@@ -111,19 +111,7 @@ public class GameManager : MonoBehaviour
         if (gameData == null)
         {
             Debug.Log("No saved game data found. Initializing default values.");
-<<<<<<< HEAD
-            gameData = new GameData
-            {
-                gold = 0,
-                skillLevel = new Dictionary<string, int>(),
-                weaponNum = new Dictionary<int, int>(),
-                statLevel_Gold = new Dictionary<StatusType, int>(),
-                statLevel_StatPoint = new Dictionary<StatusType, int>()
-
-            };
-=======
             gameData = new();
->>>>>>> JongHyeon
         }
         if (gameData.level < 1)
         {
