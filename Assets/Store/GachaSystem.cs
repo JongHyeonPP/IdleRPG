@@ -62,14 +62,14 @@ public class GachaSystem
     private WeaponData GetWeaponRarity()
     {
         // µî±Þº° È®·ü Á¤ÀÇ //¹Ù²Ü ¼ö ÀÖÀ½ 
-        var rarityRates = new Dictionary<WeaponRarity, float>
+        var rarityRates = new Dictionary<Rarity, float>
         {
-            { WeaponRarity.Common, 40f },
-            { WeaponRarity.Uncommon, 25f },
-            { WeaponRarity.Rare, 20f },
-            { WeaponRarity.Unique, 10f },
-            { WeaponRarity.Legendary, 4f },
-            { WeaponRarity.Mythic, 1f }
+            { Rarity.Common, 40f },
+            { Rarity.Uncommon, 25f },
+            { Rarity.Rare, 20f },
+            { Rarity.Unique, 10f },
+            { Rarity.Legendary, 4f },
+            { Rarity.Mythic, 1f }
         };
 
         // ÃÑ È®·ü °è»ê

@@ -28,4 +28,6 @@ public static class BattleBroker
     public static Action OnLevelExpSet;
     public static Action OnDiaSet;
     public static Action OnEmeraldSet;
+    //메뉴 UI 변경
+    public static Action<int> OnMenuUIChange;
 }

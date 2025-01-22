@@ -30,5 +30,6 @@ public class UIManager : MonoBehaviour
         _duplicateLoginUI.root.style.display = DisplayStyle.None;
         _totalStatusUI.root.style.display = DisplayStyle.None;
         _skillInfoUI.root.style.display = DisplayStyle.None;
+        BattleBroker.OnMenuUIChange?.Invoke(0);
     }
 }

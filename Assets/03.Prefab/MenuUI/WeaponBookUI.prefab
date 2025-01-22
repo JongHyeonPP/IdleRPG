@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6246763622814510879
+--- !u!1 &6398603105978483194
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,24 +8,23 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 42339448586988686}
-  - component: {fileID: 4634700359260116073}
-  - component: {fileID: 8748986411245883510}
-  - component: {fileID: 799208233245788394}
+  - component: {fileID: 8627036123645239222}
+  - component: {fileID: 4980206565207537396}
+  - component: {fileID: 2872059005750794960}
   m_Layer: 0
-  m_Name: EquipedSkillsUI
+  m_Name: WeaponBookUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &42339448586988686
+--- !u!4 &8627036123645239222
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6246763622814510879}
+  m_GameObject: {fileID: 6398603105978483194}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -34,13 +33,13 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4634700359260116073
+--- !u!114 &4980206565207537396
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6246763622814510879}
+  m_GameObject: {fileID: 6398603105978483194}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
@@ -48,36 +47,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PanelSettings: {fileID: 11400000, guid: f2f0eb129a3062647b27e4d7a574aeaa, type: 2}
   m_ParentUI: {fileID: 0}
-  sourceAsset: {fileID: 9197481963319205126, guid: 3a4a0f43f63911d43a476db57df2b1ed, type: 3}
+  sourceAsset: {fileID: 9197481963319205126, guid: 69c1e354607313a4bb1d3c929eb3946c, type: 3}
   m_SortingOrder: 1
   m_WorldSpaceSizeMode: 1
   m_WorldSpaceWidth: 1920
   m_WorldSpaceHeight: 1080
---- !u!114 &8748986411245883510
+--- !u!114 &2872059005750794960
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6246763622814510879}
+  m_GameObject: {fileID: 6398603105978483194}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38beed2f2ff1484488e9203d66d81547, type: 3}
+  m_Script: {fileID: 11500000, guid: 31e8357799da3224db9bacaa3183b151, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _skillUI: {fileID: 0}
-  emptySprite: {fileID: 21300000, guid: 6c52bbcff1f804ba1b9435a920cb9303, type: 3}
---- !u!114 &799208233245788394
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6246763622814510879}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71c60432944c33b4f9f042fae0f58511, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _scrollSpeed: 1
-  _mode: 1
+  _weaponBook:
+  - {fileID: 11400000, guid: 4a58a5fd2e7b61e498dc73080971909d, type: 2}
+  - {fileID: 11400000, guid: 6e2e40f6f647be447b00ae494ee4015c, type: 2}
+  - {fileID: 11400000, guid: 36949b7c8397d9f40a4c20ccf7926d21, type: 2}
+  - {fileID: 11400000, guid: e88aadac448d24141a31955ecd7e64c5, type: 2}
+  - {fileID: 11400000, guid: f9591e6d41c5bae41bb34b9424036cf6, type: 2}
+  - {fileID: 11400000, guid: 26300ca7ce009f94d8cedd726e8597ef, type: 2}
+  - {fileID: 11400000, guid: dd53213713ca66e4fa88628d12cd7f7d, type: 2}
+  - {fileID: 11400000, guid: 04e31877b747b0a45a5d40a5ad9e7da1, type: 2}

@@ -1,16 +1,9 @@
 {
-    "name": "Ui",
+    "name": "MenuChangeUI",
     "rootNamespace": "",
     "references": [
-        "EventControl",
-        "Game",
-        "PlayerStatusBar",
         "StatUI",
-        "StageSelect",
-        "BossTimer",
-        "GainLabel",
-        "DuplicateLogin",
-        "TotalStatus",
+        "EventControl",
         "Skill",
         "Weapon"
     ],

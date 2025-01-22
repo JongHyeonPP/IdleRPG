@@ -1,0 +1,10 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:Template name="StatElement" src="project://database/Assets/02.Script/Stat/StatElement.uxml?fileID=9197481963319205126&amp;guid=e03f9842bd4760c468ad5c2fae3c5dca&amp;type=3#StatElement" />
+    <engine:ScrollView name="StatScrollView" horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="Hidden" style="height: 800px; position: absolute; width: 100%; top: auto; background-color: rgb(70, 37, 2); left: auto; translate: 0 0; scale: 1 1; bottom: 0;">
+        <engine:Instance template="StatElement" name="PowerElement" />
+        <engine:Instance template="StatElement" name="MaxHpElement" />
+        <engine:Instance template="StatElement" name="HpRecoverElement" />
+        <engine:Instance template="StatElement" name="CriticalElement" />
+        <engine:Instance template="StatElement" name="CriticalDamageElement" />
+    </engine:ScrollView>
+</engine:UXML>

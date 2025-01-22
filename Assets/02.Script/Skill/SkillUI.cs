@@ -108,4 +108,31 @@ public class SkillUI : MonoBehaviour
     {
         skillAcquireUI.ActiveUI();
     }
+    #region UIChange
+    private void OnEnable()
+    {
+        BattleBroker.OnMenuUIChange += HandleUIChange;
+    }
+
+    private void OnDisable()
+    {
+        BattleBroker.OnMenuUIChange -= HandleUIChange;
+    }
+    private void HandleUIChange(int uiType)
+    {
+        if (uiType == 2)
+            ShowSkillUI();
+        else
+            HideSkillUI();
+    }
+    public void HideSkillUI()
+    {
+        root.style.display = DisplayStyle.None;
+    }
+    public void ShowSkillUI()
+    {
+        root.style.display = DisplayStyle.Flex;
+        //킬때마다 무기개수 초기화
+    }
+    #endregion
 }

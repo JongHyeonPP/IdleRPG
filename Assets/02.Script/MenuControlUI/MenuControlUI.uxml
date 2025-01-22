@@ -1,0 +1,11 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:VisualElement name="MenuCahngeUI" style="flex-grow: 1; justify-content: flex-end;">
+        <engine:VisualElement name="MenuParent" style="flex-grow: 0; height: 810px;" />
+        <engine:VisualElement name="MainElement" style="flex-grow: 0; width: 100%; height: 137px; scale: 1 1; translate: 0 1px; position: relative; background-color: rgb(63, 10, 10); flex-direction: row;">
+            <engine:Button text="스텟" name="StatUIButton" style="width: 200px; height: 100%; font-size: 40px; background-color: rgb(231, 134, 134);" />
+            <engine:Button text="무기" name="WeaponUIButton" style="width: 200px; height: 100%; font-size: 40px; background-color: rgb(231, 134, 134);" />
+            <engine:Button text="스킬" name="SkillUIButton" style="width: 200px; height: 100%; font-size: 40px; background-color: rgb(231, 134, 134);" />
+            <engine:Button text="무기도감" name="WeaponBookButton" style="width: 200px; height: 100%; font-size: 40px; background-color: rgb(231, 134, 134);" />
+        </engine:VisualElement>
+    </engine:VisualElement>
+</engine:UXML>

@@ -1,6 +1,0 @@
-<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/02.Script/StageSelect/StageSelectListView.uss?fileID=7433441132597879392&amp;guid=22300913a31f2274cb80b411a7a6b5a4&amp;type=3#StageSelectListView" />
-    <engine:VisualElement name="Root" enabled="true" picking-mode="Ignore" style="align-items: center; width: 100%; height: 100%;">
-        <engine:ListView name="ListView" focusable="false" virtualization-method="DynamicHeight" style="height: 351px; top: 0; background-color: rgba(255, 255, 255, 0); width: 991px; color: rgb(255, 255, 255); flex-grow: 1;" />
-    </engine:VisualElement>
-</engine:UXML>

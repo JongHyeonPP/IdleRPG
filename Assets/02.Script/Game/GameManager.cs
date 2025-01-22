@@ -118,7 +118,7 @@ public class GameManager : MonoBehaviour
             gameData.level = 1;
         }
         gameData.skillLevel ??= new();
-        gameData.weaponNum ??= new();
+        gameData.weaponCount ??= new();
         gameData.statLevel_Gold ??= new();
         gameData.statLevel_StatPoint ??= new();
         gameData.equipedSkillArr ??= new string[10];

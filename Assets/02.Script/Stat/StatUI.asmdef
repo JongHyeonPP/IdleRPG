@@ -1,18 +1,13 @@
 {
-    "name": "Ui",
+    "name": "StatUI",
     "rootNamespace": "",
     "references": [
-        "EventControl",
-        "Game",
-        "PlayerStatusBar",
-        "StatUI",
-        "StageSelect",
-        "BossTimer",
-        "GainLabel",
-        "DuplicateLogin",
-        "TotalStatus",
-        "Skill",
-        "Weapon"
+        "GUID:100c3acede156dc499b847f75b6a4d53",
+        "GUID:6a60e85635d35e94b8097a4eca63f673",
+        "GUID:c1f3ac597cd61d64e994b094eaa1fa95",
+        "GUID:20b20c657697e4f478d6b5b4c5837706",
+        "GUID:61689c4e0b9d39d46afcb27de82ad45a",
+        "GUID:23fbd7660d9cda74b954d924f4c687bd"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
