@@ -20,7 +20,7 @@ public class Weapon : MonoBehaviour
     {
         WeaponData weaponData = obj;
         _weaponData = weaponData;
-        weaponRenderer.sprite = weaponData.weaponSprite;
+        weaponRenderer.sprite = weaponData.WeaponSprite;
     }
     //»ö±òÀÌÆåÆ® ºÎ¿©
 

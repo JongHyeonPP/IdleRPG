@@ -14,34 +14,34 @@ public class WeaponManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        _playerWeaponData = _playerWeaponData.OrderBy(item=>item.uid).ToList();
-        _companionWeaponData = _companionWeaponData.OrderBy(item=>item.uid).ToList();
+        _playerWeaponData = _playerWeaponData.OrderBy(item=>item.UID).ToList();
+        _companionWeaponData = _companionWeaponData.OrderBy(item=>item.UID).ToList();
         ConvertListToDict();
     }
     private void ConvertListToDict()
     {
-        playerWeaponDict = _playerWeaponData.ToDictionary(item=>item.uid, item =>item);
-        companionWeaponDict = _companionWeaponData.ToDictionary(item=>item.uid, item =>item);
+        playerWeaponDict = _playerWeaponData.ToDictionary(item=>item.UID, item =>item);
+        companionWeaponDict = _companionWeaponData.ToDictionary(item=>item.UID, item =>item);
     }
     public List<WeaponData> GetClassifiedWeaponData(bool isPlayerWeapon, Rarity rarity)
     {
         List<WeaponData> currentList = isPlayerWeapon ? _playerWeaponData : _companionWeaponData;
-        IEnumerable<WeaponData> result = currentList.Where(item => item.weaponRarity == rarity);
+        IEnumerable<WeaponData> result = currentList.Where(item => item.WeaponRarity == rarity);
         if (!isPlayerWeapon)
-            result = result.OrderBy(item => item.weaponType);
+            result = result.OrderBy(item => item.WeaponType);
         return result.ToList();
 
     }
     public void SetIconScale(WeaponData weaponData, VisualElement weaponIcon)
     {
         float xScale = 1f, yScale = 1f;
-        if (weaponData.textureSize.x > weaponData.textureSize.y)
+        if (weaponData.TextureSize.x > weaponData.TextureSize.y)
         {
-            yScale = weaponData.textureSize.y / weaponData.textureSize.x;
+            yScale = weaponData.TextureSize.y / weaponData.TextureSize.x;
         }
-        else if (weaponData.textureSize.x < weaponData.textureSize.y)
+        else if (weaponData.TextureSize.x < weaponData.TextureSize.y)
         {
-            xScale = weaponData.textureSize.x / weaponData.textureSize.y;
+            xScale = weaponData.TextureSize.x / weaponData.TextureSize.y;
         }
         weaponIcon.style.scale = new Vector2(xScale, yScale);
     }
@@ -52,11 +52,11 @@ public class WeaponManager : MonoBehaviour
     {
         foreach (var x in _playerWeaponData)
         {
-            x.uid = x.name;
+            //x.UID = x.name;
         }
         foreach (var x in _companionWeaponData)
         {
-            x.uid = x.name;
+            //x.UID = x.name;
         }
     }
 }

@@ -40,7 +40,7 @@ public class WeaponBookUI : MonoBehaviour
             slot.style.flexGrow = slot.style.flexShrink = 0f;
             slotParent.Add(slot);
             var slotIcon = slot.Q<VisualElement>("SlotIcon");
-            slotIcon.style.backgroundImage = new(weapon.weaponSprite);
+            slotIcon.style.backgroundImage = new(weapon.WeaponSprite);
             WeaponManager.instance.SetIconScale(weapon, slotIcon);
         }
         var panel = bookDataPanel.Q<VisualElement>("BookDataPanel");

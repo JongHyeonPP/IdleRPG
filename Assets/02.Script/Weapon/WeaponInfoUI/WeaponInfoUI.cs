@@ -33,7 +33,7 @@ public class WeaponInfoUI : MonoBehaviour
         var equipButton = root.Q<Button>("EquipButton");
         equipButton.clickable.clicked += () => OnEquipClick();
         var reinforceButton = root.Q<Button>("ReinforceButton");
-        reinforceButton.clickable.clicked += () => Reinforce(_currentWeapon.uid);
+        reinforceButton.clickable.clicked += () => Reinforce(_currentWeapon.UID);
         
     }
     private void OnEquipClick()
@@ -41,7 +41,7 @@ public class WeaponInfoUI : MonoBehaviour
         Debug.Log("클릭 버튼");
         UIBroker.InactiveCurrentUI();
         PlayerBroker.OnEquipWeapon?.Invoke(_currentWeapon);
-        StartBroker.GetGameData().weaponId = _currentWeapon.uid;
+        StartBroker.GetGameData().weaponId = _currentWeapon.UID;
         BattleBroker.SaveLocal();
     }
     public void ShowWeaponInfo(WeaponData weaponData)
@@ -49,12 +49,12 @@ public class WeaponInfoUI : MonoBehaviour
         UIBroker.ActiveTranslucent(root, true);
         root.style.display = DisplayStyle.Flex;
 
-        var weaponImageTexture = weaponData.weaponSprite.texture;
+        var weaponImageTexture = weaponData.WeaponSprite.texture;
         var weaponImageStyle = new StyleBackground(weaponImageTexture);
         _weaponImage.style.backgroundImage = weaponImageStyle;
-        _weaponRarity.text = $"[{weaponData.weaponType}]";
-        _weaponName.text = $"{weaponData.weaponName}";
-        switch (weaponData.weaponRarity)
+        _weaponRarity.text = $"[{weaponData.WeaponType}]";
+        _weaponName.text = $"{weaponData.WeaponName}";
+        switch (weaponData.WeaponRarity)
         {
             case Rarity.Common:
                 _weaponRarity.style.color = new StyleColor(Color.gray);
@@ -85,9 +85,9 @@ public class WeaponInfoUI : MonoBehaviour
                 _weaponName.style.color = new StyleColor(Color.white);
                 break;
         }
-        _powerLabel.text = $"공격력: {weaponData.power}";
-        _criticalDamageLabel.text = $"치명타 공격력: {weaponData.criticalDamage}";
-        _criticalLabel.text = $"치명타 확률: {weaponData.critical}";
+        _powerLabel.text = $"공격력: {weaponData.Power}";
+        _criticalDamageLabel.text = $"치명타 공격력: {weaponData.CriticalDamage}";
+        _criticalLabel.text = $"치명타 확률: {weaponData.Critical}";
         WeaponManager.instance.SetIconScale(weaponData, _weaponImage);
         _currentWeapon = weaponData;
     }

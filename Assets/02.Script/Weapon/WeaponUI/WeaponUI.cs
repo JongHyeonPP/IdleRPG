@@ -108,7 +108,7 @@ public class WeaponUI : MonoBehaviour
         for (int index = 0; index < dataList.Count; index++)
         {
             WeaponData weaponData = dataList[index];
-            string weaponId = weaponData.uid;
+            string weaponId = weaponData.UID;
             int weaponCount = _weaponCount.ContainsKey(weaponId) ? _weaponCount[weaponId] : 0;
             
             TemplateContainer weaponSlot = weaponSlotAsset.CloneTree();//½½·Ô »ý¼º
@@ -125,11 +125,11 @@ public class WeaponUI : MonoBehaviour
             countProgressBar.title = $"{weaponCount}/{requireCount}";
             countProgressBar.value = weaponCount / (float)requireCount;
             //Icon
-            weaponIcon.style.backgroundImage = new StyleBackground(weaponData.weaponSprite.texture);
+            weaponIcon.style.backgroundImage = new StyleBackground(weaponData.WeaponSprite.texture);
             WeaponManager.instance.SetIconScale(weaponData, weaponIcon);
             if (weaponCount > 0)
             {
-                switch (weaponData.weaponRarity)
+                switch (weaponData.WeaponRarity)
                 {
                     case Rarity.Common:
                         weaponBackground.style.backgroundColor = new StyleColor(Color.gray);
