@@ -17,7 +17,7 @@ public class MenuChangeUI : MonoBehaviour
     }
     private void Start()
     {
-        var mainElement = root.Q<VisualElement>("MainElement");
+        var mainElement = root.Q<VisualElement>("ButtonParent");
         var menuParent = root.Q<VisualElement>("MenuParent");
         
         for (int i = 0; i < mainElement.childCount; i++)

@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c648b1b66edd1b64bbd4da7100062dfe, type: 3}
+  m_Name: Ancient
+  m_EditorClassIdentifier: 
+  _bookName: "\uACE0\uB300\uC758 \uC694\uBBF8"
+  _weapons:
+  - {fileID: 11400000, guid: 93841f1998650024fb6513ce84cdf17d, type: 2}
+  - {fileID: 11400000, guid: 95cd4e3f1b387c348bd3f2449b96efe9, type: 2}
+  - {fileID: 11400000, guid: a459b698a13ead44d99de3e9e2722cd8, type: 2}
+  - {fileID: 11400000, guid: 54302d613f278dc4286ae628be91a9d8, type: 2}
+  - {fileID: 11400000, guid: 3ed60ccca660fc54e98be7d181d7cd32, type: 2}
+  - {fileID: 11400000, guid: 641a8c6b629b03e4ab9354639a5da8a9, type: 2}
+  - {fileID: 11400000, guid: 4fb5c1c7fce79644bab3d415b427411c, type: 2}
+  - {fileID: 11400000, guid: e650ee4ea57d95a48875a56ed44761af, type: 2}
+  _displayName: Ancient
+  _upgradeLevels: 180000002800000050000000a000000040010000
+  _upgradeStats:
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  bookId: Ancient
+  bookName: "\uACE0\uB300\uC758 \uC694\uBBF8"
+  weapons:
+  - {fileID: 11400000, guid: 93841f1998650024fb6513ce84cdf17d, type: 2}
+  - {fileID: 11400000, guid: 95cd4e3f1b387c348bd3f2449b96efe9, type: 2}
+  - {fileID: 11400000, guid: a459b698a13ead44d99de3e9e2722cd8, type: 2}
+  - {fileID: 11400000, guid: 54302d613f278dc4286ae628be91a9d8, type: 2}
+  - {fileID: 11400000, guid: 3ed60ccca660fc54e98be7d181d7cd32, type: 2}
+  - {fileID: 11400000, guid: 641a8c6b629b03e4ab9354639a5da8a9, type: 2}
+  - {fileID: 11400000, guid: 4fb5c1c7fce79644bab3d415b427411c, type: 2}
+  - {fileID: 11400000, guid: e650ee4ea57d95a48875a56ed44761af, type: 2}
+  upgradeLevels: 180000002800000050000000a000000040010000
+  upgradeStats:
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1

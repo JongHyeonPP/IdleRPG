@@ -9,17 +9,19 @@ public class GameData
     public BigInteger gold;
     public int level;
     public BigInteger exp;
-    public Dictionary<string, int> skillLevel = new();
+    public Dictionary<string, int> skillLevel;
     [JsonConverter(typeof(EnumDictConverter<Rarity>))]
-    public Dictionary<Rarity, int> skillFragment = new ();
+    public Dictionary<Rarity, int> skillFragment;
     //Weapon
-    public Dictionary<int, int> weaponCount = new();
+    public Dictionary<string, int> weaponCount;
+    public Dictionary<string, int> weaponLevel;
     [JsonConverter(typeof(EnumDictConverter<StatusType>))]
-    public Dictionary<StatusType, int> statLevel_Gold = new();
+    public Dictionary<StatusType, int> statLevel_Gold;
     [JsonConverter(typeof(EnumDictConverter<StatusType>))]
-    public Dictionary<StatusType, int> statLevel_StatPoint = new();
+    public Dictionary<StatusType, int> statLevel_StatPoint;
     public string weaponId;
-    public string[] equipedSkillArr = new string[10];
+    public string[] equipedSkillArr;
     public int currentStageNum;
     public int maxStageNum;
+
 }

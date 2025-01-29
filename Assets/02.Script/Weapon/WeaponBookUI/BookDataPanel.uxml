@@ -1,0 +1,9 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:VisualElement name="BookDataPanel" style="flex-grow: 0; width: 100%; height: 270px; background-color: rgb(77, 72, 72); margin-top: 10px; margin-bottom: 10px;">
+        <engine:VisualElement name="UpperPanel" style="flex-grow: 0; height: 74px; margin-top: 7px;">
+            <engine:Label name="NameLabel" text="귀여운 요미" style="width: 400px; font-size: 42px; margin-left: 25px; -unity-text-align: upper-left; margin-top: 0; margin-right: 0; margin-bottom: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; color: rgb(255, 255, 255);" />
+            <engine:Button text="i" name="InfoButton" style="width: 65px; height: 65px; border-top-left-radius: 97px; border-top-right-radius: 97px; border-bottom-right-radius: 97px; border-bottom-left-radius: 97px; font-size: 71px; right: 20px; top: auto; position: absolute;" />
+        </engine:VisualElement>
+        <engine:VisualElement name="SlotParent" style="flex-grow: 1; flex-direction: row; flex-wrap: wrap; margin-left: 33px;" />
+    </engine:VisualElement>
+</engine:UXML>

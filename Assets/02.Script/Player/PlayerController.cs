@@ -11,7 +11,7 @@ public class PlayerController : Attackable
     private CapsuleCollider2D _collider;//플레이어의 콜라이더
     private float _mp;
 
-    private Weapon weapon;
+    [SerializeField] Weapon playerWeapon;
     private void Awake()
     {
         InitEvent();
@@ -22,7 +22,11 @@ public class PlayerController : Attackable
         SetWeapon();
         SetSkillSkillsInBattle();
         PlayerBroker.OnSkillChanged += OnSkillChanged;
+        
     }
+
+
+
     private void SetSkillSkillsInBattle()
     {
         string[] skillIdArr = StartBroker.GetGameData().equipedSkillArr;

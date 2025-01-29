@@ -2752,8 +2752,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   anim: {fileID: 1486366457088973459}
-  hp: 0
+  isDead: 0
   _status: {fileID: 7233560315477797491}
+  playerWeapon: {fileID: 0}
 --- !u!114 &7233560315477797491
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2766,18 +2767,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: decb9fc8164069543946f2e8c904beae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxHp: 0
-  _power: 0
-  _hpRecover: 0
   _critical: 0
   _criticalDamage: 0
-  _mana: 0
+  _resist: 0
+  _penetration: 0
+  _maxMp: 0
   _manaRecover: 0
-  _accuracy: 0
-  _evasion: 0
   _goldAscend: 0
   _expAscend: 0
-  _skills: []
 --- !u!70 &3832541437783277587
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -2858,6 +2855,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4908426363293252360}
   - component: {fileID: 1207668723993406404}
+  - component: {fileID: 596536632942106214}
   m_Layer: 6
   m_Name: R_Weapon
   m_TagString: Untagged
@@ -2935,6 +2933,20 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &596536632942106214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6190023242945923459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 108861ea593956b44bbeb68fdcb22387, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _weaponData: {fileID: 0}
+  weaponRenderer: {fileID: 0}
 --- !u!1 &6220984459559767826
 GameObject:
   m_ObjectHideFlags: 0

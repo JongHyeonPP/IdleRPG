@@ -128,14 +128,14 @@ public class StoreManager : MonoBehaviour
 
             // 아이콘과 이름을 업데이트
             var icon = slot.Q<VisualElement>("WeaponIcon"); // 아이콘
-            var weaponImageTexture = weapon.WeaponSprite.texture;
+            var weaponImageTexture = weapon.weaponSprite.texture;
             var weaponImageStyle = new StyleBackground(weaponImageTexture);
             icon.style.backgroundImage = weaponImageStyle;
 
             var nameLabel = slot.Q<Label>("WeaponName"); // 라벨
             if (nameLabel != null)
             {
-                nameLabel.text = $"{weapon.WeaponName}"; // 이름 설정
+                nameLabel.text = $"{weapon.weaponName}"; // 이름 설정
             }
 
             cnt++;
@@ -160,7 +160,7 @@ public class StoreManager : MonoBehaviour
         string log = "뽑기 결과:";
         foreach (var weapon in weapons)
         {
-            log += $"- {weapon.name} ({weapon.WeaponRarity})\n";
+            log += $"- {weapon.name} ({weapon.weaponRarity})\n";
         }
         Debug.Log(log);
     }

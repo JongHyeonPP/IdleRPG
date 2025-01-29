@@ -52,6 +52,7 @@ public class GameManager : MonoBehaviour
     {
         StartBroker.GetGameData += () => gameData;
         BattleBroker.OnStageChange += OnStageChange;
+        BattleBroker.SaveLocal += SaveLocalData;
     }
 
     //ProcessAuthentication 과정은 비동기적으로 실행된다.
@@ -70,7 +71,7 @@ public class GameManager : MonoBehaviour
         float elapsedTime = 0f;
         float minWaitTime = 1f;
 
-        while (gameData==null || elapsedTime < minWaitTime)
+        while (gameData == null || elapsedTime < minWaitTime)
         {
             elapsedTime += Time.deltaTime;
             yield return null;
@@ -101,7 +102,7 @@ public class GameManager : MonoBehaviour
     public async void SaveGameDataToCloud()
     {
         await DataManager.SaveToCloudAsync("GameData", gameData);
-        await DataManager.SaveToCloudAsync("Currency", new Dictionary <string,object>() { {"Dia",dia },{"Emerald", emerald } });
+        await DataManager.SaveToCloudAsync("Currency", new Dictionary<string, object>() { { "Dia", dia }, { "Emerald", emerald } });
     }
     //로컬 데이터를 불러와서 진행 상황을 적용한다. 유료 재화는 로컬 데이터에 저장하지 않는다.
     public void LoadGameData()
@@ -121,6 +122,9 @@ public class GameManager : MonoBehaviour
         gameData.weaponCount ??= new();
         gameData.statLevel_Gold ??= new();
         gameData.statLevel_StatPoint ??= new();
+        gameData.weaponCount ??= new();
+        gameData.weaponLevel ??= new();
+        gameData.skillFragment ??= new();
         gameData.equipedSkillArr ??= new string[10];
         userName = PlayerPrefs.GetString("Name");
         string serializedData = JsonConvert.SerializeObject(gameData, Formatting.Indented);
@@ -149,11 +153,11 @@ public class GameManager : MonoBehaviour
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
             userId = AuthenticationService.Instance.PlayerId;
             StartBroker.OnAuthenticationComplete?.Invoke();
-        }       
+        }
     }
     public void GetGoldByDrop()
     {
-        int value = 10 * (gameData.currentStageNum + 1) + Random.Range(0,3);
+        int value = 10 * (gameData.currentStageNum + 1) + Random.Range(0, 3);
         gameData.gold += value;
         BattleBroker.OnGoldSet();
         BattleBroker.OnCurrencyInBattle?.Invoke(DropType.Gold, value);
@@ -180,7 +184,7 @@ public class GameManager : MonoBehaviour
     {
         return gameData.level * 100;
     }
-    
+
     private void OnStageChange(int stageNum)
     {
         gameData.currentStageNum = stageNum;
@@ -190,6 +194,12 @@ public class GameManager : MonoBehaviour
     {
         gameData.currentStageNum++;
         gameData.maxStageNum = Mathf.Max(gameData.currentStageNum, gameData.maxStageNum);
+        SaveLocalData();
+    }
+    [ContextMenu("ClearGameData")]
+    public void ClearGameData()
+    {
+        gameData = new GameData();
         SaveLocalData();
     }
 }

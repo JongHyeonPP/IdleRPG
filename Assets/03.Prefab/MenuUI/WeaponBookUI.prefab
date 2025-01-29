@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8627036123645239222}
   - component: {fileID: 4980206565207537396}
   - component: {fileID: 2872059005750794960}
+  - component: {fileID: 2313527216215525369}
   m_Layer: 0
   m_Name: WeaponBookUI
   m_TagString: Untagged
@@ -73,3 +74,20 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 26300ca7ce009f94d8cedd726e8597ef, type: 2}
   - {fileID: 11400000, guid: dd53213713ca66e4fa88628d12cd7f7d, type: 2}
   - {fileID: 11400000, guid: 04e31877b747b0a45a5d40a5ad9e7da1, type: 2}
+  slotAsset: {fileID: 9197481963319205126, guid: ec71e3ca7269658469b790ee014e2d81, type: 3}
+--- !u!114 &2313527216215525369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6398603105978483194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71c60432944c33b4f9f042fae0f58511, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _scrollSpeed: 1
+  _mode: 0
+  _targetDocument: {fileID: 0}
+  _scrollViewName: 

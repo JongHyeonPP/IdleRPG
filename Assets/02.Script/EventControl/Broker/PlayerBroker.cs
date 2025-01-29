@@ -9,6 +9,8 @@ public static class PlayerBroker
     public static Func<object> GetPlayerController;
     //능력치 적용
     public static Action<StatusType, int> OnStatusChange;
+    //능력치 레벨이 변경됐을 때
+    public static Action<StatusType, int> OnStatusLevelSet;
     //무기장착
     public static Action<object> OnEquipWeapon;
     //플레이어 HP 변경 시 비율 전달

@@ -123,8 +123,8 @@ public class TotalDebugger : EditorWindow
     private void CurrencyAtStart()
     {
         currencyPanel.style.display = DisplayStyle.Flex;
-        //statusPanel.style.display = DisplayStyle.None;
-        //weaponPanel.style.display = DisplayStyle.None;
+        statusPanel.style.display = DisplayStyle.None;
+        weaponPanel.style.display = DisplayStyle.None;
         skillPanel.style.display = DisplayStyle.None;
         materialPanel.style.display = DisplayStyle.None;
         currentPanel = currencyPanel;
@@ -138,6 +138,8 @@ public class TotalDebugger : EditorWindow
         Button skillButton = categoriPanel.Q<Button>("SkillButton");
         Button materialButton = categoriPanel.Q<Button>("MaterialButton");
         currencyButton.RegisterCallback<ClickEvent>(evt => ChangeCategori("Currency"));
+        statusButton.RegisterCallback<ClickEvent>(evt => ChangeCategori("Status"));
+        weaponButton.RegisterCallback<ClickEvent>(evt => ChangeCategori("Weapon"));
         skillButton.RegisterCallback<ClickEvent>(evt => ChangeCategori("Skill"));
         materialButton.RegisterCallback<ClickEvent>(evt => ChangeCategori("Material"));
     }
@@ -150,6 +152,8 @@ public class TotalDebugger : EditorWindow
         skillPanel = rootVisualElement.Q<VisualElement>("SkillCategoriPanel");
         materialPanel = rootVisualElement.Q<VisualElement>("MaterialCategoriPanel");
         InitCurrency();
+        InitStatus();
+        InitWeapon();
         InitSkill();
         InitMaterial();
     }
@@ -285,9 +289,20 @@ public class TotalDebugger : EditorWindow
             }
         }
         void StatusCase()
-        { }
+        {
+            StatusType currentStatus = (StatusType)Enum.Parse(typeof(StatusType),dataName);
+            int tempValue;
+            if (isSet)
+                tempValue = (int)value;
+            else
+                tempValue = _gameData.statLevel_Gold[currentStatus] + (int)value;
+            _gameData.statLevel_Gold[currentStatus] = Mathf.Max(0, tempValue);
+            PlayerBroker.OnStatusLevelSet?.Invoke(currentStatus, _gameData.statLevel_Gold[currentStatus]);
+        }
         void WeaponCase()
-        { }
+        {
+        
+        }
         void SkillCase()
         {
             int intValue = (int)value;
@@ -365,6 +380,63 @@ public class TotalDebugger : EditorWindow
         SetDataPanel(emeraldPanel, "Emerald", GameManager.instance.emerald.ToString(), Categori.Currency, false, 120f, 33f);
         SetDataPanel(maxStagePanel, "MaxStage", _gameData.maxStageNum.ToString(), Categori.Currency, false, 120f, 33f);
     }
+    private void InitStatus()
+    {
+        ScrollView scrollView = statusPanel.Q<ScrollView>();
+        for (int i = 0; i < 5; i++)
+        {
+            TemplateContainer dataPanel = dataPanel_0.CloneTree();
+            scrollView.Add(dataPanel);
+            switch (i)
+            {
+                case 0://Power
+                    SetDataPanel(dataPanel, "Power", _gameData.statLevel_Gold[StatusType.Power].ToString(), Categori.Status, false, 120f, 33f);
+                    break;
+                case 1://MaxHp
+                    SetDataPanel(dataPanel, "MaxHp", _gameData.statLevel_Gold[StatusType.MaxHp].ToString(), Categori.Status, false, 120f, 33f);
+                    break;
+                case 2://HpRecover
+                    SetDataPanel(dataPanel, "HpRecover", _gameData.statLevel_Gold[StatusType.HpRecover].ToString(), Categori.Status, false, 120f, 33f);
+                    break;
+                case 3://Critical
+                    SetDataPanel(dataPanel, "Critical", _gameData.statLevel_Gold[StatusType.Critical].ToString(), Categori.Status, false, 120f, 33f);
+                    break;
+                case 4://CriticalDamage
+                    SetDataPanel(dataPanel, "CriticalDamage", _gameData.statLevel_Gold[StatusType.CriticalDamage].ToString(), Categori.Status, false, 120f, 25f);
+                    break;
+            }
+        }
+        
+    }
+    private void InitWeapon()
+    {
+        ScrollView scrollView = weaponPanel.Q<ScrollView>();
+        
+        InitEachWeapon(true, true);//player's level
+        InitEachWeapon(false, true);//companion's level
+        InitEachWeapon(true, false);//player's count
+        InitEachWeapon(false, false);//companion's count
+        void InitEachWeapon(bool isPlayer/*orCompanion*/, bool isLevel/*orCount*/)
+        {
+            Dictionary<string, WeaponData> targetDict = isPlayer ? WeaponManager.instance.playerWeaponDict : WeaponManager.instance.companionWeaponDict;
+            string who = isPlayer ? "Player" : "Companion";
+            string what = isLevel ? "Level" : "Count";
+            VisualElement separatePanel = CreateSeparatePanel($"{who}'s Weapon {what}");
+            scrollView.Add(separatePanel);
+            Dictionary<string, int> targetDataDict = isLevel? _gameData.weaponLevel:_gameData.weaponCount;
+            foreach (var uid in targetDict.Keys)
+            {
+                TemplateContainer dataPanel = dataPanel_0.CloneTree();
+                scrollView.Add(dataPanel);
+                if (!targetDataDict.TryGetValue(uid, out int value))
+                {
+                    value = 0;
+                }
+                SetDataPanel(dataPanel, uid.ToString(), value.ToString(), Categori.Status, false);
+            }
+        }
+    }
+
     private void SetDataPanel(VisualElement panel, string dataName, string valueStr, Categori categori, bool isBigInteger,float valueLabelWidth = 60f, float fontSize = 18f)//스킬의 경우를 기본 값으로 보면 됨
     {
         Label valueLabel = panel.Q<Label>("ValueLabel");

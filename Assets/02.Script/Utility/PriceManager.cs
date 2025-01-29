@@ -5,8 +5,9 @@ using UnityEngine;
 public class PriceManager : MonoBehaviour
 {
     public static PriceManager instance;
-    [SerializeField] PriceInfo skillPriceInfo;
-    public const int MAXSKILLLEVEL = 7;
+    [SerializeField] PriceInfo priceInfo;
+    public const int MAXSKILLLEVEL = 10;
+    public const int MAXWEAPONLEVEL = 20;
     private void Awake()
     {
         instance = this;
@@ -16,17 +17,36 @@ public class PriceManager : MonoBehaviour
         switch (weaponRarity)
         {
             case Rarity.Common:
-                return skillPriceInfo._commonSkillPiece[level];
+                return priceInfo.commonSkillPrice[level];
             case Rarity.Uncommon:
-                return skillPriceInfo._uncommonSkillPiece[level];
+                return priceInfo.uncommonSkillPrice[level];
             case Rarity.Rare:
-                return skillPriceInfo._rareSkillPiece[level];
+                return priceInfo.rareSkillPrice[level];
             case Rarity.Unique:
-                return skillPriceInfo._uniqueSkillPiece[level];
+                return priceInfo.uniqueSkillPrice[level];
             case Rarity.Legendary:
-                return skillPriceInfo._legendarySkillPiece[level];
+                return priceInfo.legendarySkillPrice[level];
             case Rarity.Mythic:
-                return skillPriceInfo._mythicSkillPiece[level];
+                return priceInfo.mythicSkillPrice[level];
+        }
+        return int.MaxValue;
+    }
+    public int GetRequireWeaponCount(Rarity weaponRarity, int level)
+    {
+        switch (weaponRarity)
+        {
+            case Rarity.Common:
+                return priceInfo.commonWeaponPrice[level];
+            case Rarity.Uncommon:
+                return priceInfo.uncommonWeaponPrice[level];
+            case Rarity.Rare:
+                return priceInfo.rareWeaponPrice[level];
+            case Rarity.Unique:
+                return priceInfo.uniqueWeaponPrice[level];
+            case Rarity.Legendary:
+                return priceInfo.legendaryWeaponPrice[level];
+            case Rarity.Mythic:
+                return priceInfo.mythicWeaponPrice[level];
         }
         return int.MaxValue;
     }

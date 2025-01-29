@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 public class SkillUI : MonoBehaviour
 {
     public VisualElement root { get; private set; }
-    private FlexibleListView _flexibleLV;
+    [SerializeField] FlexibleListView _flexibleLV;
     private VisualElement _equipBackground;
     private Button _acquisitionButton;
     private Button _playerSelectButton;
@@ -20,7 +20,6 @@ public class SkillUI : MonoBehaviour
     private Dictionary<Rarity, Label> fragmentDict = new();
     private void Awake()
     {
-        _flexibleLV = GetComponent<FlexibleListView>();
         root = GetComponent<UIDocument>().rootVisualElement;
         _equipBackground = root.Q<VisualElement>("EquipBackground");
         _acquisitionButton = root.Q<Button>("AcquisitionButton");

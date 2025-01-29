@@ -52,7 +52,7 @@ public class GachaSystem
     /// </summary>
     private WeaponData GetWeaponByRarity(string rarity)
     {
-        var weaponsByRarity = _database.Where(weapon => weapon.WeaponRarity.ToString() == rarity).ToArray();
+        var weaponsByRarity = _database.Where(weapon => weapon.weaponRarity.ToString() == rarity).ToArray();
         return weaponsByRarity[Random.Range(0, weaponsByRarity.Length)];
     }
     
@@ -85,7 +85,7 @@ public class GachaSystem
             if (randomValue <= cumulativeRate)
             {
                 // 선택된 등급에 해당하는 무기 중 랜덤 반환
-                var weaponsByRarity = _database.Where(weapon => weapon.WeaponRarity == rarity.Key).ToArray();
+                var weaponsByRarity = _database.Where(weapon => weapon.weaponRarity == rarity.Key).ToArray();
                 if (weaponsByRarity.Length == 0)
                 {
                     Debug.LogWarning($"No weapons found for rarity: {rarity.Key}");

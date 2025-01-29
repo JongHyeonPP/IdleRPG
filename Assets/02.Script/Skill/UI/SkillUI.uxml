@@ -22,7 +22,7 @@
                     <engine:Instance template="FragmentPanel" name="FragmentMythic" />
                 </engine:VisualElement>
             </engine:VisualElement>
-            <engine:Instance template="DraggableListView" style="height: 100%;" />
+            <engine:Instance template="DraggableListView" name="FlexableListView" style="height: 100%;" />
         </engine:VisualElement>
         <engine:VisualElement name="EquipBackground" style="flex-grow: 1; position: absolute; width: 1804%; height: 1010px; background-color: rgba(0, 0, 0, 0.59); display: none;" />
     </engine:VisualElement>
