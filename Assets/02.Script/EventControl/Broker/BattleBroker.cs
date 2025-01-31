@@ -30,8 +30,6 @@ public static class BattleBroker
     public static Action OnEmeraldSet;
     //메뉴 UI 변경
     public static Action<int> OnMenuUIChange;
-    //로컬 데이터 저장
-    public static Action SaveLocal;
     //무기 레벨업
     public static Action<int, int> OnWeaponLevelSet;//Weapon Id, Level
     //무기 개수 변경

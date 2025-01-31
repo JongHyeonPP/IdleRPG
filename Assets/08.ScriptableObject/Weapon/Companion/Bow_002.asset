@@ -19,5 +19,5 @@ MonoBehaviour:
   _critical: 1
   _weaponSprite: {fileID: 21300000, guid: 808c843d573657e4699f7d23671cb9f5, type: 3}
   _textureSize: {x: 1, y: 1}
-  _uID: 122
+  _uID: Bow_002
   _weaponName: "\uCD08\uBCF4\uC624\uD06C\uC758 \uD65C"

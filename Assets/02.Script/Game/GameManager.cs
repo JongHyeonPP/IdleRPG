@@ -52,7 +52,7 @@ public class GameManager : MonoBehaviour
     {
         StartBroker.GetGameData += () => gameData;
         BattleBroker.OnStageChange += OnStageChange;
-        BattleBroker.SaveLocal += SaveLocalData;
+        StartBroker.SaveLocal += SaveLocalData;
     }
 
     //ProcessAuthentication 과정은 비동기적으로 실행된다.

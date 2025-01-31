@@ -7387,6 +7387,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4634700359260116073, guid: c91f022bd6890324a84730365030a477, type: 3}
+      propertyPath: m_SortingOrder
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6246763622814510879, guid: c91f022bd6890324a84730365030a477, type: 3}
       propertyPath: m_Name
       value: EquipedSkillsUI

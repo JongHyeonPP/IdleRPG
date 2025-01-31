@@ -1,6 +1,7 @@
 using EnumCollection;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -38,10 +39,10 @@ public class WeaponUI : MonoBehaviour
         _weaponInfoUI.gameObject.SetActive(true);
         foreach (Rarity rarity in (Rarity[])Enum.GetValues(typeof(Rarity)))
         {
-            CreateWeaponSlot(true, rarity);
-            CreateWeaponSlot(false, rarity);
+            CreateWeaponSlot(rarity);
         }
-
+        PlayerBroker.OnWeaponLevelSet += OnWeaponLevelSet;
+        PlayerBroker.OnWeaponCountSet += OnWeaponCountSet;
     }
     private void Start()
     {
@@ -87,90 +88,113 @@ public class WeaponUI : MonoBehaviour
         _connectDict[buttons[2]].style.display = DisplayStyle.None;
 
     }
-    private void CreateWeaponSlot(bool isPlayerWeapon, Rarity rarity)
+    private void CreateWeaponSlot(Rarity rarity)
     {
-        ScrollView currentScrollView = (isPlayerWeapon ? _playerScrollView : _companionScrollView).scrollView;
         if (rarity != Rarity.Common)
         {
-            TemplateContainer line = rarityLineAsset.CloneTree();
-            currentScrollView.Add(line);
+            TemplateContainer playerLine = rarityLineAsset.CloneTree();
+            _playerScrollView.scrollView.Add(playerLine);
+            TemplateContainer companionLine = rarityLineAsset.CloneTree();
+            _companionScrollView.scrollView.Add(companionLine);
         }
-        string name = isPlayerWeapon ? "Player" : "Companion";
-        VisualElement slotContainer = new()
-        {
-            name = $"{name} - {rarity}"
-        };
-        slotContainer.style.width = Length.Percent(100);
-        slotContainer.style.height = Length.Auto();
-        slotContainer.style.flexDirection = FlexDirection.Row;
-        slotContainer.style.flexWrap = Wrap.Wrap;
-        List<WeaponData> dataList = WeaponManager.instance.GetClassifiedWeaponData(isPlayerWeapon, rarity);
+        VisualElement playerContainer = GetContainer();
+        VisualElement companionContainer = GetContainer();
+        List<WeaponData> dataList = WeaponManager.instance.GetWeaponDataByRarity(rarity);
         for (int index = 0; index < dataList.Count; index++)
         {
             WeaponData weaponData = dataList[index];
-            string weaponId = weaponData.UID;
-            int weaponCount = _weaponCount.ContainsKey(weaponId) ? _weaponCount[weaponId] : 0;
-            
-            TemplateContainer weaponSlot = weaponSlotAsset.CloneTree();//슬롯 생성
-            _slotDict.Add(weaponId, weaponSlot);//Dictionary에 저장 - 개수와 레벨 변경에 대응하기 위함
-            VisualElement weaponIcon = weaponSlot.Q<VisualElement>("WeaponIcon");
-            VisualElement weaponBackground = weaponSlot.Q<VisualElement>("WeaponBackground");
-            //LevelLabel
-            int weaponLevel = _weaponLevel.ContainsKey(weaponId) ? _weaponCount[weaponId] : 0;
-            Label levelLabel = weaponSlot.Q<Label>("LevelLabel");
-            levelLabel.text = weaponLevel > 0 ? $"+{weaponLevel}" : string.Empty;
-            //CountProgressBar
-            ProgressBar countProgressBar = weaponSlot.Q<ProgressBar>();
-            int requireCount = PriceManager.instance.GetRequireWeaponCount(rarity, weaponLevel);
-            countProgressBar.title = $"{weaponCount}/{requireCount}";
-            countProgressBar.value = weaponCount / (float)requireCount;
-            //Icon
-            weaponIcon.style.backgroundImage = new StyleBackground(weaponData.WeaponSprite.texture);
-            WeaponManager.instance.SetIconScale(weaponData, weaponIcon);
-            if (weaponCount > 0)
+            if (weaponData.WeaponType == WeaponType.Melee)
             {
-                switch (weaponData.WeaponRarity)
-                {
-                    case Rarity.Common:
-                        weaponBackground.style.backgroundColor = new StyleColor(Color.gray);
-                        break;
-                    case Rarity.Uncommon:
-                        weaponBackground.style.backgroundColor = new StyleColor(new Color(0.5f, 0.75f, 1f));
-                        break;
-                    case Rarity.Rare:
-                        weaponBackground.style.backgroundColor = new StyleColor(Color.magenta);
-                        break;
-                    case Rarity.Unique:
-                        weaponBackground.style.backgroundColor = new StyleColor(Color.green);
-                        break;
-                    case Rarity.Legendary:
-                        weaponBackground.style.backgroundColor = new StyleColor(Color.yellow);
-                        break;
-                    case Rarity.Mythic:
-                        weaponBackground.style.backgroundColor = new StyleColor(new Color(0f, 0f, 0.5f));
-                        break;
-                    default:
-                        weaponBackground.style.backgroundColor = new StyleColor(Color.white);
-                        break;
-                }
+                playerContainer.Add(GetSlot(weaponData));
             }
             else
             {
-                weaponIcon.style.unityBackgroundImageTintColor = new StyleColor(Color.gray);
+                companionContainer.Add(GetSlot(weaponData));
             }
-
-            int currentIndex = index;
-            weaponSlot.RegisterCallback<ClickEvent>(evt => OnClickSlot(currentIndex, weaponData, isPlayerWeapon));
-
-            slotContainer.Add(weaponSlot);
         }
-        currentScrollView.Add(slotContainer);
+        _playerScrollView.scrollView.Add(playerContainer);
+        _companionScrollView.scrollView.Add(companionContainer);
     }
 
-
-
-    private void OnClickSlot(int currentIndex, WeaponData weaponData, bool isPlayerWeapon)
+    private VisualElement GetContainer()
     {
+        VisualElement playerSlotContainer = new();
+        playerSlotContainer.style.width = Length.Percent(100);
+        playerSlotContainer.style.height = Length.Auto();
+        playerSlotContainer.style.flexDirection = FlexDirection.Row;
+        playerSlotContainer.style.flexWrap = Wrap.Wrap;
+        return playerSlotContainer;
+    }
+
+    private VisualElement GetSlot( WeaponData weaponData)
+    {
+        string weaponId = weaponData.UID;
+        int weaponCount = _weaponCount.ContainsKey(weaponId) ? _weaponCount[weaponId] : 0;
+
+        TemplateContainer weaponSlot = weaponSlotAsset.CloneTree();//슬롯 생성
+        _slotDict.Add(weaponId, weaponSlot);//Dictionary에 저장 - 개수와 레벨 변경에 대응하기 위함
+        VisualElement weaponIcon = weaponSlot.Q<VisualElement>("WeaponIcon");
+        VisualElement weaponBackground = weaponSlot.Q<VisualElement>("WeaponBackground");
+        //LevelLabel
+        int weaponLevel = _weaponLevel.ContainsKey(weaponId) ? _weaponLevel[weaponId] : 0;
+        Label levelLabel = weaponSlot.Q<Label>("LevelLabel");
+        levelLabel.text = weaponLevel > 0 ? $"+{weaponLevel}" : string.Empty;
+        //CountProgressBar
+        ProgressBar countProgressBar = weaponSlot.Q<ProgressBar>();
+        if (weaponLevel == PriceManager.MAXWEAPONLEVEL)
+        {
+            countProgressBar.title = "Max Level";
+            countProgressBar.value = 1;
+        }
+        else
+        {
+            int price = PriceManager.instance.GetRequireWeaponCount(weaponData.WeaponRarity, weaponLevel);
+            countProgressBar.title = $"{weaponCount}/{price}";
+            countProgressBar.value = weaponCount / (float)price;
+        }
+        //Icon
+        weaponIcon.style.backgroundImage = new StyleBackground(weaponData.WeaponSprite.texture);
+        WeaponManager.instance.SetIconScale(weaponData, weaponIcon);
+        if (weaponCount > 0)
+        {
+            switch (weaponData.WeaponRarity)
+            {
+                case Rarity.Common:
+                    weaponBackground.style.backgroundColor = new StyleColor(Color.gray);
+                    break;
+                case Rarity.Uncommon:
+                    weaponBackground.style.backgroundColor = new StyleColor(new Color(0.5f, 0.75f, 1f));
+                    break;
+                case Rarity.Rare:
+                    weaponBackground.style.backgroundColor = new StyleColor(Color.magenta);
+                    break;
+                case Rarity.Unique:
+                    weaponBackground.style.backgroundColor = new StyleColor(Color.green);
+                    break;
+                case Rarity.Legendary:
+                    weaponBackground.style.backgroundColor = new StyleColor(Color.yellow);
+                    break;
+                case Rarity.Mythic:
+                    weaponBackground.style.backgroundColor = new StyleColor(new Color(0f, 0f, 0.5f));
+                    break;
+                default:
+                    weaponBackground.style.backgroundColor = new StyleColor(Color.white);
+                    break;
+            }
+        }
+        else
+        {
+            weaponIcon.style.unityBackgroundImageTintColor = new StyleColor(Color.gray);
+        }
+
+        weaponSlot.RegisterCallback<ClickEvent>(evt => OnClickSlot(weaponData));
+
+        return weaponSlot;
+    }
+
+    private void OnClickSlot(WeaponData weaponData)
+    {
+        bool isPlayerWeapon = weaponData.WeaponType == WeaponType.Melee;
         DraggableScrollView currentScrollView = isPlayerWeapon?_playerScrollView:_companionScrollView;
         if (currentScrollView._isDragging)
             return;
@@ -205,14 +229,40 @@ public class WeaponUI : MonoBehaviour
     }
     #endregion
     #endregion
-    private void OnWeaponLevelSet(string uid, int level)
+    private void OnWeaponLevelSet(object weaponDataObj, int level)
     {
-        VisualElement slot = _slotDict[uid];
-        //var 
-    }
-    private void OnWeaponCountSet(int uid, int count)
-    {
+        WeaponData weaponData = (WeaponData)weaponDataObj;
+        VisualElement slot = _slotDict[weaponData.UID];
+        Label levelLabel = slot.Q<Label>("LevelLabel");
+        levelLabel.text = $"+{level}";
+
+        ProgressBar countProgressBar = slot.Q<ProgressBar>("CountProgressBar");
+        if (!_weaponCount.TryGetValue(weaponData.UID, out int count))
+        {
+            count = 0;
+        }
+        if (level == PriceManager.MAXWEAPONLEVEL)
+        {
+            countProgressBar.title = "Max Level";
+            countProgressBar.value = 1;
+        }
+        else
+        {
+            int price = PriceManager.instance.GetRequireWeaponCount(weaponData.WeaponRarity, level);
+            countProgressBar.title = $"{count}/{price}";
+            countProgressBar.value = count / (float)price;
+        }
         
+    }
+    private void OnWeaponCountSet(object weaponDataObj, int count)
+    {
+        WeaponData weaponData = (WeaponData)weaponDataObj;
+        VisualElement slot = _slotDict[weaponData.UID];
+        ProgressBar countProgressBar = slot.Q<ProgressBar>("CountProgressBar");
+        int level = _weaponLevel[weaponData.UID];
+        int price = PriceManager.instance.GetRequireWeaponCount(weaponData.WeaponRarity, level);
+        countProgressBar.title = $"{count}/{price}";
+        countProgressBar.value = count/(float)price;
     }
 
 }

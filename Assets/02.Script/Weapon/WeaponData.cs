@@ -10,7 +10,7 @@ public class WeaponData : ScriptableObject
     [SerializeField] private int _critical;
     [SerializeField] private Sprite _weaponSprite;
     [SerializeField] private Vector2 _textureSize = new Vector2(1, 1);
-    [SerializeField] private string _uID;
+    [SerializeField] string _uID;
     [SerializeField] private string _weaponName;
     public WeaponType WeaponType => _weaponType;
     public Rarity WeaponRarity => _weaponRarity;
@@ -22,4 +22,8 @@ public class WeaponData : ScriptableObject
     public string UID => _uID;
 
     public string WeaponName => _weaponName;
+    public void SetMethod()
+    {
+        _uID = name;
+    }
 }

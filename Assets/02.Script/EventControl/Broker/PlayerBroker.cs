@@ -13,6 +13,10 @@ public static class PlayerBroker
     public static Action<StatusType, int> OnStatusLevelSet;
     //무기장착
     public static Action<object> OnEquipWeapon;
+    //무기 레벨 변경
+    public static Action<object, int> OnWeaponLevelSet;
+    //무기 개수 변경
+    public static Action<object, int> OnWeaponCountSet;
     //플레이어 HP 변경 시 비율 전달
     public static Action<float> OnPlayerHpChanged;
     //플레이어 스킬 시전 시 MP의 비율 전달

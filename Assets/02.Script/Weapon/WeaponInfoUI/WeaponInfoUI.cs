@@ -42,7 +42,7 @@ public class WeaponInfoUI : MonoBehaviour
         UIBroker.InactiveCurrentUI();
         PlayerBroker.OnEquipWeapon?.Invoke(_currentWeapon);
         StartBroker.GetGameData().weaponId = _currentWeapon.UID;
-        BattleBroker.SaveLocal();
+        StartBroker.SaveLocal();
     }
     public void ShowWeaponInfo(WeaponData weaponData)
     {

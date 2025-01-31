@@ -8,6 +8,8 @@ using UnityEngine.UIElements;
 using System.Runtime.InteropServices;
 using System.Numerics;
 using Vector2 = UnityEngine.Vector2;
+using UnityEditor.Rendering.LookDev;
+using GooglePlayGames.BasicApi;
 public class TotalDebugger : EditorWindow
 {
     private GameData _gameData;
@@ -43,7 +45,13 @@ public class TotalDebugger : EditorWindow
     [DllImport("user32.dll")]
     private static extern short GetAsyncKeyState(int vKey);
     private readonly int VK_LBUTTON = 0x01;
+    //Weapon DropDown Variable
+    private string currentWeaponType;
+    private string currentWeaponValue;
+    private ScrollView[] weaponScrollViewArr;
+
     [MenuItem("Window/Total Debugger")]
+
     public static void ShowWindow()
     {
         // EditorWindow를 열고 제목 설정
@@ -98,6 +106,7 @@ public class TotalDebugger : EditorWindow
             }
             isPressingVe = false;
             pressedVe = null;
+            StartBroker.SaveLocal();
         }
         if (!isPressingVe)//누르고 있지 않을 때
             return;
@@ -195,6 +204,7 @@ public class TotalDebugger : EditorWindow
             Debug.LogError("Invalid Input");
         }
         textField.value = string.Empty;
+        StartBroker.SaveLocal();
     }
     private void OnChangeButtonDown(string dataName, bool isPlus, Label valueLabel, Categori categori, bool isBigInteger)
     {
@@ -220,25 +230,31 @@ public class TotalDebugger : EditorWindow
     }
     private void ValueEvent(string dataName, IComparable value, Label valueLabel, bool isSet/*Or Change*/, Categori categori)
     {
+        string result;
         switch (categori)
         {
             case Categori.Currency:
-                CurrencyCase();
+                result = CurrencyCase();
                 break;
             case Categori.Status:
-                StatusCase();
+                result = StatusCase();
                 break;
             case Categori.Weapon:
-                WeaponCase();
+                result = WeaponCase();
                 break;
             case Categori.Skill:
-                SkillCase();
+                result = SkillCase();
                 break;
             case Categori.Material:
-                MaterialCase();
+                result = MaterialCase();
+                break;
+            default:
+                result = string.Empty;
                 break;
         }
-        void CurrencyCase()
+        valueLabel.text = result;
+
+        string CurrencyCase()
         {
             switch (dataName)
             {
@@ -248,47 +264,44 @@ public class TotalDebugger : EditorWindow
                     else
                         _gameData.level += (int)value;
                     _gameData.level = Mathf.Max(_gameData.level, 1);
-                    valueLabel.text = _gameData.level.ToString();
                     BattleBroker.OnLevelExpSet();
-                    break;
+                    return _gameData.level.ToString();
                 case "Gold":
                     if (isSet)
                         _gameData.gold = (BigInteger)value;
                     else
                         _gameData.gold += (BigInteger)value;
                     _gameData.gold = BigInteger.Max(_gameData.gold, 0);
-                    valueLabel.text = _gameData.gold.ToString();
                     BattleBroker.OnGoldSet();
-                    break;
+                    return _gameData.gold.ToString();
                 case "Dia":
                     if (isSet)
                         GameManager.instance.dia = (int)value;
                     else
                         GameManager.instance.dia += (int)value;
                     GameManager.instance.dia = Mathf.Max(GameManager.instance.dia, 0);
-                    valueLabel.text = GameManager.instance.dia.ToString();
                     BattleBroker.OnDiaSet();
-                    break;
+                    return GameManager.instance.dia.ToString();
                 case "Emerald":
                     if (isSet)
                         GameManager.instance.emerald = (int)value;
                     else
                         GameManager.instance.emerald += (int)value;
                     GameManager.instance.emerald = Mathf.Max(GameManager.instance.emerald, 0);
-                    valueLabel.text = GameManager.instance.emerald.ToString();
                     BattleBroker.OnEmeraldSet();
-                    break;
+                    return GameManager.instance.emerald.ToString();
                 case "MaxStage":
                     if (isSet)
                         _gameData.maxStageNum = (int)value;
                     else
                         _gameData.maxStageNum += (int)value;
                     _gameData.maxStageNum = Mathf.Clamp(_gameData.maxStageNum, 0, 299);
-                    valueLabel.text = _gameData.maxStageNum.ToString();
-                    break;
+                    return _gameData.maxStageNum.ToString();
+                default:
+                    return string.Empty;
             }
         }
-        void StatusCase()
+        string StatusCase()
         {
             StatusType currentStatus = (StatusType)Enum.Parse(typeof(StatusType),dataName);
             int tempValue;
@@ -297,13 +310,52 @@ public class TotalDebugger : EditorWindow
             else
                 tempValue = _gameData.statLevel_Gold[currentStatus] + (int)value;
             _gameData.statLevel_Gold[currentStatus] = Mathf.Max(0, tempValue);
+
             PlayerBroker.OnStatusLevelSet?.Invoke(currentStatus, _gameData.statLevel_Gold[currentStatus]);
+            return _gameData.statLevel_Gold[currentStatus].ToString();
         }
-        void WeaponCase()
+        string WeaponCase()
         {
-        
+            string[] splitted = dataName.Split("::");
+            string uid = splitted[0];
+            string who = splitted[1];
+            string what = splitted[2];
+            Dictionary<string, int> weaponDict = null;
+            if (what == "Level")
+            {
+                weaponDict = _gameData.weaponLevel;
+            }
+            else if (what == "Count")
+            {
+                weaponDict = _gameData.weaponCount;
+            }
+            int tempValue;
+            if (isSet)
+                tempValue = (int)value;
+            else
+            {
+                if (!weaponDict.ContainsKey(uid))
+                    weaponDict.Add(uid, 0);
+                tempValue = weaponDict[uid] + (int)value;
+            }
+
+            tempValue = Mathf.Max(0, tempValue);
+            if (what == "Level")
+                tempValue = Mathf.Min(tempValue, PriceManager.MAXWEAPONLEVEL);
+            weaponDict[uid] = tempValue;
+            var weaponData = WeaponManager.instance.weaponDict[uid];
+
+            if (what == "Level")
+            {
+                PlayerBroker.OnWeaponLevelSet?.Invoke(weaponData, weaponDict[uid]);
+            }
+            else
+            {
+                PlayerBroker.OnWeaponCountSet?.Invoke(weaponData, weaponDict[uid]);
+            }
+            return weaponDict[uid].ToString();
         }
-        void SkillCase()
+        string SkillCase()
         {
             int intValue = (int)value;
             if (!_gameData.skillLevel.ContainsKey(dataName))
@@ -315,15 +367,15 @@ public class TotalDebugger : EditorWindow
             else
                 _gameData.skillLevel[dataName] += intValue;
             _gameData.skillLevel[dataName] = Mathf.Clamp(_gameData.skillLevel[dataName], 0, PriceManager.MAXSKILLLEVEL);
-            valueLabel.text = _gameData.skillLevel[dataName].ToString();
             BattleBroker.OnSkillLevelSet?.Invoke(dataName, intValue);
+            return _gameData.skillLevel[dataName].ToString();
         }
-        void MaterialCase()
+        string MaterialCase()
         {
             int intValue = (int)value;
             if (!Enum.TryParse(dataName, out Rarity rarity))
             {
-                return;
+                return String.Empty;
             }
             if (!_gameData.skillFragment.ContainsKey(rarity))
             {
@@ -334,8 +386,9 @@ public class TotalDebugger : EditorWindow
             else
                 _gameData.skillFragment[rarity] += intValue;
             _gameData.skillFragment[rarity] = Mathf.Max(_gameData.skillFragment[rarity], 0);
-            valueLabel.text = _gameData.skillFragment[rarity].ToString();
+            
             BattleBroker.OnFragmentSet?.Invoke(rarity, _gameData.skillFragment[rarity]);
+            return _gameData.skillFragment[rarity].ToString();
         }
     }
 
@@ -374,11 +427,13 @@ public class TotalDebugger : EditorWindow
         VisualElement diaPanel = currencyPanel.Q<VisualElement>("DiaPanel");
         VisualElement emeraldPanel = currencyPanel.Q<VisualElement>("EmeraldPanel");
         VisualElement maxStagePanel = currencyPanel.Q<VisualElement>("MaxStagePanel");
-        SetDataPanel(levelPanel, "Level", _gameData.level.ToString(), Categori.Currency, false, 120f,33f);
-        SetDataPanel(goldPanel, "Gold", _gameData.gold.ToString(), Categori.Currency, true, 120f, 33f);
-        SetDataPanel(diaPanel, "Dia", GameManager.instance.dia.ToString(), Categori.Currency, false, 120f, 33f);
-        SetDataPanel(emeraldPanel, "Emerald", GameManager.instance.emerald.ToString(), Categori.Currency, false, 120f, 33f);
-        SetDataPanel(maxStagePanel, "MaxStage", _gameData.maxStageNum.ToString(), Categori.Currency, false, 120f, 33f);
+        SetDataPanel(levelPanel, "Level","Level", _gameData.level.ToString(), Categori.Currency, false, 120f,33f);
+        SetDataPanel(goldPanel, "Gold","Gold", _gameData.gold.ToString(), Categori.Currency, true, 120f, 33f);
+        SetDataPanel(diaPanel, "Dia","Dia", GameManager.instance.dia.ToString(), Categori.Currency, false, 120f, 33f);
+        SetDataPanel(emeraldPanel, "Emerald","Emerald", GameManager.instance.emerald.ToString(), Categori.Currency, false, 120f, 33f);
+        SetDataPanel(maxStagePanel, "MaxStage","MaxStage", _gameData.maxStageNum.ToString(), Categori.Currency, false, 120f, 33f);
+        BattleBroker.OnGoldSet += () => { goldPanel.Q<Label>("ValueLabel").text = _gameData.gold.ToString(); };
+        BattleBroker.OnLevelExpSet += () => { goldPanel.Q<Label>("ValueLabel").text = _gameData.level.ToString(); };
     }
     private void InitStatus()
     {
@@ -390,19 +445,19 @@ public class TotalDebugger : EditorWindow
             switch (i)
             {
                 case 0://Power
-                    SetDataPanel(dataPanel, "Power", _gameData.statLevel_Gold[StatusType.Power].ToString(), Categori.Status, false, 120f, 33f);
+                    SetDataPanel(dataPanel, "Power", "Power", _gameData.statLevel_Gold[StatusType.Power].ToString(), Categori.Status, false, 120f, 33f);
                     break;
                 case 1://MaxHp
-                    SetDataPanel(dataPanel, "MaxHp", _gameData.statLevel_Gold[StatusType.MaxHp].ToString(), Categori.Status, false, 120f, 33f);
+                    SetDataPanel(dataPanel, "MaxHp","MaxHp", _gameData.statLevel_Gold[StatusType.MaxHp].ToString(), Categori.Status, false, 120f, 33f);
                     break;
                 case 2://HpRecover
-                    SetDataPanel(dataPanel, "HpRecover", _gameData.statLevel_Gold[StatusType.HpRecover].ToString(), Categori.Status, false, 120f, 33f);
+                    SetDataPanel(dataPanel, "HpRecover","HpRecover", _gameData.statLevel_Gold[StatusType.HpRecover].ToString(), Categori.Status, false, 120f, 33f);
                     break;
                 case 3://Critical
-                    SetDataPanel(dataPanel, "Critical", _gameData.statLevel_Gold[StatusType.Critical].ToString(), Categori.Status, false, 120f, 33f);
+                    SetDataPanel(dataPanel, "Critical","Critical", _gameData.statLevel_Gold[StatusType.Critical].ToString(), Categori.Status, false, 120f, 33f);
                     break;
                 case 4://CriticalDamage
-                    SetDataPanel(dataPanel, "CriticalDamage", _gameData.statLevel_Gold[StatusType.CriticalDamage].ToString(), Categori.Status, false, 120f, 25f);
+                    SetDataPanel(dataPanel, "CriticalDamage","CriticalDamage", _gameData.statLevel_Gold[StatusType.CriticalDamage].ToString(), Categori.Status, false, 120f, 25f);
                     break;
             }
         }
@@ -410,34 +465,109 @@ public class TotalDebugger : EditorWindow
     }
     private void InitWeapon()
     {
-        ScrollView scrollView = weaponPanel.Q<ScrollView>();
-        
-        InitEachWeapon(true, true);//player's level
-        InitEachWeapon(false, true);//companion's level
-        InitEachWeapon(true, false);//player's count
-        InitEachWeapon(false, false);//companion's count
-        void InitEachWeapon(bool isPlayer/*orCompanion*/, bool isLevel/*orCount*/)
+        VisualElement scrollViewParent = weaponPanel.Q<VisualElement>("ScrollViewParent");
+        weaponScrollViewArr = scrollViewParent.Children().Select(item => (ScrollView)item).ToArray();
+
+        //DropDown
+        DropdownField typeDropDown = weaponPanel.Q<DropdownField>("TypeDropDown");
+        DropdownField valueDropDown = weaponPanel.Q<DropdownField>("ValueDropDown");
+        typeDropDown.choices = new() {"Player","Companion" };
+        valueDropDown.choices = new() {"Level","Count" };
+        typeDropDown.value = typeDropDown.choices[0];
+        valueDropDown.value = valueDropDown.choices[0];
+        currentWeaponType = "Player";
+        currentWeaponValue = "Level";
+
+        //ScrollView
+        typeDropDown.RegisterValueChangedCallback(evt=>OnWeaponDropDownChange(evt.newValue, true));
+        valueDropDown.RegisterValueChangedCallback(evt=>OnWeaponDropDownChange(evt.newValue, false));
+        List<WeaponData> playerDict = WeaponManager.instance.GetWeaponDataByRole(true);
+        List<WeaponData> companionDict = WeaponManager.instance.GetWeaponDataByRole(false);
+        InitEachWeapon(true, true,0);//player's level
+        InitEachWeapon(false, true,1);//companion's level
+        InitEachWeapon(true, false,2);//player's count
+        InitEachWeapon(false, false,3);//companion's count
+        for (int i = 0; i < weaponScrollViewArr.Length; i++)
         {
-            Dictionary<string, WeaponData> targetDict = isPlayer ? WeaponManager.instance.playerWeaponDict : WeaponManager.instance.companionWeaponDict;
+            if (i == 0)
+            {
+                weaponScrollViewArr[i].style.display = DisplayStyle.Flex;
+            }
+            else
+            {
+                weaponScrollViewArr[i].style.display = DisplayStyle.None;
+            }
+        }
+        void InitEachWeapon(bool isPlayer/*orCompanion*/, bool isLevel/*orCount*/, int scrollViewIndex)
+        {
             string who = isPlayer ? "Player" : "Companion";
             string what = isLevel ? "Level" : "Count";
+            List<WeaponData> targetDict = isPlayer ? playerDict : companionDict;
             VisualElement separatePanel = CreateSeparatePanel($"{who}'s Weapon {what}");
-            scrollView.Add(separatePanel);
+            weaponScrollViewArr[scrollViewIndex].Add(separatePanel);
             Dictionary<string, int> targetDataDict = isLevel? _gameData.weaponLevel:_gameData.weaponCount;
-            foreach (var uid in targetDict.Keys)
+            
+            foreach (var weaponData in targetDict)
             {
+                string uid = weaponData.UID;
                 TemplateContainer dataPanel = dataPanel_0.CloneTree();
-                scrollView.Add(dataPanel);
+                weaponScrollViewArr[scrollViewIndex].Add(dataPanel);
                 if (!targetDataDict.TryGetValue(uid, out int value))
                 {
                     value = 0;
                 }
-                SetDataPanel(dataPanel, uid.ToString(), value.ToString(), Categori.Status, false);
+                SetDataPanel(dataPanel, $"{uid}::{who}::{what}", uid.ToString(), value.ToString(), Categori.Weapon, false);
             }
         }
     }
 
-    private void SetDataPanel(VisualElement panel, string dataName, string valueStr, Categori categori, bool isBigInteger,float valueLabelWidth = 60f, float fontSize = 18f)//스킬의 경우를 기본 값으로 보면 됨
+    private void OnWeaponDropDownChange(string newValue, bool isType)
+    {
+        if (isType)
+        {
+            currentWeaponType = newValue;
+        }
+        else
+        {
+            currentWeaponValue = newValue;
+        }
+        int newIndex = -1;
+        if (currentWeaponType == "Player")
+        {
+            if (currentWeaponValue == "Level")
+            {
+                newIndex = 0;
+            }
+            else if (currentWeaponValue == "Count")
+            {
+                newIndex = 2;
+            }
+        }
+        else if (currentWeaponType == "Companion")
+        {
+            if (currentWeaponValue == "Level")
+            {
+                newIndex = 1;
+            }
+            else if (currentWeaponValue == "Count")
+            {
+                newIndex = 3;
+            }
+        }
+        for (int i = 0; i < weaponScrollViewArr.Length; i++)
+        {
+            if (i == newIndex)
+            {
+                weaponScrollViewArr[i].style.display = DisplayStyle.Flex;
+            }
+            else
+            {
+                weaponScrollViewArr[i].style.display = DisplayStyle.None;
+            }
+        }
+    }
+
+    private void SetDataPanel(VisualElement panel, string dataId, string displayName, string valueStr, Categori categori, bool isBigInteger,float valueLabelWidth = 60f, float fontSize = 18f)//스킬의 경우를 기본 값으로 보면 됨
     {
         Label valueLabel = panel.Q<Label>("ValueLabel");
         valueLabel.style.width = valueLabelWidth;
@@ -450,11 +580,11 @@ public class TotalDebugger : EditorWindow
         SetHoverEventLikeButton(minusVe, true);
         TextField textField = panel.Q<TextField>();
         VisualElement buttonPanel = panel.Q<VisualElement>("ButtonPanel");
-        dataLabel.text = dataName;
+        dataLabel.text = displayName;
         dataLabel.style.fontSize = fontSize;
-        setVe.RegisterCallback<ClickEvent>(evt => OnSetButtonClick(dataName, textField, valueLabel, categori, isBigInteger));
-        plusVe.RegisterCallback<PointerDownEvent>(evt => OnChangeButtonDown(dataName, true, valueLabel, categori, isBigInteger));
-        minusVe.RegisterCallback<PointerDownEvent>(evt => OnChangeButtonDown(dataName, false, valueLabel, categori, isBigInteger));
+        setVe.RegisterCallback<ClickEvent>(evt => OnSetButtonClick(dataId, textField, valueLabel, categori, isBigInteger));
+        plusVe.RegisterCallback<PointerDownEvent>(evt => OnChangeButtonDown(dataId, true, valueLabel, categori, isBigInteger));
+        minusVe.RegisterCallback<PointerDownEvent>(evt => OnChangeButtonDown(dataId, false, valueLabel, categori, isBigInteger));
         if (StartBroker.GetGameData == null)
             return;
         valueLabel.text = valueStr;
@@ -482,7 +612,7 @@ public class TotalDebugger : EditorWindow
                 level = 0;
             }
             scrollView.Add(skillDataPanel);
-            SetDataPanel(skillDataPanel, kvp.Key, level.ToString(), Categori.Skill, false);
+            SetDataPanel(skillDataPanel, kvp.Key,kvp.Key, level.ToString(), Categori.Skill, false);
         }
     }
     private void InitMaterial()
@@ -496,7 +626,7 @@ public class TotalDebugger : EditorWindow
                 value = 0;
             }
             VisualElement panel = materialPanel.Q<VisualElement>($"{rarity}FragmentPanel");
-            SetDataPanel(panel, $"{rarity}", value.ToString(), Categori.Material, false);
+            SetDataPanel(panel, $"{rarity}", $"{rarity}", value.ToString(), Categori.Material, false);
         }
         Label fragmentLabel = materialPanel.Q<VisualElement>("FragmentSeparatePanel").Q<Label>();
         fragmentLabel.text = "Fragment";
@@ -555,6 +685,25 @@ public class TotalDebugger : EditorWindow
         if (GetAsyncKeyState(VK_LBUTTON) == 0) // 버튼이 눌리지 않은 상태
         {
             isPressingVe = false;
+        }
+    }
+    private void OnEnable()
+    {
+        // 플레이 모드 상태 변경 감지 이벤트 등록
+        EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+    }
+
+    private void OnDisable()
+    {
+        // 이벤트 해제 (메모리 누수 방지)
+        EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+    }
+
+    private void OnPlayModeStateChanged(PlayModeStateChange state)
+    {
+        if (state == PlayModeStateChange.ExitingPlayMode)
+        {
+            ToggleActiveUI(false);
         }
     }
 }

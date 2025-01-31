@@ -19,5 +19,5 @@ MonoBehaviour:
   _critical: 1
   _weaponSprite: {fileID: 21300000, guid: f17058e2bd3c44745bd37eb71c41adf1, type: 3}
   _textureSize: {x: 13, y: 21}
-  _uid: 000
+  _uID: Melee_000
   _weaponName: "\uCD08\uBCF4\uC790\uC6A9 \uB3C4\uB07C"

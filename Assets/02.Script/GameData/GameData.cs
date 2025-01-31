@@ -15,6 +15,7 @@ public class GameData
     //Weapon
     public Dictionary<string, int> weaponCount;
     public Dictionary<string, int> weaponLevel;
+    //
     [JsonConverter(typeof(EnumDictConverter<StatusType>))]
     public Dictionary<StatusType, int> statLevel_Gold;
     [JsonConverter(typeof(EnumDictConverter<StatusType>))]

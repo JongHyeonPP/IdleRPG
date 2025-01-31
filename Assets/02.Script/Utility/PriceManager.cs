@@ -33,6 +33,7 @@ public class PriceManager : MonoBehaviour
     }
     public int GetRequireWeaponCount(Rarity weaponRarity, int level)
     {
+        Debug.Log(level);
         switch (weaponRarity)
         {
             case Rarity.Common:
