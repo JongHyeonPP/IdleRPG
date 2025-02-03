@@ -8,6 +8,8 @@ public class GameData
 {
     public BigInteger gold;
     public int level;
+    public int dia;//유료 재화 - 뽑기
+    public int emerald;//유료 재화 - 강화
     public BigInteger exp;
     public Dictionary<string, int> skillLevel;
     [JsonConverter(typeof(EnumDictConverter<Rarity>))]
@@ -24,5 +26,5 @@ public class GameData
     public string[] equipedSkillArr;
     public int currentStageNum;
     public int maxStageNum;
-
+    public string userName;
 }

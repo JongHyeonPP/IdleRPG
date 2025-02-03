@@ -11,17 +11,16 @@ using Unity.Services.Authentication;
 using Unity.Services.Core;
 using UnityEngine.Playables;
 using Random = UnityEngine.Random;
+using System.Numerics;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;//싱글톤 변수
-    public GameData gameData { get; private set; }//로컬 데이터에 주기적으로 동기화할 값들로 구성된 클래스
-    public int dia;//유료 재화 - 뽑기
-    public int emerald;//유료 재화 - 강화
+    [SerializeField] GameData gameData;//로컬 데이터에 주기적으로 동기화할 값들로 구성된 클래스
+
     private float _saveInterval = 10f;//로컬 데이터에 자동 저장하는 간격(초)
     public static PlayerController controller { get; private set; }//전투하는 플레이어, GameManager.controller를 싱글톤처럼 사용하기 위함
     public string userId { get; private set; }//구글 인증을 통해 나온 유저의 아이디
-    public string userName { get; private set; }//인게임에서 변경 가능한 플레이어의 이름
     private void Awake()
     {
         if (instance == null)
@@ -92,17 +91,16 @@ public class GameManager : MonoBehaviour
             SaveLocalData();
         }
     }
-
     public void SaveLocalData()
     {
         DataManager.SaveToPlayerPrefs("GameData", gameData);
     }
 
+
     //클라우드에 현재 진행 중인 게임의 정보를 모두 저장하는 메서드. 저장하는 데이터들을 기반으로 진행 상황을 온전히 복원할 수 있어야 한다.
     public async void SaveGameDataToCloud()
     {
         await DataManager.SaveToCloudAsync("GameData", gameData);
-        await DataManager.SaveToCloudAsync("Currency", new Dictionary<string, object>() { { "Dia", dia }, { "Emerald", emerald } });
     }
     //로컬 데이터를 불러와서 진행 상황을 적용한다. 유료 재화는 로컬 데이터에 저장하지 않는다.
     public void LoadGameData()
@@ -126,7 +124,6 @@ public class GameManager : MonoBehaviour
         gameData.weaponLevel ??= new();
         gameData.skillFragment ??= new();
         gameData.equipedSkillArr ??= new string[10];
-        userName = PlayerPrefs.GetString("Name");
         string serializedData = JsonConvert.SerializeObject(gameData, Formatting.Indented);
         Debug.Log("Game data loaded:\n" + serializedData);
     }
@@ -177,10 +174,16 @@ public class GameManager : MonoBehaviour
     }
     public float GetExpPercent()
     {
-        return Math.Clamp((float)(gameData.exp / GetNeedExp()), 0, 1);
+        BigInteger needExp = GetNeedExp();
+        BigInteger exp = gameData.exp;
+
+        if (needExp == 0)
+            return 0f; // 0으로 나누는 오류 방지
+
+        return (float)((double)exp / (double)needExp);
     }
 
-    private int GetNeedExp()
+    private BigInteger GetNeedExp()
     {
         return gameData.level * 100;
     }

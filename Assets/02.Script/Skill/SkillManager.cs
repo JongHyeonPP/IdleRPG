@@ -13,7 +13,8 @@ public class SkillManager : MonoBehaviour
     private List<SkillDataSet> playerSkillSetList = new();
     private List<SkillDataSet> companionSkillSetList = new();
     private Dictionary<string, SkillData> skillDataDict = new();
-    [Header("Skill")]
+    public SkillData defaultAttackData;
+    [Header("EquipedSkill")]
     private EquipedSkill[] skillArray = new EquipedSkill[10];
     [Header("SkillAcquireInfo")]
     [SerializeField] SkillAcquireInfo[] acquireInfoArr;//Inspector
@@ -24,6 +25,8 @@ public class SkillManager : MonoBehaviour
     [SerializeField] Sprite uniqueFragmentSprite;
     [SerializeField] Sprite legendaryFragmentSprite;
     [SerializeField] Sprite mythicFragmentSprite;
+    
+
     private void Awake()
     {
         instance = this;

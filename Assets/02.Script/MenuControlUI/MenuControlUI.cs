@@ -35,7 +35,6 @@ public class MenuChangeUI : MonoBehaviour
 
     private void ChangeUI(int i)
     {
-        Debug.Log("Change UI : " + i);
         BattleBroker.OnMenuUIChange?.Invoke(i);
     }
 

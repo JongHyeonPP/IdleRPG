@@ -1,5 +1,5 @@
 {
-    "name": "Ui",
+    "name": "DefaultUI",
     "rootNamespace": "",
     "references": [
         "EventControl",
@@ -12,7 +12,8 @@
         "DuplicateLogin",
         "TotalStatus",
         "Skill",
-        "Weapon"
+        "Weapon",
+        "CurrencyBarUI"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

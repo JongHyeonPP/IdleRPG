@@ -229,9 +229,9 @@ public class WeaponUI : MonoBehaviour
     }
     #endregion
     #endregion
-    private void OnWeaponLevelSet(object weaponDataObj, int level)
+    private void OnWeaponLevelSet(string weaponUid, int level)
     {
-        WeaponData weaponData = (WeaponData)weaponDataObj;
+        WeaponData weaponData = WeaponManager.instance.weaponDict[weaponUid];
         VisualElement slot = _slotDict[weaponData.UID];
         Label levelLabel = slot.Q<Label>("LevelLabel");
         levelLabel.text = $"+{level}";

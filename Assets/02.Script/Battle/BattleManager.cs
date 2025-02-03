@@ -62,6 +62,12 @@ public class BattleManager : MonoBehaviour
         BattleBroker.OnEnemyDead += OnEnemyDead;
         PlayerBroker.OnPlayerDead += OnPlayerDead;
         BattleBroker.GetBattleType += ()=>battleType;
+        BattleBroker.IsCanAttack += IsCanAttack;
+    }
+
+    private bool IsCanAttack()
+    {
+        return !_isMove && _controller.target != null;
     }
 
     private void OnPlayerDead()
@@ -316,7 +322,7 @@ public class BattleManager : MonoBehaviour
     private void DropItem(Vector3 position)
     {
         DropBase dropBase;
-        if (UtilityManager.CalculateProbability(1f))
+        if (UtilityManager.CalculateProbability(0.5f))
         {
             var dropGold = _dPool.GetFromPool<GoldDrop>();
             activeGold.Add(dropGold);

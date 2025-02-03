@@ -95,7 +95,7 @@ public class TotalStatusUI : MonoBehaviour
         PlayerBroker.OnSetName += SetName;
         BattleBroker.OnLevelExpSet += SetLevel;
         SetLevel();
-        SetName(GameManager.instance.userName);
+        SetName(StartBroker.GetGameData().userName);
     }
     private void TopAreaInit()
     {
@@ -114,7 +114,7 @@ public class TotalStatusUI : MonoBehaviour
     }
     private void SetLevel()
     {
-        _levelLabel.text = $"Lv. {GameManager.instance.gameData.level}";
+        _levelLabel.text = $"Lv. {StartBroker.GetGameData().level}";
     }
     public void ActiveTotalStatusUI()
     {

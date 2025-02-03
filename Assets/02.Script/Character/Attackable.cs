@@ -14,38 +14,96 @@ public abstract class Attackable : MonoBehaviour
     //private Dictionary<> tempEffect = new();
     protected Coroutine attackCoroutine;
     public bool isDead;
-    protected EquipedSkill[] skillInBattleArr = new EquipedSkill[10];
-    private void DefaultAttack()
+    protected EquipedSkill[] equipedSkillArr = new EquipedSkill[10];
+    private EquipedSkill _defaultAttack;
+    protected void SetDefaultAttack()
     {
-        SkillBehaviour(1, SkillType.Damage, SkillRange.Target);
-    }
-    private void ActiveSkill(string _skillName, float _value, float _range, float type)
-    {
-        Debug.Log("Skill : " + _skillName);
-        SkillBehaviour(1, SkillType.Damage, SkillRange.Target);
-    }
-    protected void SkillBehaviour(int skillValue, SkillType type, SkillRange range, int targetNum = 1, float preDelay = 0.2f, float postDelay = 0.2f)
-    {
-        StartCoroutine(SkillBehaviorCoroutine(skillValue, type, range, targetNum, preDelay, postDelay));
-    }
-    private IEnumerator SkillBehaviorCoroutine(int skillValue, SkillType type, SkillRange range, int targetNum, float preDelay, float postDelay)
-    {
-
-        switch (type)
-        {
-            default:
-                anim.SetTrigger("Attack");
-                break;
-        }
-        List<Attackable> targets = GetTargets(range, targetNum);
-        StartCoroutine(ActiveSkillToTarget(targets, skillValue, type, preDelay));
-        VisualEffectToTarget(targets);
-        yield return new WaitForSeconds(postDelay);
+        _defaultAttack = new();
     }
     public void StartAttack()
     {
         attackCoroutine = StartCoroutine(AttackRoop());
     }
+    //AttackTerm 간격마다 우선 순위에 있는 스킬 사용
+    private IEnumerator AttackRoop()
+    {
+        while (true)
+        {
+
+            EquipedSkill currentSkill = null;
+            foreach (EquipedSkill skill in equipedSkillArr)
+            {
+                if (skill == null)
+                    continue;
+                if (skill.IsSkillAble)
+                {
+                    currentSkill = skill;
+                    skill.SetCoolMax();
+                    break;
+                }
+            }
+            if (currentSkill == null)
+            {
+                currentSkill = _defaultAttack;
+                if (this is PlayerController)
+                    ProgressCoolAttack();
+            }
+            Debug.Log(currentSkill.skillData.name);
+            SkillData skillData = currentSkill.skillData;
+            if (skillData.isAnim)
+            {
+                yield return new WaitForSeconds(skillData.preDelay);
+                AnimBehavior(currentSkill, skillData);
+                List<Attackable> targets = GetTargets(skillData.target, skillData.targetNum);
+                ActiveSkillToTarget(targets, currentSkill);
+                VisualEffectToTarget(targets);
+                yield return new WaitForSeconds(skillData.postDelay);
+            }
+            else
+            {
+                List<Attackable> targets = GetTargets(skillData.target, skillData.targetNum);
+                ActiveSkillToTarget(targets, currentSkill);
+                VisualEffectToTarget(targets);
+            }
+;
+        }
+    }
+
+    private void AnimBehavior(EquipedSkill currentSkill, SkillData skillData)
+    {
+        if (currentSkill == _defaultAttack)
+        {
+            anim.SetFloat("AttackState", 0f);
+            anim.SetTrigger("Attack");
+        }
+        else
+        {
+            switch (skillData.type)
+            {
+                case SkillType.Damage:
+                    anim.SetFloat("AttackState", 1f);
+                    anim.SetTrigger("Attack");
+                    break;
+                case SkillType.Heal:
+                case SkillType.AttBuff:
+                    anim.SetTrigger("Buff");
+                    break;
+            }
+        }
+    }
+
+    private void ProgressCoolAttack()
+    {
+        foreach (EquipedSkill equipedSkill in equipedSkillArr)
+        {
+            if (equipedSkill != null)
+            {
+                if (equipedSkill.skillData.skillCoolType == SkillCoolType.ByAtt)
+                    equipedSkill.currentCoolAttack = Mathf.Max(equipedSkill.currentCoolAttack - 1, 0);
+            }
+        }
+    }
+
     public void StopAttack()
     {
         target = null;
@@ -55,17 +113,20 @@ public abstract class Attackable : MonoBehaviour
             attackCoroutine = null;
         }
     }
-    private IEnumerator ActiveSkillToTarget(List<Attackable> targets, int skillValue, SkillType skillType, float preDelay)
+    private void ActiveSkillToTarget(List<Attackable> targets, EquipedSkill skill)
     {
-        yield return new WaitForSeconds(preDelay);
         ICharacterStatus myStatus = GetStatus();
-        BigInteger calcedValue = skillValue;
+        SkillData skillData = skill.skillData;
+        int skillLevel = skill.level;
+        BigInteger calcedValue = new(skillData.value[skillLevel] * 100f);
         calcedValue *= myStatus.Power;
+        calcedValue /= 100;
+        //100을 곱하고 계산 후 다시 나눠주면 소수점 아래 2자리까지 보존
         foreach (var target in targets)
         {
-            ICharacterStatus targetStatus = target.GetStatus();
+            //ICharacterStatus targetStatus = target.GetStatus();
             //일련의 계산 진행
-            target.ReceiveSkill(calcedValue, skillType);
+            target.ReceiveSkill(calcedValue, skillData.type);
         }
         if (target.hp == 0)
         {
@@ -91,7 +152,7 @@ public abstract class Attackable : MonoBehaviour
             case SkillType.Heal:
                 break;
         }
-        OnReceiveDamage();
+        OnReceiveSkill();
         if (hp == 0)
         {
             OnDead();
@@ -101,7 +162,7 @@ public abstract class Attackable : MonoBehaviour
     {
 
     }
-    private List<Attackable> GetTargets(SkillRange range, int targetNum)
+    private List<Attackable> GetTargets(SkillTarget range, int targetNum)
     {
         List<Attackable> result = new();
         switch (range)
@@ -112,35 +173,9 @@ public abstract class Attackable : MonoBehaviour
         }
         return result;
     }
-    //AttackTerm 간격마다 우선 순위에 있는 스킬 사용
-    protected IEnumerator AttackRoop()
-    {
-        ICharacterStatus _status = GetStatus();
-        while (true)
-        {
-            bool isActiveSkill = false;
-            foreach (EquipedSkill skill in skillInBattleArr)
-            {
-                if (skill == null)
-                    continue;
-                if (skill.IsSkillAble)
-                {
-                    SkillData data = skill.skillData;
-                    ActiveSkill(data.name, data.value[0], data.range, data.range);
-                    isActiveSkill = true;
-                    break;
-                }
-            }
-            if (!isActiveSkill)
-            {
-                if (target)
-                    DefaultAttack();
-            }
-            yield return new WaitForSeconds(attackTerm);
-        }
-    }
+
     public abstract ICharacterStatus GetStatus();
     protected abstract void OnDead();
-    protected abstract void OnReceiveDamage();
+    protected abstract void OnReceiveSkill();
 
 }

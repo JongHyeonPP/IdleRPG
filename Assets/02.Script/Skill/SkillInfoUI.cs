@@ -5,11 +5,12 @@ using UnityEngine.UIElements;
 
 public class SkillInfoUI : MonoBehaviour
 {
+    [SerializeField]GameData _gameData;
     [SerializeField]SkillUI skillUI;
-    [SerializeField]EquipedSkillsUI equipdSkillUI;
+    [SerializeField]EquipedSkillUI equipedSkillUI;
     [SerializeField]SkillAcquireUI skillAcquireUI;
     public VisualElement root { get; private set; }
-    private string currentSkillId;
+    private SkillData currentSkillData;//현재 선택된 스킬 데이터
     //채우기 위한 필드
     private VisualElement iconVe;
     private Label levelLabel;
@@ -30,6 +31,12 @@ public class SkillInfoUI : MonoBehaviour
     private Button acquireButton;
     private Label maxLevelLabel;
     private void Awake()
+    {
+        _gameData = StartBroker.GetGameData();
+        SetUI();
+    }
+
+    private void SetUI()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
         iconVe = root.Q<VisualElement>("SkillIcon");
@@ -53,11 +60,12 @@ public class SkillInfoUI : MonoBehaviour
         equipButton.RegisterCallback<ClickEvent>(click => OnEquipButtonClick());
         acquireButton.RegisterCallback<ClickEvent>(click => OnAcquireButtonClick());
     }
+
     public void ActiveUI(SkillData skillData, int skillLevel)
     {
+        currentSkillData = skillData;
         root.style.display = DisplayStyle.Flex;
         UIBroker.ActiveTranslucent(root, true);
-        currentSkillId = skillData.name;
         iconVe.style.backgroundImage = new(skillData.iconSprite);
         levelLabel.text = $"Lv.{skillLevel}";
         titleLabel.text = skillData.skillName;
@@ -101,13 +109,37 @@ public class SkillInfoUI : MonoBehaviour
     }
     public void OnUpgradeButtonClick()
     {
-        Debug.Log("UC");
+        Rarity rarity = currentSkillData.rarity;
+        string uid = currentSkillData.uid;
+        if (PriceManager.instance.GetRequireFragment_Skill(rarity, _gameData.skillLevel[uid]) <= _gameData.skillFragment[rarity])//재화가 충분할 경우
+        {
+            _gameData.skillFragment[rarity] -= PriceManager.instance.GetRequireFragment_Skill(rarity, _gameData.skillLevel[uid]);
+            PlayerBroker.OnFragmentSet(rarity, _gameData.skillFragment[rarity]);
+            _gameData.skillLevel[uid]++;
+            if (_gameData.skillLevel[uid] == PriceManager.MAXSKILLLEVEL)
+            {
+                maxLevelLabel.style.display = DisplayStyle.Flex;
+                upgradeButton.style.display = DisplayStyle.None;
+            }
+            else
+            {
+                fragmentLabel.text = PriceManager.instance.GetRequireFragment_Skill(rarity, _gameData.skillLevel[uid]).ToString();
+            }
+            levelLabel.text = $"Lv.{_gameData.skillLevel[currentSkillData.uid]}";
+            PlayerBroker.OnSkillLevelSet(currentSkillData.uid, _gameData.skillLevel[currentSkillData.uid]);
+        }
+        else//재화가 부족한 경우
+        {
+            Debug.Log("재화 부족");
+            return;
+        }
+        
     }
     public void OnEquipButtonClick()
     {
         UIBroker.InactiveCurrentUI();
         skillUI.ToggleEquipBackground(true);
-        equipdSkillUI.SetCurrentSkillId(currentSkillId);
+        equipedSkillUI.SetCurrentSkillId(currentSkillData);
     }
     public void OnAcquireButtonClick()
     {

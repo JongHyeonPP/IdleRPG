@@ -3,7 +3,7 @@ using UnityEngine.UIElements;
 
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] PlayerStatusBarUI _playerStatusBarUI;
+    [SerializeField] CurrencyBarUI _currencyBar;
     [SerializeField] TotalLabelUI _goldLabelUI;
     [SerializeField] StatUI _statUI;
     [SerializeField] StageSelectUI _stageSelectUI;
@@ -15,6 +15,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] WeaponUI _weaponUI;
     void Start()
     {
+        //오브젝트가 비활성화 돼있어도 발동시키기 위함
         _stageSelectUI.gameObject.SetActive(true);
         _stageSelectBackground.gameObject.SetActive(true);
         _duplicateLoginUI.gameObject.SetActive(true);
@@ -22,7 +23,7 @@ public class UIManager : MonoBehaviour
         _skillInfoUI.gameObject.SetActive(true);
         _weaponUI.gameObject.SetActive(true);
         _statUI.gameObject.SetActive(true);
-        _playerStatusBarUI.root.style.display = DisplayStyle.Flex;
+        _currencyBar.root.style.display = DisplayStyle.Flex;
         _goldLabelUI.root.style.display = DisplayStyle.Flex;
         _statUI.root.style.display = DisplayStyle.Flex;
         _stageSelectUI.root.style.visibility = Visibility.Hidden;

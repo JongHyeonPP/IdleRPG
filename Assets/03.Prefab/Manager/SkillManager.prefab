@@ -70,6 +70,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ffb5a097ff656c649b08b4443d26e026, type: 2}
   - {fileID: 11400000, guid: 9dd677f697b44be4abdc8b41cc4b3a0e, type: 2}
   - {fileID: 11400000, guid: 8f29073c8a3775b41b07c0d15c338aae, type: 2}
+  defaultAttackData: {fileID: 11400000, guid: c68e6cd8eab9ec546be74b88f14a8795, type: 2}
   acquireInfoArr:
   - {fileID: 11400000, guid: 141a0db2e3e31ec4eb93679dc444fd04, type: 2}
   - {fileID: 11400000, guid: 11de19414a9c61b42bc3de79cad82d90, type: 2}

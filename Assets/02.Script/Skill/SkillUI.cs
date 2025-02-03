@@ -26,8 +26,8 @@ public class SkillUI : MonoBehaviour
         _playerSelectButton = root.Q<Button>("PlayerSelectButton");
         _partySelectButton = root.Q<Button>("PartySelectButton");
         skillAcquireUI.gameObject.SetActive(true);
-        BattleBroker.OnSkillLevelSet += OnSkillLevelChange;
-        BattleBroker.OnFragmentSet += OnFragmentSet;
+        PlayerBroker.OnSkillLevelSet += OnSkillLevelChange;
+        PlayerBroker.OnFragmentSet += OnFragmentSet;
     }
 
     private void OnFragmentSet(Rarity rarity, int num)

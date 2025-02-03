@@ -9,7 +9,7 @@ using System;
 
 public class StatUI : MonoBehaviour
 {
-    private GameManager _gameManager;
+    private GameData _gameData;
     private Coroutine _incrementCoroutine;
     
     private readonly StatusType[] _activeStats =
@@ -33,17 +33,17 @@ public class StatUI : MonoBehaviour
     {
         root = GetComponent<UIDocument>().rootVisualElement;
         draggableScrollView = GetComponent<DraggableScrollView>();
+        PlayerBroker.OnStatusLevelSet+=UpdateStatText;
     }
     private void Start()
     {
-        _gameManager = GameManager.instance;
+        _gameData = StartBroker.GetGameData();
      
 
         foreach (var stat in _activeStats)
         {
             InitializeStatUI(stat);
         }
-        PlayerBroker.OnStatusLevelSet += UpdateStatText;
     }
 
 
@@ -84,26 +84,26 @@ public class StatUI : MonoBehaviour
         statIcon.style.backgroundImage = new(iconSprite);
         button.RegisterCallback<PointerDownEvent>(evt => OnPointerDown(stat),TrickleDown.TrickleDown);
         button.RegisterCallback<PointerUpEvent>(evt => OnPointerUp(), TrickleDown.TrickleDown);
-        if (!_gameManager.gameData.statLevel_Gold.ContainsKey(stat))
+        if (!_gameData.statLevel_Gold.ContainsKey(stat))
         {
-            _gameManager.gameData.statLevel_Gold[stat] = 1; 
+            _gameData.statLevel_Gold[stat] = 1; 
         }
-        int currentLevel = _gameManager.gameData.statLevel_Gold[stat];
+        int currentLevel = _gameData.statLevel_Gold[stat];
         UpdateStatText(stat, currentLevel);
     }
     
 
     private void OnPointerDown(StatusType stat)//스텟버튼누르기
     {
-        int currentLevel = _gameManager.gameData.statLevel_Gold[stat]; 
-        int requiredGold = FomulaManager.GetGoldRequired(currentLevel); 
+        int currentLevel = _gameData.statLevel_Gold[stat]; 
+        int requiredGold = FormulaManager.GetGoldRequired(currentLevel); 
 
-        if (_gameManager.gameData.gold < requiredGold) 
+        if (_gameData.gold < requiredGold) 
         {
            Debug.Log("골드가 없습니다.");
            return; 
         }
-        _gameManager.gameData.gold -= requiredGold;
+        _gameData.gold -= requiredGold;
         if (_incrementCoroutine == null)
         {
             _incrementCoroutine = StartCoroutine(IncreaseLevelContinuously(stat));
@@ -117,7 +117,7 @@ public class StatUI : MonoBehaviour
         {
             StopCoroutine(_incrementCoroutine);
             _incrementCoroutine = null;
-            DataManager.SaveToPlayerPrefs("GameData", _gameManager.gameData);
+            GameManager.instance.SaveLocalData();
         }
     }
 
@@ -133,9 +133,9 @@ public class StatUI : MonoBehaviour
     
     private void IncrementStat(StatusType stat)
     {
-        _gameManager.gameData.statLevel_Gold[stat]++;
-        PlayerBroker.OnStatusChange(stat, 1);
-        UpdateStatText(stat, _gameManager.gameData.statLevel_Gold[stat]);
+        _gameData.statLevel_Gold[stat]++;
+        PlayerBroker.OnStatusLevelSet(stat, _gameData.statLevel_Gold[stat]);
+        UpdateStatText(stat, _gameData.statLevel_Gold[stat]);
     }
 
     private void UpdateStatText(StatusType stat, int level)
@@ -147,9 +147,9 @@ public class StatUI : MonoBehaviour
 
         levelLabel.text = $"Level: {level}";
 
-        riseLabel.text = FomulaManager.GetStatRiseText(level, stat);
+        riseLabel.text = FormulaManager.GetStatRiseText(level, stat);
 
-        button.text = $"{FomulaManager.GetGoldRequired(level)}";
+        button.text = $"{FormulaManager.GetGoldRequired(level)}";
     }
     #region UIChange
     private void OnEnable()
