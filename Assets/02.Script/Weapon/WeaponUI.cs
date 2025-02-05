@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class WeaponUI : MonoBehaviour
+public class WeaponUI : MonoBehaviour,IBattleUI
 {
     [SerializeField] private List<WeaponData> _weaponDataList;
 
@@ -21,7 +21,9 @@ public class WeaponUI : MonoBehaviour
         draggableScrollView = GetComponent<DraggableScrollView>();
         _weaponCount = StartBroker.GetGameData().weaponCount;
         _weaponInfo.gameObject.SetActive(true);
+
     }
+  
     private void Start()
     {
         CreateWeaponButtons();
@@ -87,11 +89,13 @@ public class WeaponUI : MonoBehaviour
     private void OnEnable()
     {
         BattleBroker.OnMenuUIChange += HandleUIChange;
+        MediatorManager<IBattleUI>.RegisterMediator(this);
     }
 
     private void OnDisable()
     {
         BattleBroker.OnMenuUIChange -= HandleUIChange;
+        MediatorManager<IBattleUI>.UnregisterMediator(this);
     }
     private void HandleUIChange(int uiType)
     {
@@ -108,6 +112,16 @@ public class WeaponUI : MonoBehaviour
     {
         root.style.display = DisplayStyle.Flex;
         //킬때마다 무기개수 초기화
+    }
+
+    public void ActivateBattleMode()
+    {
+        ShowWeaponUI();
+    }
+
+    public void DeactivateBattleMode()
+    {
+        HideWeaponUI();
     }
     #endregion
     #endregion

@@ -5,15 +5,8 @@ public class StoryPlayerController : MonoBehaviour
 {
     public Animator anim;
     public GameObject player;
-   
-   
-    private void Start()
-    {
-        StartCoroutine(TranslatePlayerCoroutine());
-    }
-
-   
-    private IEnumerator TranslatePlayerCoroutine()
+     
+    public IEnumerator TranslatePlayerCoroutine()
     {
         while (player.transform.position.x < -1.16f)
         {

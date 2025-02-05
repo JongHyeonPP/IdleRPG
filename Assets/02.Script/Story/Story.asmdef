@@ -1,12 +1,9 @@
 {
-    "name": "MenuChangeUI",
+    "name": "Story",
     "rootNamespace": "",
     "references": [
-        "StatUI",
-        "EventControl",
-        "Skill",
-        "Weapon",
-        "Story"
+        "GUID:c1f3ac597cd61d64e994b094eaa1fa95",
+        "GUID:20b20c657697e4f478d6b5b4c5837706"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -1,7 +1,6 @@
 using NUnit.Framework.Interfaces;
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using UnityEditor.U2D.Animation;
 using UnityEngine;
 
 public struct TextData

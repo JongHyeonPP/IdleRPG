@@ -12,7 +12,8 @@
         "DuplicateLogin",
         "TotalStatus",
         "Skill",
-        "Weapon"
+        "Weapon",
+        "Story"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
