@@ -9,6 +9,8 @@ public class TransitionManager : MonoBehaviour
     private void Start()
     {
         SwitchToStoryMode(1);
+        BattleBroker.SwitchToStory += SwitchToStoryMode;
+        BattleBroker.SwitchBattle += SwitchToBattleMode;
     }
 
     public void SwitchToStoryMode(int index)

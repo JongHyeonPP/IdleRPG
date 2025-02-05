@@ -34,10 +34,10 @@ MonoBehaviour:
   - 1
   - 1
   - 1
-  type: 1
+  type: 0
   target: 1
   targetNum: 1
   preDelay: 0.2
   postDelay: 1
-  isAnim: 0
+  isAnim: 1
   visualEffectPrefab: {fileID: 0}

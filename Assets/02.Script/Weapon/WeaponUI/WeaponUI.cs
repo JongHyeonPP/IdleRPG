@@ -6,7 +6,7 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class WeaponUI : MonoBehaviour
+public class WeaponUI : MonoBehaviour, IBattleUI
 {
     //VIsualElement
     public VisualElement root { get; private set; }
@@ -265,4 +265,13 @@ public class WeaponUI : MonoBehaviour
         countProgressBar.value = count/(float)price;
     }
 
+    public void ActivateBattleMode()
+    {
+        
+    }
+
+    public void DeactivateBattleMode()
+    {
+        
+    }
 }

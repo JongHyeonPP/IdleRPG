@@ -34,4 +34,7 @@ public static class BattleBroker
     //무기 개수 변경
     public static Action<int, int> OnWeaponCountSet;//Weapon Id, Count
     public static Func<bool> IsCanAttack;
+
+    public static Action<int> SwitchToStory;
+    public static Action SwitchBattle;
 }

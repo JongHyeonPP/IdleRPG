@@ -47,7 +47,6 @@ public static class FormulaManager
         {
             return 1;
         }
-        
     }
     public static string GetStatRiseText(int level, StatusType stat)
     {
