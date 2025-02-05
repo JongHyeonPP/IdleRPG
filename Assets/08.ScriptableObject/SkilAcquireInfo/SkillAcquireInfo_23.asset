@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   acquireLevel: 500
   playerSkillData: {fileID: 0}
-  partySkillData: {fileID: 11400000, guid: 8f29073c8a3775b41b07c0d15c338aae, type: 2}
+  companionSkillData: {fileID: 11400000, guid: 8f29073c8a3775b41b07c0d15c338aae, type: 2}

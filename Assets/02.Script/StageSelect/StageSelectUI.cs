@@ -29,7 +29,7 @@ public class StageSelectUI : MonoBehaviour
     }
     private void Start()
     {
-        ChangePage(GameManager.instance.gameData.currentStageNum / 20);
+        ChangePage(StartBroker.GetGameData().currentStageNum / 20);
     }
 
     private void OnExitButtonClick(ClickEvent evt)

@@ -6,10 +6,8 @@ public class FlexibleListView : DraggableScrollView
     public ListView listView { get; private set; }
     public List<IListViewItem> items { get; private set; }
     public LVItemController _controller { get; private set; }
-    
     private void Awake()
     {
-        listView = GetComponent<UIDocument>().rootVisualElement.Q<ListView>();
         InitScrollView();
         _controller = GetComponent<LVItemController>();
         _controller.draggableLV = this;
@@ -18,6 +16,7 @@ public class FlexibleListView : DraggableScrollView
     }
     private void SetListView()
     {
+        listView = _targetDocument.rootVisualElement.Q<ListView>();
         listView.makeItem = MakeItem;
         listView.bindItem = BindItem;
         listView.selectionType = SelectionType.Single;

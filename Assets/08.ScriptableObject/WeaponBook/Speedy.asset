@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c648b1b66edd1b64bbd4da7100062dfe, type: 3}
+  m_Name: Speedy
+  m_EditorClassIdentifier: 
+  _bookName: "\uB0A0\uB835\uD55C \uC694\uBBF8"
+  _weapons:
+  - {fileID: 11400000, guid: 2d13bd46a83acc140ac1bbe6269f2354, type: 2}
+  - {fileID: 11400000, guid: f6976526b9cea004bbeedfd352394923, type: 2}
+  - {fileID: 11400000, guid: ced8f3c9067fa0846bbe6d557f09d4f9, type: 2}
+  - {fileID: 11400000, guid: 560493f54c1c46d40adaa99b74609b27, type: 2}
+  - {fileID: 11400000, guid: 61d182b11f1107e4cbfde994467e0297, type: 2}
+  - {fileID: 11400000, guid: 5cf829becff223f419077aeab79d70bd, type: 2}
+  - {fileID: 11400000, guid: 1381b4481c09d254aa3dcce608e85a10, type: 2}
+  _displayName: Speedy
+  _upgradeLevels: 1500000023000000460000008c00000018010000
+  _upgradeStats:
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  bookId: Speedy
+  bookName: "\uB0A0\uB835\uD55C \uC694\uBBF8"
+  weapons:
+  - {fileID: 11400000, guid: 2d13bd46a83acc140ac1bbe6269f2354, type: 2}
+  - {fileID: 11400000, guid: f6976526b9cea004bbeedfd352394923, type: 2}
+  - {fileID: 11400000, guid: ced8f3c9067fa0846bbe6d557f09d4f9, type: 2}
+  - {fileID: 11400000, guid: 560493f54c1c46d40adaa99b74609b27, type: 2}
+  - {fileID: 11400000, guid: 61d182b11f1107e4cbfde994467e0297, type: 2}
+  - {fileID: 11400000, guid: 5cf829becff223f419077aeab79d70bd, type: 2}
+  - {fileID: 11400000, guid: 1381b4481c09d254aa3dcce608e85a10, type: 2}
+  upgradeLevels: 1500000023000000460000008c00000018010000
+  upgradeStats:
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1

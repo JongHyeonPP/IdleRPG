@@ -25,6 +25,18 @@ public class EquipedSkill
             }
         }
     }
+    public void SetCoolMax()
+    {
+        switch (skillData.skillCoolType)
+        {
+            case SkillCoolType.ByAtt:
+                currentCoolAttack = skillData.coolAttack;
+                    break;
+            case SkillCoolType.ByTime:
+                currentCoolTime = skillData.cooltime;
+                break;
+        }
+    }
     public EquipedSkill(SkillData skillData)
     {
         this.skillData = skillData;
@@ -32,13 +44,16 @@ public class EquipedSkill
         currentCoolAttack = 0;
         if (!StartBroker.GetGameData().skillLevel.TryGetValue(skillData.name, out int level))
         {
-            Debug.Log("장착했는데 스킬인데 없는 스킬이래");
+            Debug.Log($"{skillData.name} - {level}");
         }
         GameData gameData = StartBroker.GetGameData();
-        BattleBroker.OnSkillLevelSet += OnSkillLevelChange;
+        PlayerBroker.OnSkillLevelSet += OnSkillLevelChange;
         this.level = level;
     }
-
+    public EquipedSkill()//기본 공격
+    {
+        skillData = SkillManager.instance.defaultAttackData;
+    }
     private void OnSkillLevelChange(string skillId, int skillLevel)
     {
         if (skillData.name == skillId)
@@ -46,4 +61,5 @@ public class EquipedSkill
             level = skillLevel;
         }
     }
+
 }

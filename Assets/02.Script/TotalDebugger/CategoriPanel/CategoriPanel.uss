@@ -1,0 +1,16 @@
+/* 왼쪽 텍스트의 VisualElement*/
+.unity-popup-field__label {
+    min-width: 80px;
+}
+/*드롭 다운*/
+#DropDownParent .unity-base-field__input {
+    min-width: 150px;
+    max-width: 150px;
+    min-height: 40px;
+    max-height: 40px;
+} */
+/*드롭 다운의 텍스트*/
+.unity-base-popup-field__text {
+    font-size: 15px;
+     margin-left: 10px; 
+}

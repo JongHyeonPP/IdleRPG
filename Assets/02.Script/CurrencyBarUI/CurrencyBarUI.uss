@@ -1,0 +1,18 @@
+.custom-progress-bar .unity-progress-bar__container {
+    min-height: 190%;
+    min-width: 102%;
+    background-image: none;
+}
+
+.custom-progress-bar .unity-progress-bar__background {
+    border-radius: 10px;
+    background-image: none;
+    -unity-background-image-tint-color: rgb(255, 255, 255);
+    background-color: rgb(171, 150, 126);
+}
+
+.custom-progress-bar .unity-progress-bar__progress {
+    background-size: cover;
+    border-radius: 10px;
+    background-color: rgb(110, 180, 235);
+}

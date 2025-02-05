@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
-using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.UIElements;
-using UnityEngine.VFX;
 
 public class SkillAcquireUI : MonoBehaviour
 {
+    private GameData _gameData;
     public VisualElement root { get; private set; }
     private VisualElement slotParentPanel;
     private DraggableScrollView _draggableScrollView;
@@ -16,7 +15,26 @@ public class SkillAcquireUI : MonoBehaviour
         root = GetComponent<UIDocument>().rootVisualElement;
         slotParentPanel = root.Q<VisualElement>("SlotParentPanel");
         _draggableScrollView = GetComponent<DraggableScrollView>();
+        BattleBroker.OnLevelExpSet += OnLevelExpSet;
+        _gameData = StartBroker.GetGameData();
     }
+
+    private void OnLevelExpSet()
+    {
+        int level = _gameData.level;
+        foreach (KeyValuePair<int, VisualElement> kvp in unlockPanelDict)
+        {
+            if (kvp.Key > level)//배우지 못하는 경우
+            {
+                kvp.Value.style.display = DisplayStyle.Flex;
+            }
+            else//배울 수 있는 경우
+            {
+                kvp.Value.style.display = DisplayStyle.None;
+            }
+        }
+    }
+
     private void Start()
     {
         root.style.display = DisplayStyle.None;
@@ -38,20 +56,20 @@ public class SkillAcquireUI : MonoBehaviour
     {
         if (_draggableScrollView._isDragging)
             return;
-        Dictionary<string, int> skillLevel = StartBroker.GetGameData().skillLevel;
+        Dictionary<string, int> skillLevel = _gameData.skillLevel;
         iconVe.style.display = DisplayStyle.None;
-        if (!skillLevel.ContainsKey(skillData.name))
-           StartBroker.GetGameData().skillLevel[skillData.name] = 1;
-        BattleBroker.OnSkillLevelSet(skillData.name, 1);
+        if (!skillLevel.ContainsKey(skillData.name) || skillLevel[skillData.name]==0)
+           _gameData.skillLevel[skillData.name] = 1;
+        PlayerBroker.OnSkillLevelSet(skillData.name, 1);
     }
     private void SetSkillAcquireSlot(VisualElement slot, SkillAcquireInfo info)
     {
         Label levelLabel = slot.Q<Label>("LevelLabel");
         VisualElement skillIcon_Player = slot.Q<VisualElement>("SkillIcon_Player");
-        VisualElement skillIcon_Party = slot.Q<VisualElement>("SkillIcon_Party");
+        VisualElement skillIcon_Companion = slot.Q<VisualElement>("SkillIcon_Companion");
         VisualElement unlockPanel = slot.Q<VisualElement>("UnlockPanel");
         unlockPanelDict.Add(info.acquireLevel, unlockPanel);
-        if (StartBroker.GetGameData().level >= info.acquireLevel)
+        if (_gameData.level >= info.acquireLevel)
         {
             unlockPanel.style.display = DisplayStyle.None;
         }
@@ -60,21 +78,24 @@ public class SkillAcquireUI : MonoBehaviour
             unlockPanel.style.display = DisplayStyle.Flex;
         }
         SetEachSlot(skillIcon_Player, info.playerSkillData);
-        SetEachSlot(skillIcon_Party, info.partySkillData);
+        SetEachSlot(skillIcon_Companion, info.companionSkillData);
         levelLabel.text = info.acquireLevel.ToString();
     }
     private void SetEachSlot(VisualElement iconVe, SkillData skillData)
     {
-        Dictionary<string, int> skillLevel = StartBroker.GetGameData().skillLevel;
-        if (skillData&&!skillLevel.ContainsKey(skillData.name))
+        Dictionary<string, int> skillLevel = _gameData.skillLevel;
+        if (skillData == null)
         {
-            iconVe.style.backgroundImage = new(skillData.iconSprite);
-            iconVe.RegisterCallback<ClickEvent>(evt => OnSlotClicked(skillData, iconVe));
+            iconVe.style.visibility = Visibility.Hidden;
+            return;
         }
-        else
+        if (skillLevel.ContainsKey(skillData.uid) && skillLevel[skillData.uid] != 0)
         {
-           iconVe.style.visibility = Visibility.Hidden;
+            iconVe.style.visibility = Visibility.Hidden;
+            return;
         }
+        iconVe.style.backgroundImage = new(skillData.iconSprite);
+        iconVe.RegisterCallback<ClickEvent>(evt => OnSlotClicked(skillData, iconVe));
     }
     public void ActiveUI()
     {

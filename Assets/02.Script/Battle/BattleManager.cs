@@ -33,7 +33,6 @@ public class BattleManager : MonoBehaviour
 
     private StageInfo currentStageInfo;//현재 진행 중인 스테이지의 전투 정보... 적 종류, 개수, 스테이지 이름...
     private BattleType battleType;//전투의 타입. Default, Boss, Die
-
     private void Awake()
     {
         if (instance == null)
@@ -63,6 +62,12 @@ public class BattleManager : MonoBehaviour
         BattleBroker.OnEnemyDead += OnEnemyDead;
         PlayerBroker.OnPlayerDead += OnPlayerDead;
         BattleBroker.GetBattleType += ()=>battleType;
+        BattleBroker.IsCanAttack += IsCanAttack;
+    }
+
+    private bool IsCanAttack()
+    {
+        return !_isMove && _controller.target != null;
     }
 
     private void OnPlayerDead()
@@ -317,7 +322,7 @@ public class BattleManager : MonoBehaviour
     private void DropItem(Vector3 position)
     {
         DropBase dropBase;
-        if (UtilityManager.CalculateProbability(1f))
+        if (UtilityManager.CalculateProbability(0.5f))
         {
             var dropGold = _dPool.GetFromPool<GoldDrop>();
             activeGold.Add(dropGold);

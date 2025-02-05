@@ -13,9 +13,9 @@ namespace EnumCollection
         //To Ally       
         Heal, AttBuff
     }
-    public enum SkillRange
+    public enum SkillTarget
     {
-        Self, Target
+        Self, Opponent
     }
     public enum StatusType
     {
@@ -43,7 +43,7 @@ namespace EnumCollection
     }
     public enum WeaponType
     {
-        MeleeWeapon,
+        Melee,
         Bow,
         Staff,
         Shield

@@ -13,6 +13,8 @@ public class DraggableScrollView : MonoBehaviour
     // 인스펙터 노출
     [SerializeField] private float _scrollSpeed = 1f;
     [SerializeField] private ScrollViewMode _mode;
+    [SerializeField] protected UIDocument _targetDocument;
+    [SerializeField] private string _scrollViewName;//없으면 
 
     //클릭 이벤트
     public Action OnItemClicked;
@@ -22,7 +24,14 @@ public class DraggableScrollView : MonoBehaviour
     }
     public void InitScrollView()
     {
-        scrollView = GetComponent<UIDocument>().rootVisualElement.Q<ScrollView>();
+        if (_targetDocument == null)
+            _targetDocument = GetComponent<UIDocument>();
+        if (_scrollViewName == string.Empty)
+            scrollView = _targetDocument.rootVisualElement.Q<ScrollView>();
+        else
+            scrollView = _targetDocument.rootVisualElement.Q<VisualElement>(_scrollViewName).Q<ScrollView>();
+        if (scrollView == null)
+            Destroy(this);
         scrollView.verticalScrollerVisibility = ScrollerVisibility.Hidden;
         scrollView.horizontalScrollerVisibility = ScrollerVisibility.Hidden;
         scrollView.mode = _mode;

@@ -24,7 +24,9 @@ public class GainLabelUI : MonoBehaviour
             pieceRoot.style.opacity = 0f;
             pieceArr[i] = new GainLabelPiece(pieceRoot, iconElement, valueLabel)
             {
-                isActive = false
+                isActive = false,
+                _goldTexture = _goldTexture,
+                _expTexture = _expTexture,
             };
         }
         BattleBroker.OnCurrencyInBattle += OnCurrencyInBattle;
@@ -58,59 +60,7 @@ public class GainLabelUI : MonoBehaviour
         pieceArr[0].SetValue(dropType, value);
         StartCoroutine(GraduallyHideAlpha());
     }
-    internal class GainLabelPiece
-    {
-        // Perm Value
-        public bool isActive;
-        public VisualElement root;
-        private VisualElement _iconElement;
-        private Label _valueLabel;
-        // Temp Value
-        private DropType _dropType;
-        private int _value;
-        private readonly float _hideDuration = 1f;
 
-        internal GainLabelPiece(VisualElement root, VisualElement iconElement, Label valueLabel)
-        {
-            this.root = root;
-            _iconElement = iconElement;
-            _valueLabel = valueLabel;
-        }
-
-        internal void SetValue(DropType dropType, int value)
-        {
-            _dropType = dropType;
-            _value = value;
-            _valueLabel.text = value.ToString("N0");
-            isActive = true;
-            root.style.opacity = 1f;
-        }
-
-        internal void GetValue(out DropType dropType, out int value)
-        {
-            dropType = _dropType;
-            value = _value;
-        }
-
-        internal IEnumerator GraduallyHidePiece()
-        {
-            if (!isActive)
-                yield break;
-            isActive = false;
-            float elapsedTime = 0f;
-            float initialOpacity = root.style.opacity.value;
-
-            while (elapsedTime < _hideDuration)
-            {
-                elapsedTime += Time.deltaTime;
-                float newOpacity = Mathf.Lerp(initialOpacity, 0f, elapsedTime / _hideDuration);
-                root.style.opacity = newOpacity;
-                yield return null;
-            }
-            root.style.opacity = 0f;
-
-        }
-    }
 
 }
 

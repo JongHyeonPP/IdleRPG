@@ -4,19 +4,19 @@ using UnityEngine;
 public class PriceInfo : ScriptableObject
 {
     [Header("Skill_Piece")]
-    public int[] _commonSkillPiece;
-    public int[] _uncommonSkillPiece;
-    public int[] _rareSkillPiece;
-    public int[] _uniqueSkillPiece;
-    public int[] _legendarySkillPiece;
-    public int[] _mythicSkillPiece;
+    public int[] commonSkillPrice;
+    public int[] uncommonSkillPrice;
+    public int[] rareSkillPrice;
+    public int[] uniqueSkillPrice;
+    public int[] legendarySkillPrice;
+    public int[] mythicSkillPrice;
     [Header("Weapon")]
-    public int[] _commonWeaponPrice;
-    public int[] _uncommonSWeaponPrice;
-    public int[] _rareWeaponPrice;
-    public int[] _uniqueWeaponPrice;
-    public int[] _legendaryWeaponPrice;
-    public int[] _mythicWeaponPrice;
+    public int[] commonWeaponPrice;
+    public int[] uncommonWeaponPrice;
+    public int[] rareWeaponPrice;
+    public int[] uniqueWeaponPrice;
+    public int[] legendaryWeaponPrice;
+    public int[] mythicWeaponPrice;
     [Header("Companion")]
-    public int[] _companionPrice;
+    public int[] companionPrice;
 }

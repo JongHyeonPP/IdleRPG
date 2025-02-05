@@ -1,5 +1,0 @@
-<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <engine:ScrollView name="StatScrollView" horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="Hidden" mode="Vertical" style="height: 800px; position: absolute; width: 100%; top: auto; background-color: rgb(70, 37, 2); left: auto; translate: 0 0; scale: 1 1; bottom: 0;">
-        <engine:VisualElement name="SlotContainer" style="flex-grow: 1; flex-direction: row; width: 100%; flex-wrap: wrap; justify-content: center;" />
-    </engine:ScrollView>
-</engine:UXML>

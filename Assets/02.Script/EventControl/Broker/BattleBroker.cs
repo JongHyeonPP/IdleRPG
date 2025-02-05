@@ -21,13 +21,17 @@ public static class BattleBroker
     public static Action<float> OnBossHpChanged;
     //전투에서 무엇을 얼마나 얻었는지, 왼쪽에 줄줄이 띄우기 위함
     public static Action<DropType, int> OnCurrencyInBattle;
-    public static Action<string, int> OnSkillLevelSet;//Skill Id, Skill Level
-    public static Action<Rarity, int> OnFragmentSet;//Skill Id, Skill Level
-    //골드 적용 이후
+
     public static Action OnGoldSet;
     public static Action OnLevelExpSet;
     public static Action OnDiaSet;
     public static Action OnEmeraldSet;
+    public static Action OnMaxStageSet;
     //메뉴 UI 변경
     public static Action<int> OnMenuUIChange;
+    //무기 레벨업
+    public static Action<int, int> OnWeaponLevelSet;//Weapon Id, Level
+    //무기 개수 변경
+    public static Action<int, int> OnWeaponCountSet;//Weapon Id, Count
+    public static Func<bool> IsCanAttack;
 }

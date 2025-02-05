@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c648b1b66edd1b64bbd4da7100062dfe, type: 3}
+  m_Name: Light
+  m_EditorClassIdentifier: 
+  _bookName: "\uBE5B\uC758 \uC694\uBBF8"
+  _weapons:
+  - {fileID: 11400000, guid: d4eb85d754fc86a4aa63072b153432c8, type: 2}
+  - {fileID: 11400000, guid: b524869e7cd2505418c009e2d78e9086, type: 2}
+  - {fileID: 11400000, guid: c98215c4d1839dc4998d5210b2a6751d, type: 2}
+  - {fileID: 11400000, guid: 221648b348093174ea1159c05b3e8daa, type: 2}
+  - {fileID: 11400000, guid: 6fc9ce732e7fc034996b5b094dcb04bd, type: 2}
+  - {fileID: 11400000, guid: 02d5c56dde7dd8244a2c7e37107e4df3, type: 2}
+  - {fileID: 11400000, guid: fb5ec643866483149a7ae1bdeab7647e, type: 2}
+  - {fileID: 11400000, guid: 35d807d1afc6359469ba41cff8519d64, type: 2}
+  _displayName: Light
+  _upgradeLevels: 180000002800000050000000a000000040010000
+  _upgradeStats:
+  - 24
+  - 40
+  - 80
+  - 160
+  - 320
+  bookId: Light
+  bookName: "\uBE5B\uC758 \uC694\uBBF8"
+  weapons:
+  - {fileID: 11400000, guid: d4eb85d754fc86a4aa63072b153432c8, type: 2}
+  - {fileID: 11400000, guid: b524869e7cd2505418c009e2d78e9086, type: 2}
+  - {fileID: 11400000, guid: c98215c4d1839dc4998d5210b2a6751d, type: 2}
+  - {fileID: 11400000, guid: 221648b348093174ea1159c05b3e8daa, type: 2}
+  - {fileID: 11400000, guid: 6fc9ce732e7fc034996b5b094dcb04bd, type: 2}
+  - {fileID: 11400000, guid: 02d5c56dde7dd8244a2c7e37107e4df3, type: 2}
+  - {fileID: 11400000, guid: fb5ec643866483149a7ae1bdeab7647e, type: 2}
+  - {fileID: 11400000, guid: 35d807d1afc6359469ba41cff8519d64, type: 2}
+  upgradeLevels: 180000002800000050000000a000000040010000
+  upgradeStats:
+  - 24
+  - 40
+  - 80
+  - 160
+  - 320

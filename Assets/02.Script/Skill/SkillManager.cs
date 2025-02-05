@@ -9,11 +9,12 @@ public class SkillManager : MonoBehaviour
     public static SkillManager instance;
     [Header("SkillData")]
     [SerializeField] SkillData[] playerSkillArr;//Inspector
-    [SerializeField] SkillData[] partySkillArr;//Inspector
+    [SerializeField] SkillData[] companionSkillArr;//Inspector
     private List<SkillDataSet> playerSkillSetList = new();
-    private List<SkillDataSet> partySkillSetList = new();
+    private List<SkillDataSet> companionSkillSetList = new();
     private Dictionary<string, SkillData> skillDataDict = new();
-    [Header("Skill")]
+    public SkillData defaultAttackData;
+    [Header("EquipedSkill")]
     private EquipedSkill[] skillArray = new EquipedSkill[10];
     [Header("SkillAcquireInfo")]
     [SerializeField] SkillAcquireInfo[] acquireInfoArr;//Inspector
@@ -24,6 +25,8 @@ public class SkillManager : MonoBehaviour
     [SerializeField] Sprite uniqueFragmentSprite;
     [SerializeField] Sprite legendaryFragmentSprite;
     [SerializeField] Sprite mythicFragmentSprite;
+    
+
     private void Awake()
     {
         instance = this;
@@ -31,12 +34,12 @@ public class SkillManager : MonoBehaviour
         {
             skillDataDict.Add(skillData.name, skillData);
         }
-        foreach (SkillData skillData in partySkillArr)
+        foreach (SkillData skillData in companionSkillArr)
         {
             skillDataDict.Add(skillData.name, skillData);
         }
         SetDataSet(playerSkillArr, playerSkillSetList);
-        SetDataSet(partySkillArr, partySkillSetList);
+        SetDataSet(companionSkillArr, companionSkillSetList);
     }
     private void SetDataSet(SkillData[] skillDataArr, List<SkillDataSet> dataSetList)
     {
@@ -64,7 +67,7 @@ public class SkillManager : MonoBehaviour
     }
     public List<IListViewItem> GetSkillDataListAsItem(bool isPlayerSkill)//or PartySkill
     {
-        List<SkillDataSet> skillDataSets = isPlayerSkill ? playerSkillSetList : partySkillSetList;
+        List<SkillDataSet> skillDataSets = isPlayerSkill ? playerSkillSetList : companionSkillSetList;
         return skillDataSets.Select(item=>(IListViewItem)item).ToList();
     }
     public SkillData GetSkillData(string id)

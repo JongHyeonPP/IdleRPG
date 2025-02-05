@@ -27,6 +27,6 @@ public class TotalLabelUI : MonoBehaviour
 
     private void SetGold()
     {
-        _goldLabel.text = GameManager.instance.gameData.gold.ToString("N0");
+        _goldLabel.text = StartBroker.GetGameData().gold.ToString("N0");
     }
 }

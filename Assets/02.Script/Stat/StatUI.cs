@@ -5,10 +5,11 @@ using UnityEngine.UI;
 using UnityEngine.UIElements;
 using Button = UnityEngine.UIElements.Button;
 using EnumCollection;
+using System;
 
 public class StatUI : MonoBehaviour
 {
-    private GameManager _gameManager;
+    private GameData _gameData;
     private Coroutine _incrementCoroutine;
     
     private readonly StatusType[] _activeStats =
@@ -32,71 +33,77 @@ public class StatUI : MonoBehaviour
     {
         root = GetComponent<UIDocument>().rootVisualElement;
         draggableScrollView = GetComponent<DraggableScrollView>();
+        PlayerBroker.OnStatusLevelSet+=UpdateStatText;
     }
     private void Start()
     {
-        _gameManager = GameManager.instance;
+        _gameData = StartBroker.GetGameData();
      
-        
+
         foreach (var stat in _activeStats)
         {
             InitializeStatUI(stat);
         }
     }
- 
-  
+
 
     private void InitializeStatUI(StatusType stat)
     {
-        var elementRoot = root.Q<VisualElement>($"{stat}Element");
+        VisualElement elementRoot = root.Q<VisualElement>($"{stat}Element");
         _statElements[stat] = elementRoot;
-        var button = elementRoot.Q<Button>("StatButton");
-        var levelLabel = elementRoot.Q<Label>("StatLevel");
-        var riseLabel = elementRoot.Q<Label>("StatRise");
-        var statIcon = elementRoot.Q<VisualElement>("StatIcon");
+        Button button = elementRoot.Q<Button>("StatButton");
+        Label levelLabel = elementRoot.Q<Label>("StatLevel");
+        Label riseLabel = elementRoot.Q<Label>("StatRise");
+        VisualElement statIcon = elementRoot.Q<VisualElement>("StatIcon");
+        Label statName = elementRoot.Q<Label>("StatName");
 
         Sprite iconSprite = null;
         switch (stat)
         {
             case StatusType.Power:
+                statName.text = "공격력";
                 iconSprite = powerSprite;
                 break;
             case StatusType.MaxHp:
+                statName.text = "체력";
                 iconSprite = maxHpSprite;
                 break;
             case StatusType.HpRecover:
+                statName.text = "체력 회복";
                 iconSprite = hpRecoverSprite;
                 break;
             case StatusType.Critical:
+                statName.text = "치명타";
                 iconSprite = criticalSprite;
                 break;
             case StatusType.CriticalDamage:
+                statName.text = "치명타 공격력";
                 iconSprite = criticalDamageSprite;
                 break;
         }
         statIcon.style.backgroundImage = new(iconSprite);
         button.RegisterCallback<PointerDownEvent>(evt => OnPointerDown(stat),TrickleDown.TrickleDown);
         button.RegisterCallback<PointerUpEvent>(evt => OnPointerUp(), TrickleDown.TrickleDown);
-        if (!_gameManager.gameData.statLevel_Gold.ContainsKey(stat))
+        if (!_gameData.statLevel_Gold.ContainsKey(stat))
         {
-            _gameManager.gameData.statLevel_Gold[stat] = 1; 
+            _gameData.statLevel_Gold[stat] = 1; 
         }
-        int currentLevel = _gameManager.gameData.statLevel_Gold[stat];
+        int currentLevel = _gameData.statLevel_Gold[stat];
         UpdateStatText(stat, currentLevel);
     }
     
 
     private void OnPointerDown(StatusType stat)//스텟버튼누르기
     {
-        int currentLevel = _gameManager.gameData.statLevel_Gold[stat]; 
-        int requiredGold = FomulaManager.GetGoldRequired(currentLevel); 
+        int currentLevel = _gameData.statLevel_Gold[stat]; 
+        int requiredGold = FormulaManager.GetGoldRequired(currentLevel); 
 
-        if (_gameManager.gameData.gold < requiredGold) 
+        if (_gameData.gold < requiredGold) 
         {
            Debug.Log("골드가 없습니다.");
            return; 
         }
-        _gameManager.gameData.gold -= requiredGold;
+        _gameData.gold -= requiredGold;
         if (_incrementCoroutine == null)
         {
             _incrementCoroutine = StartCoroutine(IncreaseLevelContinuously(stat));
@@ -110,7 +117,7 @@ public class StatUI : MonoBehaviour
         {
             StopCoroutine(_incrementCoroutine);
             _incrementCoroutine = null;
-            DataManager.SaveToPlayerPrefs("GameData", _gameManager.gameData);
+            GameManager.instance.SaveLocalData();
         }
     }
 
@@ -126,9 +133,9 @@ public class StatUI : MonoBehaviour
     
     private void IncrementStat(StatusType stat)
     {
-        _gameManager.gameData.statLevel_Gold[stat]++;
-        PlayerBroker.OnStatusChange(stat, 1);
-        UpdateStatText(stat, _gameManager.gameData.statLevel_Gold[stat]);
+        _gameData.statLevel_Gold[stat]++;
+        PlayerBroker.OnStatusLevelSet(stat, _gameData.statLevel_Gold[stat]);
+        UpdateStatText(stat, _gameData.statLevel_Gold[stat]);
     }
 
     private void UpdateStatText(StatusType stat, int level)
@@ -140,9 +147,9 @@ public class StatUI : MonoBehaviour
 
         levelLabel.text = $"Level: {level}";
 
-        riseLabel.text = FomulaManager.GetStatRiseText(level, stat);
+        riseLabel.text = FormulaManager.GetStatRiseText(level, stat);
 
-        button.text = $"{FomulaManager.GetGoldRequired(level)}";
+        button.text = $"{FormulaManager.GetGoldRequired(level)}";
     }
     #region UIChange
     private void OnEnable()
