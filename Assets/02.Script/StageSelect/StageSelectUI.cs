@@ -45,7 +45,6 @@ public class StageSelectUI : MonoBehaviour
         }
         else
         {
-            root.style.visibility = Visibility.Visible;
             UIBroker.InactiveCurrentUI();
         }
         

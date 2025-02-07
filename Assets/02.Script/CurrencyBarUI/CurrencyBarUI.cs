@@ -44,7 +44,7 @@ public class CurrencyBarUI : MonoBehaviour
     {
         float value = GameManager.instance.GetExpPercent();
         _expBar.value = value;
-        _expBar.title = $"{value*100f}%";
+        _expBar.title = $"{value * 100f:F2}%";
         _levelLabel.text = $"Lv. {StartBroker.GetGameData().level}";
     }
     private void OnSetLevel(int level)

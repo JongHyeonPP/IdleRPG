@@ -48,7 +48,6 @@ public class TotalDebugger : EditorWindow
     private string currentWeaponValue;
     private ScrollView[] weaponScrollViewArr;
     //Skill DropDown Variable
-    private string currentSkillType;
     private ScrollView[] skillScrollViewArr;
 
     [MenuItem("Window/Total Debugger")]
@@ -614,12 +613,12 @@ public class TotalDebugger : EditorWindow
         InitEachSkill(companionValue, skillScrollViewArr[1]);
         skillScrollViewArr[0].style.display = DisplayStyle.Flex;
         skillScrollViewArr[1].style.display = DisplayStyle.None;
-        currentSkillType = "Player";
+        //currentSkillType = "Player";
         //DropDown
         DropdownField typeDropDown = skillPanel.Q<DropdownField>("TypeDropDown");
         typeDropDown.choices = new() { "Player", "Companion" };
         typeDropDown.value = typeDropDown.choices[0];
-        currentSkillType = "Player";
+        //currentSkillType = "Player";
         typeDropDown.RegisterValueChangedCallback(evt => OnSkillDropDownChange(evt.newValue));
     }
     void InitEachSkill(IEnumerable<string> uids, ScrollView scrollView)

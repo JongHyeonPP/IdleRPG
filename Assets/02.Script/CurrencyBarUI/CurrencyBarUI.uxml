@@ -13,11 +13,11 @@
                             </engine:VisualElement>
                             <engine:VisualElement name="Emerald" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); background-size: 100px 100px; flex-shrink: 0; height: 120px; width: 250px; flex-direction: row; align-items: center;">
                                 <engine:VisualElement style="flex-grow: 0; background-color: rgba(255, 255, 255, 0); background-size: 100% 100%; flex-shrink: 0; height: 50px; width: 50px; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Icons/32/GemLong02Outlined.png?fileID=2800000&amp;guid=7651491213e74554d93849ed82c03fb5&amp;type=3#GemLong02Outlined&quot;);" />
-                                <engine:Label text="Label" name="EmeraldLabel" style="left: 10px;" />
+                                <engine:Label text="6" name="EmeraldLabel" style="left: 10px; margin-left: 15px;" />
                             </engine:VisualElement>
                             <engine:VisualElement name="Dia" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); background-size: 100px 100px; flex-shrink: 0; height: 120px; width: 250px; flex-direction: row; align-items: center;">
                                 <engine:VisualElement style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); background-size: 100% 100%; flex-shrink: 0; height: 50px; width: 50px; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Icons/32/Gem01.png?fileID=2800000&amp;guid=486112d5a03a3ee41ac790455313a1ab&amp;type=3#Gem01&quot;); -unity-background-image-tint-color: rgb(255, 255, 255);" />
-                                <engine:Label text="Label" name="DiaLabel" style="left: 10px;" />
+                                <engine:Label text="6" name="DiaLabel" style="left: 10px; margin-left: 17px;" />
                             </engine:VisualElement>
                             <engine:VisualElement name="Setting" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); background-size: 100px 100px; flex-shrink: 0; height: 120px; width: 250px; flex-direction: row; align-items: center;">
                                 <engine:VisualElement style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); background-size: 100% 100%; flex-shrink: 0; height: 65px; width: 65px; background-image: url(&quot;project://database/Assets/Asset/Wooden_UI/Wooden_UI_png/gear.png?fileID=2800000&amp;guid=6f82c769d51ea504083832377e952d62&amp;type=3#gear&quot;); -unity-background-image-tint-color: rgb(255, 255, 255); top: -4px;" />
