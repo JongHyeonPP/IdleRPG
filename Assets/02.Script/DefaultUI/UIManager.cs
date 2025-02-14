@@ -35,5 +35,26 @@ public class UIManager : MonoBehaviour
         BattleBroker.OnMenuUIChange?.Invoke(0);
        
     }
-    
+    private void OnEnable()
+    {
+        BattleBroker.SwitchToStory += DisableBattleUI;
+    }
+    private void DisableBattleUI(int i)
+    {
+        _stageSelectUI.gameObject.SetActive(false);
+        _stageSelectBackground.gameObject.SetActive(false);
+        _duplicateLoginUI.gameObject.SetActive(false);
+        _totalStatusUI.gameObject.SetActive(false);
+        _skillInfoUI.gameObject.SetActive(false);
+        _weaponUI.gameObject.SetActive(false);
+        _statUI.gameObject.SetActive(false);
+        _currencyBar.root.style.display = DisplayStyle.None;
+        _goldLabelUI.root.style.display = DisplayStyle.None;
+        _statUI.root.style.display = DisplayStyle.None;
+        _stageSelectUI.root.style.visibility = Visibility.Hidden;
+        _stageSelectBackground.root.style.visibility = Visibility.Hidden;
+        _duplicateLoginUI.root.style.display = DisplayStyle.None;
+        _totalStatusUI.root.style.display = DisplayStyle.None;
+        _skillInfoUI.root.style.display = DisplayStyle.None;
+    }
 }

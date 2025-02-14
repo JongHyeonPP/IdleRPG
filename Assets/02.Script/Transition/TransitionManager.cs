@@ -5,12 +5,18 @@ public class TransitionManager : MonoBehaviour
 {
     private BattleType currentBattleType = BattleType.Default;
     public StoryManager storyManager;
-  
-    private void Start()
+
+    private void OnEnable()
     {
-        SwitchToStoryMode(1);
         BattleBroker.SwitchToStory += SwitchToStoryMode;
         BattleBroker.SwitchBattle += SwitchToBattleMode;
+       
+    }
+
+    private void Start()
+    {
+        // SwitchToStoryMode(1);
+        BattleBroker.SwitchToStory?.Invoke(1);
     }
 
     public void SwitchToStoryMode(int index)
@@ -23,7 +29,8 @@ public class TransitionManager : MonoBehaviour
         }
         if (index == 1)
         {
-            StartCoroutine(storyManager.FadeEffect());
+            //StartCoroutine(storyManager.FadeEffect());
+            StoryBroker.StoryModeStart?.Invoke(1);
         }
 
 
@@ -39,7 +46,8 @@ public class TransitionManager : MonoBehaviour
         {
             battleUI.ActivateBattleMode();
         }
-        storyManager.HideStoryUI();
+      //  storyManager.HideStoryUI();
+       // StoryBroker.EndStoryMode?.Invoke();
         currentBattleType = BattleType.Default;
     }
 

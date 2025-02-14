@@ -1,0 +1,18 @@
+{
+    "name": "Transition",
+    "rootNamespace": "",
+    "references": [
+        "GUID:c1f3ac597cd61d64e994b094eaa1fa95",
+        "GUID:6cd240a1fe3c1b64c983b53aa401c60c",
+        "GUID:20b20c657697e4f478d6b5b4c5837706"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

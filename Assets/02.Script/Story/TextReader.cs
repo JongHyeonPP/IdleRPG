@@ -11,31 +11,29 @@ public struct TextData
     public int Term;
 }
 
-public class TextReader :MonoBehaviour
+public static class TextReader 
 {
-    private Dictionary<int, TextData> textDatas = new Dictionary<int, TextData>();
+    private static Dictionary<int, TextData> textDatas = new Dictionary<int, TextData>();
    
-    public TextData GetTextData(int key)
+    public static TextData GetTextData(int key)
     {
-        return textDatas[key];
+        if (textDatas.TryGetValue(key, out TextData textData))
+        {
+            return textData;
+        }
+        return default;
     }
 
-  
 
-    private void Awake()
+    public static void LoadData()
     {
-        LoadData();
-    }
-
-    public void LoadData()
-    {
-      
+        if (textDatas.Count > 0) return;
         LoadTextDataTable();
        
     }
    
 
-    private void LoadTextDataTable()
+    private static void LoadTextDataTable()
     {
         TextAsset textAsset = Resources.Load<TextAsset>("TextData/TextDataTable");
 
