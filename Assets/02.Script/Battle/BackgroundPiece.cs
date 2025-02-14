@@ -51,12 +51,9 @@ public class BackgroundPiece : MonoBehaviour, IMoveByPlayer
             { Background.VineForest, vineForestObject },
             { Background.WinterForest, winterForestObject }
         };
-
-        // 기본 활성화된 배경 설정 (예: 평원 배경 활성화)
-        currentBackground = plainObject;
-        if (currentBackground != null)
+        foreach (var x in backgroundDict.Values)
         {
-            currentBackground.SetActive(true);
+            x.SetActive(false);
         }
     }
 

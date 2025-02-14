@@ -14,6 +14,7 @@ public class FlexibleListView : DraggableScrollView
         SetListView();
 
     }
+
     private void SetListView()
     {
         listView = _targetDocument.rootVisualElement.Q<ListView>();

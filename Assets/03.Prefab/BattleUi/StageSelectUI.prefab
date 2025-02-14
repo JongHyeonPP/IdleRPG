@@ -50,7 +50,7 @@ MonoBehaviour:
   m_PanelSettings: {fileID: 11400000, guid: f2f0eb129a3062647b27e4d7a574aeaa, type: 2}
   m_ParentUI: {fileID: 0}
   sourceAsset: {fileID: 9197481963319205126, guid: 0291d64796f884645bbba1a49f5ee056, type: 3}
-  m_SortingOrder: 5
+  m_SortingOrder: 6
   m_WorldSpaceSizeMode: 1
   m_WorldSpaceWidth: 1920
   m_WorldSpaceHeight: 1080
@@ -96,7 +96,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _scrollSpeed: 1
-  _controller: {fileID: 6170235044210406654}
+  _mode: 0
+  _targetDocument: {fileID: 0}
+  _scrollViewName: 
 --- !u!114 &6170235044210406654
 MonoBehaviour:
   m_ObjectHideFlags: 0

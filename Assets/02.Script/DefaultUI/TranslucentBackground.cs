@@ -5,18 +5,21 @@ using UnityEngine.UIElements;
 
 public class TranslucentBackground : MonoBehaviour
 {
-    public VisualElement root { get; private set; }
     private VisualElement _currentUI;
     private bool _isDisplay;
+    private VisualElement _background;
     private void Awake()
     {
-        root = GetComponent<UIDocument>().rootVisualElement;
-        UIBroker.ActiveTranslucent += OnActiveTraslucent;
+        
     }
     private void Start()
     {
-        root.Q<VisualElement>("Background").RegisterCallback<ClickEvent>(click=>InvokeBroker());
-        UIBroker.InactiveCurrentUI += () => { root.style.visibility = Visibility.Hidden; };
+        VisualElement root = GetComponent<UIDocument>().rootVisualElement;
+        UIBroker.ActiveTranslucent += OnActiveTraslucent;
+        _background = root.Q<VisualElement>("Background");
+        _background.RegisterCallback<ClickEvent>(click=> InvokeBroker());
+        _background.style.display = DisplayStyle.None;
+        UIBroker.InactiveCurrentUI += () => { _background.style.display = DisplayStyle.None; };
     }
 
     private void InvokeBroker()
@@ -28,7 +31,7 @@ public class TranslucentBackground : MonoBehaviour
     {
         _isDisplay = isDisplay;
         _currentUI = currentUI;
-        root.style.visibility = Visibility.Visible;
+       _background.style.display = DisplayStyle.Flex;
         UIBroker.InactiveCurrentUI += () => CallBackCurrentUI();
     }
     private void CallBackCurrentUI()

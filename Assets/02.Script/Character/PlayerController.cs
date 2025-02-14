@@ -19,13 +19,10 @@ public class PlayerController : Attackable
     }
     private void Start()
     {
-        SetWeapon();
         SetSkillSkillsInBattle();
         PlayerBroker.OnSkillChanged += OnSkillChanged;
         SetDefaultAttack();
     }
-
-
     private void SetSkillSkillsInBattle()
     {
         string[] skillIdArr = StartBroker.GetGameData().equipedSkillArr;
@@ -38,10 +35,6 @@ public class PlayerController : Attackable
             EquipedSkill skillInBattle = new(skillData);
             equipedSkillArr[i] = skillInBattle;
         }
-    }
-    private void SetWeapon()
-    {
-
     }
     private void InitEvent()
     {

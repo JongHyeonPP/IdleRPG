@@ -2,34 +2,57 @@
     <engine:Template name="EquipSlot" src="project://database/Assets/02.Script/TotalStatus/EquipSlot.uxml?fileID=9197481963319205126&amp;guid=d885f3cb5474a964fa6f4956167ea844&amp;type=3#EquipSlot" />
     <engine:Template name="PlayerSpriteArea" src="project://database/Assets/02.Script/TotalStatus/PlayerSpriteArea.uxml?fileID=9197481963319205126&amp;guid=9b608c6dd5e0b1c409a6262a7b6a1cba&amp;type=3#PlayerSpriteArea" />
     <engine:Template name="StatusLabelSet" src="project://database/Assets/02.Script/TotalStatus/StatusLabelSet.uxml?fileID=9197481963319205126&amp;guid=13e50ef98a86b9947ba1c46ebbba897e&amp;type=3#StatusLabelSet" />
+    <engine:Template name="ExitButton" src="project://database/Assets/02.Script/DefaultUI/ExitButton.uxml?fileID=9197481963319205126&amp;guid=56c49e16b4a3e0641931b48714473123&amp;type=3#ExitButton" />
     <Style src="project://database/Assets/02.Script/TotalStatus/TotalStatusUI.uss?fileID=7433441132597879392&amp;guid=c84266722f293744b9c1f06e7424d726&amp;type=3#TotalStatusUI" />
-    <engine:VisualElement name="TotalStatusUI" style="flex-grow: 0; position: absolute; background-color: rgb(152, 97, 6); align-self: center; width: 985px; height: 1633px; bottom: 321px; font-size: 39px; color: rgb(255, 255, 255);">
-        <engine:VisualElement name="TopArea" style="flex-grow: 0; height: 113px; background-color: rgba(0, 0, 0, 0.36); flex-direction: row; justify-content: center; align-items: center;">
-            <engine:Button text="기본 정보" name="StatusButton" focusable="false" class="CategoriSelectButton" />
-            <engine:Button text="외형" name="AppearanceButton" focusable="false" class="CategoriSelectButton" />
-        </engine:VisualElement>
-        <engine:VisualElement name="MiddleArea" style="flex-grow: 0; height: 556px;">
-            <engine:VisualElement name="MiddleHorizontal" style="flex-grow: 0; justify-content: center; align-items: center; flex-direction: row; top: 201px; height: 326px;">
-                <engine:Instance template="EquipSlot" name="WeaponSlot" class="EquipSlotPadding" />
-                <engine:Instance template="PlayerSpriteArea" name="PlayerArea" style="height: 562px; width: 154px;" />
-                <engine:Instance template="EquipSlot" name="AccessoriesSlot" class="EquipSlotPadding" />
+    <engine:VisualElement name="TotalStatusUI" style="flex-grow: 0; position: absolute; background-color: rgba(152, 97, 6, 0); align-self: center; width: 985px; height: 1633px; font-size: 39px; color: rgb(255, 255, 255); background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/Window.png?fileID=21300000&amp;guid=63655f4cc96936340989153c4eccea19&amp;type=3#Window&quot;); -unity-background-image-tint-color: rgb(115, 75, 30); align-items: center; justify-content: center; -unity-font-definition: url(&quot;project://database/Assets/05.Font/Maplestory%20Light.ttf?fileID=12800000&amp;guid=b7853b5ad26567e41a3c4210e64c5419&amp;type=3#Maplestory Light&quot;); letter-spacing: 17px; text-shadow: 2px 2px 0 rgb(0, 0, 0); top: 270px;">
+        <engine:VisualElement name="Frame" style="flex-grow: 1; position: absolute; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/WindowStroke.png?fileID=21300000&amp;guid=8a7a753f989769c4ebd7f236420af813&amp;type=3#WindowStroke&quot;); width: 102%; height: 102%;" />
+        <engine:VisualElement name="MainPanel" style="flex-grow: 0; width: 92%; height: 96%; flex-shrink: 0;">
+            <engine:VisualElement name="CategoriButtonParent" style="flex-grow: 0; height: 143px; background-color: rgba(0, 0, 0, 0); flex-direction: row; justify-content: center; align-items: center; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/TitleBar.png?fileID=2800000&amp;guid=a331d5e1dd3208d4ab0085903c241b8a&amp;type=3#TitleBar&quot;); padding-bottom: 29px; font-size: 45px; -unity-text-outline-color: rgb(0, 0, 0);">
+                <engine:Button name="StatusButton" focusable="false" class="CategoriSelectButton" style="height: 90px; background-color: rgba(0, 0, 0, 0); border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel4.png?fileID=21300000&amp;guid=afd0d6697682a8f4096f448c83ac52f3&amp;type=3#UniversalPanel4&quot;); -unity-background-image-tint-color: rgb(149, 96, 53); width: 400px; margin-right: 30px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;">
+                    <engine:VisualElement name="DetailTop" picking-mode="Ignore" style="flex-grow: 1; width: 100%; height: 100%; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel4TBevel.png?fileID=21300000&amp;guid=b3be0bdb85a86cc489b2d4772915967d&amp;type=3#UniversalPanel4TBevel&quot;); -unity-background-image-tint-color: rgb(168, 110, 63); position: absolute; display: flex;" />
+                    <engine:VisualElement name="DetailBottom" picking-mode="Ignore" style="flex-grow: 1; width: 100%; height: 100%; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel4BBevel.png?fileID=21300000&amp;guid=465de44ed4062d24da21ac82818bc18e&amp;type=3#UniversalPanel4BBevel&quot;); -unity-background-image-tint-color: rgb(91, 65, 43); position: absolute;" />
+                    <engine:VisualElement name="SelectedPanel" picking-mode="Ignore" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel4.png?fileID=21300000&amp;guid=afd0d6697682a8f4096f448c83ac52f3&amp;type=3#UniversalPanel4&quot;); -unity-background-image-tint-color: rgba(255, 218, 0, 0.3); position: absolute; width: 100%; height: 100%;" />
+                    <engine:Label text="기본 정보" picking-mode="Ignore" style="position: absolute; width: 100%; height: 100%; margin-top: -1px;" />
+                </engine:Button>
+                <engine:Button name="AppearanceButton" focusable="false" class="CategoriSelectButton" style="height: 90px; background-color: rgba(0, 0, 0, 0); border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel4.png?fileID=21300000&amp;guid=afd0d6697682a8f4096f448c83ac52f3&amp;type=3#UniversalPanel4&quot;); -unity-background-image-tint-color: rgb(149, 96, 53); width: 400px; margin-right: 30px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;">
+                    <engine:VisualElement name="DetailTop" picking-mode="Ignore" style="flex-grow: 1; width: 100%; height: 100%; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel4TBevel.png?fileID=21300000&amp;guid=b3be0bdb85a86cc489b2d4772915967d&amp;type=3#UniversalPanel4TBevel&quot;); -unity-background-image-tint-color: rgb(168, 110, 63); position: absolute; display: flex;" />
+                    <engine:VisualElement name="DetailBottom" picking-mode="Ignore" style="flex-grow: 1; width: 100%; height: 100%; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel4BBevel.png?fileID=21300000&amp;guid=465de44ed4062d24da21ac82818bc18e&amp;type=3#UniversalPanel4BBevel&quot;); -unity-background-image-tint-color: rgb(91, 65, 43); position: absolute;" />
+                    <engine:VisualElement name="SelectedPanel" picking-mode="Ignore" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel4.png?fileID=21300000&amp;guid=afd0d6697682a8f4096f448c83ac52f3&amp;type=3#UniversalPanel4&quot;); -unity-background-image-tint-color: rgba(255, 218, 0, 0.3); position: absolute; width: 100%; height: 100%; display: none;" />
+                    <engine:Label text="외형" picking-mode="Ignore" style="position: absolute; width: 100%; height: 100%; margin-top: -1px; letter-spacing: 42px;" />
+                </engine:Button>
+            </engine:VisualElement>
+            <engine:VisualElement name="CategoriPanelParent" style="flex-grow: 1;">
+                <engine:VisualElement name="StatusPanel" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; display: flex;">
+                    <engine:VisualElement name="EquipPanel" style="flex-grow: 0; height: 556px;">
+                        <engine:VisualElement name="MiddleHorizontal" style="flex-grow: 0; justify-content: center; align-items: center; flex-direction: row; top: 201px; height: 326px;">
+                            <engine:Instance template="EquipSlot" name="WeaponSlot" class="EquipSlotPadding" />
+                            <engine:Instance template="PlayerSpriteArea" name="PlayerArea" style="height: 562px; width: 154px;" />
+                            <engine:Instance template="EquipSlot" name="AccSlot" class="EquipSlotPadding" />
+                        </engine:VisualElement>
+                    </engine:VisualElement>
+                    <engine:VisualElement name="ValuePanel" style="flex-grow: 0; height: 56%; width: 94%; align-items: flex-start; align-self: center; background-color: rgba(0, 0, 0, 0); background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel4.png?fileID=21300000&amp;guid=afd0d6697682a8f4096f448c83ac52f3&amp;type=3#UniversalPanel4&quot;); -unity-background-image-tint-color: rgba(0, 0, 0, 0.42);">
+                        <engine:VisualElement name="SetVertical" style="flex-grow: 0; height: 100%; width: 100%; align-items: flex-start; align-self: center; background-color: rgba(0, 0, 0, 0); padding-top: 35px; padding-left: 61px; padding-right: 64px; margin-bottom: 99px;">
+                            <engine:Instance template="StatusLabelSet" name="PowerSet" class="LabelSetPadding" style="width: 100%; flex-grow: 1;" />
+                            <engine:Instance template="StatusLabelSet" name="MaxHpSet" class="LabelSetPadding" style="width: 100%; flex-grow: 1;" />
+                            <engine:Instance template="StatusLabelSet" name="HpRecoverSet" class="LabelSetPadding" style="width: 100%; flex-grow: 1;" />
+                            <engine:Instance template="StatusLabelSet" name="CriticalSet" class="LabelSetPadding" style="width: 100%; flex-grow: 1;" />
+                            <engine:Instance template="StatusLabelSet" name="CriticalDamageSet" class="LabelSetPadding" style="width: 100%;" />
+                            <engine:Instance template="StatusLabelSet" name="MaxMpSet" class="LabelSetPadding" style="width: 100%; flex-grow: 1;" />
+                            <engine:Instance template="StatusLabelSet" name="MpRecoverSet" class="LabelSetPadding" style="width: 100%; flex-grow: 1;" />
+                            <engine:Instance template="StatusLabelSet" name="ResistSet" class="LabelSetPadding" style="width: 100%; flex-grow: 1;" />
+                            <engine:Instance template="StatusLabelSet" name="PenetrationSet" class="LabelSetPadding" style="width: 100%; flex-grow: 1;" />
+                            <engine:Instance template="StatusLabelSet" name="GoldAscendSet" class="LabelSetPadding" style="width: 100%; flex-grow: 1;" />
+                            <engine:Instance template="StatusLabelSet" name="ExpAscendSet" class="LabelSetPadding" style="width: 100%;" />
+                        </engine:VisualElement>
+                        <engine:VisualElement name="Detail" style="flex-grow: 1; position: absolute; width: 100%; height: 100%;">
+                            <engine:VisualElement name="Top" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel4TBevel.png?fileID=21300000&amp;guid=b3be0bdb85a86cc489b2d4772915967d&amp;type=3#UniversalPanel4TBevel&quot;); -unity-background-image-tint-color: rgb(130, 104, 66);" />
+                            <engine:VisualElement name="Bottom" style="flex-grow: 1; width: 100%; height: 100%; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel4BBevel.png?fileID=21300000&amp;guid=465de44ed4062d24da21ac82818bc18e&amp;type=3#UniversalPanel4BBevel&quot;); -unity-background-image-tint-color: rgb(48, 38, 22);" />
+                        </engine:VisualElement>
+                    </engine:VisualElement>
+                </engine:VisualElement>
+                <engine:VisualElement name="AppearancePanel" style="flex-grow: 1; position: absolute; width: 100%; height: 100%;" />
             </engine:VisualElement>
         </engine:VisualElement>
-        <engine:VisualElement name="BottomArea" style="flex-grow: 0; height: 56%; width: 94%; align-items: flex-start; align-self: center; background-color: rgba(0, 0, 0, 0.48);">
-            <engine:VisualElement name="SetVertical" style="flex-grow: 0; height: 100%; width: 100%; align-items: flex-start; align-self: center; background-color: rgba(0, 0, 0, 0); padding-top: 35px; padding-left: 61px; padding-right: 64px;">
-                <engine:Instance template="StatusLabelSet" name="PowerSet" class="LabelSetPadding" style="width: 100%;" />
-                <engine:Instance template="StatusLabelSet" name="MaxHpSet" class="LabelSetPadding" style="width: 100%;" />
-                <engine:Instance template="StatusLabelSet" name="HpRecoverSet" class="LabelSetPadding" style="width: 100%;" />
-                <engine:Instance template="StatusLabelSet" name="CriticalSet" class="LabelSetPadding" style="width: 100%;" />
-                <engine:Instance template="StatusLabelSet" name="CriticalDamageSet" class="LabelSetPadding" style="width: 100%;" />
-                <engine:Instance template="StatusLabelSet" name="MaxMpSet" class="LabelSetPadding" style="width: 100%;" />
-                <engine:Instance template="StatusLabelSet" name="MpRecoverSet" class="LabelSetPadding" style="width: 100%;" />
-                <engine:Instance template="StatusLabelSet" name="ResistSet" class="LabelSetPadding" style="width: 100%;" />
-                <engine:Instance template="StatusLabelSet" name="PenetrationSet" class="LabelSetPadding" style="width: 100%;" />
-                <engine:Instance template="StatusLabelSet" name="GoldAscendSet" class="LabelSetPadding" style="width: 100%;" />
-                <engine:Instance template="StatusLabelSet" name="ExpAscendSet" class="LabelSetPadding" style="width: 100%;" />
-            </engine:VisualElement>
-        </engine:VisualElement>
-        <engine:Button text="X" name="ExitButton" style="position: absolute; width: 150px; height: 150px; font-size: 105px; background-color: rgb(255, 0, 0); align-self: center; bottom: -191px;" />
+        <engine:Instance template="ExitButton" name="ExitButton" style="position: absolute; bottom: -160px;" />
     </engine:VisualElement>
 </engine:UXML>

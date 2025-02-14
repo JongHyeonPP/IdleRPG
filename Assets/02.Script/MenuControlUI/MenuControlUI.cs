@@ -10,17 +10,23 @@ public class MenuChangeUI : MonoBehaviour
     [SerializeField] WeaponUI weaponUI;
     [SerializeField] SkillUI skillUI;
     [SerializeField] WeaponBookUI weaponBookUI;
-    private VisualElement[] buttonUIs;
+    [SerializeField] CompanionUI companionUI;
+    //[SerializeField] AdventureUI adventureUI;
+    //Etc
+    [SerializeField] EquipedSkillUI equipedSkillUI;
+    private VisualElement[] buttonArr;
     private void Awake()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
-        
     }
     private void Start()
     {
+        var rootChild = root.Q<VisualElement>("MenuControlUI");
+        rootChild.Insert(0,equipedSkillUI.root);
+        equipedSkillUI.root.style.position = Position.Relative;
         var mainElement = root.Q<VisualElement>("ButtonParent");
         var menuParent = root.Q<VisualElement>("MenuParent");
-        buttonUIs = new VisualElement[mainElement.childCount];
+        buttonArr = new VisualElement[mainElement.childCount];
         for (int i = 0; i < mainElement.childCount; i++)
         {
             int localIndex = i;
@@ -38,19 +44,39 @@ public class MenuChangeUI : MonoBehaviour
                 case 2:
                     button.text = "스킬";
                     break;
+                case 3:
+                    button.text = "동료";
+                    break;
+                case 4:
+                    button.text = "모험";
+                    break;
+                case 5:
+                    button.text = "상점";
+                    break;
             }
+            buttonArr[i] = menuButton;
         }
+        ChangeUI(0);
         menuParent.Add(statUI.root);
         menuParent.Add(weaponUI.root);
         menuParent.Add(skillUI.root);
         menuParent.Add(weaponBookUI.root);
+        menuParent.Add(companionUI.root);
+        //menuParent.Add(adventureUI.root);
         //MenuControlUI의 크기에 맞춰서 크기 세팅
         statUI.root.ElementAt(0).style.height = Length.Percent(100);
         skillUI.root.ElementAt(0).style.height = Length.Percent(100);
+        companionUI.root.ElementAt(0).style.height = Length.Percent(100);
     }
-
-    private void ChangeUI(int i)
+    private void ChangeUI(int index)
     {
-        BattleBroker.OnMenuUIChange?.Invoke(i);
+        UIBroker.OnMenuUIChange?.Invoke(index);
+        for (int i = 0; i < buttonArr.Length; i++)
+        {
+            if (i == index)
+                buttonArr[i].style.top = -30;
+            else
+                buttonArr[i].style.top = 0;
+        }
     }
 }

@@ -14,7 +14,8 @@
         "Skill",
         "Weapon",
         "Story",
-        "CurrencyBarUI"
+        "CurrencyBarUI",
+        "Battle"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

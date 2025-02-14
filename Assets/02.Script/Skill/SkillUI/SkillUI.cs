@@ -11,20 +11,21 @@ public class SkillUI : MonoBehaviour
     private VisualElement _equipBackground;
     private Button _acquisitionButton;
     private Button _playerSelectButton;
-    private Button _partySelectButton;
+    private Button _companionSelectButton;
     [SerializeField] SkillAcquireUI skillAcquireUI;
     //ButtonColor
-    private readonly Color inactiveColor = new(0f, 0.36f, 0.51f);
-    private readonly Color activeColor = new(0.04f, 0.24f, 0.32f);
+    private readonly Color inactiveColor =  new (0.7f, 0.7f, 0.7f);
+    private readonly Color activeColor = new(1f, 1f, 1f);
     //Fragment
     private Dictionary<Rarity, Label> fragmentDict = new();
+    [SerializeField] Sprite[] fragmentSprites;
     private void Awake()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
         _equipBackground = root.Q<VisualElement>("EquipBackground");
         _acquisitionButton = root.Q<Button>("AcquisitionButton");
         _playerSelectButton = root.Q<Button>("PlayerSelectButton");
-        _partySelectButton = root.Q<Button>("PartySelectButton");
+        _companionSelectButton = root.Q<Button>("PartySelectButton");
         skillAcquireUI.gameObject.SetActive(true);
         PlayerBroker.OnSkillLevelSet += OnSkillLevelChange;
         PlayerBroker.OnFragmentSet += OnFragmentSet;
@@ -51,7 +52,7 @@ public class SkillUI : MonoBehaviour
         // 버튼 클릭 이벤트 등록
         _acquisitionButton.RegisterCallback<ClickEvent>(evt=>OnAcquisitionButtonClicked());
         _playerSelectButton.RegisterCallback<ClickEvent>(evt=>OnPlayerSelectButtonClicked());
-        _partySelectButton.RegisterCallback<ClickEvent>(evt=>OnPartySelectButtonClicked());
+        _companionSelectButton.RegisterCallback<ClickEvent>(evt=>OnCompanionSelectButtonClicked());
     }
 
     private void InitFragmentGrid()
@@ -80,15 +81,15 @@ public class SkillUI : MonoBehaviour
     {
         List<IListViewItem> itemList = SkillManager.instance.GetSkillDataListAsItem(true);
         _flexibleLV.ChangeItems(itemList);
-        _playerSelectButton.style.backgroundColor = activeColor;
-        _partySelectButton.style.backgroundColor = inactiveColor;
+        _playerSelectButton.style.unityBackgroundImageTintColor =_playerSelectButton.style.color = activeColor;
+        _companionSelectButton.style.unityBackgroundImageTintColor=_companionSelectButton.style.color = inactiveColor;
     }
-    private void OnPartySelectButtonClicked()
+    private void OnCompanionSelectButtonClicked()
     {
         List<IListViewItem> itemList = SkillManager.instance.GetSkillDataListAsItem(false);
         _flexibleLV.ChangeItems(itemList);
-        _partySelectButton.style.backgroundColor = activeColor;
-        _playerSelectButton.style.backgroundColor = inactiveColor;
+        _playerSelectButton.style.unityBackgroundImageTintColor = _playerSelectButton.style.color = inactiveColor;
+        _companionSelectButton.style.unityBackgroundImageTintColor = _companionSelectButton.style.color = activeColor;
     }
 
     public void ToggleEquipBackground(bool isActive)
@@ -110,28 +111,19 @@ public class SkillUI : MonoBehaviour
     #region UIChange
     private void OnEnable()
     {
-        BattleBroker.OnMenuUIChange += HandleUIChange;
+        UIBroker.OnMenuUIChange += HandleUIChange;
     }
 
     private void OnDisable()
     {
-        BattleBroker.OnMenuUIChange -= HandleUIChange;
+        UIBroker.OnMenuUIChange -= HandleUIChange;
     }
     private void HandleUIChange(int uiType)
     {
         if (uiType == 2)
-            ShowSkillUI();
+            root.style.display = DisplayStyle.Flex;
         else
-            HideSkillUI();
-    }
-    public void HideSkillUI()
-    {
-        root.style.display = DisplayStyle.None;
-    }
-    public void ShowSkillUI()
-    {
-        root.style.display = DisplayStyle.Flex;
-        //킬때마다 무기개수 초기화
+            root.style.display = DisplayStyle.None;
     }
     #endregion
 }

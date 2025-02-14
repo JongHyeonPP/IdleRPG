@@ -45,7 +45,7 @@ public class StageSelectUI : MonoBehaviour
         }
         else
         {
-            UIBroker.InactiveCurrentUI();
+            UIBroker.InactiveCurrentUI?.Invoke();
         }
         
     }

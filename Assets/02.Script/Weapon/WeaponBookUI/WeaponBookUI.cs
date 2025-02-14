@@ -44,7 +44,7 @@ public class WeaponBookUI : MonoBehaviour
             WeaponManager.instance.SetIconScale(weapon, slotIcon);
         }
         var panel = bookDataPanel.Q<VisualElement>("BookDataPanel");
-        if (weaponBook.weapons.Count > 6)
+        if (weaponBook.weapons.Count > 5)
         {
             panel.style.height = 440;
         }

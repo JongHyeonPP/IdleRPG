@@ -11,10 +11,7 @@ public class PlayerBarUI : MonoBehaviour
     {
         InitElement();
         InitEvent();
-    }
-    void Start()
-    {
-        InitPosition();
+        UIBroker.SetBarPosition += SetBarPosition;
     }
 
     private void InitElement()
@@ -24,14 +21,20 @@ public class PlayerBarUI : MonoBehaviour
         mpBar = _root.Q<ProgressBar>("MpBar");
     }
 
-    private void InitPosition()
+    private void SetBarPosition(Camera currentCamera)
     {
         VisualElement vertical = GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("Vertical");
         var controller = (MonoBehaviour)PlayerBroker.GetPlayerController();
-        Vector3 screenPoint = Camera.main.WorldToScreenPoint(controller.transform.position);
-        vertical.style.left = screenPoint.x;
-        vertical.style.top = Screen.height - screenPoint.y;
+
+        // 월드 좌표를 스크린 좌표로 변환
+        Vector3 screenPoint = currentCamera.WorldToScreenPoint(controller.transform.position);
+
+        float left = screenPoint.x - 140;
+        float bottom = screenPoint.y - 105;
+        vertical.style.left = left;
+        vertical.style.bottom = bottom;  // Y축 반전 제거
     }
+
 
     private void OnStageEnter()
     {

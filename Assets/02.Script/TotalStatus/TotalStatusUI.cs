@@ -9,27 +9,55 @@ public class TotalStatusUI : MonoBehaviour
 {
     public VisualElement root { private set; get; }
     private Dictionary<StatusType, Label> _setDict;
-    private EquipSlot _weaponSlot;
-    private EquipSlot _accessoriesSlot;
     private PlayerStatus _status;
+    //StatusVe
     private Label _levelLabel;
     private Label _nameLabel;
+    private VisualElement weaponSlot;
+    private VisualElement accSlot;
     private void Awake()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
-        //Top 초기화 (Button)
-        TopAreaInit();
-        //Middle 초기화 (EquipSlot, PlayerSpriteArea)
-        MiddleAreaInit();
-        //Bottom 초기화 (StatusSet)
-        BottomAreaInit();
-        //ExitButton
+        CategoriButtonInit();
+        StatusPanelInit();
+        AppearancePanelInit();
         Button exitButton = root.Q<Button>("ExitButton");
         exitButton.RegisterCallback<ClickEvent>(click => UIBroker.InactiveCurrentUI?.Invoke());
+        InitEquipSlot();
+        PlayerBroker.OnEquipWeapon += OnEquipWeapon;
     }
 
-    private void BottomAreaInit()
+    private void InitEquipSlot()
     {
+        weaponSlot = root.Q<VisualElement>("WeaponSlot");
+        accSlot = root.Q<VisualElement>("AccSlot");
+        weaponSlot.Q<Label>("CategoriLabel").text = "장착 무기";
+        accSlot.Q<Label>("CategoriLabel").text = "장착 악세서리";
+    }
+
+    private void OnEquipWeapon(object obj)
+    {
+        WeaponData weaponData = (WeaponData)obj;
+        VisualElement equipIcon = weaponSlot.Q<VisualElement>("EquipIcon");
+        equipIcon.style.backgroundImage = new(weaponData.WeaponSprite);
+        WeaponManager.instance.SetIconScale(weaponData, equipIcon);
+        weaponSlot.Q<Label>("NameLabel").text = weaponData.name;
+    }
+
+    private void StatusPanelInit()
+    {
+        //EquipPanel
+        VisualElement weaponSlotRoot = root.Q<VisualElement>("WeaponSlot");
+        VisualElement accessoriesSlotRoot = root.Q<VisualElement>("AccessoriesSlot");
+        VisualElement area = root.Q<VisualElement>("PlayerArea");
+        _levelLabel = area.Q<Label>("LevelLabel");
+        _nameLabel = area.Q<Label>("NameLabel");
+        PlayerBroker.OnSetName += SetName;
+        BattleBroker.OnLevelExpSet += SetLevel;
+        SetLevel();
+        SetName(StartBroker.GetGameData().userName);
+
+        //ValuePanel
         VisualElement setVertical = root.Q<VisualElement>("SetVertical");
         _setDict = Enum.GetValues(typeof(StatusType))
             .Cast<StatusType>()
@@ -81,28 +109,33 @@ public class TotalStatusUI : MonoBehaviour
             }
         }
     }
-    private void MiddleAreaInit()
+    private void AppearancePanelInit()
     {
-        //EquipSlot
-        VisualElement weaponSlotRoot = root.Q<VisualElement>("WeaponSlot");
-        VisualElement accessoriesSlotRoot = root.Q<VisualElement>("AccessoriesSlot");
-        _weaponSlot = new(weaponSlotRoot);
-        _accessoriesSlot = new(accessoriesSlotRoot);
-        //PlayerSpriteArea
-        VisualElement area = root.Q<VisualElement>("PlayerArea");
-        _levelLabel = area.Q<Label>("LevelLabel");
-        _nameLabel = area.Q<Label>("NameLabel");
-        PlayerBroker.OnSetName += SetName;
-        BattleBroker.OnLevelExpSet += SetLevel;
-        SetLevel();
-        SetName(StartBroker.GetGameData().userName);
+        //주연이가 코스튬 넣어야 함.
     }
-    private void TopAreaInit()
+    private void CategoriButtonInit()
     {
         Button statusButton = root.Q<Button>("StatusButton");
-        Button appearanceButton = root.Q<Button>("StatusButton");
-    }
+        Button appearanceButton = root.Q<Button>("AppearanceButton");
+        statusButton.RegisterCallback<ClickEvent>(evt =>
+        {
+            ShowStatusOrAppearance(true);
+        });
+        appearanceButton.RegisterCallback<ClickEvent>(evt => 
+        {
+            ShowStatusOrAppearance(false);
+        });
+        ShowStatusOrAppearance(true);
 
+
+        void ShowStatusOrAppearance(bool isStatus)
+        {
+            statusButton.Q<VisualElement>("SelectedPanel").style.display = isStatus? DisplayStyle.Flex:DisplayStyle.None;
+            appearanceButton.Q<VisualElement>("SelectedPanel").style.display = isStatus ? DisplayStyle.None : DisplayStyle.Flex;
+            root.Q<VisualElement>("StatusPanel").style.display = isStatus ? DisplayStyle.Flex : DisplayStyle.None;
+            root.Q<VisualElement>("AppearancePanel").style.display = isStatus ? DisplayStyle.None : DisplayStyle.Flex;
+        }
+    }
     private void Start()
     {
         PlayerController controller = (PlayerController)PlayerBroker.GetPlayerController();
@@ -136,15 +169,5 @@ public class TotalStatusUI : MonoBehaviour
         _setDict[StatusType.Penetration].text = _status.Penetration.ToString("N0");
         _setDict[StatusType.GoldAscend].text = _status.GoldAscend.ToString("F1")+'%';
         _setDict[StatusType.ExpAscend].text = _status.ExpAscend.ToString("F1")+'%';
-    }
-}
-internal class EquipSlot
-{
-    private Label _nameLabel;
-    private VisualElement _equipIcon;
-    internal EquipSlot(VisualElement slotRoot)
-    {
-        _nameLabel = slotRoot.Q<Label>("NameLabel");
-        _equipIcon = slotRoot.Q<VisualElement>("EquipIcon");
     }
 }

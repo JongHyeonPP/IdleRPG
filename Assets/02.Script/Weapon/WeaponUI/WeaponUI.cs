@@ -25,8 +25,8 @@ public class WeaponUI : MonoBehaviour, IBattleUI
     [SerializeField] VisualTreeAsset weaponSlotAsset;//무기 슬롯 에셋
     [SerializeField] VisualTreeAsset rarityLineAsset;//Rarity에 따라 자리를 구분지을 실선
     //ButtonColor
-    private readonly Color inactiveColor = new(0f, 0.36f, 0.51f);
-    private readonly Color activeColor = new(0.04f, 0.24f, 0.32f);
+    private readonly Color inactiveColor = new(0.7f, 0.7f, 0.7f);
+    private readonly Color activeColor = new(1f, 1f, 1f);
     //uid에 대한 Slot
     private Dictionary<string, VisualElement> _slotDict = new();
     private void Awake()
@@ -55,11 +55,11 @@ public class WeaponUI : MonoBehaviour, IBattleUI
     {
         if (currentButton != null)
         {
-            currentButton.style.backgroundColor = inactiveColor;
+            currentButton.style.unityBackgroundImageTintColor = currentButton.style.color = inactiveColor;
             _connectDict[currentButton].style.display = DisplayStyle.None;
         }
         currentButton = buttons[buttonIndex];
-        currentButton.style.backgroundColor = activeColor;
+        currentButton.style.unityBackgroundImageTintColor = currentButton.style.color = activeColor;
         _connectDict[currentButton].style.display = DisplayStyle.Flex;
     }
     #region Init
@@ -76,6 +76,7 @@ public class WeaponUI : MonoBehaviour, IBattleUI
             int index = i;//스코프를 벗어난 i를 로컬 변수화
             buttons[index] = (Button)buttonPanel.ElementAt(i);
             buttons[index].RegisterCallback<ClickEvent>(evt => SwitchScrollView(index));
+            buttons[index].style.unityBackgroundImageTintColor = buttons[index].style.color = inactiveColor;
             _connectDict.Add(buttons[index], parentPanel.ElementAt(i));
         }
         buttons[0] = root.Q<Button>("PlayerButton");
@@ -112,21 +113,31 @@ public class WeaponUI : MonoBehaviour, IBattleUI
                 companionContainer.Add(GetSlot(weaponData));
             }
         }
+        if (rarity == Rarity.Mythic)
+        {
+            playerContainer.Add(GetPadding());
+            companionContainer.Add(GetPadding());
+        }
         _playerScrollView.scrollView.Add(playerContainer);
         _companionScrollView.scrollView.Add(companionContainer);
     }
-
+    private VisualElement GetPadding()
+    {
+        VisualElement padding = new();
+        padding.style.width = Length.Percent(100);
+        padding.style.height = 30f;
+        return padding;
+    }
     private VisualElement GetContainer()
     {
         VisualElement playerSlotContainer = new();
-        playerSlotContainer.style.width = Length.Percent(100);
+        playerSlotContainer.style.width = Length.Percent(110);//여유있는 줄바꿈을 위해
         playerSlotContainer.style.height = Length.Auto();
         playerSlotContainer.style.flexDirection = FlexDirection.Row;
         playerSlotContainer.style.flexWrap = Wrap.Wrap;
         return playerSlotContainer;
     }
-
-    private VisualElement GetSlot( WeaponData weaponData)
+    private VisualElement GetSlot(WeaponData weaponData)
     {
         string weaponId = weaponData.UID;
         int weaponCount = _weaponCount.ContainsKey(weaponId) ? _weaponCount[weaponId] : 0;
@@ -184,14 +195,13 @@ public class WeaponUI : MonoBehaviour, IBattleUI
         }
         else
         {
-            weaponIcon.style.unityBackgroundImageTintColor = new StyleColor(Color.gray);
+            //weaponIcon.style.unityBackgroundImageTintColor = new StyleColor(Color.gray);
         }
 
         weaponSlot.RegisterCallback<ClickEvent>(evt => OnClickSlot(weaponData));
 
         return weaponSlot;
     }
-
     private void OnClickSlot(WeaponData weaponData)
     {
         bool isPlayerWeapon = weaponData.WeaponType == WeaponType.Melee;
@@ -204,12 +214,12 @@ public class WeaponUI : MonoBehaviour, IBattleUI
     #region UIChange
     private void OnEnable()
     {
-        BattleBroker.OnMenuUIChange += HandleUIChange;
+        UIBroker.OnMenuUIChange += HandleUIChange;
     }
 
     private void OnDisable()
     {
-        BattleBroker.OnMenuUIChange -= HandleUIChange;
+        UIBroker.OnMenuUIChange -= HandleUIChange;
     }
     private void HandleUIChange(int uiType)
     {
@@ -252,7 +262,6 @@ public class WeaponUI : MonoBehaviour, IBattleUI
             countProgressBar.title = $"{count}/{price}";
             countProgressBar.value = count / (float)price;
         }
-        
     }
     private void OnWeaponCountSet(object weaponDataObj, int count)
     {

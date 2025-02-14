@@ -1,0 +1,6 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:VisualElement name="FragmentPanel" style="flex-grow: 0; flex-direction: row; align-items: center; margin-bottom: 13px; margin-right: 44px; width: 138px;">
+        <engine:VisualElement name="IconVe" style="flex-grow: 0; flex-shrink: 0; width: 50px; height: 50px; background-color: rgba(255, 255, 255, 0); background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Icons/32/GemLong01Outlined.png?fileID=2800000&amp;guid=f00ebf5f3deae0f468a140750040a64c&amp;type=3#GemLong01Outlined&quot;);" />
+        <engine:Label text="12345" name="NumLabel" style="align-items: flex-start; justify-content: center; -unity-text-align: upper-center; margin-left: 15px; font-size: 30px;" />
+    </engine:VisualElement>
+</engine:UXML>

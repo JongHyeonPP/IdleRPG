@@ -82,12 +82,12 @@ public class EquipedSkillUI : MonoBehaviour
     }
     private void OnEnable()
     {
-        BattleBroker.OnMenuUIChange += HandleUIChange;
+        UIBroker.OnMenuUIChange += HandleUIChange;
     }
 
     private void OnDisable()
     {
-        BattleBroker.OnMenuUIChange -= HandleUIChange;
+        UIBroker.OnMenuUIChange -= HandleUIChange;
     }
     private void HandleUIChange(int uiType)
     {
