@@ -7,7 +7,7 @@ using static UnityEngine.GraphicsBuffer;
 public class BattleManager : MonoBehaviour
 {
     public static BattleManager instance;
-
+    private GameData _gameData;
     [Header("Enemy Pool")]
     //두 가지 적이 섞여 나오도록 오브젝트 풀을 두 가지 생성
     [SerializeField] EnemyPool _ePool0;
@@ -35,6 +35,7 @@ public class BattleManager : MonoBehaviour
     private BattleType battleType;//전투의 타입. Default, Boss, Die
     [SerializeField] Camera expandCamera;//전투 메인 카메라
     [SerializeField] Camera shrinkCamera;//전투 메인 카메라
+    public Camera currentCamera;//전투 메인 카메라
     private void Awake()
     {
         if (instance == null)
@@ -45,6 +46,7 @@ public class BattleManager : MonoBehaviour
 
     private void Start()
     {
+        _gameData = StartBroker.GetGameData();
         _controller = GameManager.controller;
         _ePool0.poolParent = _ePool1.poolParent = _poolParent;
         GameManager.instance.AutoSaveStart();
@@ -65,6 +67,7 @@ public class BattleManager : MonoBehaviour
         BattleBroker.GetBattleType += () => battleType;
         BattleBroker.IsCanAttack += IsCanAttack;
         UIBroker.OnMenuUIChange += OnMenuUIChange;
+        BattleBroker.OnStageChange(_gameData.currentStageNum);
     }
     private void OnMenuUIChange(int index)
     {
@@ -82,9 +85,11 @@ public class BattleManager : MonoBehaviour
     }
     public void InvokeActions()
     {
-        BattleBroker.OnStageChange(StartBroker.GetGameData().currentStageNum);
-        string weaponId = StartBroker.GetGameData().weaponId;
+        string weaponId = _gameData.weaponId;
+        if(weaponId!=null)
         PlayerBroker.OnEquipWeapon(WeaponManager.instance.weaponDict[weaponId]);
+        else
+            PlayerBroker.OnEquipWeapon(null);
     }
 
     private bool IsCanAttack()
@@ -204,6 +209,20 @@ public class BattleManager : MonoBehaviour
     {
         currentStageInfo = StageInfoManager.instance.GetStageInfo(stageNum);
         BattleBroker.OnStageEnter();
+        if (stageNum > _gameData.maxStageNum)
+        {
+            switch (stageNum)
+            {
+                case 1:
+                    Debug.Log("최초 접속");
+                    break;
+                case 21:
+                    Debug.Log("두 번째 스토리");
+                    break;
+            }
+            _gameData.maxStageNum = stageNum;
+        }
+        StartBroker.SaveLocal();
     }
     private void OnStageEnter()
     {
@@ -328,7 +347,7 @@ public class BattleManager : MonoBehaviour
     private void OnBossStageClear()
     {
         battleType = BattleType.None;
-        GameManager.instance.GoToNextStage();
+        _gameData.currentStageNum++;
         _isMove = true;
         _controller.MoveState(true);
         StartCoroutine(StageEnterAfterWhile());
@@ -337,7 +356,7 @@ public class BattleManager : MonoBehaviour
     private IEnumerator StageEnterAfterWhile()
     {
         yield return new WaitForSeconds(1.5f);
-        BattleBroker.OnStageChange(StartBroker.GetGameData().currentStageNum);
+        BattleBroker.OnStageChange(_gameData.currentStageNum);
     }
 
     private void DropItem(Vector3 position)
@@ -387,46 +406,47 @@ public class BattleManager : MonoBehaviour
         }
         _enemies = null;
     }
-    private void OnDestroy()
-    {
-        ClearEvent();
-    }
-    private void ClearEvent()
-    {
-        // BattleBroker 이벤트 해제
-        BattleBroker.OnStageEnter -= OnStageEnter;
-        BattleBroker.OnStageChange -= OnStageChange;
-        BattleBroker.OnBossEnter -= OnBossEnter;
-        BattleBroker.OnEnemyDead -= OnEnemyDead;
-        BattleBroker.GetBattleType -= () => battleType;
+    //private void OnDestroy()
+    //{
+    //    ClearEvent();
+    //}
+    //private void ClearEvent()
+    //{
+    //    // BattleBroker 이벤트 해제
+    //    BattleBroker.OnStageEnter -= OnStageEnter;
+    //    BattleBroker.OnStageChange -= OnStageChange;
+    //    BattleBroker.OnBossEnter -= OnBossEnter;
+    //    BattleBroker.OnEnemyDead -= OnEnemyDead;
+    //    BattleBroker.GetBattleType -= () => battleType;
 
-        // PlayerBroker 이벤트 해제
-        PlayerBroker.OnPlayerDead -= OnPlayerDead;
-    }
+    //    // PlayerBroker 이벤트 해제
+    //    PlayerBroker.OnPlayerDead -= OnPlayerDead;
+    //}
     private void ControlView(bool isExpand)
     {
         if (isExpand)//넓은 공간을 보여줌
         {
             expandCamera.gameObject.SetActive(true);
             shrinkCamera.gameObject.SetActive(false);
+            currentCamera = expandCamera;
             UIBroker.SetBarPosition?.Invoke(expandCamera);
         }
         else//적은 공간을 보여줌
         {
             expandCamera.gameObject.SetActive(false);
             shrinkCamera.gameObject.SetActive(true);
+            currentCamera = shrinkCamera;
             UIBroker.SetBarPosition?.Invoke(shrinkCamera);
         }
         
     }
-    [ContextMenu("PauseBattle")]
-    public void PauseBattle()
+    public void ControlBattle(bool isActive)
     {
-        isBattleActive = false;
+        isBattleActive = isActive;
     }
     [ContextMenu("RestartBattle")]
     public void RestartBattle()
     {
-        BattleBroker.OnStageChange(StartBroker.GetGameData().currentStageNum);
+        BattleBroker.OnStageChange(_gameData.currentStageNum);
     }
 }

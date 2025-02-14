@@ -37,4 +37,12 @@ public class StageInfoManager : MonoBehaviour
         return items;
     }
     public StageInfo GetStageInfo(int stageNum) => _stageInfos[stageNum];
+    [ContextMenu("Temp")]
+    public void Temp()
+    {
+        foreach (var x in _stageInfos)
+        {
+            x.stageNum++;
+        }
+    }
 }

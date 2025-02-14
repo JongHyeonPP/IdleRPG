@@ -39,9 +39,16 @@ public class TotalStatusUI : MonoBehaviour
     {
         WeaponData weaponData = (WeaponData)obj;
         VisualElement equipIcon = weaponSlot.Q<VisualElement>("EquipIcon");
-        equipIcon.style.backgroundImage = new(weaponData.WeaponSprite);
-        WeaponManager.instance.SetIconScale(weaponData, equipIcon);
-        weaponSlot.Q<Label>("NameLabel").text = weaponData.name;
+        if (weaponData == null)
+        {
+            equipIcon.style.backgroundImage = null;
+        }
+        else
+        {
+            equipIcon.style.backgroundImage = new(weaponData.WeaponSprite);
+            WeaponManager.instance.SetIconScale(weaponData, equipIcon);
+            weaponSlot.Q<Label>("NameLabel").text = weaponData.name;
+        }
     }
 
     private void StatusPanelInit()

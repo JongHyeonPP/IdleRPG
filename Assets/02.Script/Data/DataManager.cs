@@ -134,5 +134,4 @@ public class DataManager : MonoBehaviour
             return default;
         }
     }
-
 }

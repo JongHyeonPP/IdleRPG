@@ -110,7 +110,10 @@ public class GameManager : MonoBehaviour
         if (gameData == null)
         {
             Debug.Log("No saved game data found. Initializing default values.");
-            gameData = new();
+            gameData = new()
+            {
+                currentStageNum = 1
+            };
         }
         if (gameData.level < 1)
         {
@@ -191,12 +194,6 @@ public class GameManager : MonoBehaviour
     private void OnStageChange(int stageNum)
     {
         gameData.currentStageNum = stageNum;
-        SaveLocalData();
-    }
-    public void GoToNextStage()
-    {
-        gameData.currentStageNum++;
-        gameData.maxStageNum = Mathf.Max(gameData.currentStageNum, gameData.maxStageNum);
         SaveLocalData();
     }
     [ContextMenu("ClearGameData")]

@@ -24,7 +24,7 @@ public class GameData
     public Dictionary<StatusType, int> statLevel_StatPoint;
     public string weaponId;
     public string[] equipedSkillArr;
-    public int currentStageNum;
-    public int maxStageNum;
+    public int currentStageNum;//내가 어느 스테이지에 위치해있냐
+    public int maxStageNum;//내가 어디까지 뚫었냐
     public string userName;
 }

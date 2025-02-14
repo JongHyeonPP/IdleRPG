@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a800df23dc72f3f4da31798639b67d50, type: 3}
   m_Name: Stage_218
   m_EditorClassIdentifier: 
-  stageNum: 218
+  stageNum: 217
   stageName: Unset Stage
   background: 10
   dropProb: 0
   enemy_0: {fileID: 11400000, guid: 60ed891e47d6b1745a46cc963c06869e, type: 2}
-  enemy_1: {fileID: 11400000, guid: 99f75d5f55e1eba4f9370b82b8e9ea46, type: 2}
+  enemy_1: {fileID: 0}
   boss: {fileID: 11400000, guid: 8fe432f1657434f41b184634d8c5aac3, type: 2}
   enemyNum: 4

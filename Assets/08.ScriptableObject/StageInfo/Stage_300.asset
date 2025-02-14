@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a800df23dc72f3f4da31798639b67d50, type: 3}
-  m_Name: Stage_0
+  m_Name: Stage_300
   m_EditorClassIdentifier: 
-  stageNum: 0
+  stageNum: 299
   stageName: Unset Stage
-  background: 0
+  background: 14
   dropProb: 0
-  enemy_0: {fileID: 11400000, guid: 6071fbb2f6628724e97e0a3d7a9f9fb0, type: 2}
-  enemy_1: {fileID: 0}
-  boss: {fileID: 11400000, guid: 36a0074aa544b9e408e43031d4e36e32, type: 2}
+  enemy_0: {fileID: 11400000, guid: b800be524bdb91f4a8cb430c1e8f8871, type: 2}
+  enemy_1: {fileID: 11400000, guid: 0d350e1d49e2d30438426783e7a02949, type: 2}
+  boss: {fileID: 11400000, guid: 98bcffd60c3584f4797277e42309e1e2, type: 2}
   enemyNum: 4
