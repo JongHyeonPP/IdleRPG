@@ -65,7 +65,7 @@ public abstract class Attackable : MonoBehaviour
                 ActiveSkillToTarget(targets, currentSkill);
                 VisualEffectToTarget(targets);
             }
-;
+            
         }
     }
 

@@ -56,6 +56,6 @@ public class WeaponManager : MonoBehaviour
         {
             xScale = weaponData.TextureSize.x / weaponData.TextureSize.y;
         }
-        weaponIcon.style.scale = new Vector2(xScale, yScale);
+        weaponIcon.style.scale = new Vector2(xScale, yScale) * weaponData.TextureScale;
     }
 }

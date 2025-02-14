@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 public static class UIBroker
@@ -9,4 +10,7 @@ public static class UIBroker
     public static Action<VisualElement, bool> ActiveTranslucent;
     //스킬 장착 상태 해제
     public static Action InactiveSkillEquip;
+    //메뉴 UI 변경
+    public static Action<int> OnMenuUIChange;
+    public static Action<Camera> SetBarPosition;
 }

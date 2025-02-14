@@ -27,8 +27,6 @@ public static class BattleBroker
     public static Action OnDiaSet;
     public static Action OnEmeraldSet;
     public static Action OnMaxStageSet;
-    //메뉴 UI 변경
-    public static Action<int> OnMenuUIChange;
     //무기 레벨업
     public static Action<int, int> OnWeaponLevelSet;//Weapon Id, Level
     //무기 개수 변경
@@ -37,4 +35,7 @@ public static class BattleBroker
 
     public static Action<int> SwitchToStory;
     public static Action SwitchBattle;
+    //동료 전투 컨트롤
+    public static Action<object> StartCompanionAttack;
+    public static Action StopCompanionAttack;
 }

@@ -6,6 +6,7 @@ using UnityEngine.UIElements;
 using Button = UnityEngine.UIElements.Button;
 using EnumCollection;
 using System;
+using System.Linq;
 
 public class StatUI : MonoBehaviour
 {
@@ -23,6 +24,11 @@ public class StatUI : MonoBehaviour
     private Dictionary<StatusType, VisualElement> _statElements = new();
     public VisualElement root { get; private set; }
     private DraggableScrollView draggableScrollView;
+    Button[] categoriButtons;
+    VisualElement[] categoriPanels;
+    //ButtonColor
+    private readonly Color inactiveColor = new(0.7f, 0.7f, 0.7f);
+    private readonly Color activeColor = new(1f, 1f, 1f);
     [Header("Sprite")]
     [SerializeField] private Sprite powerSprite;
     [SerializeField] private Sprite maxHpSprite;
@@ -33,23 +39,43 @@ public class StatUI : MonoBehaviour
     {
         root = GetComponent<UIDocument>().rootVisualElement;
         draggableScrollView = GetComponent<DraggableScrollView>();
-        PlayerBroker.OnStatusLevelSet+=UpdateStatText;
+        PlayerBroker.OnStatusLevelSet += UpdateStatText;
     }
     private void Start()
     {
         _gameData = StartBroker.GetGameData();
-     
+        categoriPanels = root.Q<VisualElement>("PanelParent").Children().ToArray();
+        categoriButtons = root.Q<VisualElement>("ButtonParent").Children().Select(item=>(Button)item).ToArray();
+        InitButton();
+        InitEnhancePanel();
+        OnCategoriButtonClick(0);
+    }
 
-        foreach (var stat in _activeStats)
+    private void InitButton()
+    {
+        VisualElement buttonParent = root.Q<VisualElement>("ButtonParent");
+        for (int i = 0; i < 3; i++)
         {
-            InitializeStatUI(stat);
+            Button categoriButton = categoriButtons[i];
+            int index = i;//로컬 변수화
+            categoriButton.RegisterCallback<ClickEvent>(evt =>
+            {
+                OnCategoriButtonClick(index);
+            });
         }
     }
 
-
-    private void InitializeStatUI(StatusType stat)
+    private void InitEnhancePanel()
     {
-        VisualElement elementRoot = root.Q<VisualElement>($"{stat}Element");
+        foreach (var stat in _activeStats)
+        {
+            InitEnhanceElement(stat);
+        }
+        
+    }
+    void InitEnhanceElement(StatusType stat)
+    {
+        VisualElement elementRoot = categoriPanels[0].Q<VisualElement>($"{stat}Element");
         _statElements[stat] = elementRoot;
         Button button = elementRoot.Q<Button>("StatButton");
         Label levelLabel = elementRoot.Q<Label>("StatLevel");
@@ -82,20 +108,38 @@ public class StatUI : MonoBehaviour
                 break;
         }
         statIcon.style.backgroundImage = new(iconSprite);
-        button.RegisterCallback<PointerDownEvent>(evt => OnPointerDown(stat),TrickleDown.TrickleDown);
+        button.RegisterCallback<PointerDownEvent>(evt => OnPointerDown(stat), TrickleDown.TrickleDown);
         button.RegisterCallback<PointerUpEvent>(evt => OnPointerUp(), TrickleDown.TrickleDown);
         if (!_gameData.statLevel_Gold.ContainsKey(stat))
         {
-            _gameData.statLevel_Gold[stat] = 1; 
+            _gameData.statLevel_Gold[stat] = 1;
         }
         int currentLevel = _gameData.statLevel_Gold[stat];
         UpdateStatText(stat, currentLevel);
     }
-    
+
+
+    private void OnCategoriButtonClick(int index)
+    {
+        
+        for (int i = 0; i < 3; i++)
+        {
+            if (index == i)
+            {
+                categoriPanels[i].style.display = DisplayStyle.Flex;
+                categoriButtons[i].style.color = categoriButtons[i].style.unityBackgroundImageTintColor = activeColor;
+            }
+            else
+            {
+                categoriPanels[i].style.display = DisplayStyle.None;
+                categoriButtons[i].style.color = categoriButtons[i].style.unityBackgroundImageTintColor = inactiveColor;
+            }
+        }
+    }
 
     private void OnPointerDown(StatusType stat)//스텟버튼누르기
     {
-        int currentLevel = _gameData.statLevel_Gold[stat]; 
+        int currentLevel = _gameData.statLevel_Gold[stat];
         int requiredGold = FormulaManager.GetGoldRequired(currentLevel); 
 
         if (_gameData.gold < requiredGold) 
@@ -110,7 +154,6 @@ public class StatUI : MonoBehaviour
         }
        
     }
-
     private void OnPointerUp()//버튼떼서 데이터저장
     {
         if (_incrementCoroutine != null)
@@ -120,7 +163,6 @@ public class StatUI : MonoBehaviour
             GameManager.instance.SaveLocalData();
         }
     }
-
     private IEnumerator IncreaseLevelContinuously(StatusType stat)
     {
         IncrementStat(stat);
@@ -130,7 +172,6 @@ public class StatUI : MonoBehaviour
             IncrementStat(stat);
         }
     }
-    
     private void IncrementStat(StatusType stat)
     {
         _gameData.statLevel_Gold[stat]++;
@@ -143,23 +184,23 @@ public class StatUI : MonoBehaviour
         var elementRoot = _statElements[stat];
         var levelLabel = elementRoot.Q<Label>("StatLevel");
         var riseLabel = elementRoot.Q<Label>("StatRise");
-        var button = elementRoot.Q<Button>("StatButton");
+        var priceLabel = elementRoot.Q<Label>("PriceLabel");
 
         levelLabel.text = $"Level: {level}";
 
         riseLabel.text = FormulaManager.GetStatRiseText(level, stat);
 
-        button.text = $"{FormulaManager.GetGoldRequired(level)}";
+        priceLabel.text = $"{FormulaManager.GetGoldRequired(level)}";
     }
     #region UIChange
     private void OnEnable()
     {
-        BattleBroker.OnMenuUIChange += HandleUIChange;
+        UIBroker.OnMenuUIChange += HandleUIChange;
     }
 
     private void OnDisable()
     {
-        BattleBroker.OnMenuUIChange -= HandleUIChange;
+        UIBroker.OnMenuUIChange -= HandleUIChange;
     }
     private void HandleUIChange(int uiType)
     {

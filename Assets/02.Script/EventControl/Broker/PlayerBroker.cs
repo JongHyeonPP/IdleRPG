@@ -6,11 +6,11 @@ using UnityEngine;
 public static class PlayerBroker
 {
     //PlayerController에서 능력치 얻어옴 - PlayerController
-    public static Func<object> GetPlayerController;
+    public static Func<object> GetPlayerController;//PlayerController
     //능력치 레벨이 변경됐을 때
     public static Action<StatusType, int> OnStatusLevelSet;
     //무기장착
-    public static Action<object> OnEquipWeapon;
+    public static Action<object> OnEquipWeapon;//WeaponData
     //무기 레벨 변경
     public static Action<string, int> OnWeaponLevelSet;
     //무기 개수 변경

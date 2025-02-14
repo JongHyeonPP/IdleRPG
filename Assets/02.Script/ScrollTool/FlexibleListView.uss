@@ -1,0 +1,8 @@
+.unity-list-view__item {
+    background-color: transparent;
+    color: rgb(255, 255, 255);
+}
+
+.unity-scroll-view__content_container {
+    align-items: center;
+}

@@ -1,3 +1,21 @@
+.unity-progress-bar__container {
+    min-height: 39px;
+    visibility: visible;
+    display: flex;
+    -unity-background-image-tint-color: rgb(0, 0, 0);
+    background-image: url("project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel1.png?fileID=21300000&guid=9eba597d30b7a114ea7924c3748871ed&type=3#UniversalPanel1");
+}
+
 .unity-progress-bar__progress {
-    background-color : rgb(44,44,200);
+    background-color: rgba(255, 255, 255, 0);
+    background-image: url("project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Bars/FillBlue.png?fileID=21300000&guid=a87d143cace9ca64581a7e24800179bc&type=3#FillBlue");
+}
+
+.unity-progress-bar__background {
+    background-color: rgba(0, 0, 0, 0);
+    visibility: visible;
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
 }

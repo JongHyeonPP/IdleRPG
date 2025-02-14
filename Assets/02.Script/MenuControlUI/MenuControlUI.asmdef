@@ -6,7 +6,8 @@
         "EventControl",
         "Skill",
         "Weapon",
-        "Story"
+        "Story",
+        "ComPanion"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

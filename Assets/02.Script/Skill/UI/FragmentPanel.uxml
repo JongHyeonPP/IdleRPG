@@ -1,6 +1,0 @@
-<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <engine:VisualElement name="FragmentPanel" style="flex-grow: 0; flex-direction: row; align-items: center; margin-bottom: 21px; margin-right: 29px; width: 138px;">
-        <engine:VisualElement name="IconVe" style="flex-grow: 0; flex-shrink: 0; width: 50px; height: 50px; background-color: rgb(0, 0, 0);" />
-        <engine:Label text="12345" name="NumLabel" style="align-items: flex-start; justify-content: center; -unity-text-align: upper-center; margin-left: 15px; font-size: 30px;" />
-    </engine:VisualElement>
-</engine:UXML>

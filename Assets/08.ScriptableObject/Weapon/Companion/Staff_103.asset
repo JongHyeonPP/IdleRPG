@@ -19,5 +19,6 @@ MonoBehaviour:
   _critical: 1
   _weaponSprite: {fileID: 21300000, guid: ffef52aa2bdb04c1394af5d4599ed210, type: 3}
   _textureSize: {x: 1, y: 1}
+  _textureScale: 1
   _uID: Staff_103
   _weaponName: "\uC218\uC218\uAED8\uB07C \uC2A4\uD0DC\uD504"
