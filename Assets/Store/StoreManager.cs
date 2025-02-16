@@ -1,22 +1,25 @@
 using System.Collections.Generic;
 using UnityEngine.UIElements;
 using UnityEngine;
+using System.Collections;
+
 
 public class StoreManager : MonoBehaviour
 {
     [Header("Data")]
     [SerializeField] private WeaponData[] _weaponDatas;             // 무기 데이터들
-    [SerializeField] private List<WeaponData> _weaponSaveDatas;             // 뽑힌 무기 데이터들
+    [SerializeField] private List<WeaponData> _weaponSaveDatas;     // 뽑힌 무기 데이터들
 
-    public List<WeaponData> WeaponSaveDatas => _weaponSaveDatas; // 이거 가져다 써 일단 정욱핑
+    public List<WeaponData> WeaponSaveDatas => _weaponSaveDatas;    // 이거 가져다 써 일단 정욱핑
 
     [Header("UI")]
     [SerializeField] private UIDocument _storeUIDocument;           // UI 문서
     [SerializeField] private VisualTreeAsset _storeSlotItem;        //슬롯아이템 
 
-    private VisualElement _root; 
+    private VisualElement _root;
 
     // Weapon UI
+    private VisualElement _panel;                                   // 상점 패널
     private VisualElement _weaponGrid;                              // 무기 그리드
     private Button _weapon1Btn;                                     // 무기 1회 뽑기 버튼
     private Button _weapon10Btn;                                    // 무기 10회 뽑기 버튼
@@ -37,6 +40,8 @@ public class StoreManager : MonoBehaviour
 
     private void Start() => InitStore();
 
+    private void OnEnable() => InitStore(); // 테스트용
+
     /// <summary>
     /// 초반 세팅
     /// </summary>
@@ -48,6 +53,7 @@ public class StoreManager : MonoBehaviour
 
         var root = _storeUIDocument.rootVisualElement;
         _root = root; // 저장핑
+        _panel = root?.Q<VisualElement>("Panel");
         _weaponGrid = root?.Q<VisualElement>("WeaponGrid");
         _rowVE1 = root?.Q<VisualElement>("RowVE1");
         _rowVE2 = root?.Q<VisualElement>("RowVE2");
@@ -61,6 +67,8 @@ public class StoreManager : MonoBehaviour
 
         // Popup 비활성화
         SetPopupVisibility(false);
+
+        _panel.style.display = DisplayStyle.Flex;
 
         _weapon1Btn.RegisterCallback<ClickEvent>(evt => DrawMultipleWeapons(1));
         _weapon10Btn.RegisterCallback<ClickEvent>(evt => DrawMultipleWeapons(10));
@@ -77,10 +85,10 @@ public class StoreManager : MonoBehaviour
     /// </summary>
     private void SetPopupVisibility(bool isVisible)
     {
-        if (_popup == null) return;
-        
-        _popup.style.display = isVisible ? DisplayStyle.Flex : DisplayStyle.None;
+        if (_popup == null || _isPopupVisible == isVisible) return;
+
         _isPopupVisible = isVisible;
+        StartCoroutine(AniPopup(isVisible));  // 애니메이션 시작
     }
 
     /// <summary>
@@ -117,35 +125,42 @@ public class StoreManager : MonoBehaviour
     private void UpdateWeaponGridUI(List<WeaponData> weapons)
     {
         if (weapons == null) return;
-        
+
         SetPopupVisibility(true);
 
         int cnt = 0;
+        float delayInterval = 1f;  // 슬롯 간 텀 (초)
+
         foreach (var weapon in weapons)
         {
             // _storeSlotItem을 클론
             var slot = _storeSlotItem.CloneTree();
 
             // 아이콘과 이름을 업데이트
-            var icon = slot.Q<VisualElement>("WeaponIcon"); // 아이콘
+            var icon = slot.Q<VisualElement>("WeaponIcon");
             var weaponImageTexture = weapon.WeaponSprite.texture;
             var weaponImageStyle = new StyleBackground(weaponImageTexture);
             icon.style.backgroundImage = weaponImageStyle;
 
-            var nameLabel = slot.Q<Label>("WeaponName"); // 라벨
+            var nameLabel = slot.Q<Label>("WeaponName");
             if (nameLabel != null)
             {
-                nameLabel.text = $"{weapon.WeaponName}"; // 이름 설정
+                nameLabel.text = $"{weapon.WeaponName}";
             }
 
-            cnt++;
-
-            if(cnt > STORE_COLUMN)
+            // 그리드에 추가
+            if (cnt >= STORE_COLUMN)
                 _rowVE2.Add(slot);
-            else 
+            else
                 _rowVE1.Add(slot);
+
+            // 슬롯 애니메이션 시작 (슬롯마다 지연 시간 증가)
+            StartCoroutine(AniSlotDelay(slot, cnt * delayInterval));
+
+            cnt++;
         }
     }
+
 
     // 그리드 초기화
     private void ClearGrid() 
@@ -164,4 +179,122 @@ public class StoreManager : MonoBehaviour
         }
         Debug.Log(log);
     }
+
+    /// <summary>
+    /// 슬롯 애니메이션
+    /// </summary>
+    /// <param name="slot"></param>
+    /// <returns></returns>
+    private IEnumerator AnimateSlot(VisualElement slot)
+    {
+        float duration = 0.5f;  // 애니메이션 시간
+        float elapsed = 0f;
+
+        Vector3 startScale = new Vector3(0.5f, 0.5f, 1f);  // 작게 시작
+        Vector3 endScale = new Vector3(1f, 1f, 1f);         // 원래 크기
+
+        // 초기 상태 설정
+        slot.style.scale = new StyleScale(startScale);
+        slot.style.opacity = 0f;
+
+        // 애니메이션 루프
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            float easedT = EaseInOutCubic(t);
+
+            // 스케일 및 투명도 조정
+            slot.style.scale = new StyleScale(Vector3.Lerp(startScale, endScale, easedT));
+            slot.style.opacity = Mathf.Lerp(0f, 1f, easedT);
+
+            yield return null;
+        }
+
+        // 애니메이션 완료 후 최종 상태 설정
+        slot.style.scale = new StyleScale(endScale);
+        slot.style.opacity = 1f;
+    }
+
+    /// <summary>
+    /// 딜레이 준 애니메이션
+    /// </summary>
+    /// <param name="slot"></param>
+    /// <param name="delay"></param>
+    /// <returns></returns>
+    private IEnumerator AniSlotDelay(VisualElement slot, float delay)
+    {
+        // 텀을 먼저 대기
+        yield return new WaitForSeconds(delay);
+
+        // 애니메이션 시작
+        float duration = 0.5f;
+        float elapsed = 0f;
+        Vector3 startScale = new Vector3(0.5f, 0.5f, 1f);
+        Vector3 endScale = new Vector3(1f, 1f, 1f);
+
+        slot.style.scale = new StyleScale(startScale);
+        slot.style.opacity = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            float easedT = EaseInOutCubic(t);
+
+            // 스케일 및 투명도 조정
+            slot.style.scale = new StyleScale(Vector3.Lerp(startScale, endScale, easedT));
+            slot.style.opacity = Mathf.Lerp(0f, 1f, easedT);
+
+            yield return null;
+        }
+
+        slot.style.scale = new StyleScale(endScale);
+        slot.style.opacity = 1f;
+    }
+
+
+    /// <summary>
+    /// 팝업에 애니메이션 효과 적용
+    /// </summary>
+    private IEnumerator AniPopup(bool isVisible)
+    {
+        float duration = 0.3f;  // 애니메이션 시간 (초)
+        float elapsed = 0f;
+
+        // 초기값과 목표값 설정
+        Vector3 startScale = isVisible ? new Vector3(0.8f, 0.8f, 1f) : new Vector3(1f, 1f, 1f);
+        Vector3 endScale = isVisible ? new Vector3(1f, 1f, 1f) : new Vector3(0.8f, 0.8f, 1f);
+
+        // 팝업 표시 스타일 변경
+        if (isVisible) _popup.style.display = DisplayStyle.Flex;
+
+        // 애니메이션 루프
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            float easedT = EaseInOutCubic(t);
+
+            // 스케일 조정
+            _popup.style.scale = new StyleScale(Vector3.Lerp(startScale, endScale, easedT));
+
+            // 투명도 조정 (원하는 경우)
+            _popup.style.opacity = Mathf.Lerp(isVisible ? 0f : 1f, isVisible ? 1f : 0f, easedT);
+
+            yield return null;
+        }
+
+        // 애니메이션 완료 후 처리
+        if (!isVisible) _popup.style.display = DisplayStyle.None;
+    }
+
+    /// <summary>
+    /// 이징 함수 (부드러운 애니메이션 곡선)
+    /// </summary>
+    private float EaseInOutCubic(float t)
+    {
+        return t < 0.5f ? 4f * t * t * t : 1f - Mathf.Pow(-2f * t + 2f, 3f) / 2f;
+    }
+
 }
