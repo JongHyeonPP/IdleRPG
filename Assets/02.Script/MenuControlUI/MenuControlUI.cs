@@ -5,16 +5,21 @@ using UnityEngine.UIElements;
 using Button = UnityEngine.UIElements.Button;
 public class MenuChangeUI : MonoBehaviour
 {
-    public VisualElement root { private get; set; }
+    //Controlled Componenet
+
     [SerializeField] StatUI statUI;
     [SerializeField] WeaponUI weaponUI;
     [SerializeField] SkillUI skillUI;
     [SerializeField] WeaponBookUI weaponBookUI;
     [SerializeField] CompanionUI companionUI;
     //[SerializeField] AdventureUI adventureUI;
+    [SerializeField] StoreUI storeUI;
     //Etc
+    public VisualElement root { private get; set; }
     [SerializeField] EquipedSkillUI equipedSkillUI;
+    private NoticeDot[] _noticeDotArr = new NoticeDot[6];
     private VisualElement[] buttonArr;
+    private int currentIndex = -1;
     private void Awake()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
@@ -22,7 +27,7 @@ public class MenuChangeUI : MonoBehaviour
     private void Start()
     {
         var rootChild = root.Q<VisualElement>("MenuControlUI");
-        rootChild.Insert(0,equipedSkillUI.root);
+        rootChild.Insert(0, equipedSkillUI.root);
         equipedSkillUI.root.style.position = Position.Relative;
         var mainElement = root.Q<VisualElement>("ButtonParent");
         var menuParent = root.Q<VisualElement>("MenuParent");
@@ -33,6 +38,9 @@ public class MenuChangeUI : MonoBehaviour
             VisualElement menuButton = mainElement.ElementAt(localIndex);
             Button button = menuButton.Q<Button>();
             button.RegisterCallback<ClickEvent>(evt => ChangeUI(localIndex));
+            _noticeDotArr[i] = new(menuButton, this);
+            _noticeDotArr[i].SetParentToRoot();
+            _noticeDotArr[i].StartNotice();
             switch (i)
             {
                 case 0:
@@ -62,21 +70,29 @@ public class MenuChangeUI : MonoBehaviour
         menuParent.Add(skillUI.root);
         menuParent.Add(weaponBookUI.root);
         menuParent.Add(companionUI.root);
+        menuParent.Add(storeUI.root);
         //menuParent.Add(adventureUI.root);
         //MenuControlUI의 크기에 맞춰서 크기 세팅
         statUI.root.ElementAt(0).style.height = Length.Percent(100);
         skillUI.root.ElementAt(0).style.height = Length.Percent(100);
         companionUI.root.ElementAt(0).style.height = Length.Percent(100);
+        storeUI.root.ElementAt(0).style.height = Length.Percent(100);
     }
     private void ChangeUI(int index)
     {
+        if (currentIndex == index)
+            return;
+
+
         UIBroker.OnMenuUIChange?.Invoke(index);
-        for (int i = 0; i < buttonArr.Length; i++)
+
+        buttonArr[index].style.top = -30f;
+        if (currentIndex > -1)
         {
-            if (i == index)
-                buttonArr[i].style.top = -30;
-            else
-                buttonArr[i].style.top = 0;
+            _noticeDotArr[index].OnPositionChange(0, -30);
+            buttonArr[currentIndex].style.top = 0f;
+            _noticeDotArr[currentIndex].OnPositionChange(0, 30);
         }
+        currentIndex = index;
     }
 }

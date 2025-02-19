@@ -3,6 +3,8 @@ using UnityEngine.UIElements;
 
 public class UIManager : MonoBehaviour
 {
+    public static UIManager instance;
+
     [SerializeField] CurrencyBarUI _currencyBar;
     [SerializeField] TotalLabelUI _goldLabelUI;
     [SerializeField] StatUI _statUI;
@@ -18,6 +20,8 @@ public class UIManager : MonoBehaviour
 
     void Awake()
     {
+        instance = this;
+
         // 모든 UI 요소에서 UIDocument 가져오기
         EnableUIDocuments(_currencyBar);
         EnableUIDocuments(_goldLabelUI);

@@ -50,7 +50,7 @@
                         </engine:VisualElement>
                     </engine:VisualElement>
                 </engine:VisualElement>
-                <engine:VisualElement name="AppearancePanel" style="flex-grow: 1; position: absolute; width: 100%; height: 100%;" />
+                <engine:VisualElement name="AppearancePanel" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; display: flex;" />
             </engine:VisualElement>
         </engine:VisualElement>
         <engine:Instance template="ExitButton" name="ExitButton" style="position: absolute; bottom: -160px;" />

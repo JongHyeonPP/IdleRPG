@@ -29,7 +29,7 @@ public class PlayerBarUI : MonoBehaviour
         // 월드 좌표를 스크린 좌표로 변환
         Vector3 screenPoint = currentCamera.WorldToScreenPoint(controller.transform.position);
 
-        float left = screenPoint.x - 140;
+        float left = screenPoint.x - 100;
         float bottom = screenPoint.y - 105;
         vertical.style.left = left;
         vertical.style.bottom = bottom;  // Y축 반전 제거

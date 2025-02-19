@@ -1,0 +1,20 @@
+.size-small {
+    flex-grow: 0;
+    height: 1600px;
+    width: 1010px;
+    align-items: center;
+    padding-top: 0;
+    align-self: center;
+    justify-content: center;
+    top: 370px;
+    -unity-font-definition: url("project://database/Assets/05.Font/Maplestory%20Light.ttf?fileID=12800000&guid=b7853b5ad26567e41a3c4210e64c5419&type=3#Maplestory Light");
+    color: rgb(255, 255, 255);
+    scale: 0.8 0.8;
+}
+
+.size-normal {
+    width: 985px;
+    scale: 1 1;
+    transition-duration: 1s;
+    transition-timing-function: ease-in-bounce;
+}

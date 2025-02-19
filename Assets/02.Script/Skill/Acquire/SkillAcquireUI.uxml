@@ -1,53 +1,55 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <engine:Template name="SkillAcquireSlot" src="project://database/Assets/02.Script/Skill/UI/SkillAcquireSlot.uxml?fileID=9197481963319205126&amp;guid=8b813415653b50747a52a047ee90946a&amp;type=3#SkillAcquireSlot" />
+    <engine:Template name="SkillAcquireSlot" src="project://database/Assets/02.Script/Skill/Acquire/SkillAcquireSlot.uxml?fileID=9197481963319205126&amp;guid=8b813415653b50747a52a047ee90946a&amp;type=3#SkillAcquireSlot" />
     <engine:Template name="ExitButton" src="project://database/Assets/02.Script/DefaultUI/ExitButton.uxml?fileID=9197481963319205126&amp;guid=56c49e16b4a3e0641931b48714473123&amp;type=3#ExitButton" />
-    <engine:VisualElement picking-mode="Ignore" name="SkillAcquireUI" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); justify-content: center; align-items: center;">
-        <engine:VisualElement name="UIPanel" style="flex-grow: 0; width: 1016px; height: 1896px; flex-shrink: 0; top: -75px; background-color: rgb(70, 35, 0);">
-            <engine:VisualElement name="TitlePanel" style="flex-grow: 0; flex-shrink: 0; height: 126px;">
-                <engine:Label text="스킬 배우기" name="TitleLabel" style="width: 100%; height: 100%; -unity-text-align: middle-left; font-size: 58px; color: rgb(255, 255, 255); padding-left: 66px;" />
-            </engine:VisualElement>
-            <engine:VisualElement name="Line" style="flex-grow: 0; flex-shrink: 0; height: 10px; background-color: rgba(0, 0, 0, 0.38); width: 970px; align-self: center; top: 0;" />
-            <engine:VisualElement style="flex-grow: 0; flex-shrink: 0; height: 1693px; width: 953px; align-self: center; background-color: rgb(31, 19, 8); margin-top: 26px; justify-content: flex-end;">
-                <engine:ScrollView horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="Hidden" name="ScrollView" style="flex-grow: 0; width: 100%; height: 1554px; padding-top: 29px;">
-                    <engine:VisualElement name="MiddlePanel" style="flex-grow: 0; flex-shrink: 0; height: 77px; justify-content: flex-start; flex-direction: row; align-items: center; margin-left: 19px; margin-bottom: 26px;">
-                        <engine:Label text="Level" style="font-size: 38px; width: 114px; color: rgb(255, 255, 255);" />
-                        <engine:VisualElement name="VisualElement" style="flex-grow: 0; flex-shrink: 0; margin-right: 0; margin-left: 0; width: 406px; align-items: center; justify-content: center;">
-                            <engine:Label text="주인공" style="-unity-text-align: middle-center; color: rgb(255, 255, 255); font-size: 80px;" />
+    <engine:VisualElement picking-mode="Ignore" name="SkillAcquireUI" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); justify-content: center; align-items: center; -unity-font-definition: url(&quot;project://database/Assets/05.Font/Maplestory%20Light.ttf?fileID=12800000&amp;guid=b7853b5ad26567e41a3c4210e64c5419&amp;type=3#Maplestory Light&quot;); -unity-text-outline-color: rgb(0, 0, 0); -unity-text-outline-width: 1px; letter-spacing: 9px; top: -87px;">
+        <engine:VisualElement name="MainPanel_0" style="flex-grow: 0; width: 1010px; height: 1739px; flex-shrink: 0; position: absolute; justify-content: center; align-self: center; align-items: center;">
+            <engine:VisualElement name="MainPanel_1" style="flex-grow: 0; width: 911px; height: 1638px; flex-shrink: 0;">
+                <engine:VisualElement name="TitlePanel" style="flex-grow: 0; flex-shrink: 0; height: 126px; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/TitleBar.png?fileID=2800000&amp;guid=a331d5e1dd3208d4ab0085903c241b8a&amp;type=3#TitleBar&quot;); visibility: visible;">
+                    <engine:Label text="스킬 배우기" name="TitleLabel" style="width: 100%; height: 100%; -unity-text-align: middle-left; font-size: 58px; color: rgb(255, 255, 255); padding-top: 0; padding-right: 0; padding-bottom: 31px; padding-left: 24px; -unity-font-style: normal; -unity-font-definition: url(&quot;project://database/Assets/05.Font/Maplestory%20Bold.ttf?fileID=12800000&amp;guid=cb734c07d35dbf549a5a6fce9ebf42b1&amp;type=3#Maplestory Bold&quot;);" />
+                </engine:VisualElement>
+                <engine:VisualElement name="ScrollViewPanel" style="flex-grow: 1; flex-shrink: 1; height: 100%; width: 100%; align-self: center; background-color: rgb(132, 92, 47); justify-content: flex-end;">
+                    <engine:ScrollView horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="Hidden" name="ScrollView" style="flex-grow: 0; width: 100%; height: 100%; padding-top: 28px;">
+                        <engine:VisualElement name="MiddlePanel" style="flex-grow: 0; flex-shrink: 0; justify-content: flex-start; flex-direction: row; align-items: center; margin-left: 19px; margin-bottom: 9px; margin-top: -9px;">
+                            <engine:Label text="Level" style="font-size: 38px; width: 148px; color: rgb(255, 255, 255); padding-left: 12px;" />
+                            <engine:VisualElement name="VisualElement" style="flex-grow: 0; flex-shrink: 0; margin-right: 0; margin-left: 0; width: 328px; align-items: center; justify-content: center;">
+                                <engine:Label text="주인공" style="-unity-text-align: middle-center; color: rgb(255, 255, 255); font-size: 60px;" />
+                            </engine:VisualElement>
+                            <engine:VisualElement style="flex-grow: 0; flex-shrink: 0; margin-right: 0; margin-left: 0; width: 389px; align-items: center;">
+                                <engine:Label text="동료" enable-rich-text="true" style="-unity-text-align: middle-center; color: rgb(255, 255, 255); font-size: 60px;" />
+                            </engine:VisualElement>
                         </engine:VisualElement>
-                        <engine:VisualElement style="flex-grow: 0; flex-shrink: 0; margin-right: 0; margin-left: 0; width: 389px; align-items: center;">
-                            <engine:Label text="동료" enable-rich-text="true" style="-unity-text-align: middle-center; color: rgb(255, 255, 255); font-size: 80px;" />
+                        <engine:VisualElement name="SlotParentPanel" style="flex-grow: 1;">
+                            <engine:Instance template="SkillAcquireSlot" name="Slot_0" />
+                            <engine:Instance template="SkillAcquireSlot" name="Slot_1" />
+                            <engine:Instance template="SkillAcquireSlot" name="Slot_2" />
+                            <engine:Instance template="SkillAcquireSlot" name="Slot_3" />
+                            <engine:Instance template="SkillAcquireSlot" name="Slot_4" />
+                            <engine:Instance template="SkillAcquireSlot" name="Slot_5" />
+                            <engine:Instance template="SkillAcquireSlot" name="Slot_6" />
+                            <engine:Instance template="SkillAcquireSlot" name="Slot_7" />
+                            <engine:Instance template="SkillAcquireSlot" name="Slot_8" />
+                            <engine:Instance template="SkillAcquireSlot" name="Slot_9" />
+                            <engine:Instance template="SkillAcquireSlot" name="Slot_10" />
+                            <engine:Instance template="SkillAcquireSlot" name="Slot_11" />
+                            <engine:Instance template="SkillAcquireSlot" name="Slot_12" />
+                            <engine:Instance template="SkillAcquireSlot" name="Slot_13" />
+                            <engine:Instance template="SkillAcquireSlot" name="Slot_14" />
+                            <engine:Instance template="SkillAcquireSlot" name="Slot_15" />
+                            <engine:Instance template="SkillAcquireSlot" name="Slot_16" />
+                            <engine:Instance template="SkillAcquireSlot" name="Slot_17" />
+                            <engine:Instance template="SkillAcquireSlot" name="Slot_18" />
+                            <engine:Instance template="SkillAcquireSlot" name="Slot_19" />
+                            <engine:Instance template="SkillAcquireSlot" name="Slot_20" />
+                            <engine:Instance template="SkillAcquireSlot" name="Slot_21" />
+                            <engine:Instance template="SkillAcquireSlot" name="Slot_22" />
+                            <engine:Instance template="SkillAcquireSlot" name="Slot_23" />
                         </engine:VisualElement>
-                    </engine:VisualElement>
-                    <engine:VisualElement name="SlotParentPanel" style="flex-grow: 1; padding-bottom: 100px;">
-                        <engine:Instance template="SkillAcquireSlot" name="Slot_0" style="width: 961px;" />
-                        <engine:Instance template="SkillAcquireSlot" name="Slot_1" />
-                        <engine:Instance template="SkillAcquireSlot" name="Slot_2" />
-                        <engine:Instance template="SkillAcquireSlot" name="Slot_3" />
-                        <engine:Instance template="SkillAcquireSlot" name="Slot_4" />
-                        <engine:Instance template="SkillAcquireSlot" name="Slot_5" />
-                        <engine:Instance template="SkillAcquireSlot" name="Slot_6" />
-                        <engine:Instance template="SkillAcquireSlot" name="Slot_7" />
-                        <engine:Instance template="SkillAcquireSlot" name="Slot_8" />
-                        <engine:Instance template="SkillAcquireSlot" name="Slot_9" />
-                        <engine:Instance template="SkillAcquireSlot" name="Slot_10" />
-                        <engine:Instance template="SkillAcquireSlot" name="Slot_11" />
-                        <engine:Instance template="SkillAcquireSlot" name="Slot_12" />
-                        <engine:Instance template="SkillAcquireSlot" name="Slot_13" />
-                        <engine:Instance template="SkillAcquireSlot" name="Slot_14" />
-                        <engine:Instance template="SkillAcquireSlot" name="Slot_15" />
-                        <engine:Instance template="SkillAcquireSlot" name="Slot_16" />
-                        <engine:Instance template="SkillAcquireSlot" name="Slot_17" />
-                        <engine:Instance template="SkillAcquireSlot" name="Slot_18" />
-                        <engine:Instance template="SkillAcquireSlot" name="Slot_19" />
-                        <engine:Instance template="SkillAcquireSlot" name="Slot_20" />
-                        <engine:Instance template="SkillAcquireSlot" name="Slot_21" />
-                        <engine:Instance template="SkillAcquireSlot" name="Slot_22" />
-                        <engine:Instance template="SkillAcquireSlot" name="Slot_23" />
-                    </engine:VisualElement>
-                </engine:ScrollView>
-                <engine:VisualElement name="BottomPadding" style="flex-grow: 1; width: 100%; margin-top: 27px; background-color: rgba(0, 0, 0, 0);" />
+                    </engine:ScrollView>
+                    <engine:VisualElement name="BottomPadding" style="flex-grow: 1; width: 100%; margin-top: 27px; background-color: rgba(0, 0, 0, 0);" />
+                </engine:VisualElement>
+                <engine:Instance template="ExitButton" picking-mode="Ignore" style="align-self: center; position: absolute; bottom: -208px;" />
             </engine:VisualElement>
-            <engine:Instance template="ExitButton" picking-mode="Ignore" style="top: 86px; align-self: center;" />
+            <engine:VisualElement name="Frame" picking-mode="Ignore" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/WindowStroke.png?fileID=21300000&amp;guid=8a7a753f989769c4ebd7f236420af813&amp;type=3#WindowStroke&quot;); width: 100%; height: 100%; position: absolute; display: flex;" />
         </engine:VisualElement>
     </engine:VisualElement>
 </engine:UXML>

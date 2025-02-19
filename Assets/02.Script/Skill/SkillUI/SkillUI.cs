@@ -13,6 +13,7 @@ public class SkillUI : MonoBehaviour
     private Button _playerSelectButton;
     private Button _companionSelectButton;
     [SerializeField] SkillAcquireUI skillAcquireUI;
+    private NoticeDot _acquireNoticeDot;
     //ButtonColor
     private readonly Color inactiveColor =  new (0.7f, 0.7f, 0.7f);
     private readonly Color activeColor = new(1f, 1f, 1f);
@@ -29,6 +30,8 @@ public class SkillUI : MonoBehaviour
         skillAcquireUI.gameObject.SetActive(true);
         PlayerBroker.OnSkillLevelSet += OnSkillLevelChange;
         PlayerBroker.OnFragmentSet += OnFragmentSet;
+        _acquireNoticeDot =  new NoticeDot(_acquisitionButton, this);
+        _acquireNoticeDot.StartNotice();
     }
 
     private void OnFragmentSet(Rarity rarity, int num)
@@ -121,7 +124,10 @@ public class SkillUI : MonoBehaviour
     private void HandleUIChange(int uiType)
     {
         if (uiType == 2)
+        {
             root.style.display = DisplayStyle.Flex;
+            _acquireNoticeDot.SetParentToRoot();
+        }
         else
             root.style.display = DisplayStyle.None;
     }

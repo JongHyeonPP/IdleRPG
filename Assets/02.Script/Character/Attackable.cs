@@ -48,7 +48,7 @@ public abstract class Attackable : MonoBehaviour
                 if (this is PlayerController)
                     ProgressCoolAttack();
             }
-            Debug.Log(currentSkill.skillData.name);
+            //Debug.Log(currentSkill.skillData.name);
             SkillData skillData = currentSkill.skillData;
             if (skillData.isAnim)
             {
@@ -71,9 +71,12 @@ public abstract class Attackable : MonoBehaviour
 
     private void AnimBehavior(EquipedSkill currentSkill, SkillData skillData)
     {
+        if (this is PlayerController)
+            Debug.Log("Log");
         if (currentSkill == _defaultAttack)
         {
-            anim.SetFloat("AttackState", 0f);
+            if (this is PlayerController)
+                anim.SetFloat("AttackState", 0f);
             anim.SetTrigger("Attack");
         }
         else
@@ -147,7 +150,8 @@ public abstract class Attackable : MonoBehaviour
                 hp = hp - calcedValue;
                 if (hp < 0)
                     hp = 0;
-                anim.SetTrigger("Hit");
+                if (this is EnemyController)
+                    anim.SetTrigger("Hit");
                 break;
             case SkillType.Heal:
                 break;

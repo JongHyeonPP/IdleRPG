@@ -73,7 +73,6 @@ public class BackgroundPiece : MonoBehaviour, IMoveByPlayer
         {
             currentBackground.SetActive(false);
         }
-
         // 새로운 배경 활성화
         if (backgroundDict.TryGetValue(newBackground, out GameObject newBackgroundObject) && newBackgroundObject != null)
         {

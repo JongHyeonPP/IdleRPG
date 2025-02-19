@@ -6,28 +6,40 @@ public class StageSelectController : LVItemController
     //가져온 아이템의 ui 구조를 설정한다.
     public override void BindItem(VisualElement element, int index)
     {
+        GameData _gameData = StartBroker.GetGameData();
         IListViewItem item = draggableLV.items[index];
         StageInfo stageInfo = item as StageInfo;
         int stageNum = stageInfo.stageNum;
         //VisualElement 가져오기
+        VisualElement bottomImage = element.Q<VisualElement>("BottomImage");
         Label stageLabel = element.Q<Label>("StageLabel");
         Label titleLabel = element.Q<Label>("TitleLabel");
         Label infoLabel = element.Q<Label>("InfoLabel");
         VisualElement lockGroup = element.Q<VisualElement>("LockGroup");
+        VisualElement selectBorder = element.Q<VisualElement>("SelectBorder");
         Button moveButton = element.Q<Button>("MoveButton");
         //VisualElement 설정
+        element.style.marginBottom = 40;
         titleLabel.text = stageInfo.stageName;
-        if (StartBroker.GetGameData().maxStageNum >= stageNum)//오픈된 스테이지라면
+        if (_gameData.maxStageNum >= stageNum)//오픈된 스테이지라면
         {
-            stageLabel.style.display = infoLabel.style.display = moveButton.style.display = DisplayStyle.Flex;
+            stageLabel.style.display =bottomImage.style.display =infoLabel.style.display = moveButton.style.display = DisplayStyle.Flex;
             lockGroup.style.display = DisplayStyle.None;
             stageLabel.text = $"STAGE {stageInfo.stageNum}";
             infoLabel.text = stageInfo.GetDropInfo();
         }
         else//닫힌 스테이지라면
         {
-            stageLabel.style.display = infoLabel.style.display = moveButton.style.display = DisplayStyle.None;
+            stageLabel.style.display =bottomImage.style.display =infoLabel.style.display = moveButton.style.display = DisplayStyle.None;
             lockGroup.style.display = DisplayStyle.Flex;
+        }
+        if (_gameData.currentStageNum == stageNum)
+        {
+            selectBorder.style.display = DisplayStyle.Flex;
+        }
+        else
+        {
+            selectBorder.style.display = DisplayStyle.None;
         }
         // 기존 이벤트 제거
         moveButton.UnregisterCallback<ClickEvent>(OnMoveButtonClick);

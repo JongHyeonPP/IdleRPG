@@ -160,6 +160,7 @@ public class PlayerController : Attackable
     }
     protected override void OnDead()
     {
+        anim.ResetTrigger("Attack");
         anim.SetTrigger("Die");
         PlayerBroker.OnPlayerDead();
         StopCoroutine(attackCoroutine);

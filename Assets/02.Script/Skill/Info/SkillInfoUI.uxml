@@ -1,59 +1,77 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <engine:VisualElement name="SkillInfoUI" picking-mode="Ignore" style="flex-grow: 1; justify-content: center; align-items: center;">
-        <engine:VisualElement name="Vertical" style="flex-grow: 0; height: 840px; width: 992px; background-color: rgb(96, 72, 50);">
-            <engine:VisualElement name="Upper" style="flex-grow: 0.3; padding-top: 60px; padding-left: 60px; flex-direction: row;">
-                <engine:VisualElement name="SkillIconArea" style="flex-grow: 0; flex-shrink: 0; width: 200px; height: 200px; background-image: none;">
-                    <engine:VisualElement name="SkillIcon" style="flex-grow: 0; flex-shrink: 0; width: 200px; height: 200px; background-image: url(&quot;project://database/Assets/Asset/Skill_Icon_Pack/red/red_01.PNG?fileID=2800000&amp;guid=275a5bfa4f581a5459d5535d663454ef&amp;type=3#red_01&quot;); justify-content: flex-end;">
-                        <engine:Label text="Lv.1" name="LevelLabel" style="color: rgb(255, 255, 255); font-size: 40px; margin-left: 14px;" />
+    <Style src="project://database/Assets/02.Script/Skill/Info/SkillInfoUI.uss?fileID=7433441132597879392&amp;guid=3f65db093b0b9ba4289fb9043e9f6615&amp;type=3#SkillInfoUI" />
+    <engine:VisualElement name="SkillInfoUI" picking-mode="Ignore" style="flex-grow: 1; justify-content: center; align-items: center; -unity-font-definition: url(&quot;project://database/Assets/05.Font/Maplestory%20Light.ttf?fileID=12800000&amp;guid=b7853b5ad26567e41a3c4210e64c5419&amp;type=3#Maplestory Light&quot;); -unity-text-outline-width: 0.5px; -unity-text-outline-color: rgb(0, 0, 0); letter-spacing: 5px;">
+        <engine:VisualElement name="MainPanel" style="flex-grow: 0; height: 828px; width: 1008px; align-items: center; justify-content: center;">
+            <engine:VisualElement name="Vertical" style="flex-grow: 0; background-color: rgb(132, 92, 47); width: 912px; height: 735px;">
+                <engine:VisualElement name="Upper" style="flex-grow: 0; padding-top: 21px; padding-left: 41px; flex-direction: row; height: 271px;">
+                    <engine:VisualElement name="SkillIconArea" style="flex-grow: 0; width: 200px; height: 200px;">
+                        <engine:VisualElement name="SkillIcon" style="flex-grow: 0; flex-shrink: 0; width: 200px; height: 200px; background-image: url(&quot;project://database/Assets/Asset/Skill_Icon_Pack/red/red_01.PNG?fileID=2800000&amp;guid=275a5bfa4f581a5459d5535d663454ef&amp;type=3#red_01&quot;); justify-content: flex-end; background-size: 90% 90%;">
+                            <engine:Label text="Lv.1" name="LevelLabel" style="color: rgb(255, 255, 255); font-size: 40px; margin-left: 19px; margin-bottom: 8px;" />
+                        </engine:VisualElement>
+                        <engine:ProgressBar value="22" title="5/2" name="LevelProgressBar" style="padding-top: 5px; font-size: 27px; letter-spacing: 28px;" />
+                        <engine:VisualElement name="IconFrame" style="flex-grow: 0; flex-shrink: 0; width: 200px; height: 200px; background-image: url(&quot;project://database/Assets/Asset/Wooden_UI/Wooden_UI_png/frame_s_01.png?fileID=2800000&amp;guid=cca143f374ac48f44b7aa0198b0df466&amp;type=3#frame_s_01&quot;); position: absolute;" />
                     </engine:VisualElement>
-                    <engine:ProgressBar value="22" title="5/2" name="LevelProgressBar" style="padding-top: 13px;" />
-                </engine:VisualElement>
-                <engine:VisualElement name="SkillInfoArea" style="flex-grow: 1; margin-left: 38px;">
-                    <engine:VisualElement style="flex-grow: 0; flex-shrink: 0; flex-direction: row;">
-                        <engine:Label text="[일반]" name="RarityLabel" style="font-size: 43px; color: rgb(255, 255, 255);" />
-                        <engine:Label text="불꽃 베기" name="TitleLabel" style="font-size: 43px; color: rgb(255, 255, 255);" />
-                    </engine:VisualElement>
-                    <engine:Label text="검신에 불꽃을 감아 적들을 불태운다" name="SimpleLabel" style="font-size: 33px; color: rgb(255, 255, 255);" />
-                </engine:VisualElement>
-            </engine:VisualElement>
-            <engine:VisualElement name="Middle" style="flex-grow: 1; padding-left: 0; padding-right: 0; background-color: rgba(0, 0, 0, 0); margin-right: 40px; margin-left: 40px; height: 101px;">
-                <engine:VisualElement name="ComplexArea" style="flex-grow: 0; padding-left: 20px; padding-top: 20px; background-color: rgba(0, 0, 0, 0.31); height: 226px;">
-                    <engine:Label text="범위 3 이내의 적 모두에게&#10; 공격력의 400%로 1회 공격" name="ComplexLabel" style="color: rgb(255, 255, 255); font-size: 41px;" />
-                </engine:VisualElement>
-                <engine:VisualElement name="VisualElement" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); margin-right: 0; flex-direction: row; font-size: 34px; padding-top: 29px; justify-content: center;">
-                    <engine:VisualElement name="CoolArea" style="flex-grow: 1; position: relative; width: 440px; background-color: rgba(0, 0, 0, 0.31); flex-direction: row; color: rgb(255, 255, 255); height: 60px;">
-                        <engine:Label text="필요공격수" name="CoolTypeLabel" style="flex-grow: 1; padding-left: 49px;" />
-                        <engine:Label text="12" name="CoolNumLabel" style="flex-grow: 0; margin-right: 70px;" />
-                    </engine:VisualElement>
-                    <engine:VisualElement name="MpArea" style="flex-grow: 1; position: relative; right: -11px; width: 440px; background-color: rgba(0, 0, 0, 0.31); flex-direction: row; color: rgb(255, 255, 255); height: 60px;">
-                        <engine:Label text="MP 소모" name="Label" style="flex-grow: 1; padding-left: 49px;" />
-                        <engine:Label text="12" name="MpLabel" style="flex-grow: 0; margin-right: 70px;" />
+                    <engine:VisualElement name="SkillInfoArea" style="flex-grow: 1; margin-left: 38px;">
+                        <engine:VisualElement name="VisualElement" style="flex-grow: 0; flex-shrink: 0; flex-direction: row;">
+                            <engine:Label text="[일반]" name="RarityLabel" style="font-size: 43px; color: rgb(255, 255, 255);" />
+                            <engine:Label text="불꽃 베기" name="TitleLabel" style="font-size: 43px; color: rgb(255, 255, 255);" />
+                        </engine:VisualElement>
+                        <engine:Label text="검신에 불꽃을 감아 적들을 불태운다" name="SimpleLabel" style="font-size: 33px; color: rgb(195, 195, 195);" />
                     </engine:VisualElement>
                 </engine:VisualElement>
-            </engine:VisualElement>
-            <engine:VisualElement name="Bottom" picking-mode="Ignore" style="flex-grow: 0; flex-direction: row; height: 142px; color: rgb(255, 255, 255); font-size: 32px; visibility: visible; display: flex; justify-content: center;">
-                <engine:VisualElement name="OwnPanel" picking-mode="Ignore" style="flex-grow: 1; width: 892px; height: 127px; flex-direction: row; position: absolute; top: -23px; display: flex;">
-                    <engine:VisualElement name="UpgradePanel" style="flex-grow: 1; width: 80px;">
-                        <engine:Button name="UpgradeButton" style="flex-grow: 1; margin-right: 43px; width: 100%; background-color: rgb(238, 161, 0); align-items: center; position: absolute; display: none;">
-                            <engine:Label text="강화" name="UpgradeLabel" style="margin-top: -8px; font-size: 40px; height: 53px;" />
-                            <engine:VisualElement name="FragmentPanel" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0.31); width: 298px; justify-content: center; height: 55px; flex-direction: row; align-items: center; flex-shrink: 0;">
-                                <engine:VisualElement name="FragmentIcon" style="flex-grow: 0; width: 40px; height: 40px; background-image: none; background-color: rgb(0, 0, 0); position: relative; flex-shrink: 0; margin-left: -18px;" />
-                                <engine:Label text="15" name="FragmentLabel" style="background-size: 70% 100%; background-color: rgba(0, 0, 0, 0); left: 15px; font-size: 43px;" />
+                <engine:VisualElement name="Middle" style="flex-grow: 0; padding-left: 0; padding-right: 0; background-color: rgba(0, 0, 0, 0); margin-right: 40px; margin-left: 40px; align-items: center;">
+                    <engine:VisualElement name="ComplexArea" style="flex-grow: 0; padding-left: 20px; padding-top: 20px; background-color: rgba(0, 0, 0, 0.31); height: 216px; border-top-left-radius: 27px; border-top-right-radius: 27px; border-bottom-right-radius: 27px; border-bottom-left-radius: 27px; width: 876px;">
+                        <engine:Label text="범위 3 이내의 적 모두에게&#10; 공격력의 400%로 1회 공격" name="ComplexLabel" style="color: rgb(255, 255, 255); font-size: 41px;" />
+                    </engine:VisualElement>
+                    <engine:VisualElement name="VisualElement" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; font-size: 34px; padding-top: 0; justify-content: center; margin-top: 20px; height: 61px; width: 105%;">
+                        <engine:VisualElement name="CoolArea" style="flex-grow: 1; position: relative; background-color: rgba(0, 0, 0, 0.31); flex-direction: row; color: rgb(255, 255, 255); border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; height: 100%; flex-shrink: 0; width: 300px; padding-left: 30px; padding-right: 30px;">
+                            <engine:Label text="필요공격수" name="CoolTypeLabel" style="flex-grow: 1; -unity-text-align: middle-left; color: rgb(195, 195, 195);" />
+                            <engine:Label text="12" name="CoolNumLabel" style="flex-grow: 0; -unity-text-align: middle-left;" />
+                        </engine:VisualElement>
+                        <engine:VisualElement name="Padding" style="flex-grow: 0; width: 34px; flex-shrink: 0;" />
+                        <engine:VisualElement name="MpArea" style="flex-grow: 1; position: relative; background-color: rgba(0, 0, 0, 0.31); flex-direction: row; color: rgb(255, 255, 255); border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; flex-shrink: 0; width: 300px; padding-right: 30px; padding-left: 30px;">
+                            <engine:Label text="MP 소모" name="Label" style="flex-grow: 1; -unity-text-align: middle-left; color: rgb(195, 195, 195);" />
+                            <engine:Label text="12" name="MpLabel" style="flex-grow: 0; -unity-text-align: middle-left;" />
+                        </engine:VisualElement>
+                    </engine:VisualElement>
+                </engine:VisualElement>
+                <engine:VisualElement name="Bottom" picking-mode="Ignore" style="flex-grow: 0; flex-direction: row; height: 122px; color: rgb(255, 255, 255); font-size: 40px; visibility: visible; display: flex; justify-content: center; margin-top: 15px; -unity-text-outline-width: 1px;">
+                    <engine:VisualElement name="OwnPanel" picking-mode="Ignore" style="flex-grow: 1; width: 100%; height: 100%; flex-direction: row; position: absolute; display: none; align-items: center; justify-content: center;">
+                        <engine:VisualElement name="UpgradePanel" style="height: 100%; flex-grow: 0; width: 400px; margin-right: 20px;">
+                            <engine:Button name="UpgradeButton" style="flex-grow: 1; margin-right: 43px; width: 100%; align-items: center; position: absolute; display: flex; -unity-background-image-tint-color: rgb(255, 181, 0); background-color: rgba(188, 188, 188, 0); background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel1.png?fileID=21300000&amp;guid=9eba597d30b7a114ea7924c3748871ed&amp;type=3#UniversalPanel1&quot;); border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; height: 100%; justify-content: center;">
+                                <engine:Label text="강화" name="UpgradeLabel" style="margin-top: -8px; height: 53px;" />
+                                <engine:VisualElement name="FragmentPanel" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0.38); width: 298px; justify-content: center; height: 55px; flex-direction: row; align-items: center; flex-shrink: 0; border-top-left-radius: 6px; border-top-right-radius: 6px; border-bottom-right-radius: 6px; border-bottom-left-radius: 6px;">
+                                    <engine:VisualElement name="FragmentIcon" style="flex-grow: 0; width: 40px; height: 40px; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Icons/32/GemLong01.png?fileID=2800000&amp;guid=763282434841e654fa86476b044d6b64&amp;type=3#GemLong01&quot;); position: relative; flex-shrink: 0; margin-left: -18px;" />
+                                    <engine:Label text="15" name="FragmentLabel" style="background-size: 70% 100%; background-color: rgba(0, 0, 0, 0); left: 15px;" />
+                                </engine:VisualElement>
+                                <engine:VisualElement name="Detail" style="flex-grow: 1; position: absolute; width: 100%; height: 100%;">
+                                    <engine:VisualElement name="DetailTop" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel1TBevel.png?fileID=21300000&amp;guid=ee217845de63b8e458ffe3173c7efb06&amp;type=3#UniversalPanel1TBevel&quot;); -unity-background-image-tint-color: rgb(255, 206, 85); position: absolute; width: 100%; height: 100%;" />
+                                    <engine:VisualElement name="DetailBottom" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel1BBevel.png?fileID=21300000&amp;guid=adfed6a0905a8874e9e0250e35efecd7&amp;type=3#UniversalPanel1BBevel&quot;); -unity-background-image-tint-color: rgb(229, 162, 0); width: 100%; height: 100%; position: absolute;" />
+                                </engine:VisualElement>
+                            </engine:Button>
+                            <engine:Label text="최대 레벨" name="MaxLevelLabel" style="margin-top: 0; height: 100%; position: absolute; width: 100%; -unity-text-align: middle-center; display: none;" />
+                        </engine:VisualElement>
+                        <engine:Button name="EquipButton" style="flex-grow: 0; margin-left: 20px; justify-content: center; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel1.png?fileID=21300000&amp;guid=9eba597d30b7a114ea7924c3748871ed&amp;type=3#UniversalPanel1&quot;); background-color: rgba(188, 188, 188, 0); -unity-background-image-tint-color: rgb(255, 181, 0); border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; height: 100%; width: 400px;">
+                            <engine:Label text="슬롯 장착" name="EquipLabel" />
+                            <engine:VisualElement name="Detail" style="flex-grow: 1; position: absolute; width: 100%; height: 100%;">
+                                <engine:VisualElement name="DetailTop" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel1TBevel.png?fileID=21300000&amp;guid=ee217845de63b8e458ffe3173c7efb06&amp;type=3#UniversalPanel1TBevel&quot;); -unity-background-image-tint-color: rgb(255, 206, 85); position: absolute; width: 100%; height: 100%;" />
+                                <engine:VisualElement name="DetailBottom" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel1BBevel.png?fileID=21300000&amp;guid=adfed6a0905a8874e9e0250e35efecd7&amp;type=3#UniversalPanel1BBevel&quot;); -unity-background-image-tint-color: rgb(229, 162, 0); width: 100%; height: 100%; position: absolute;" />
                             </engine:VisualElement>
                         </engine:Button>
-                        <engine:Label text="최대 레벨" name="MaxLevelLabel" style="margin-top: 0; font-size: 40px; height: 100%; position: absolute; width: 100%; -unity-text-align: middle-center;" />
                     </engine:VisualElement>
-                    <engine:Button name="EquipButton" style="flex-grow: 1; margin-left: 43px; width: 80px; background-color: rgb(238, 161, 0); justify-content: center;">
-                        <engine:Label text="슬롯 장착" name="EquipLabel" style="font-size: 40px;" />
-                    </engine:Button>
-                </engine:VisualElement>
-                <engine:VisualElement name="DisownPanel" picking-mode="Ignore" style="flex-grow: 1; width: 892px; height: 127px; flex-direction: row; position: absolute; top: -23px; display: none;">
-                    <engine:Label text="미습득 스킬" style="width: 80px; flex-grow: 1; -unity-text-align: middle-center;" />
-                    <engine:Button name="AcquireButton" style="flex-grow: 1; margin-left: 43px; width: 80px; background-color: rgb(238, 161, 0); justify-content: center;">
-                        <engine:Label text="스킬습득 이동" name="AcquireLabel" picking-mode="Ignore" />
-                    </engine:Button>
+                    <engine:VisualElement name="DisownPanel" picking-mode="Ignore" style="flex-grow: 1; width: 100%; height: 100%; flex-direction: row; position: absolute; display: flex; justify-content: center;">
+                        <engine:Label text="미습득 스킬" style="width: 400px; flex-grow: 0; -unity-text-align: middle-center; margin-right: 20px;" />
+                        <engine:Button name="AcquireButton" style="flex-grow: 0; margin-left: 20px; width: 400px; justify-content: center; -unity-background-image-tint-color: rgb(255, 181, 0); background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel1.png?fileID=21300000&amp;guid=9eba597d30b7a114ea7924c3748871ed&amp;type=3#UniversalPanel1&quot;); padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; background-color: rgba(188, 188, 188, 0); border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0;">
+                            <engine:Label text="스킬습득 이동" name="AcquireLabel" picking-mode="Ignore" />
+                            <engine:VisualElement name="Detail" style="flex-grow: 1; position: absolute; width: 100%; height: 100%;">
+                                <engine:VisualElement name="DetailTop" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel1TBevel.png?fileID=21300000&amp;guid=ee217845de63b8e458ffe3173c7efb06&amp;type=3#UniversalPanel1TBevel&quot;); -unity-background-image-tint-color: rgb(255, 206, 85); position: absolute; width: 100%; height: 100%;" />
+                                <engine:VisualElement name="DetailBottom" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel1BBevel.png?fileID=21300000&amp;guid=adfed6a0905a8874e9e0250e35efecd7&amp;type=3#UniversalPanel1BBevel&quot;); -unity-background-image-tint-color: rgb(229, 162, 0); width: 100%; height: 100%; position: absolute;" />
+                            </engine:VisualElement>
+                        </engine:Button>
+                    </engine:VisualElement>
                 </engine:VisualElement>
             </engine:VisualElement>
+            <engine:VisualElement name="Frame" picking-mode="Ignore" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/WindowStroke.png?fileID=21300000&amp;guid=8a7a753f989769c4ebd7f236420af813&amp;type=3#WindowStroke&quot;);" />
         </engine:VisualElement>
     </engine:VisualElement>
 </engine:UXML>

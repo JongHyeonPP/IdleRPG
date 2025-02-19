@@ -65,36 +65,54 @@ public class SkillAcquireUI : MonoBehaviour
     private void SetSkillAcquireSlot(VisualElement slot, SkillAcquireInfo info)
     {
         Label levelLabel = slot.Q<Label>("LevelLabel");
-        VisualElement skillIcon_Player = slot.Q<VisualElement>("SkillIcon_Player");
-        VisualElement skillIcon_Companion = slot.Q<VisualElement>("SkillIcon_Companion");
-        VisualElement unlockPanel = slot.Q<VisualElement>("UnlockPanel");
-        unlockPanelDict.Add(info.acquireLevel, unlockPanel);
+        VisualElement skillIcon_Player = slot.Q<VisualElement>("SkillPanel_Player_1");
+        VisualElement skillIcon_Companion = slot.Q<VisualElement>("SkillPanel_Companion_1");
+        VisualElement lockPanel = slot.Q<VisualElement>("LockPanel");
+        unlockPanelDict.Add(info.acquireLevel, lockPanel);
         if (_gameData.level >= info.acquireLevel)
         {
-            unlockPanel.style.display = DisplayStyle.None;
+            lockPanel.style.display = DisplayStyle.None;
         }
         else
         {
-            unlockPanel.style.display = DisplayStyle.Flex;
+            lockPanel.style.display = DisplayStyle.Flex;
         }
         SetEachSlot(skillIcon_Player, info.playerSkillData);
         SetEachSlot(skillIcon_Companion, info.companionSkillData);
         levelLabel.text = info.acquireLevel.ToString();
+        if (levelLabel.text.Length >= 3)
+        {
+            levelLabel.style.fontSize = 30;
+        }
+        else
+        {
+            levelLabel.style.fontSize = 40;
+        }
+
     }
-    private void SetEachSlot(VisualElement iconVe, SkillData skillData)
+    private void SetEachSlot(VisualElement iconPanel, SkillData skillData)
     {
         Dictionary<string, int> skillLevel = _gameData.skillLevel;
         if (skillData == null)
         {
-            iconVe.style.visibility = Visibility.Hidden;
+            iconPanel.style.visibility = Visibility.Hidden;
             return;
         }
         if (skillLevel.ContainsKey(skillData.uid) && skillLevel[skillData.uid] != 0)
         {
-            iconVe.style.visibility = Visibility.Hidden;
+            iconPanel.style.visibility = Visibility.Hidden;
             return;
         }
-        iconVe.style.backgroundImage = new(skillData.iconSprite);
+        VisualElement iconVe = iconPanel.Q<VisualElement>("SkillIcon");
+        if (skillData.iconSprite == null)
+        {
+            iconVe.style.backgroundImage =null;
+        }
+        else
+        {
+            iconVe.style.backgroundImage = new(skillData.iconSprite);
+        }
+        
         iconVe.RegisterCallback<ClickEvent>(evt => OnSlotClicked(skillData, iconVe));
     }
     public void ActiveUI()
