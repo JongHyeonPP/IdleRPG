@@ -17702,10 +17702,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: StageInfoManager
       objectReference: {fileID: 0}
-    - target: {fileID: 2964889136537277354, guid: b5df6a7374b157640b32356f1e4b6b67, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7810459626597755582, guid: b5df6a7374b157640b32356f1e4b6b67, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.549093
