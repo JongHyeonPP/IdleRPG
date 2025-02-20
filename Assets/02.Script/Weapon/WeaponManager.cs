@@ -58,4 +58,46 @@ public class WeaponManager : MonoBehaviour
         }
         weaponIcon.style.scale = new Vector2(xScale, yScale) * weaponData.TextureScale;
     }
+    private void ApplyReinforcement(WeaponData weaponData, int level)
+    {
+        float powerIncrease = 0f;
+        float critDamageIncrease = 0f;
+        float critIncrease = 0f;
+
+        switch (weaponData.WeaponRarity)
+        {
+            case Rarity.Common:
+                powerIncrease = 2f * level;
+                critDamageIncrease = 1f * level;
+                critIncrease = 0.5f * level;
+                break;
+            case Rarity.Uncommon:
+                powerIncrease = 3f * level;
+                critDamageIncrease = 1.5f * level;
+                critIncrease = 0.75f * level;
+                break;
+            case Rarity.Rare:
+                powerIncrease = 4f * level;
+                critDamageIncrease = 2f * level;
+                critIncrease = 1f * level;
+                break;
+            case Rarity.Unique:
+                powerIncrease = 5f * level;
+                critDamageIncrease = 2.5f * level;
+                critIncrease = 1.25f * level;
+                break;
+            case Rarity.Legendary:
+                powerIncrease = 7f * level;
+                critDamageIncrease = 3.5f * level;
+                critIncrease = 1.5f * level;
+                break;
+            case Rarity.Mythic:
+                powerIncrease = 10f * level;
+                critDamageIncrease = 5f * level;
+                critIncrease = 2f * level;
+                break;
+        }
+        weaponData.SetReinforcedStats(powerIncrease, critDamageIncrease, critIncrease);
+    }
+    
 }

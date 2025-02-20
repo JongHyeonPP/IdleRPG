@@ -16,7 +16,7 @@ public class TransitionManager : MonoBehaviour
     private void Start()
     {
         // SwitchToStoryMode(1);
-        BattleBroker.SwitchToStory?.Invoke(1);
+      //  BattleBroker.SwitchToStory?.Invoke(1);
     }
 
     public void SwitchToStoryMode(int index)

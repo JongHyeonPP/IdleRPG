@@ -67,6 +67,8 @@ public class BattleManager : MonoBehaviour
         BattleBroker.IsCanAttack += IsCanAttack;
         UIBroker.OnMenuUIChange += OnMenuUIChange;
         BattleBroker.OnStageChange(_gameData.currentStageNum);
+        BattleBroker.SwitchBattle += () => ControlBattle(true);
+        BattleBroker.SwitchToStory += (stageId) => ControlBattle(false);
     }
     private void OnMenuUIChange(int index)
     {
@@ -214,6 +216,7 @@ public class BattleManager : MonoBehaviour
             {
                 case 1:
                     Debug.Log("최초 접속");
+                    BattleBroker.SwitchToStory?.Invoke(1);
                     break;
                 case 21:
                     Debug.Log("두 번째 스토리");
