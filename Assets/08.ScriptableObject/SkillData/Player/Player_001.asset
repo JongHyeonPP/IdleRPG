@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillName: Player_001
   uid: Player_001
-  iconSprite: {fileID: 0}
+  iconSprite: {fileID: 21300000, guid: 6c52bbcff1f804ba1b9435a920cb9303, type: 3}
   simple: 
   complex: 
   rarity: 0
@@ -24,18 +24,21 @@ MonoBehaviour:
   coolAttack: 3
   requireMp: 15
   value:
-  - 1
-  - 1
-  - 1
-  - 1
-  - 1
-  - 1
-  - 1
-  - 1
-  - 1
-  - 1
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
   type: 1
   target: 1
   targetNum: 1
   preDelay: 0.2
   postDelay: 1
+  isAnim: 1
+  visualEffectPrefab: {fileID: 0}

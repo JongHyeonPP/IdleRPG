@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillName: Companion_201
   uid: Companion_201
-  iconSprite: {fileID: 0}
+  iconSprite: {fileID: 21300000, guid: 6c52bbcff1f804ba1b9435a920cb9303, type: 3}
   simple: 
   complex: 
   rarity: 2
@@ -24,16 +24,21 @@ MonoBehaviour:
   coolAttack: 0
   requireMp: 15
   value:
-  - 1
-  - 1
-  - 1
-  - 1
-  - 1
-  - 1
-  - 1
-  - 1
-  - 1
-  - 1
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
   type: 1
   target: 1
-  num: 1
+  targetNum: 1
+  preDelay: 0.2
+  postDelay: 0.2
+  isAnim: 1
+  visualEffectPrefab: {fileID: 0}

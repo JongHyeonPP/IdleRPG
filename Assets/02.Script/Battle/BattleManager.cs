@@ -12,8 +12,8 @@ public class BattleManager : MonoBehaviour
     [SerializeField] EnemyPool _ePool0;
     [SerializeField] EnemyPool _ePool1;
     [SerializeField] DropPool _dPool;
-    [SerializeField] HashSet<GoldDrop> activeGold = new();
-    [SerializeField] HashSet<ExpDrop> activeExp = new();
+    [SerializeField] HashSet<GoldDrop> _activeGold = new();
+    [SerializeField] HashSet<ExpDrop> _activeExp = new();
     [SerializeField] Transform _spawnSpot;//풀링된 오브젝트가 활성화되면서 나올 위치 정보
     [SerializeField] Transform _poolParent;//비활성화 돼 풀에 들어간 오브젝트가 들어갈 공간
     [Header("Etc")]
@@ -30,10 +30,10 @@ public class BattleManager : MonoBehaviour
     private int _enemyBundleNum = 10;//적이 위치할 수 있는 배열의 크기. 실제로 적이 몇 명 할당될지는 DetermineEnemyNum가 정의한다.
     private int _currentTargetIndex;//현재 마주보고 있는 캐릭터의 enemies에서의 인덱스
     private bool isBattleActive = false; // 전투 루프 활성화 여부
-    private StageInfo currentStageInfo;//현재 진행 중인 스테이지의 전투 정보... 적 종류, 개수, 스테이지 이름...
+    private StageInfo _currentStageInfo;//현재 진행 중인 스테이지의 전투 정보... 적 종류, 개수, 스테이지 이름...
     private BattleType battleType;//전투의 타입. Default, Boss, Die
-    [SerializeField] Camera expandCamera;//전투 메인 카메라
-    [SerializeField] Camera shrinkCamera;//전투 메인 카메라
+    [SerializeField] Camera _expandCamera;//전투 메인 카메라
+    [SerializeField] Camera _shrinkCamera;//전투 메인 카메라
     public Camera currentCamera;//전투 메인 카메라
     private void Awake()
     {
@@ -206,7 +206,7 @@ public class BattleManager : MonoBehaviour
     }
     private void OnStageChange(int stageNum)
     {
-        currentStageInfo = StageInfoManager.instance.GetStageInfo(stageNum);
+        _currentStageInfo = StageInfoManager.instance.GetStageInfo(stageNum);
         BattleBroker.OnStageEnter();
         if (stageNum > _gameData.maxStageNum)
         {
@@ -250,7 +250,7 @@ public class BattleManager : MonoBehaviour
 
     private void ChangeBackground()
     {
-        Background background = currentStageInfo.background;
+        Background background = _currentStageInfo.background;
         foreach (BackgroundPiece piece in _pieces)
         {
             piece.ChangeBackground(background);
@@ -261,24 +261,24 @@ public class BattleManager : MonoBehaviour
     {
         _ePool0.ClearPool();
         _ePool1.ClearPool();
-        if (currentStageInfo.enemy_0)
-            _ePool0.InitializePool(currentStageInfo.enemy_0, currentStageInfo.enemyNum);
-        if (currentStageInfo.enemy_1)
-            _ePool1.InitializePool(currentStageInfo.enemy_1, currentStageInfo.enemyNum);
+        if (_currentStageInfo.enemy_0)
+            _ePool0.InitializePool(_currentStageInfo.enemy_0, _currentStageInfo.enemyNum);
+        if (_currentStageInfo.enemy_1)
+            _ePool1.InitializePool(_currentStageInfo.enemy_1, _currentStageInfo.enemyNum);
     }
 
     private void InitBossPools()
     {
         _ePool0.ClearPool();
         _ePool1.ClearPool();
-        _ePool0.InitializePool(currentStageInfo.boss, 1);
+        _ePool0.InitializePool(_currentStageInfo.boss, 1);
     }
 
     private EnemyController[] MakeDefaultEnemies()
     {
         EnemyController[] result = new EnemyController[_enemyBundleNum];
         int currentNum = 0;
-        int enemyNum = currentStageInfo.enemyNum;
+        int enemyNum = _currentStageInfo.enemyNum;
         int index = 0;
 
         while (currentNum < enemyNum)
@@ -364,7 +364,7 @@ public class BattleManager : MonoBehaviour
         if (UtilityManager.CalculateProbability(0.5f))
         {
             var dropGold = _dPool.GetFromPool<GoldDrop>();
-            activeGold.Add(dropGold);
+            _activeGold.Add(dropGold);
             dropBase = dropGold;
             dropBase.transform.position = position + Vector3.up * 0.5f;
             dropBase.StartDropMove();
@@ -372,7 +372,7 @@ public class BattleManager : MonoBehaviour
         else
         {
             var dropExp = _dPool.GetFromPool<ExpDrop>();
-            activeExp.Add(dropExp);
+            _activeExp.Add(dropExp);
             dropBase = dropExp;
             dropBase.transform.position = position + Vector3.up * 0.2f;
             dropBase.StartDropMove();
@@ -380,17 +380,17 @@ public class BattleManager : MonoBehaviour
     }
     private void ClearActiveDrop()
     {
-        foreach (ExpDrop x in activeExp)
+        foreach (ExpDrop x in _activeExp)
         {
             _dPool.ReturnToPool(x);
         }
-        activeExp.Clear();
+        _activeExp.Clear();
 
-        foreach (GoldDrop x in activeGold)
+        foreach (GoldDrop x in _activeGold)
         {
             _dPool.ReturnToPool(x);
         }
-        activeGold.Clear();
+        _activeGold.Clear();
     }
 
     private void ClearActiveEnemy()
@@ -425,17 +425,17 @@ public class BattleManager : MonoBehaviour
     {
         if (isExpand)//넓은 공간을 보여줌
         {
-            expandCamera.gameObject.SetActive(true);
-            shrinkCamera.gameObject.SetActive(false);
-            currentCamera = expandCamera;
-            UIBroker.SetBarPosition?.Invoke(expandCamera);
+            _expandCamera.gameObject.SetActive(true);
+            _shrinkCamera.gameObject.SetActive(false);
+            currentCamera = _expandCamera;
+            UIBroker.SetBarPosition?.Invoke(_expandCamera);
         }
         else//적은 공간을 보여줌
         {
-            expandCamera.gameObject.SetActive(false);
-            shrinkCamera.gameObject.SetActive(true);
-            currentCamera = shrinkCamera;
-            UIBroker.SetBarPosition?.Invoke(shrinkCamera);
+            _expandCamera.gameObject.SetActive(false);
+            _shrinkCamera.gameObject.SetActive(true);
+            currentCamera = _shrinkCamera;
+            UIBroker.SetBarPosition?.Invoke(_shrinkCamera);
         }
         
     }

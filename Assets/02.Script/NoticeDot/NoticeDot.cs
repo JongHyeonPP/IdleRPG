@@ -52,6 +52,7 @@ public class NoticeDot
         _expand.transform.scale =_mainPanel.transform.scale = Vector3.one;
         _coroutineSet.Clear();
     }
+    //SetparentToRoot를 발동하면 원래 부모의 좌표를 따라가지 않아서 별도로 위치 이동시킬 때 호출하면 됨
     public void OnPositionChange(float xChange, float yChange)
     {
         // 현재 위치 가져오기
