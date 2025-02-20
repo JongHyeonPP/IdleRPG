@@ -1,7 +1,12 @@
 using UnityEngine;
 using EnumCollection;
+public interface IGachaItems
+{
+    Rarity ItemRarity { get; }
+}
+
 [CreateAssetMenu(fileName = "WeaponData", menuName = "Scriptable Objects/WeaponData")]
-public class WeaponData : ScriptableObject
+public class WeaponData : ScriptableObject, IGachaItems
 {
     [SerializeField] private WeaponType _weaponType;
     [SerializeField] private Rarity _weaponRarity;
@@ -31,4 +36,5 @@ public class WeaponData : ScriptableObject
         _critical += (int)critIncrease;
     }
 
+    public Rarity ItemRarity => WeaponRarity;
 }

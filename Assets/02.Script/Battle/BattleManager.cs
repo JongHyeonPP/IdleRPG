@@ -30,7 +30,7 @@ public class BattleManager : MonoBehaviour
     private int _enemyBundleNum = 10;//적이 위치할 수 있는 배열의 크기. 실제로 적이 몇 명 할당될지는 DetermineEnemyNum가 정의한다.
     private int _currentTargetIndex;//현재 마주보고 있는 캐릭터의 enemies에서의 인덱스
     private bool isBattleActive = false; // 전투 루프 활성화 여부
-    private StageInfo currentStageInfo;//현재 진행 중인 스테이지의 전투 정보... 적 종류, 개수, 스테이지 이름...
+    [SerializeField] private StageInfo currentStageInfo;//현재 진행 중인 스테이지의 전투 정보... 적 종류, 개수, 스테이지 이름...
     private BattleType battleType;//전투의 타입. Default, Boss, Die
     [SerializeField] Camera expandCamera;//전투 메인 카메라
     [SerializeField] Camera shrinkCamera;//전투 메인 카메라

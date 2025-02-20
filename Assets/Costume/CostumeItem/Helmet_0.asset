@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5649e372f42bd3740b2d096fb0b450af, type: 3}
-  m_Name: Hair_0
+  m_Name: Helmet_0
   m_EditorClassIdentifier: 
-  Name: "\uADC0\uC5EC\uC6C0\uD3ED\uBC1C\uC591\uAC08\uB798"
-  IconTexture: {fileID: 2800000, guid: e5b88e17b8b03471cac1ec6c79715e0f, type: 3}
-  IconColor: {r: 0, g: 0.6745098, b: 1, a: 1}
+  Name: "\uD1A0\uAE7D\uC774\uD5EC\uBA67"
+  IconTexture: {fileID: 2800000, guid: 19529fa7285b247809b427d68c11abb9, type: 3}
+  IconColor: {r: 1, g: 1, b: 1, a: 1}
   Parts:
-  - Part: 2
-    CostumeSprite: {fileID: 21300000, guid: e5b88e17b8b03471cac1ec6c79715e0f, type: 3}
-    CostumeColor: {r: 0, g: 0.67642593, b: 1, a: 1}
+  - Part: 3
+    CostumeSprite: {fileID: 21300000, guid: 19529fa7285b247809b427d68c11abb9, type: 3}
+    CostumeColor: {r: 1, g: 1, b: 1, a: 1}

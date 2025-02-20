@@ -19,7 +19,7 @@ public enum BodyPart
 
 public class CharacterRenderer : MonoBehaviour
 {
-    [Header("Character Parts (Manual Assignment)")]
+    [Header("Character Parts")]
     [SerializeField] private SpriteRenderer _headRenderer;
     [SerializeField] private SpriteRenderer _faceHairRenderer;
     [SerializeField] private SpriteRenderer _hairRenderer;
@@ -35,7 +35,6 @@ public class CharacterRenderer : MonoBehaviour
 
     private void Awake()
     {
-        // Dictionary를 수동으로 설정
         _partRenderers = new Dictionary<BodyPart, SpriteRenderer>
         {
             { BodyPart.Head, _headRenderer },
@@ -52,20 +51,21 @@ public class CharacterRenderer : MonoBehaviour
     }
 
     /// <summary>
-    /// 특정 부위에 스프라이트 적용
+    /// 특정 부위에 아이템 적용
     /// </summary>
-    public void ApplySprite(BodyPart part, Sprite sprite)
+    public void AppItem(BodyPart part, Sprite sprite, Color color)
     {
         if (_partRenderers.TryGetValue(part, out SpriteRenderer renderer) && renderer != null)
         {
             renderer.sprite = sprite;
+            renderer.color = color;
         }
     }
 
     /// <summary>
-    /// 특정 부위 스프라이트 초기화
+    /// 특정 부위 아이템 초기화
     /// </summary>
-    public void ResetSprite(BodyPart part)
+    public void ResetPartItem(BodyPart part)
     {
         if (_partRenderers.TryGetValue(part, out SpriteRenderer renderer) && renderer != null)
         {
@@ -74,9 +74,9 @@ public class CharacterRenderer : MonoBehaviour
     }
 
     /// <summary>
-    /// 모든 부위 스프라이트 초기화
+    /// 모든 부위 아이템 초기화
     /// </summary>
-    public void ResetAllSprites()
+    public void ResetAllItems()
     {
         foreach (var renderer in _partRenderers.Values)
         {

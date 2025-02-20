@@ -32,11 +32,17 @@ public class StoreManager : MonoBehaviour
     private Button _openPopupBtn;                                   // Popup 열기 버튼
 
     // System
-    private GachaSystem _gachaSystem;                               // 가차 시스템
+    // 제네릭 Gacha 시스템 (WeaponData가 IGachaItem을 구현한다고 가정)
+    private GachaSystem<WeaponData> _gachaSystem;
+    // 예시로 코스튬 관련 가차 시스템 (코스튬 데이터가 IGachaItem을 구현해야 함)
+    private GachaSystem<CostumeItem> __costumeGachaSystem;
 
     private bool _isPopupVisible = false;
     private const int STORE_ROW = 2;
     private const int STORE_COLUMN = 5;
+
+    //Data
+    private Dictionary<string, int> _weaponCount;
 
     private void Start() => InitStore();
 
@@ -49,7 +55,11 @@ public class StoreManager : MonoBehaviour
     {
         if (_storeUIDocument == null) return;
 
-        _gachaSystem = new GachaSystem(_weaponDatas);
+        // 제네릭 GachaSystem으로 변경 (타입 파라미터 추가)
+        _gachaSystem = new GachaSystem<WeaponData>(_weaponDatas);
+        // 만약 CostumeManager.instance.AllCostumeDatas가 CostumeData[] 타입이라면...
+        __costumeGachaSystem = new GachaSystem<CostumeItem>(CostumeManager.instance.AllCostumeDatas);
+
 
         var root = _storeUIDocument.rootVisualElement;
         _root = root; // 저장핑
@@ -108,15 +118,31 @@ public class StoreManager : MonoBehaviour
         ClearGrid();
 
         // 뽑기
-        List<WeaponData> drawnWeapons = _gachaSystem.DrawWeapons(count);
+        List<WeaponData> drawnWeapons = _gachaSystem.DrawItems(count);
 
         // 저장된 무기데이터들
         // 이거 가져다가 추가해서 쓰면 되는디
+
+        var gameData = StartBroker.GetGameData();
+        _weaponCount = gameData.weaponCount;
+        PlayerBroker.OnWeaponCountSet += OnWeaponCountSet;
+
         _weaponSaveDatas = drawnWeapons;
         
         //그리기
         UpdateWeaponGridUI(drawnWeapons);
         UpdateLog(drawnWeapons);
+    }
+
+    private void OnWeaponCountSet(object weaponDataObj, int count)
+    {
+        WeaponData weaponData = (WeaponData)weaponDataObj;
+        VisualElement slot = _slotDict[weaponData.UID];
+        ProgressBar countProgressBar = slot.Q<ProgressBar>("CountProgressBar");
+        int level = _weaponLevel[weaponData.UID];
+        int price = PriceManager.instance.GetRequireWeaponCount(weaponData.WeaponRarity, level);
+        countProgressBar.title = $"{count}/{price}";
+        countProgressBar.value = count / (float)price;
     }
 
     /// <summary>
@@ -219,9 +245,6 @@ public class StoreManager : MonoBehaviour
     /// <summary>
     /// 딜레이 준 애니메이션
     /// </summary>
-    /// <param name="slot"></param>
-    /// <param name="delay"></param>
-    /// <returns></returns>
     private IEnumerator AniSlotDelay(VisualElement slot, float delay)
     {
         // 텀을 먼저 대기
