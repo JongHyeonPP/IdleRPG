@@ -14,10 +14,12 @@ public class WeaponInfoUI : MonoBehaviour
     private WeaponData _currentWeapon;
     public VisualElement root { get; private set; }
     Dictionary<string, int> _weaponCount;
+    Dictionary<string, int> _weaponLevel;    
     private void Awake()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
         _weaponCount = StartBroker.GetGameData().weaponCount;
+        _weaponLevel = StartBroker.GetGameData().weaponLevel;
         root.style.display = DisplayStyle.None;
         InitWeaponInfo();
     }
@@ -94,16 +96,33 @@ public class WeaponInfoUI : MonoBehaviour
     private void Reinforce(string weaponID)
     {
         int weaponCount = GetWeaponCount(weaponID);
-        if (weaponCount <= 0)
+        int weaponLevel= GetWeaponLevel(weaponID);
+        if (weaponCount <= 0|| weaponCount < weaponLevel + 1)
         {
-
+            //강화 재료가 없습니다
             return;
         }
-        _weaponCount[weaponID]--;
+        else
+        {
+            weaponCount -= weaponLevel + 1;
+
+            weaponLevel = ++weaponLevel;
+
+            _weaponCount[weaponID] = weaponCount;
+            _weaponLevel[weaponID] = weaponLevel;
+            PlayerBroker.OnWeaponCountSet(weaponID, weaponCount);
+            PlayerBroker.OnWeaponLevelSet(weaponID, weaponLevel);
+            StartBroker.SaveLocal();
+        }
+
     }
     public int GetWeaponCount(string weaponID)
     {
         return _weaponCount.ContainsKey(weaponID) ? _weaponCount[weaponID] : 0;
+    }
+    public int GetWeaponLevel(string weaponID)
+    {
+        return _weaponLevel.ContainsKey(weaponID) ? _weaponLevel[weaponID] : 0;
     }
     public void GetWeapon(string weaponID)
     {

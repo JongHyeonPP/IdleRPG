@@ -24,4 +24,11 @@ public class WeaponData : ScriptableObject
     public string UID => _uID;
 
     public string WeaponName => _weaponName;
+    public void SetReinforcedStats(float powerIncrease, float critDamageIncrease, float critIncrease)
+    {
+        _power += (int)powerIncrease;
+        _criticalDamage += (int)critDamageIncrease;
+        _critical += (int)critIncrease;
+    }
+
 }

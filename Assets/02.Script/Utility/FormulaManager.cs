@@ -9,16 +9,30 @@ public static class FormulaManager
         if (level <= 1000)
         {
             return Mathf.CeilToInt(
-                0.0003f * Mathf.Pow(level, 3)
-                - 0.15f * Mathf.Pow(level, 2)
-                + 14f * level + 1f
+                0.000005f * Mathf.Pow(level, 3)  
+                + 0.01f * Mathf.Pow(level, 2)   
+                + 5f * level                  
+                + 100f                          
+            );
+        }
+        else if (level <= 5000)
+        {
+            return Mathf.CeilToInt(
+                0.00000001f * Mathf.Pow(level, 3.5f) 
+                + 100f * level                        
+            );
+        }
+        else if (level <= 10000)
+        {
+            return Mathf.CeilToInt(
+                0.0000000001f * Mathf.Pow(level, 4f)
+                + 2000f * level
             );
         }
         else
         {
             return Mathf.CeilToInt(
-                0.0000000008f * Mathf.Pow(level, 4.2f)
-                + 1000f * level
+                10000f * level - 90000000f 
             );
         }
     }
