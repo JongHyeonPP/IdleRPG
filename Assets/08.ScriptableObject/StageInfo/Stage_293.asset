@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a800df23dc72f3f4da31798639b67d50, type: 3}
   m_Name: Stage_293
   m_EditorClassIdentifier: 
-  stageNum: 292
+  stageNum: 293
   stageName: Unset Stage
   background: 14
   dropProb: 0

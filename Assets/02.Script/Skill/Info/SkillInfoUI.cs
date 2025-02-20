@@ -111,7 +111,13 @@ public class SkillInfoUI : MonoBehaviour
     {
         Rarity rarity = currentSkillData.rarity;
         string uid = currentSkillData.uid;
-        if (PriceManager.instance.GetRequireFragment_Skill(rarity, _gameData.skillLevel[uid]) <= _gameData.skillFragment[rarity])//재화가 충분할 경우
+        int requiredFragment = PriceManager.instance.GetRequireFragment_Skill(rarity, _gameData.skillLevel[uid]);
+        int ownedSkillFragement;
+        if (!_gameData.skillFragment.TryGetValue(rarity, out ownedSkillFragement))
+        {
+            ownedSkillFragement = 0;
+        }
+        if (requiredFragment <= ownedSkillFragement)//재화가 충분할 경우
         {
             _gameData.skillFragment[rarity] -= PriceManager.instance.GetRequireFragment_Skill(rarity, _gameData.skillLevel[uid]);
             PlayerBroker.OnFragmentSet(rarity, _gameData.skillFragment[rarity]);

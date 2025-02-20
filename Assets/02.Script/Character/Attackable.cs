@@ -71,8 +71,6 @@ public abstract class Attackable : MonoBehaviour
 
     private void AnimBehavior(EquipedSkill currentSkill, SkillData skillData)
     {
-        if (this is PlayerController)
-            Debug.Log("Log");
         if (currentSkill == _defaultAttack)
         {
             if (this is PlayerController)

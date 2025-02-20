@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillName: Player_501
   uid: Player_501
-  iconSprite: {fileID: 0}
+  iconSprite: {fileID: 21300000, guid: 6c52bbcff1f804ba1b9435a920cb9303, type: 3}
   simple: 
   complex: 
   rarity: 5
@@ -34,8 +34,11 @@ MonoBehaviour:
   - 0
   - 0
   - 0
+  - 0
   type: 0
   target: 1
   targetNum: 1
   preDelay: 0.2
   postDelay: 1
+  isAnim: 1
+  visualEffectPrefab: {fileID: 0}

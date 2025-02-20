@@ -113,7 +113,7 @@ public class SkillAcquireUI : MonoBehaviour
             iconVe.style.backgroundImage = new(skillData.iconSprite);
         }
         
-        iconVe.RegisterCallback<ClickEvent>(evt => OnSlotClicked(skillData, iconVe));
+        iconVe.RegisterCallback<ClickEvent>(evt => OnSlotClicked(skillData, iconPanel));
     }
     public void ActiveUI()
     {

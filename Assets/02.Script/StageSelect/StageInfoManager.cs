@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class StageInfoManager : MonoBehaviour
@@ -43,6 +44,13 @@ public class StageInfoManager : MonoBehaviour
         foreach (var x in _stageInfos)
         {
             x.stageNum++;
+
+            // 변경된 ScriptableObject를 Unity가 감지하도록 설정
+            EditorUtility.SetDirty(x);
         }
+
+        // 변경된 데이터를 애셋 파일에 저장
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
     }
 }

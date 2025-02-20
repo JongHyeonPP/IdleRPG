@@ -7552,7 +7552,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7208184810888490800, guid: 6b6898b6425569e4989ac61fa76b6bc9, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7208184810888490800, guid: 6b6898b6425569e4989ac61fa76b6bc9, type: 3}
       propertyPath: m_LocalRotation.x
@@ -7560,7 +7560,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7208184810888490800, guid: 6b6898b6425569e4989ac61fa76b6bc9, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7208184810888490800, guid: 6b6898b6425569e4989ac61fa76b6bc9, type: 3}
       propertyPath: m_LocalRotation.z
@@ -7572,7 +7572,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7208184810888490800, guid: 6b6898b6425569e4989ac61fa76b6bc9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: 7208184810888490800, guid: 6b6898b6425569e4989ac61fa76b6bc9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -11307,8 +11307,8 @@ MonoBehaviour:
   _pieces:
   - {fileID: 1943143936072147939}
   - {fileID: 931570589}
-  expandCamera: {fileID: 766356764}
-  shrinkCamera: {fileID: 519420031}
+  _expandCamera: {fileID: 766356764}
+  _shrinkCamera: {fileID: 519420031}
   currentCamera: {fileID: 0}
 --- !u!1 &1524033933
 GameObject:

@@ -24,16 +24,17 @@ MonoBehaviour:
   coolAttack: 3
   requireMp: 15
   value:
-  - 1
-  - 1
-  - 1
-  - 1
-  - 1
-  - 1
-  - 1
-  - 1
-  - 1
-  - 1
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
   type: 0
   target: 1
   targetNum: 1
