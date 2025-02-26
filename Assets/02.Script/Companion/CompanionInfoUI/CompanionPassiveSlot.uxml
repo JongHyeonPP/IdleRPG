@@ -1,34 +1,34 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <engine:VisualElement name="CompanionPassiveSlot" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); height: 170px; flex-shrink: 0; width: 840px; flex-direction: row; background-image: url(&quot;project://database/Assets/Asset/Wooden_UI/Wooden_UI_png/Plank_07.png?fileID=2800000&amp;guid=d0b159b4b7dc2ba42855372ba849c485&amp;type=3#Plank_07&quot;); color: rgb(214, 211, 211); font-size: 35px; -unity-font-definition: url(&quot;project://database/Assets/05.Font/Maplestory%20Light.ttf?fileID=12800000&amp;guid=b7853b5ad26567e41a3c4210e64c5419&amp;type=3#Maplestory Light&quot;); letter-spacing: 5px;">
-        <engine:VisualElement name="Panel_0" style="flex-grow: 0; width: 158px; align-items: center; justify-content: center; flex-shrink: 0;">
-            <engine:VisualElement name="IconPanel" style="flex-grow: 0; width: 120px; height: 120px; background-image: none; align-items: center; justify-content: center; left: 4px;">
-                <engine:VisualElement name="IconSprite" style="flex-grow: 0; width: 125px; height: 125px; background-image: url(&quot;project://database/Assets/Asset/Skill_Icon_Pack/blue/blue_09.PNG?fileID=2800000&amp;guid=fb2fb148430557941a676bf4cd5ad85e&amp;type=3#blue_09&quot;); position: absolute;" />
-                <engine:VisualElement name="IconFrame" style="flex-grow: 0; width: 140px; height: 140px; background-image: url(&quot;project://database/Assets/Asset/Wooden_UI/Wooden_UI_png/frame_s_01.png?fileID=2800000&amp;guid=cca143f374ac48f44b7aa0198b0df466&amp;type=3#frame_s_01&quot;); align-items: center; justify-content: center; position: absolute;" />
+    <engine:VisualElement name="CompanionPassiveSlot" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); height: 190px; flex-shrink: 0; width: 840px; flex-direction: row; background-image: url(&quot;project://database/Assets/Asset/Wooden_UI/Wooden_UI_png/Plank_07.png?fileID=2800000&amp;guid=d0b159b4b7dc2ba42855372ba849c485&amp;type=3#Plank_07&quot;); color: rgb(214, 211, 211); font-size: 35px; -unity-font-definition: url(&quot;project://database/Assets/05.Font/Maplestory%20Light.ttf?fileID=12800000&amp;guid=b7853b5ad26567e41a3c4210e64c5419&amp;type=3#Maplestory Light&quot;); letter-spacing: 5px;">
+        <engine:VisualElement name="Panel_0" style="flex-grow: 0; width: 188px; align-items: center; justify-content: center; flex-shrink: 0;">
+            <engine:VisualElement name="IconPanel" style="flex-grow: 0; background-image: none; align-items: center; justify-content: center; left: 4px; top: -6px;">
+                <engine:VisualElement name="IconSprite" style="flex-grow: 0; width: 130px; height: 130px; background-image: url(&quot;project://database/Assets/Asset/Skill_Icon_Pack/blue/blue_09.PNG?fileID=2800000&amp;guid=fb2fb148430557941a676bf4cd5ad85e&amp;type=3#blue_09&quot;); position: absolute;" />
+                <engine:VisualElement name="IconFrame" style="flex-grow: 0; width: 150px; height: 150px; background-image: url(&quot;project://database/Assets/Asset/Wooden_UI/Wooden_UI_png/frame_s_01.png?fileID=2800000&amp;guid=cca143f374ac48f44b7aa0198b0df466&amp;type=3#frame_s_01&quot;); align-items: center; justify-content: center; position: absolute;" />
             </engine:VisualElement>
         </engine:VisualElement>
-        <engine:VisualElement name="Panel_1" style="flex-grow: 0; width: 354px; flex-shrink: 0;">
+        <engine:VisualElement name="Panel_1" style="flex-grow: 0; width: 286px; flex-shrink: 0;">
             <engine:VisualElement name="LabelPanel" style="flex-grow: 1;">
                 <engine:Label text="집중 사격" name="NameLabel" style="margin-top: 18px;" />
                 <engine:Label text="명중 +95%" name="EffectLabel" style="margin-top: 18px;" />
             </engine:VisualElement>
         </engine:VisualElement>
         <engine:VisualElement name="Panel_2" style="flex-grow: 0; flex-shrink: 0; align-items: flex-end;">
-            <engine:Label text="Lv19" name="LevelLabel" style="margin-top: 18px; -unity-text-align: upper-right;" />
+            <engine:Label text="Lv19" name="SkillLevelLabel" style="margin-top: 18px; -unity-text-align: upper-right;" />
         </engine:VisualElement>
         <engine:VisualElement name="Panel_3" style="flex-grow: 1; flex-shrink: 0; align-items: flex-start; justify-content: center; margin-right: 19px; top: -6px; left: 23px;">
-            <engine:Button name="MoveButton" focusable="false" style="position: absolute; width: 189px; height: 119px; display: flex; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-background-image-tint-color: rgb(255, 156, 49); background-color: rgba(188, 188, 188, 0); background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel3.png?fileID=21300000&amp;guid=77a6dcc512971ab419243a3716436257&amp;type=3#UniversalPanel3&quot;); color: rgb(255, 255, 255); align-items: center; top: 25px;">
+            <engine:Button name="MoveButton" focusable="false" style="position: absolute; width: 225px; height: 141px; display: flex; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-background-image-tint-color: rgb(255, 156, 49); background-color: rgba(188, 188, 188, 0); background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel3.png?fileID=21300000&amp;guid=77a6dcc512971ab419243a3716436257&amp;type=3#UniversalPanel3&quot;); color: rgb(255, 255, 255); align-items: center; top: 25px; font-size: 30px;">
                 <engine:VisualElement style="flex-grow: 1; position: absolute; width: 100%; height: 100%;">
                     <engine:VisualElement picking-mode="Ignore" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel3TBevel.png?fileID=21300000&amp;guid=4fd1298263d8b1248802bb6b7d0e559c&amp;type=3#UniversalPanel3TBevel&quot;); -unity-background-image-tint-color: rgb(255, 197, 134);" />
                     <engine:VisualElement picking-mode="Ignore" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel3BBevel.png?fileID=21300000&amp;guid=5d2da8262ca5ec742b0c111d6548a1d3&amp;type=3#UniversalPanel3BBevel&quot;); -unity-background-image-tint-color: rgb(209, 127, 39);" />
                 </engine:VisualElement>
                 <engine:Label text="강화" style="margin-top: 7px; margin-right: 0; margin-bottom: 3px; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-size: 30px;" />
-                <engine:VisualElement name="CloverPanel" style="flex-grow: 0; width: 119px; background-color: rgba(0, 0, 0, 0.5); height: 31px; justify-content: center; margin-bottom: 4px;">
+                <engine:VisualElement name="CloverPanel" style="flex-grow: 0; width: 119px; background-color: rgba(0, 0, 0, 0.5); height: 40px; justify-content: center; margin-bottom: 4px;">
                     <engine:VisualElement name="IconSprite" style="flex-grow: 0; width: 25px; height: 25px; flex-shrink: 0; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Icons/32/Clover.png?fileID=2800000&amp;guid=7e406199c949f1449bc592e1e4db1487&amp;type=3#Clover&quot;); margin-left: 5px;" />
-                    <engine:Label text="3333" name="CloverLabel" style="position: absolute; font-size: 22px; right: 0;" />
+                    <engine:Label text="3333" name="CloverLabel" style="position: absolute; right: 0;" />
                 </engine:VisualElement>
-                <engine:VisualElement name="FragmentPanel" style="flex-grow: 0; width: 119px; background-color: rgba(0, 0, 0, 0.5); height: 31px; justify-content: center;">
+                <engine:VisualElement name="FragmentPanel" style="flex-grow: 0; width: 119px; background-color: rgba(0, 0, 0, 0.5); height: 40px; justify-content: center;">
                     <engine:VisualElement name="IconSprite" style="flex-grow: 0; width: 25px; height: 25px; flex-shrink: 0; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Icons/32/GemLong01.png?fileID=2800000&amp;guid=763282434841e654fa86476b044d6b64&amp;type=3#GemLong01&quot;);" />
-                    <engine:Label text="3333" name="FragmentLabel" style="position: absolute; font-size: 22px; right: 0;" />
+                    <engine:Label text="3333" name="FragmentLabel" style="position: absolute; right: 0;" />
                 </engine:VisualElement>
             </engine:Button>
         </engine:VisualElement>

@@ -2,11 +2,12 @@ using EnumCollection;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using static PriceInfo;
 
 public class PriceManager : MonoBehaviour
 {
     public static PriceManager instance;
-    [SerializeField] PriceInfo priceInfo;
+    [SerializeField] PriceInfo _priceInfo;
     public const int MAXSKILLLEVEL = 10;
     public const int MAXCOMPANIONSKILLLEVEL = 20;
     public const int MAXWEAPONLEVEL = 20;
@@ -19,17 +20,17 @@ public class PriceManager : MonoBehaviour
         switch (weaponRarity)
         {
             case Rarity.Common:
-                return priceInfo.commonSkillPrice[level];
+                return _priceInfo.commonSkillPrice[level];
             case Rarity.Uncommon:
-                return priceInfo.uncommonSkillPrice[level];
+                return _priceInfo.uncommonSkillPrice[level];
             case Rarity.Rare:
-                return priceInfo.rareSkillPrice[level];
+                return _priceInfo.rareSkillPrice[level];
             case Rarity.Unique:
-                return priceInfo.uniqueSkillPrice[level];
+                return _priceInfo.uniqueSkillPrice[level];
             case Rarity.Legendary:
-                return priceInfo.legendarySkillPrice[level];
+                return _priceInfo.legendarySkillPrice[level];
             case Rarity.Mythic:
-                return priceInfo.mythicSkillPrice[level];
+                return _priceInfo.mythicSkillPrice[level];
         }
         return int.MaxValue;
     }
@@ -38,19 +39,71 @@ public class PriceManager : MonoBehaviour
         switch (weaponRarity)
         {
             case Rarity.Common:
-                return priceInfo.commonWeaponPrice[level];
+                return _priceInfo.commonWeaponPrice[level];
             case Rarity.Uncommon:
-                return priceInfo.uncommonWeaponPrice[level];
+                return _priceInfo.uncommonWeaponPrice[level];
             case Rarity.Rare:
-                return priceInfo.rareWeaponPrice[level];
+                return _priceInfo.rareWeaponPrice[level];
             case Rarity.Unique:
-                return priceInfo.uniqueWeaponPrice[level];
+                return _priceInfo.uniqueWeaponPrice[level];
             case Rarity.Legendary:
-                return priceInfo.legendaryWeaponPrice[level];
+                return _priceInfo.legendaryWeaponPrice[level];
             case Rarity.Mythic:
-                return priceInfo.mythicWeaponPrice[level];
+                return _priceInfo.mythicWeaponPrice[level];
         }
         return int.MaxValue;
+    }
+    public (int, int) GetRequireCompanionSkill_CloverFragment(int companionIndex, int skillIndex, int skillLevel)
+    {
+        CompanionSkillPrice price = new();
+
+        switch (companionIndex)
+        {
+            case 0:
+                switch (skillIndex)
+                {
+                    case 0:
+                        price = _priceInfo.companion0_SkillPrice0[skillLevel];
+                        break;
+                    case 1:
+                        price = _priceInfo.companion0_SkillPrice1[skillLevel];
+                        break;
+                    case 2:
+                        price = _priceInfo.companion0_SkillPrice2[skillLevel];
+                        break;
+                }
+                break;
+            case 1:
+                switch (skillIndex)
+                {
+                    case 0:
+                        price = _priceInfo.companion1_SkillPrice0[skillLevel];
+                        break;
+                    case 1:
+                        price = _priceInfo.companion1_SkillPrice1[skillLevel];
+                        break;
+                    case 2:
+                        price = _priceInfo.companion1_SkillPrice2[skillLevel];
+                        break;
+                }
+                break;
+            case 2:
+                switch (skillIndex)
+                {
+                    case 0:
+                        price = _priceInfo.companion2_SkillPrice0[skillLevel];
+                        break;
+                    case 1:
+                        price = _priceInfo.companion2_SkillPrice1[skillLevel];
+                        break;
+                    case 2:
+                        price = _priceInfo.companion2_SkillPrice2[skillLevel];
+                        break;
+                }
+                break;
+        }
+
+        return (price.clover, price.fragment);
     }
 
 }

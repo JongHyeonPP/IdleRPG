@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d54ea04a6255fd24b9c351314d19965b, type: 3}
   m_Name: Companion_1
   m_EditorClassIdentifier: 
-  companionSkill: {fileID: 0}
-  companionName: 
-  companionJob: 
+  companionSkillArr:
+  - {fileID: 11400000, guid: fbe84476e9af6f9439c4bdd530686e9c, type: 2}
+  - {fileID: 11400000, guid: 38f90df14df6ef74bb32cbf5597afa9d, type: 2}
+  - {fileID: 11400000, guid: 750ce9fe4a9742b4e9d3bfa1bfe54a84, type: 2}
+  companionName: "\uC804\uC0AC\uC694\uBBF8"
+  companionJob: "\uC804\uC0AC"

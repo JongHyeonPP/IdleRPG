@@ -41,11 +41,12 @@ public class BattleManager : MonoBehaviour
         {
             instance = this;
         }
+        _gameData = StartBroker.GetGameData();
     }
 
     private void Start()
     {
-        _gameData = StartBroker.GetGameData();
+        
         _controller = GameManager.controller;
         _ePool0.poolParent = _ePool1.poolParent = _poolParent;
         GameManager.instance.AutoSaveStart();
@@ -53,6 +54,7 @@ public class BattleManager : MonoBehaviour
         _controller.MoveState(true);
         isBattleActive = true;
         SetEvent();
+        ControlView(false);
     }
 
     public void SetEvent()

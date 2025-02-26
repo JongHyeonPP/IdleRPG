@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef5ab10e5d7b96f44883280afb1d6071, type: 3}
-  m_Name: Companion_200
+  m_Name: Companion_2_2
   m_EditorClassIdentifier: 
-  skillName: Companion_200
-  uid: Companion_200
-  iconSprite: {fileID: 21300000, guid: 6c52bbcff1f804ba1b9435a920cb9303, type: 3}
+  skillName: Companion_2_2
+  uid: Companion_2_2
+  iconSprite: {fileID: 21300000, guid: 877922d02d835044dbd18274a3cf71c9, type: 3}
   simple: 
   complex: 
-  rarity: 2
+  rarity: 4
   isPlayerSkill: 0
   skillCoolType: 0
-  cooltime: 3
-  coolAttack: 0
+  cooltime: 0
+  coolAttack: 3
   requireMp: 15
   value:
   - 0
@@ -35,7 +35,7 @@ MonoBehaviour:
   - 0
   - 0
   - 0
-  type: 1
+  type: 0
   target: 1
   targetNum: 1
   preDelay: 0.2

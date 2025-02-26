@@ -12,11 +12,12 @@ using Unity.Services.Core;
 using UnityEngine.Playables;
 using Random = UnityEngine.Random;
 using System.Numerics;
+using UnityEditor.Overlays;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;//싱글톤 변수
-    [SerializeField] GameData gameData;//로컬 데이터에 주기적으로 동기화할 값들로 구성된 클래스
+    [SerializeField] GameData _gameData;//로컬 데이터에 주기적으로 동기화할 값들로 구성된 클래스
 
     private float _saveInterval = 10f;//로컬 데이터에 자동 저장하는 간격(초)
     public static PlayerController controller { get; private set; }//전투하는 플레이어, GameManager.controller를 싱글톤처럼 사용하기 위함
@@ -46,10 +47,10 @@ public class GameManager : MonoBehaviour
         {
             Destroy(this);
         }
+        StartBroker.GetGameData += () => _gameData;
     }
     private void Start()
     {
-        StartBroker.GetGameData += () => gameData;
         BattleBroker.OnStageChange += OnStageChange;
         StartBroker.SaveLocal += SaveLocalData;
     }
@@ -61,8 +62,8 @@ public class GameManager : MonoBehaviour
     {
         controller = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
         controller.InitDefaultStatus();
-        controller.SetStatus(gameData.statLevel_Gold);
-        controller.SetStatus(gameData.statLevel_StatPoint);
+        controller.SetStatus(_gameData.statLevel_Gold);
+        controller.SetStatus(_gameData.statLevel_StatPoint);
     }
     //데이터 로드 시간이 너무 짧으면 과정 연출이 애매해져서 최소 시간 할당했음.
     private IEnumerator WaitAndInvokeOnDataLoadComplete()
@@ -70,7 +71,7 @@ public class GameManager : MonoBehaviour
         float elapsedTime = 0f;
         float minWaitTime = 1f;
 
-        while (gameData == null || elapsedTime < minWaitTime)
+        while (_gameData == null || elapsedTime < minWaitTime)
         {
             elapsedTime += Time.deltaTime;
             yield return null;
@@ -93,41 +94,41 @@ public class GameManager : MonoBehaviour
     }
     public void SaveLocalData()
     {
-        DataManager.SaveToPlayerPrefs("GameData", gameData);
+        DataManager.SaveToPlayerPrefs("GameData", _gameData);
     }
 
 
     //클라우드에 현재 진행 중인 게임의 정보를 모두 저장하는 메서드. 저장하는 데이터들을 기반으로 진행 상황을 온전히 복원할 수 있어야 한다.
     public async void SaveGameDataToCloud()
     {
-        await DataManager.SaveToCloudAsync("GameData", gameData);
+        await DataManager.SaveToCloudAsync("GameData", _gameData);
     }
     //로컬 데이터를 불러와서 진행 상황을 적용한다. 유료 재화는 로컬 데이터에 저장하지 않는다.
     public void LoadGameData()
     {
-        gameData = DataManager.LoadFromPlayerPrefs<GameData>("GameData");
+        _gameData = DataManager.LoadFromPlayerPrefs<GameData>("GameData");
 
-        if (gameData == null)
+        if (_gameData == null)
         {
             Debug.Log("No saved game data found. Initializing default values.");
-            gameData = new()
+            _gameData = new()
             {
                 currentStageNum = 1
             };
         }
-        if (gameData.level < 1)
+        if (_gameData.level < 1)
         {
-            gameData.level = 1;
+            _gameData.level = 1;
         }
-        gameData.skillLevel ??= new();
-        gameData.weaponCount ??= new();
-        gameData.statLevel_Gold ??= new();
-        gameData.statLevel_StatPoint ??= new();
-        gameData.weaponCount ??= new();
-        gameData.weaponLevel ??= new();
-        gameData.skillFragment ??= new();
-        gameData.equipedSkillArr ??= new string[10];
-        string serializedData = JsonConvert.SerializeObject(gameData, Formatting.Indented);
+        _gameData.skillLevel ??= new();
+        _gameData.weaponCount ??= new();
+        _gameData.statLevel_Gold ??= new();
+        _gameData.statLevel_StatPoint ??= new();
+        _gameData.weaponCount ??= new();
+        _gameData.weaponLevel ??= new();
+        _gameData.skillFragment ??= new();
+        _gameData.equipedSkillArr ??= new string[5];
+        string serializedData = JsonConvert.SerializeObject(_gameData, Formatting.Indented);
         Debug.Log("Game data loaded:\n" + serializedData);
     }
 
@@ -157,20 +158,20 @@ public class GameManager : MonoBehaviour
     }
     public void GetGoldByDrop()
     {
-        int value = 10 * (gameData.currentStageNum + 1) + Random.Range(0, 3);
-        gameData.gold += value;
+        int value = 10 * (_gameData.currentStageNum + 1) + Random.Range(0, 3);
+        _gameData.gold += value;
         BattleBroker.OnGoldSet();
         BattleBroker.OnCurrencyInBattle?.Invoke(DropType.Gold, value);
     }
     public void GetExpByDrop()
     {
-        int value = 10 * (gameData.currentStageNum + 1);
+        int value = 10 * (_gameData.currentStageNum + 1);
         //mainStageNum
-        gameData.exp += value;
-        if (gameData.exp >= GetNeedExp())
+        _gameData.exp += value;
+        if (_gameData.exp >= GetNeedExp())
         {
-            gameData.exp = 0;
-            gameData.level++;
+            _gameData.exp = 0;
+            _gameData.level++;
         }
         BattleBroker.OnLevelExpSet();
         BattleBroker.OnCurrencyInBattle(DropType.Exp, value);
@@ -178,7 +179,7 @@ public class GameManager : MonoBehaviour
     public float GetExpPercent()
     {
         BigInteger needExp = GetNeedExp();
-        BigInteger exp = gameData.exp;
+        BigInteger exp = _gameData.exp;
 
         if (needExp == 0)
             return 0f; // 0으로 나누는 오류 방지
@@ -188,18 +189,18 @@ public class GameManager : MonoBehaviour
 
     private BigInteger GetNeedExp()
     {
-        return gameData.level * 100;
+        return _gameData.level * 100;
     }
 
     private void OnStageChange(int stageNum)
     {
-        gameData.currentStageNum = stageNum;
+        _gameData.currentStageNum = stageNum;
         SaveLocalData();
     }
     [ContextMenu("ClearGameData")]
     public void ClearGameData()
     {
-        gameData = null;
+        _gameData = null;
         SaveLocalData();
     }
 }
