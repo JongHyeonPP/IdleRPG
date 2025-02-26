@@ -256,7 +256,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a19fd21ea79da8740a6075d970c4bf4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  priceinfo: {fileID: 11400000, guid: 77e45d53d8604ff4d85cff0dfafaae2f, type: 2}
+  priceInfo: {fileID: 11400000, guid: 77e45d53d8604ff4d85cff0dfafaae2f, type: 2}
 --- !u!4 &680408467
 Transform:
   m_ObjectHideFlags: 0
@@ -380,8 +380,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0f4066e98d30734c9ea1af22d8f2e39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dia: 0
-  emerald: 0
+  gameData:
+    level: 0
+    dia: 0
+    emerald: 0
+    weaponId: 
+    equipedSkillArr: []
+    currentStageNum: 0
+    maxStageNum: 0
+    userName: 
 --- !u!4 &1048825963
 Transform:
   m_ObjectHideFlags: 0

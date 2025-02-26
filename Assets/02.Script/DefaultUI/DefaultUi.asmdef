@@ -4,7 +4,6 @@
     "references": [
         "EventControl",
         "Game",
-        "PlayerStatusBar",
         "StatUI",
         "StageSelect",
         "BossTimer",
@@ -15,7 +14,9 @@
         "Weapon",
         "Story",
         "CurrencyBarUI",
-        "Battle"
+        "Battle",
+        "PlayerUI",
+        "Companion"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -8,6 +8,6 @@
                 <engine:Label text="Lv. 5" name="LevelLabel" style="position: absolute; bottom: 9px; left: 21px; color: rgb(255, 255, 255); font-size: 43px; -unity-text-outline-width: 2px; -unity-text-outline-color: rgb(0, 0, 0); letter-spacing: 6px; -unity-font-definition: url(&quot;project://database/Assets/05.Font/Maplestory%20Bold.ttf?fileID=12800000&amp;guid=cb734c07d35dbf549a5a6fce9ebf42b1&amp;type=3#Maplestory Bold&quot;);" />
             </engine:VisualElement>
         </engine:VisualElement>
-        <engine:ProgressBar value="22" title="0/5" name="CountProgressBar" style="width: 100%; bottom: auto; top: -10px; font-size: 30px; letter-spacing: 42px;" />
+        <engine:ProgressBar value="0.2" title="0/5" name="CountProgressBar" high-value="1" style="width: 100%; bottom: auto; top: -10px; font-size: 30px; letter-spacing: 42px;" />
     </engine:VisualElement>
 </engine:UXML>

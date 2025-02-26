@@ -1,7 +1,6 @@
 using EnumCollection;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -10,11 +9,20 @@ public class WeaponUI : MonoBehaviour, IBattleUI
 {
     //VIsualElement
     public VisualElement root { get; private set; }
-    private Button[] buttons;//플레이어 무기, 동료 무기, 무기 도감
-    private Button currentButton;//선택돼있는 버튼
-    private Dictionary<Button, VisualElement> _connectDict;//해당 버튼에 연결된 VisualElement
-    [SerializeField] DraggableScrollView _playerScrollView;
-    [SerializeField] DraggableScrollView _companionScrollView;
+    //메인 버튼
+    private Button[] mainButtons;//플레이어 무기, 동료 무기, 무기 도감
+    private Dictionary<Button, VisualElement> _connectMainPanelDict = new();//해당 버튼에 연결된 VisualElement
+    //동료 무기 버튼
+    private Button[] companionButtons;//플레이어 무기, 동료 무기, 무기 도감
+    private Dictionary<Button, VisualElement> _connectCompanionPanelDict = new();//해당 버튼에 연결된 VisualElement
+    //패널
+    private VisualElement _playerPanel;
+    private VisualElement _companionPanel;
+    //스크롤뷰
+    [SerializeField] DraggableScrollView _playerScrollView; 
+    [SerializeField] DraggableScrollView _bowScrollView;
+    [SerializeField] DraggableScrollView _shieldScrollView;
+    [SerializeField] DraggableScrollView _staffScrollView;
     //Other UI
     [SerializeField] private WeaponInfoUI _weaponInfoUI;
     [SerializeField] private WeaponBookUI _weaponBookUI;
@@ -37,89 +45,162 @@ public class WeaponUI : MonoBehaviour, IBattleUI
         _weaponCount = gameData.weaponCount;
         _weaponLevel = gameData.weaponLevel;
         _weaponInfoUI.gameObject.SetActive(true);
-        foreach (Rarity rarity in (Rarity[])Enum.GetValues(typeof(Rarity)))
-        {
-            CreateWeaponSlot(rarity);
-        }
+
         PlayerBroker.OnWeaponLevelSet += OnWeaponLevelSet;
         PlayerBroker.OnWeaponCountSet += OnWeaponCountSet;
     }
     private void Start()
     {
-        root.Q<VisualElement>("ParentPanel").Add(_weaponBookUI.root);//_weaponBookUI.root가 할당된 이후 <- Start
+        foreach (Rarity rarity in (Rarity[])Enum.GetValues(typeof(Rarity)))
+        {
+            CreateWeaponSlot(rarity);
+        }
+        root.Q<VisualElement>("MainParentPanel").Add(_weaponBookUI.root);//_weaponBookUI.root가 할당된 이후 <- Start
         _weaponBookUI.root.style.height = _weaponBookUI.root.ElementAt(0).style.height = Length.Percent(100);
         InitUI();
-        SwitchScrollView(0);
+        
     }
-    private void SwitchScrollView(int buttonIndex)
+    private void SwitchMainPanel(int buttonIndex)
     {
-        if (currentButton != null)
+        for (int i = 0; i < mainButtons.Length; i++)
         {
-            currentButton.style.unityBackgroundImageTintColor = currentButton.style.color = inactiveColor;
-            _connectDict[currentButton].style.display = DisplayStyle.None;
+            var currentMainButton = mainButtons[i];
+            if (i == buttonIndex)
+            {
+                _connectMainPanelDict[currentMainButton].style.display = DisplayStyle.Flex;
+                currentMainButton.style.unityBackgroundImageTintColor = new Color(activeColor.r, activeColor.g, activeColor.b, 0.1f);
+                currentMainButton.Q<VisualElement>("OutLine").style.unityBackgroundImageTintColor = activeColor;
+                currentMainButton.Q<Label>().style.color = activeColor;
+            }
+            else
+            {
+                _connectMainPanelDict[currentMainButton].style.display = DisplayStyle.None;
+                currentMainButton.style.unityBackgroundImageTintColor = new Color(inactiveColor.r, inactiveColor.g, inactiveColor.b, 0f);
+                currentMainButton.Q<VisualElement>("OutLine").style.unityBackgroundImageTintColor = inactiveColor;
+                currentMainButton.Q<Label>().style.color = inactiveColor;
+            }
         }
-        currentButton = buttons[buttonIndex];
-        currentButton.style.unityBackgroundImageTintColor = currentButton.style.color = activeColor;
-        _connectDict[currentButton].style.display = DisplayStyle.Flex;
+    }
+    private void SwitchCompanionPanel(int buttonIndex)
+    {
+        for (int i = 0; i < companionButtons.Length; i++)
+        {
+            var currentCompanionButton = companionButtons[i];
+            if (i == buttonIndex)
+            {
+                _connectCompanionPanelDict[currentCompanionButton].style.display = DisplayStyle.Flex;
+                currentCompanionButton.style.unityBackgroundImageTintColor = new Color(activeColor.r, activeColor.g, activeColor.b, 0.1f);
+                currentCompanionButton.Q<VisualElement>("OutLine").style.unityBackgroundImageTintColor = activeColor;
+                currentCompanionButton.Q<Label>().style.color = activeColor;
+            }
+            else
+            {
+                _connectCompanionPanelDict[currentCompanionButton].style.display = DisplayStyle.None;
+                currentCompanionButton.style.unityBackgroundImageTintColor = new Color(inactiveColor.r, inactiveColor.g, inactiveColor.b, 0f);
+                currentCompanionButton.Q<VisualElement>("OutLine").style.unityBackgroundImageTintColor = inactiveColor;
+                currentCompanionButton.Q<Label>().style.color = inactiveColor;
+            }
+        }
     }
     #region Init
     private void InitUI()
     {
-        
-        VisualElement buttonPanel = root.Q<VisualElement>("ButtonPanel");//버튼 부모
-        VisualElement parentPanel = root.Q<VisualElement>("ParentPanel");//버튼에 의해 나타날 VisualElement들의 부모
-        int numOfButtons = buttonPanel.childCount;
-        buttons = new Button[numOfButtons];
-        _connectDict = new();
+        InitMainElement();
+        InitCompanionElement();
+    }
+
+    private void InitCompanionElement()
+    {
+        VisualElement companionButtonParent = root.Q<VisualElement>("CompanionButtonParent");//동료 버튼 부모
+        VisualElement companionScrollViewParent = root.Q<VisualElement>("CompanionScrollViewParent");//버튼에 의해 나타날 VisualElement들의 부모
+        int numOfButtons = companionButtonParent.childCount;
+        companionButtons = new Button[numOfButtons];
         for (int i = 0; i < numOfButtons; i++)
         {
             int index = i;//스코프를 벗어난 i를 로컬 변수화
-            buttons[index] = (Button)buttonPanel.ElementAt(i);
-            buttons[index].RegisterCallback<ClickEvent>(evt => SwitchScrollView(index));
-            buttons[index].style.unityBackgroundImageTintColor = buttons[index].style.color = inactiveColor;
-            _connectDict.Add(buttons[index], parentPanel.ElementAt(i));
+            companionButtons[index] = (Button)companionButtonParent.ElementAt(i);
+            companionButtons[index].RegisterCallback<ClickEvent>(evt => SwitchCompanionPanel(index));
+            _connectCompanionPanelDict.Add(companionButtons[index], companionScrollViewParent.ElementAt(i));
         }
-        buttons[0] = root.Q<Button>("PlayerButton");
-        buttons[1] = root.Q<Button>("CompanionButton");
-
-        buttons[0].text = "주인공";
-        buttons[1].text = "동료";
-        _connectDict[buttons[0]].style.display = DisplayStyle.Flex;
-        _connectDict[buttons[1]].style.display = DisplayStyle.None;
-        _connectDict[buttons[2]].style.display = DisplayStyle.None;
-
+        _connectCompanionPanelDict[companionButtons[0]].style.display = DisplayStyle.Flex;
+        _connectCompanionPanelDict[companionButtons[1]].style.display = DisplayStyle.None;
+        _connectCompanionPanelDict[companionButtons[2]].style.display = DisplayStyle.None;
+        SwitchCompanionPanel(0);
     }
+
+    private void InitMainElement()
+    {
+        VisualElement mainButtonPanel = root.Q<VisualElement>("MainButtonPanel");//버튼 부모
+        VisualElement parentPanel = root.Q<VisualElement>("MainParentPanel");//버튼에 의해 나타날 VisualElement들의 부모
+        int numOfButtons = mainButtonPanel.childCount;
+        mainButtons = new Button[numOfButtons];
+        for (int i = 0; i < numOfButtons; i++)
+        {
+            int index = i;//스코프를 벗어난 i를 로컬 변수화
+            mainButtons[index] = (Button)mainButtonPanel.ElementAt(i);
+            mainButtons[index].RegisterCallback<ClickEvent>(evt => SwitchMainPanel(index));
+            _connectMainPanelDict.Add(mainButtons[index], parentPanel.ElementAt(i));
+        }
+        _connectMainPanelDict[mainButtons[0]].style.display = DisplayStyle.Flex;
+        _connectMainPanelDict[mainButtons[1]].style.display = DisplayStyle.None;
+        _connectMainPanelDict[mainButtons[2]].style.display = DisplayStyle.None;
+        SwitchMainPanel(0);
+    }
+
     private void CreateWeaponSlot(Rarity rarity)
     {
         if (rarity != Rarity.Common)
         {
-            TemplateContainer playerLine = rarityLineAsset.CloneTree();
-            _playerScrollView.scrollView.Add(playerLine);
-            TemplateContainer companionLine = rarityLineAsset.CloneTree();
-            _companionScrollView.scrollView.Add(companionLine);
+            SetRarityLine();
         }
+        //같은 등급의 무기들을 넣어놓을 VisualElement
         VisualElement playerContainer = GetContainer();
-        VisualElement companionContainer = GetContainer();
+        VisualElement bowContainer = GetContainer();
+        VisualElement shieldContainer = GetContainer();
+        VisualElement staffContainer = GetContainer();
         List<WeaponData> dataList = WeaponManager.instance.GetWeaponDataByRarity(rarity);
         for (int index = 0; index < dataList.Count; index++)
         {
             WeaponData weaponData = dataList[index];
-            if (weaponData.WeaponType == WeaponType.Melee)
+            switch (weaponData.WeaponType)
             {
-                playerContainer.Add(GetSlot(weaponData));
-            }
-            else
-            {
-                companionContainer.Add(GetSlot(weaponData));
+                case WeaponType.Melee:
+                    playerContainer.Add(GetSlot(weaponData));
+                    break;
+                case WeaponType.Bow:
+                    bowContainer.Add(GetSlot(weaponData));
+                    break;
+                case WeaponType.Shield:
+                    shieldContainer.Add(GetSlot(weaponData));
+                    break;
+                case WeaponType.Staff:
+                    staffContainer.Add(GetSlot(weaponData));
+                    break;
             }
         }
         if (rarity == Rarity.Mythic)
         {
             playerContainer.Add(GetPadding());
-            companionContainer.Add(GetPadding());
+            bowContainer.Add(GetPadding());
+            shieldContainer.Add(GetPadding());
+            staffContainer.Add(GetPadding());
         }
         _playerScrollView.scrollView.Add(playerContainer);
-        _companionScrollView.scrollView.Add(companionContainer);
+        _bowScrollView.scrollView.Add(bowContainer);
+        _shieldScrollView.scrollView.Add(shieldContainer);
+        _staffScrollView.scrollView.Add(staffContainer);
+    }
+    void SetRarityLine()
+    {
+        //Rarity가 다른 무기들을 구분하는 선을 만듦
+        TemplateContainer playerLine = rarityLineAsset.CloneTree();
+        TemplateContainer bowLine = rarityLineAsset.CloneTree();
+        TemplateContainer shieldLine = rarityLineAsset.CloneTree();
+        TemplateContainer staffLine = rarityLineAsset.CloneTree();
+        _playerScrollView.scrollView.Add(playerLine);
+        _bowScrollView.scrollView.Add(bowLine);
+        _shieldScrollView.scrollView.Add(shieldLine);
+        _staffScrollView.scrollView.Add(staffLine);
     }
     private VisualElement GetPadding()
     {
@@ -140,33 +221,18 @@ public class WeaponUI : MonoBehaviour, IBattleUI
     private VisualElement GetSlot(WeaponData weaponData)
     {
         string weaponId = weaponData.UID;
-        int weaponCount = _weaponCount.ContainsKey(weaponId) ? _weaponCount[weaponId] : 0;
+        int count = _weaponCount.ContainsKey(weaponId) ? _weaponCount[weaponId] : 0;
 
         TemplateContainer weaponSlot = weaponSlotAsset.CloneTree();//슬롯 생성
         _slotDict.Add(weaponId, weaponSlot);//Dictionary에 저장 - 개수와 레벨 변경에 대응하기 위함
         VisualElement weaponIcon = weaponSlot.Q<VisualElement>("WeaponIcon");
         VisualElement weaponBackground = weaponSlot.Q<VisualElement>("WeaponBackground");
-        //LevelLabel
-        int weaponLevel = _weaponLevel.ContainsKey(weaponId) ? _weaponLevel[weaponId] : 0;
-        Label levelLabel = weaponSlot.Q<Label>("LevelLabel");
-        levelLabel.text = weaponLevel > 0 ? $"+{weaponLevel}" : string.Empty;
-        //CountProgressBar
-        ProgressBar countProgressBar = weaponSlot.Q<ProgressBar>();
-        if (weaponLevel == PriceManager.MAXWEAPONLEVEL)
-        {
-            countProgressBar.title = "Max Level";
-            countProgressBar.value = 1;
-        }
-        else
-        {
-            int price = PriceManager.instance.GetRequireWeaponCount(weaponData.WeaponRarity, weaponLevel);
-            countProgressBar.title = $"{weaponCount}/{price}";
-            countProgressBar.value = weaponCount / (float)price;
-        }
+        int level = _weaponLevel.ContainsKey(weaponId) ? _weaponLevel[weaponId] : 0;
+        SlotSet(weaponData, level, count);
         //Icon
         weaponIcon.style.backgroundImage = new StyleBackground(weaponData.WeaponSprite.texture);
         WeaponManager.instance.SetIconScale(weaponData, weaponIcon);
-        if (weaponCount > 0)
+        if (count > 0)
         {
             switch (weaponData.WeaponRarity)
             {
@@ -205,7 +271,22 @@ public class WeaponUI : MonoBehaviour, IBattleUI
     private void OnClickSlot(WeaponData weaponData)
     {
         bool isPlayerWeapon = weaponData.WeaponType == WeaponType.Melee;
-        DraggableScrollView currentScrollView = isPlayerWeapon?_playerScrollView:_companionScrollView;
+        DraggableScrollView currentScrollView = null;
+        switch (weaponData.WeaponType)
+        {
+            case WeaponType.Melee:
+                currentScrollView = _playerScrollView;
+                break;
+            case WeaponType.Bow:
+                currentScrollView = _bowScrollView;
+                break;
+            case WeaponType.Shield:
+                currentScrollView = _shieldScrollView;
+                break;
+            case WeaponType.Staff:
+                currentScrollView = _staffScrollView;
+                break;
+        }
         if (currentScrollView._isDragging)
             return;
         _weaponInfoUI.ShowWeaponInfo(weaponData);
@@ -239,40 +320,46 @@ public class WeaponUI : MonoBehaviour, IBattleUI
     }
     #endregion
     #endregion
-    private void OnWeaponLevelSet(string weaponUid, int level)
+    private void OnWeaponLevelSet(string weaponId, int level)
     {
-        WeaponData weaponData = WeaponManager.instance.weaponDict[weaponUid];
+        WeaponData weaponData = WeaponManager.instance.weaponDict[weaponId];
+        if (!_weaponCount.TryGetValue(weaponData.UID, out int count))
+        {
+            count = 0;
+        }
+        SlotSet(weaponData, level, count);
+    }
+    private void OnWeaponCountSet(string weaponId, int count)
+    {
+        WeaponData weaponData = WeaponManager.instance.weaponDict[weaponId];
+        int level = _weaponLevel[weaponData.UID];
+        SlotSet(weaponData, level, count);
+    }
+
+    private void SlotSet(WeaponData weaponData, int level, int count)
+    {
         VisualElement slot = _slotDict[weaponData.UID];
         Label levelLabel = slot.Q<Label>("LevelLabel");
         levelLabel.text = $"+{level}";
 
         ProgressBar countProgressBar = slot.Q<ProgressBar>("CountProgressBar");
-        if (!_weaponCount.TryGetValue(weaponData.UID, out int count))
-        {
-            count = 0;
-        }
+
         if (level == PriceManager.MAXWEAPONLEVEL)
         {
-            countProgressBar.title = "Max Level";
+            countProgressBar.style.letterSpacing = 15f;
+            countProgressBar.title = $"{count}/Max";
             countProgressBar.value = 1;
         }
         else
         {
+            countProgressBar.style.letterSpacing = 42f;
             int price = PriceManager.instance.GetRequireWeaponCount(weaponData.WeaponRarity, level);
             countProgressBar.title = $"{count}/{price}";
             countProgressBar.value = count / (float)price;
         }
     }
-    private void OnWeaponCountSet(object weaponDataObj, int count)
-    {
-        WeaponData weaponData = (WeaponData)weaponDataObj;
-        VisualElement slot = _slotDict[weaponData.UID];
-        ProgressBar countProgressBar = slot.Q<ProgressBar>("CountProgressBar");
-        int level = _weaponLevel[weaponData.UID];
-        int price = PriceManager.instance.GetRequireWeaponCount(weaponData.WeaponRarity, level);
-        countProgressBar.title = $"{count}/{price}";
-        countProgressBar.value = count/(float)price;
-    }
+
+
 
     public void ActivateBattleMode()
     {

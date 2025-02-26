@@ -27,4 +27,5 @@ public class GameData
     public int currentStageNum;//내가 어느 스테이지에 위치해있냐
     public int maxStageNum;//내가 어디까지 뚫었냐
     public string userName;
+    //코스튬 관련 데이터
 }

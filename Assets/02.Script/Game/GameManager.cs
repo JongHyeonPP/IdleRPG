@@ -199,7 +199,7 @@ public class GameManager : MonoBehaviour
     [ContextMenu("ClearGameData")]
     public void ClearGameData()
     {
-        gameData = new GameData();
+        gameData = null;
         SaveLocalData();
     }
 }

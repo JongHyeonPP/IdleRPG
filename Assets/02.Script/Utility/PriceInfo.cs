@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "PriceInfo", menuName = "ScriptableObjects/PriceInfo")]
@@ -17,6 +18,23 @@ public class PriceInfo : ScriptableObject
     public int[] uniqueWeaponPrice;
     public int[] legendaryWeaponPrice;
     public int[] mythicWeaponPrice;
-    [Header("Companion")]
-    public int[] companionPrice;
+    [Header("Companion_0_Skill")]
+    public CompanionSkillPrice[] companion0_SkillPrice0;
+    public CompanionSkillPrice[] companion0_SkillPrice1;
+    public CompanionSkillPrice[] companion0_SkillPrice2;
+    [Header("Companion_1_Skill")]
+    public CompanionSkillPrice[] companion1_SkillPrice0;
+    public CompanionSkillPrice[] companion1_SkillPrice1;
+    public CompanionSkillPrice[] companion1_SkillPrice2;
+    [Header("Companion_2_Skill")]
+    public CompanionSkillPrice[] companion2_SkillPrice0;
+    public CompanionSkillPrice[] companion2_SkillPrice1;
+    public CompanionSkillPrice[] companion2_SkillPrice2;
+
+    [Serializable]
+    public struct CompanionSkillPrice
+    {
+        public int clover;
+        public int fragment;
+    }
 }

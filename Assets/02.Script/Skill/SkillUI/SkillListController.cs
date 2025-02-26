@@ -14,10 +14,17 @@ public class SkillListController : LVItemController
     {
         IListViewItem item = draggableLV.items[index];
         SkillDataSet skillDataSet = item as SkillDataSet;
-        for (int i = 0; i < skillDataSet.dataSet.Count; i++)
+        for (int i = 0; i < 4; i++)
         {
-            SkillData skillData = skillDataSet.dataSet[i];
             VisualElement dataRootParent = element.Q<VisualElement>($"SkillData_{i}");
+            if (i >= skillDataSet.dataSet.Count)
+            {
+                dataRootParent.style.display = DisplayStyle.None;
+                continue;
+            }
+            dataRootParent.style.display = DisplayStyle.Flex;
+            SkillData skillData = skillDataSet.dataSet[i];
+            
             if (!_gameData.skillLevel.TryGetValue(skillData.name, out int skillLevel))
             {
                 skillLevel = 0;

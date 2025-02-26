@@ -18,25 +18,27 @@ public class UIManager : MonoBehaviour
     [SerializeField] EquipedSkillUI _equipedSkillUI;
     [SerializeField] WeaponInfoUI _weaponInfoUI;
     [SerializeField] SkillAcquireUI _skillAcquireUI;
+    [SerializeField] PlayerBarUI _playerBarUI;
+    [SerializeField] CompanionInfoUI _companionInfoUI;
     private bool _active = false;
     
     void Awake()
     {
         instance = this;
 
-        // 모든 UI 요소에서 UIDocument 가져오기
-        EnableUIDocuments(_currencyBar);
-        EnableUIDocuments(_goldLabelUI);
-        EnableUIDocuments(_statUI);
-        EnableUIDocuments(_stageSelectUI);
-        EnableUIDocuments(_bossTimerUI);
-        EnableUIDocuments(_duplicateLoginUI);
-        EnableUIDocuments(_totalStatusUI);
-        EnableUIDocuments(_skillInfoUI);
-        EnableUIDocuments(_weaponUI);
-        EnableUIDocuments(_equipedSkillUI);
-        EnableUIDocuments(_weaponInfoUI);
-        EnableUIDocuments(_skillAcquireUI);
+        //// 모든 UI 요소에서 UIDocument 가져오기
+        //EnableUIDocuments(_currencyBar);
+        //EnableUIDocuments(_goldLabelUI);
+        //EnableUIDocuments(_statUI);
+        //EnableUIDocuments(_stageSelectUI);
+        //EnableUIDocuments(_bossTimerUI);
+        //EnableUIDocuments(_duplicateLoginUI);
+        //EnableUIDocuments(_totalStatusUI);
+        //EnableUIDocuments(_skillInfoUI);
+        //EnableUIDocuments(_weaponUI);
+        //EnableUIDocuments(_equipedSkillUI);
+        //EnableUIDocuments(_weaponInfoUI);
+        //EnableUIDocuments(_skillAcquireUI);
     }
 
     void Start()
@@ -48,6 +50,7 @@ public class UIManager : MonoBehaviour
         _duplicateLoginUI.root.style.display = DisplayStyle.None;
         _totalStatusUI.root.style.display = DisplayStyle.None;
         _skillInfoUI.root.style.display = DisplayStyle.None;
+        _companionInfoUI.root.style.display = DisplayStyle.None;
 
         UIBroker.OnMenuUIChange?.Invoke(0);
         BattleManager.instance.InvokeActions();

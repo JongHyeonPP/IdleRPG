@@ -5,7 +5,7 @@ using UnityEngine;
 public class StageInfoManager : MonoBehaviour
 {
     public static StageInfoManager instance;
-    [SerializeField] StageInfo[] _stageInfos;
+    [SerializeField] StageInfo[] _stageInfoArr;
     private void Awake()
     {
         if (!instance)
@@ -23,25 +23,26 @@ public class StageInfoManager : MonoBehaviour
         List<IListViewItem> items = new();
 
         // 유효성 검사
-        if (_stageInfos == null || start < 0 || count <= 0 || start >= _stageInfos.Length)
+        if (_stageInfoArr == null || start < 0 || count <= 0 || start >= _stageInfoArr.Length)
         {
             return items;
         }
 
         // 지정된 범위만큼 데이터를 가져옴
-        int end = Mathf.Min(start + count, _stageInfos.Length);
+        int end = Mathf.Min(start + count, _stageInfoArr.Length);
         for (int i = start; i < end; i++)
         {
-            items.Add(_stageInfos[i]);
+            items.Add(_stageInfoArr[i]);
         }
 
         return items;
     }
-    public StageInfo GetStageInfo(int stageNum) => _stageInfos[stageNum];
+    public StageInfo GetStageInfo(int stageNum) => _stageInfoArr[stageNum-1];
+#if UNITY_EDITOR
     [ContextMenu("Temp")]
     public void Temp()
     {
-        foreach (var x in _stageInfos)
+        foreach (var x in _stageInfoArr)
         {
             x.stageNum++;
 
@@ -53,4 +54,5 @@ public class StageInfoManager : MonoBehaviour
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
     }
+#endif
 }

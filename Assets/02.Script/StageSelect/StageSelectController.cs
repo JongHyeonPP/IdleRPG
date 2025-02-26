@@ -19,7 +19,6 @@ public class StageSelectController : LVItemController
         VisualElement selectBorder = element.Q<VisualElement>("SelectBorder");
         Button moveButton = element.Q<Button>("MoveButton");
         //VisualElement 설정
-        element.style.marginBottom = 40;
         titleLabel.text = stageInfo.stageName;
         if (_gameData.maxStageNum >= stageNum)//오픈된 스테이지라면
         {

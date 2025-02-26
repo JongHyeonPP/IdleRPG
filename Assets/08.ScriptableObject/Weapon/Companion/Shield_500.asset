@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f613b878f275b44d8fc49262ca519ac, type: 3}
   m_Name: Shield_500
   m_EditorClassIdentifier: 
-  _weaponType: 3
+  _weaponType: 2
   _weaponRarity: 5
   _power: 1
   _criticalDamage: 1

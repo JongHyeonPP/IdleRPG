@@ -84,7 +84,7 @@ public class SkillInfoUI : MonoBehaviour
                 break;
         }
         mpLabel.text = skillData.requireMp.ToString();
-        
+
         if (skillLevel == 0)
         {
             ownPanel.style.display = DisplayStyle.None;
@@ -103,7 +103,7 @@ public class SkillInfoUI : MonoBehaviour
             {
                 maxLevelLabel.style.display = DisplayStyle.None;
                 upgradeButton.style.display = DisplayStyle.Flex;
-                fragmentLabel.text = PriceManager.instance.GetRequireFragment_Skill(skillData.rarity, skillLevel).ToString();
+                fragmentLabel.text = PriceManager.instance.GetRequireFragment_Skill(skillData.rarity, skillLevel + 1).ToString();
             }
         }
     }
@@ -111,15 +111,14 @@ public class SkillInfoUI : MonoBehaviour
     {
         Rarity rarity = currentSkillData.rarity;
         string uid = currentSkillData.uid;
-        int requiredFragment = PriceManager.instance.GetRequireFragment_Skill(rarity, _gameData.skillLevel[uid]);
-        int ownedSkillFragement;
-        if (!_gameData.skillFragment.TryGetValue(rarity, out ownedSkillFragement))
+        int requiredFragment = PriceManager.instance.GetRequireFragment_Skill(rarity, _gameData.skillLevel[uid]+1);
+        if (!_gameData.skillFragment.TryGetValue(rarity, out int ownedSkillFragement))
         {
             ownedSkillFragement = 0;
         }
         if (requiredFragment <= ownedSkillFragement)//재화가 충분할 경우
         {
-            _gameData.skillFragment[rarity] -= PriceManager.instance.GetRequireFragment_Skill(rarity, _gameData.skillLevel[uid]);
+            _gameData.skillFragment[rarity] -= PriceManager.instance.GetRequireFragment_Skill(rarity, _gameData.skillLevel[uid]+1);
             PlayerBroker.OnFragmentSet(rarity, _gameData.skillFragment[rarity]);
             _gameData.skillLevel[uid]++;
             if (_gameData.skillLevel[uid] == PriceManager.MAXSKILLLEVEL)
@@ -129,7 +128,7 @@ public class SkillInfoUI : MonoBehaviour
             }
             else
             {
-                fragmentLabel.text = PriceManager.instance.GetRequireFragment_Skill(rarity, _gameData.skillLevel[uid]).ToString();
+                fragmentLabel.text = PriceManager.instance.GetRequireFragment_Skill(rarity, _gameData.skillLevel[uid]+1).ToString();
             }
             levelLabel.text = $"Lv.{_gameData.skillLevel[currentSkillData.uid]}";
             PlayerBroker.OnSkillLevelSet(currentSkillData.uid, _gameData.skillLevel[currentSkillData.uid]);

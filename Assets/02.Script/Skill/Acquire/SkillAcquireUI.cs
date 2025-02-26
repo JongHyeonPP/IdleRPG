@@ -65,9 +65,11 @@ public class SkillAcquireUI : MonoBehaviour
     private void SetSkillAcquireSlot(VisualElement slot, SkillAcquireInfo info)
     {
         Label levelLabel = slot.Q<Label>("LevelLabel");
-        VisualElement skillIcon_Player = slot.Q<VisualElement>("SkillPanel_Player_1");
-        VisualElement skillIcon_Companion = slot.Q<VisualElement>("SkillPanel_Companion_1");
+        VisualElement activePanel_1 = slot.Q<VisualElement>("ActivePanel_1");
+        VisualElement passivePanel_1 = slot.Q<VisualElement>("PassivePanel_1");
         VisualElement lockPanel = slot.Q<VisualElement>("LockPanel");
+        VisualElement currentPanel = info.SkillData.isActiveSkill ? activePanel_1 : passivePanel_1;
+        VisualElement iconVe = currentPanel.Q<VisualElement>("SkillIcon");
         unlockPanelDict.Add(info.acquireLevel, lockPanel);
         if (_gameData.level >= info.acquireLevel)
         {
@@ -77,8 +79,34 @@ public class SkillAcquireUI : MonoBehaviour
         {
             lockPanel.style.display = DisplayStyle.Flex;
         }
-        SetEachSlot(skillIcon_Player, info.playerSkillData);
-        SetEachSlot(skillIcon_Companion, info.companionSkillData);
+        
+        (info.SkillData.isActiveSkill ? passivePanel_1 : activePanel_1).style.visibility = Visibility.Hidden;
+        Dictionary<string, int> skillLevel = _gameData.skillLevel;
+        var skillData = info.SkillData;
+        
+        if (skillData == null)
+        {
+            currentPanel.style.visibility = Visibility.Hidden;
+            return;
+        }
+        if (skillLevel.ContainsKey(skillData.uid) && skillLevel[skillData.uid] != 0)
+        {
+            currentPanel.style.visibility = Visibility.Hidden;
+        }
+        else
+        {
+            
+            if (skillData.iconSprite == null)
+            {
+                iconVe.style.backgroundImage = null;
+            }
+            else
+            {
+                iconVe.style.backgroundImage = new(skillData.iconSprite);
+            }
+
+        }
+        iconVe.RegisterCallback<ClickEvent>(evt => OnSlotClicked(skillData, currentPanel));
         levelLabel.text = info.acquireLevel.ToString();
         if (levelLabel.text.Length >= 3)
         {
@@ -90,30 +118,9 @@ public class SkillAcquireUI : MonoBehaviour
         }
 
     }
-    private void SetEachSlot(VisualElement iconPanel, SkillData skillData)
+    private void SetSlot(VisualElement iconPanel, SkillData skillData)
     {
-        Dictionary<string, int> skillLevel = _gameData.skillLevel;
-        if (skillData == null)
-        {
-            iconPanel.style.visibility = Visibility.Hidden;
-            return;
-        }
-        if (skillLevel.ContainsKey(skillData.uid) && skillLevel[skillData.uid] != 0)
-        {
-            iconPanel.style.visibility = Visibility.Hidden;
-            return;
-        }
-        VisualElement iconVe = iconPanel.Q<VisualElement>("SkillIcon");
-        if (skillData.iconSprite == null)
-        {
-            iconVe.style.backgroundImage =null;
-        }
-        else
-        {
-            iconVe.style.backgroundImage = new(skillData.iconSprite);
-        }
-        
-        iconVe.RegisterCallback<ClickEvent>(evt => OnSlotClicked(skillData, iconPanel));
+
     }
     public void ActiveUI()
     {

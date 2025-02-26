@@ -13,5 +13,4 @@ MonoBehaviour:
   m_Name: SkillAcquireInfo_8
   m_EditorClassIdentifier: 
   acquireLevel: 50
-  playerSkillData: {fileID: 11400000, guid: ab729bdbf4dea64418775dd40f2fe521, type: 2}
-  partySkillData: {fileID: 0}
+  SkillData: {fileID: 11400000, guid: fc0818b77d8e3a14f90471acc296a612, type: 2}

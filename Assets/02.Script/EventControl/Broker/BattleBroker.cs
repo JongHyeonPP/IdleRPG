@@ -27,10 +27,6 @@ public static class BattleBroker
     public static Action OnDiaSet;
     public static Action OnEmeraldSet;
     public static Action OnMaxStageSet;
-    //무기 레벨업
-    public static Action<int, int> OnWeaponLevelSet;//Weapon Id, Level
-    //무기 개수 변경
-    public static Action<int, int> OnWeaponCountSet;//Weapon Id, Count
     public static Func<bool> IsCanAttack;
 
     public static Action<int> SwitchToStory;

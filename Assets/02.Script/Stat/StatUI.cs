@@ -121,18 +121,21 @@ public class StatUI : MonoBehaviour
 
     private void OnCategoriButtonClick(int index)
     {
-        
         for (int i = 0; i < 3; i++)
         {
             if (index == i)
             {
                 categoriPanels[i].style.display = DisplayStyle.Flex;
-                categoriButtons[i].style.color = categoriButtons[i].style.unityBackgroundImageTintColor = activeColor;
+                categoriButtons[i].style.unityBackgroundImageTintColor = new Color(activeColor.r,activeColor.g,activeColor.b, 0.1f);
+                categoriButtons[i].Q<VisualElement>("OutLine").style.unityBackgroundImageTintColor = activeColor;    
+                categoriButtons[i].Q<Label>().style.color = activeColor;    
             }
             else
             {
                 categoriPanels[i].style.display = DisplayStyle.None;
-                categoriButtons[i].style.color = categoriButtons[i].style.unityBackgroundImageTintColor = inactiveColor;
+                categoriButtons[i].style.unityBackgroundImageTintColor = new Color(inactiveColor.r, inactiveColor.g, inactiveColor.b, 0f);
+                categoriButtons[i].Q<VisualElement>("OutLine").style.unityBackgroundImageTintColor = inactiveColor;
+                categoriButtons[i].Q<Label>().style.color = inactiveColor;
             }
         }
     }

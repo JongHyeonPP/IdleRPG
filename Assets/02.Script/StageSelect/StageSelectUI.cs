@@ -25,9 +25,9 @@ public class StageSelectUI : MonoBehaviour
         Button leftButton = root.Q<Button>("LeftButton");
         Button rightButton = root.Q<Button>("RightButton");
         backgroundImage = root.Q<VisualElement>("BackgroundImage");
-        exitButton.RegisterCallback<ClickEvent>(OnExitButtonClick);
-        leftButton.RegisterCallback<ClickEvent>(OnLeftButtonClick);
-        rightButton.RegisterCallback<ClickEvent>(OnRightButtonClick);
+        exitButton.RegisterCallback<ClickEvent>(evt=>OnExitButtonClick());
+        leftButton.RegisterCallback<ClickEvent>(evt=>OnLeftButtonClick());
+        rightButton.RegisterCallback<ClickEvent>(evt=>OnRightButtonClick());
         BattleBroker.OnStageChange += OnStageChange;
     }
     private void Start()
@@ -35,7 +35,7 @@ public class StageSelectUI : MonoBehaviour
         ChangePage(StartBroker.GetGameData().currentStageNum / 20);
     }
 
-    private void OnExitButtonClick(ClickEvent evt)
+    private void OnExitButtonClick()
     {
         ToggleUi(false);
     }
@@ -96,7 +96,7 @@ public class StageSelectUI : MonoBehaviour
         return t * t * t; // 천천히 시작해서 빠르게 줄어듦
     }
 
-    private void OnLeftButtonClick(ClickEvent evt)
+    private void OnLeftButtonClick()
     {
         // 이전 인덱스를 계산 (순환)
         _currentIndex = (_currentIndex - 1 + backgrounds.Length) % backgrounds.Length;
@@ -104,7 +104,7 @@ public class StageSelectUI : MonoBehaviour
         ChangePage(_currentIndex);
     }
 
-    private void OnRightButtonClick(ClickEvent evt)
+    private void OnRightButtonClick()
     {
         // 다음 인덱스를 계산 (순환)
         _currentIndex = (_currentIndex + 1) % backgrounds.Length;

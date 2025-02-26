@@ -2,20 +2,17 @@ using EnumCollection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 public class SkillManager : MonoBehaviour
 {
     public static SkillManager instance;
     [Header("SkillData")]
-    [SerializeField] SkillData[] playerSkillArr;//Inspector
-    [SerializeField] SkillData[] companionSkillArr;//Inspector
-    private List<SkillDataSet> playerSkillSetList = new();
-    private List<SkillDataSet> companionSkillSetList = new();
+    public SkillData[] playerSkillArr;//Inspector
+    public SkillData[] companionSkillArr;//Inspector
     private Dictionary<string, SkillData> skillDataDict = new();
     public SkillData defaultAttackData;
-    [Header("EquipedSkill")]
-    private EquipedSkill[] skillArray = new EquipedSkill[10];
     [Header("SkillAcquireInfo")]
     [SerializeField] SkillAcquireInfo[] acquireInfoArr;//Inspector
     [Header("Fragment")]
@@ -25,8 +22,9 @@ public class SkillManager : MonoBehaviour
     [SerializeField] Sprite uniqueFragmentSprite;
     [SerializeField] Sprite legendaryFragmentSprite;
     [SerializeField] Sprite mythicFragmentSprite;
-    
-
+    [Header("SkillDataSet")]
+    public readonly List<SkillDataSet> activeSet = new();
+    public readonly List<SkillDataSet> passiveSet = new();
     private void Awake()
     {
         instance = this;
@@ -38,36 +36,39 @@ public class SkillManager : MonoBehaviour
         {
             skillDataDict.Add(skillData.name, skillData);
         }
-        SetDataSet(playerSkillArr, playerSkillSetList);
-        SetDataSet(companionSkillArr, companionSkillSetList);
+        SetSkillDataSets(true);
+        SetSkillDataSets(false);
     }
-    private void SetDataSet(SkillData[] skillDataArr, List<SkillDataSet> dataSetList)
+    private void SetSkillDataSets(bool isActiveSkill)
     {
-        for (int i = 0; i < skillDataArr.Length; i+=4)
+        SkillData[] linqedSkillDataArr = playerSkillArr.Where(item => item.isActiveSkill==isActiveSkill).ToArray();
+        List<SkillDataSet> currentSet = isActiveSkill ? activeSet : passiveSet;
+
+        for (int i = 0; i < linqedSkillDataArr.Length; i+=4)
         {
             List<SkillData> dataSet = new()
             {
-                skillDataArr[i]
+                linqedSkillDataArr[i]
             };
-            if (i + 1 < skillDataArr.Length)
+            if (i + 1 < linqedSkillDataArr.Length)
             {
-                dataSet.Add(skillDataArr[i+1]);
+                dataSet.Add(linqedSkillDataArr[i+1]);
             }
-            if (i + 2 < skillDataArr.Length)
+            if (i + 2 < linqedSkillDataArr.Length)
             {
-                dataSet.Add(skillDataArr[i+2]);
+                dataSet.Add(linqedSkillDataArr[i+2]);
             }
-            if (i + 3 < skillDataArr.Length)
+            if (i + 3 < linqedSkillDataArr.Length)
             {
-                dataSet.Add(skillDataArr[i+3]);
+                dataSet.Add(linqedSkillDataArr[i+3]);
             }
-            dataSetList.Add(new SkillDataSet(dataSet));
+            currentSet.Add(new SkillDataSet(dataSet));
         }
         
     }
-    public List<IListViewItem> GetSkillDataListAsItem(bool isPlayerSkill)//or PartySkill
+    public List<IListViewItem> GetPlayerSkillDataListAsItem(bool isActive)//or Passive
     {
-        List<SkillDataSet> skillDataSets = isPlayerSkill ? playerSkillSetList : companionSkillSetList;
+        List<SkillDataSet> skillDataSets = isActive ? activeSet : passiveSet;
         return skillDataSets.Select(item=>(IListViewItem)item).ToList();
     }
     public SkillData GetSkillData(string id)
@@ -100,5 +101,27 @@ public class SkillManager : MonoBehaviour
                 return mythicFragmentSprite;
         }
         return null;
+    }
+    [ContextMenu("SetUidAsObjectName")]
+    public void SetUidAsObjectName()
+    {
+        // 데이터 변경
+        foreach (var x in playerSkillArr)
+        {
+            x.uid = x.name;
+            x.skillName = x.name;
+            EditorUtility.SetDirty(x);
+        }
+        foreach (var x in companionSkillArr)
+        {
+            x.uid = x.name;
+            x.skillName = x.name;
+            EditorUtility.SetDirty(x);
+        }
+
+        // 변경 사항을 Unity 에디터에 반영 (한 번만 호출)
+        
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
     }
 }

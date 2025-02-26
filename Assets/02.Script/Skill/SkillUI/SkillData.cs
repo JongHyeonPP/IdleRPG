@@ -31,4 +31,5 @@ public class SkillData : ScriptableObject
     public float postDelay = 0.2f;//판정 후딜
     public bool isAnim = true;//애니메이션을 보여줄지
     public GameObject visualEffectPrefab;//공격 이펙트 프리팹
+    public bool isActiveSkill;//액티브 스킬인지
 }

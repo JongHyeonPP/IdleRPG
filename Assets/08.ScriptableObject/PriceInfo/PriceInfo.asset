@@ -12,16 +12,384 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c31b40e68dba4f940b964bda9134eed3, type: 3}
   m_Name: PriceInfo
   m_EditorClassIdentifier: 
-  commonSkillPrice: 02000000040000000800000010000000200000004000000080000000000100000002000000040000
-  uncommonSkillPrice: 02000000040000000800000010000000200000004000000080000000000100000002000000040000
-  rareSkillPrice: 02000000040000000800000010000000200000004000000080000000000100000002000000040000
-  uniqueSkillPrice: 02000000040000000800000010000000200000004000000080000000000100000002000000040000
-  legendarySkillPrice: 02000000040000000800000010000000200000004000000080000000000100000002000000040000
-  mythicSkillPrice: 01000000020000000400000008000000100000002000000040000000800000000001000000020000
+  commonSkillPrice: 0000000000000000020000000400000008000000100000002000000040000000800000000001000000020000
+  uncommonSkillPrice: 0000000000000000020000000400000008000000100000002000000040000000800000000001000000020000
+  rareSkillPrice: 0000000000000000020000000400000008000000100000002000000040000000800000000001000000020000
+  uniqueSkillPrice: 0000000000000000020000000400000008000000100000002000000040000000800000000001000000020000
+  legendarySkillPrice: 0000000000000000020000000400000008000000100000002000000040000000800000000001000000020000
+  mythicSkillPrice: 0000000000000000020000000400000008000000100000002000000040000000800000000001000000020000
   commonWeaponPrice: 04000000080000000c0000001000000014000000180000001c0000002000000024000000280000002c0000003000000034000000380000003c0000004000000044000000480000004c00000050000000
   uncommonWeaponPrice: 04000000080000000c0000001000000014000000180000001c0000002000000024000000280000002c0000003000000034000000380000003c0000004000000044000000480000004c00000050000000
   rareWeaponPrice: 04000000080000000c0000001000000014000000180000001c0000002000000024000000280000002c0000003000000034000000380000003c0000004000000044000000480000004c00000050000000
   uniqueWeaponPrice: 04000000080000000c0000001000000014000000180000001c0000002000000024000000280000002c0000003000000034000000380000003c0000004000000044000000480000004c00000050000000
   legendaryWeaponPrice: 04000000080000000c0000001000000014000000180000001c0000002000000024000000280000002c0000003000000034000000380000003c0000004000000044000000480000004c00000050000000
   mythicWeaponPrice: 020000000400000006000000080000000a0000000c0000000e00000010000000120000001400000016000000180000001a0000001c0000001e0000002000000022000000240000002600000028000000
-  companionPrice: 
+  companion0_SkillPrice0:
+  - clover: 0
+    fragment: 0
+  - clover: 0
+    fragment: 0
+  - clover: 10
+    fragment: 20
+  - clover: 20
+    fragment: 40
+  - clover: 30
+    fragment: 60
+  - clover: 40
+    fragment: 80
+  - clover: 50
+    fragment: 100
+  - clover: 60
+    fragment: 120
+  - clover: 70
+    fragment: 140
+  - clover: 80
+    fragment: 160
+  - clover: 90
+    fragment: 180
+  - clover: 100
+    fragment: 200
+  - clover: 110
+    fragment: 220
+  - clover: 120
+    fragment: 240
+  - clover: 130
+    fragment: 260
+  - clover: 140
+    fragment: 280
+  - clover: 150
+    fragment: 300
+  - clover: 160
+    fragment: 320
+  - clover: 170
+    fragment: 340
+  - clover: 180
+    fragment: 360
+  companion0_SkillPrice1:
+  - clover: 0
+    fragment: 0
+  - clover: 0
+    fragment: 0
+  - clover: 20
+    fragment: 40
+  - clover: 40
+    fragment: 80
+  - clover: 60
+    fragment: 120
+  - clover: 80
+    fragment: 160
+  - clover: 100
+    fragment: 200
+  - clover: 120
+    fragment: 240
+  - clover: 140
+    fragment: 280
+  - clover: 160
+    fragment: 320
+  - clover: 180
+    fragment: 360
+  - clover: 200
+    fragment: 400
+  - clover: 220
+    fragment: 440
+  - clover: 240
+    fragment: 480
+  - clover: 260
+    fragment: 520
+  - clover: 280
+    fragment: 560
+  - clover: 300
+    fragment: 600
+  - clover: 320
+    fragment: 640
+  - clover: 340
+    fragment: 680
+  - clover: 360
+    fragment: 720
+  companion0_SkillPrice2:
+  - clover: 0
+    fragment: 0
+  - clover: 0
+    fragment: 0
+  - clover: 40
+    fragment: 80
+  - clover: 80
+    fragment: 160
+  - clover: 120
+    fragment: 240
+  - clover: 160
+    fragment: 320
+  - clover: 200
+    fragment: 400
+  - clover: 240
+    fragment: 480
+  - clover: 280
+    fragment: 560
+  - clover: 320
+    fragment: 640
+  - clover: 360
+    fragment: 720
+  - clover: 400
+    fragment: 800
+  - clover: 440
+    fragment: 880
+  - clover: 480
+    fragment: 960
+  - clover: 520
+    fragment: 1040
+  - clover: 560
+    fragment: 1120
+  - clover: 600
+    fragment: 1200
+  - clover: 640
+    fragment: 1280
+  - clover: 680
+    fragment: 1360
+  - clover: 720
+    fragment: 1440
+  companion1_SkillPrice0:
+  - clover: 0
+    fragment: 0
+  - clover: 0
+    fragment: 0
+  - clover: 10
+    fragment: 20
+  - clover: 20
+    fragment: 40
+  - clover: 30
+    fragment: 60
+  - clover: 40
+    fragment: 80
+  - clover: 50
+    fragment: 100
+  - clover: 60
+    fragment: 120
+  - clover: 70
+    fragment: 140
+  - clover: 80
+    fragment: 160
+  - clover: 90
+    fragment: 180
+  - clover: 100
+    fragment: 200
+  - clover: 110
+    fragment: 220
+  - clover: 120
+    fragment: 240
+  - clover: 130
+    fragment: 260
+  - clover: 140
+    fragment: 280
+  - clover: 150
+    fragment: 300
+  - clover: 160
+    fragment: 320
+  - clover: 170
+    fragment: 340
+  - clover: 180
+    fragment: 360
+  companion1_SkillPrice1:
+  - clover: 0
+    fragment: 0
+  - clover: 0
+    fragment: 0
+  - clover: 20
+    fragment: 40
+  - clover: 40
+    fragment: 80
+  - clover: 60
+    fragment: 120
+  - clover: 80
+    fragment: 160
+  - clover: 100
+    fragment: 200
+  - clover: 120
+    fragment: 240
+  - clover: 140
+    fragment: 280
+  - clover: 160
+    fragment: 320
+  - clover: 180
+    fragment: 360
+  - clover: 200
+    fragment: 400
+  - clover: 220
+    fragment: 440
+  - clover: 240
+    fragment: 480
+  - clover: 260
+    fragment: 520
+  - clover: 280
+    fragment: 560
+  - clover: 300
+    fragment: 600
+  - clover: 320
+    fragment: 640
+  - clover: 340
+    fragment: 680
+  - clover: 360
+    fragment: 720
+  companion1_SkillPrice2:
+  - clover: 0
+    fragment: 0
+  - clover: 0
+    fragment: 0
+  - clover: 40
+    fragment: 80
+  - clover: 80
+    fragment: 160
+  - clover: 120
+    fragment: 240
+  - clover: 160
+    fragment: 320
+  - clover: 200
+    fragment: 400
+  - clover: 240
+    fragment: 480
+  - clover: 280
+    fragment: 560
+  - clover: 320
+    fragment: 640
+  - clover: 360
+    fragment: 720
+  - clover: 400
+    fragment: 800
+  - clover: 440
+    fragment: 880
+  - clover: 480
+    fragment: 960
+  - clover: 520
+    fragment: 1040
+  - clover: 560
+    fragment: 1120
+  - clover: 600
+    fragment: 1200
+  - clover: 640
+    fragment: 1280
+  - clover: 680
+    fragment: 1360
+  - clover: 720
+    fragment: 1440
+  companion2_SkillPrice0:
+  - clover: 0
+    fragment: 0
+  - clover: 0
+    fragment: 0
+  - clover: 10
+    fragment: 20
+  - clover: 20
+    fragment: 40
+  - clover: 30
+    fragment: 60
+  - clover: 40
+    fragment: 80
+  - clover: 50
+    fragment: 100
+  - clover: 60
+    fragment: 120
+  - clover: 70
+    fragment: 140
+  - clover: 80
+    fragment: 160
+  - clover: 90
+    fragment: 180
+  - clover: 100
+    fragment: 200
+  - clover: 110
+    fragment: 220
+  - clover: 120
+    fragment: 240
+  - clover: 130
+    fragment: 260
+  - clover: 140
+    fragment: 280
+  - clover: 150
+    fragment: 300
+  - clover: 160
+    fragment: 320
+  - clover: 170
+    fragment: 340
+  - clover: 180
+    fragment: 360
+  companion2_SkillPrice1:
+  - clover: 0
+    fragment: 0
+  - clover: 0
+    fragment: 0
+  - clover: 20
+    fragment: 40
+  - clover: 40
+    fragment: 80
+  - clover: 60
+    fragment: 120
+  - clover: 80
+    fragment: 160
+  - clover: 100
+    fragment: 200
+  - clover: 120
+    fragment: 240
+  - clover: 140
+    fragment: 280
+  - clover: 160
+    fragment: 320
+  - clover: 180
+    fragment: 360
+  - clover: 200
+    fragment: 400
+  - clover: 220
+    fragment: 440
+  - clover: 240
+    fragment: 480
+  - clover: 260
+    fragment: 520
+  - clover: 280
+    fragment: 560
+  - clover: 300
+    fragment: 600
+  - clover: 320
+    fragment: 640
+  - clover: 340
+    fragment: 680
+  - clover: 360
+    fragment: 720
+  companion2_SkillPrice2:
+  - clover: 0
+    fragment: 0
+  - clover: 0
+    fragment: 0
+  - clover: 40
+    fragment: 80
+  - clover: 80
+    fragment: 160
+  - clover: 120
+    fragment: 240
+  - clover: 160
+    fragment: 320
+  - clover: 200
+    fragment: 400
+  - clover: 240
+    fragment: 480
+  - clover: 280
+    fragment: 560
+  - clover: 320
+    fragment: 640
+  - clover: 360
+    fragment: 720
+  - clover: 400
+    fragment: 800
+  - clover: 440
+    fragment: 880
+  - clover: 480
+    fragment: 960
+  - clover: 520
+    fragment: 1040
+  - clover: 560
+    fragment: 1120
+  - clover: 600
+    fragment: 1200
+  - clover: 640
+    fragment: 1280
+  - clover: 680
+    fragment: 1360
+  - clover: 720
+    fragment: 1440

@@ -45,8 +45,8 @@ namespace EnumCollection
     {
         Melee,
         Bow,
+        Shield,
         Staff,
-        Shield
     }
     public enum BattleType
     {

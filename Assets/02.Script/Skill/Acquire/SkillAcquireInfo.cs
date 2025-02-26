@@ -4,8 +4,5 @@ using UnityEngine;
 public class SkillAcquireInfo : ScriptableObject
 {
     public int acquireLevel;
-    [Header("PlayerSkill")]
-    public SkillData playerSkillData;
-    [Header("CompanionSkill")]
-    public SkillData companionSkillData;
+    public SkillData SkillData;
 }

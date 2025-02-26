@@ -13,5 +13,4 @@ MonoBehaviour:
   m_Name: SkillAcquireInfo_5
   m_EditorClassIdentifier: 
   acquireLevel: 35
-  playerSkillData: {fileID: 0}
-  companionSkillData: {fileID: 11400000, guid: 839916fbdbfa99b42bd74b28e7205e35, type: 2}
+  SkillData: {fileID: 11400000, guid: f051d7160f9da574195c2354ee02bd56, type: 2}

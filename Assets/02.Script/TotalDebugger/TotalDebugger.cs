@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using EnumCollection;
 using System;
 using System.Collections.Generic;
@@ -604,13 +605,12 @@ public class TotalDebugger : EditorWindow
     {
         VisualElement scrollViewParent = skillPanel.Q<VisualElement>("ScrollViewParent");
         skillScrollViewArr = scrollViewParent.Children().Select(item => (ScrollView)item).ToArray();
-        Dictionary<string, SkillData> skillDict = SkillManager.instance.GetSkillDict();
         skillScrollViewArr[0].Add(CreateSeparatePanel("Player Skill"));
-        var playerValue = skillDict.Where(item => item.Value.isPlayerSkill).Select(item => item.Value.uid);
-        InitEachSkill(playerValue, skillScrollViewArr[0]);
+        SkillData[] playerArr = SkillManager.instance.playerSkillArr;
+        InitEachSkill(playerArr, skillScrollViewArr[0]);
         skillScrollViewArr[1].Add(CreateSeparatePanel("Companion Skill"));
-        var companionValue = skillDict.Where(item => !item.Value.isPlayerSkill).Select(item => item.Value.uid);
-        InitEachSkill(companionValue, skillScrollViewArr[1]);
+        var companionArr = SkillManager.instance.companionSkillArr;
+        InitEachSkill(companionArr, skillScrollViewArr[1]);
         skillScrollViewArr[0].style.display = DisplayStyle.Flex;
         skillScrollViewArr[1].style.display = DisplayStyle.None;
         //currentSkillType = "Player";
@@ -621,10 +621,12 @@ public class TotalDebugger : EditorWindow
         //currentSkillType = "Player";
         typeDropDown.RegisterValueChangedCallback(evt => OnSkillDropDownChange(evt.newValue));
     }
-    void InitEachSkill(IEnumerable<string> uids, ScrollView scrollView)
+    void InitEachSkill(SkillData[] skillDataArr, ScrollView scrollView)
     {
-        foreach (var uid in uids)
+        for (int i = 0; i < skillDataArr.Length; i++)
         {
+            SkillData x = skillDataArr[i];
+            string uid = x.uid;
             TemplateContainer skillDataPanel = dataPanel_0.CloneTree();
             if (!_gameData.skillLevel.TryGetValue(uid, out int level))
             {
@@ -777,3 +779,4 @@ public class TotalDebugger : EditorWindow
         }
     }
 }
+#endif

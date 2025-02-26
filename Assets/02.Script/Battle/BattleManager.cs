@@ -30,11 +30,11 @@ public class BattleManager : MonoBehaviour
     private int _enemyBundleNum = 10;//적이 위치할 수 있는 배열의 크기. 실제로 적이 몇 명 할당될지는 DetermineEnemyNum가 정의한다.
     private int _currentTargetIndex;//현재 마주보고 있는 캐릭터의 enemies에서의 인덱스
     private bool isBattleActive = false; // 전투 루프 활성화 여부
-    [SerializeField] private StageInfo currentStageInfo;//현재 진행 중인 스테이지의 전투 정보... 적 종류, 개수, 스테이지 이름...
+    private StageInfo currentStageInfo;//현재 진행 중인 스테이지의 전투 정보... 적 종류, 개수, 스테이지 이름...
     private BattleType battleType;//전투의 타입. Default, Boss, Die
     [SerializeField] Camera expandCamera;//전투 메인 카메라
     [SerializeField] Camera shrinkCamera;//전투 메인 카메라
-    public Camera currentCamera;//전투 메인 카메라
+    [HideInInspector] public Camera currentCamera;//전투 메인 카메라
     private void Awake()
     {
         if (instance == null)
@@ -87,8 +87,8 @@ public class BattleManager : MonoBehaviour
     public void InvokeActions()
     {
         string weaponId = _gameData.weaponId;
-        if(weaponId!=null)
-        PlayerBroker.OnEquipWeapon(WeaponManager.instance.weaponDict[weaponId]);
+        if (weaponId != null)
+            PlayerBroker.OnEquipWeapon(WeaponManager.instance.weaponDict[weaponId]);
         else
             PlayerBroker.OnEquipWeapon(null);
     }
@@ -116,7 +116,7 @@ public class BattleManager : MonoBehaviour
             return;
         BattleLoop();
     }
-    
+
     private void BattleLoop()
     {
         if (battleType == BattleType.None)
@@ -135,7 +135,7 @@ public class BattleManager : MonoBehaviour
         }
 
         // 매 프레임마다 MoveByPlayer 호출
-        
+
     }
     private void TargetCase()
     {
@@ -180,7 +180,7 @@ public class BattleManager : MonoBehaviour
         EnemyController target = null;
         while (true)
         {
-            if (_enemies[_currentTargetIndex] != null&& !_enemies[_currentTargetIndex].isDead)
+            if (_enemies[_currentTargetIndex] != null && !_enemies[_currentTargetIndex].isDead)
             {
                 target = _enemies[_currentTargetIndex];
                 _controller.target = target;
@@ -212,16 +212,16 @@ public class BattleManager : MonoBehaviour
         BattleBroker.OnStageEnter();
         if (stageNum > _gameData.maxStageNum)
         {
-            switch (stageNum)
-            {
-                case 1:
-                    Debug.Log("최초 접속");
-                    BattleBroker.SwitchToStory?.Invoke(1);
-                    break;
-                case 21:
-                    Debug.Log("두 번째 스토리");
-                    break;
-            }
+            //switch (stageNum)
+            //{
+            //    case 1:
+            //        Debug.Log("최초 접속");
+            //        BattleBroker.SwitchToStory?.Invoke(1);
+            //        break;
+            //    case 21:
+            //        Debug.Log("두 번째 스토리");
+            //        break;
+            //}
             _gameData.maxStageNum = stageNum;
         }
         StartBroker.SaveLocal();

@@ -1,6 +1,6 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <engine:Template name="WeaponBookSlot" src="project://database/Assets/02.Script/Weapon/WeaponBookUI/WeaponBookSlot.uxml?fileID=9197481963319205126&amp;guid=ff69b7df9d674624a8cdd6add077e156&amp;type=3#WeaponBookSlot" />
-    <engine:VisualElement name="WeaponBookUI" style="flex-grow: 0; height: 800px; justify-content: flex-end; bottom: 0; position: absolute; width: 100%;">
+    <engine:Template name="WeaponBookSlot" src="project://database/Assets/02.Script/Weapon/WeaponBookUI/BookDataPanel.uxml?fileID=9197481963319205126&amp;guid=ff69b7df9d674624a8cdd6add077e156&amp;type=3#BookDataPanel" />
+    <engine:VisualElement name="WeaponBookUI" style="flex-grow: 0; height: 800px; justify-content: flex-end; bottom: 0; position: absolute; width: 100%; display: flex;">
         <engine:ScrollView name="WeaponBook" vertical-scroller-visibility="Hidden" horizontal-scroller-visibility="Hidden" style="top: auto; left: auto; position: absolute; width: 100%; height: 100%; background-color: rgb(67, 38, 16);">
             <engine:Instance template="WeaponBookSlot" name="Savage" />
             <engine:Instance template="WeaponBookSlot" name="New" />

@@ -62,7 +62,7 @@ public class MenuChangeUI : MonoBehaviour
                     button.text = "ªÛ¡°";
                     break;
             }
-            buttonArr[i] = menuButton;
+            buttonArr[i] = button;
         }
         ChangeUI(0);
         menuParent.Add(statUI.root);

@@ -125,7 +125,7 @@ public class StoreManager : MonoBehaviour
 
         var gameData = StartBroker.GetGameData();
         _weaponCount = gameData.weaponCount;
-        PlayerBroker.OnWeaponCountSet += OnWeaponCountSet;
+        //PlayerBroker.OnWeaponCountSet += OnWeaponCountSet;
 
         _weaponSaveDatas = drawnWeapons;
         
@@ -134,16 +134,16 @@ public class StoreManager : MonoBehaviour
         UpdateLog(drawnWeapons);
     }
 
-    private void OnWeaponCountSet(object weaponDataObj, int count)
-    {
-        WeaponData weaponData = (WeaponData)weaponDataObj;
-        VisualElement slot = _slotDict[weaponData.UID];
-        ProgressBar countProgressBar = slot.Q<ProgressBar>("CountProgressBar");
-        int level = _weaponLevel[weaponData.UID];
-        int price = PriceManager.instance.GetRequireWeaponCount(weaponData.WeaponRarity, level);
-        countProgressBar.title = $"{count}/{price}";
-        countProgressBar.value = count / (float)price;
-    }
+    //private void OnWeaponCountSet(object weaponDataObj, int count)
+    //{
+    //    WeaponData weaponData = (WeaponData)weaponDataObj;
+    //    VisualElement slot = _slotDict[weaponData.UID];
+    //    ProgressBar countProgressBar = slot.Q<ProgressBar>("CountProgressBar");
+    //    int level = _weaponLevel[weaponData.UID];
+    //    int price = PriceManager.instance.GetRequireWeaponCount(weaponData.WeaponRarity, level);
+    //    countProgressBar.title = $"{count}/{price}";
+    //    countProgressBar.value = count / (float)price;
+    //}
 
     /// <summary>
     /// 무기들 UI 그리기

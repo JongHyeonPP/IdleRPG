@@ -113,8 +113,6 @@ public class DataManager : MonoBehaviour
     // 로컬 로드 (PlayerPrefs)
     public static T LoadFromPlayerPrefs<T>(string key)
     {
-        try
-        {
             string jsonData = PlayerPrefs.GetString(key, string.Empty);
             if (!string.IsNullOrEmpty(jsonData))
             {
@@ -127,11 +125,5 @@ public class DataManager : MonoBehaviour
                 Debug.LogWarning($"No data found in PlayerPrefs for key: {key}");
                 return default;
             }
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"Failed to load data from PlayerPrefs: {e.Message}");
-            return default;
-        }
     }
 }

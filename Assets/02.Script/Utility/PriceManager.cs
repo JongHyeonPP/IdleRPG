@@ -1,5 +1,6 @@
 using EnumCollection;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class PriceManager : MonoBehaviour
@@ -7,6 +8,7 @@ public class PriceManager : MonoBehaviour
     public static PriceManager instance;
     [SerializeField] PriceInfo priceInfo;
     public const int MAXSKILLLEVEL = 10;
+    public const int MAXCOMPANIONSKILLLEVEL = 20;
     public const int MAXWEAPONLEVEL = 20;
     private void Awake()
     {
@@ -50,5 +52,7 @@ public class PriceManager : MonoBehaviour
         }
         return int.MaxValue;
     }
+
 }
+
 

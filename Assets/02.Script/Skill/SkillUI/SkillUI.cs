@@ -9,9 +9,9 @@ public class SkillUI : MonoBehaviour
     public VisualElement root { get; private set; }
     [SerializeField] FlexibleListView _flexibleLV;
     private VisualElement _equipBackground;
-    private Button _acquisitionButton;
-    private Button _playerSelectButton;
-    private Button _companionSelectButton;
+    private Button _acquireButton;
+    private Button _activeButton;
+    private Button _passiveButton;
     [SerializeField] SkillAcquireUI skillAcquireUI;
     private NoticeDot _acquireNoticeDot;
     //ButtonColor
@@ -24,13 +24,13 @@ public class SkillUI : MonoBehaviour
     {
         root = GetComponent<UIDocument>().rootVisualElement;
         _equipBackground = root.Q<VisualElement>("EquipBackground");
-        _acquisitionButton = root.Q<Button>("AcquisitionButton");
-        _playerSelectButton = root.Q<Button>("PlayerSelectButton");
-        _companionSelectButton = root.Q<Button>("PartySelectButton");
+        _acquireButton = root.Q<Button>("AcquireButton");
+        _activeButton = root.Q<Button>("ActiveButton");
+        _passiveButton = root.Q<Button>("PassiveButton");
         skillAcquireUI.gameObject.SetActive(true);
         PlayerBroker.OnSkillLevelSet += OnSkillLevelChange;
         PlayerBroker.OnFragmentSet += OnFragmentSet;
-        _acquireNoticeDot =  new NoticeDot(_acquisitionButton, this);
+        _acquireNoticeDot =  new NoticeDot(_acquireButton, this);
         _acquireNoticeDot.StartNotice();
     }
 
@@ -46,16 +46,16 @@ public class SkillUI : MonoBehaviour
 
     private void Start()
     {
-        OnPlayerSelectButtonClicked();
+        OnActiveButtonClicked();
         ToggleEquipBackground(false);
         _equipBackground.RegisterCallback<ClickEvent>(evt => {
             ToggleEquipBackground(false);
         });
         InitFragmentGrid();
         // 버튼 클릭 이벤트 등록
-        _acquisitionButton.RegisterCallback<ClickEvent>(evt=>OnAcquisitionButtonClicked());
-        _playerSelectButton.RegisterCallback<ClickEvent>(evt=>OnPlayerSelectButtonClicked());
-        _companionSelectButton.RegisterCallback<ClickEvent>(evt=>OnCompanionSelectButtonClicked());
+        _acquireButton.RegisterCallback<ClickEvent>(evt=>OnAcquisitionButtonClicked());
+        _activeButton.RegisterCallback<ClickEvent>(evt=>OnActiveButtonClicked());
+        _passiveButton.RegisterCallback<ClickEvent>(evt=>OnPassiveButtonClicked());
     }
 
     private void InitFragmentGrid()
@@ -80,19 +80,29 @@ public class SkillUI : MonoBehaviour
         }
     }
 
-    private void OnPlayerSelectButtonClicked()
+    private void OnActiveButtonClicked()
     {
-        List<IListViewItem> itemList = SkillManager.instance.GetSkillDataListAsItem(true);
-        _flexibleLV.ChangeItems(itemList);
-        _playerSelectButton.style.unityBackgroundImageTintColor =_playerSelectButton.style.color = activeColor;
-        _companionSelectButton.style.unityBackgroundImageTintColor=_companionSelectButton.style.color = inactiveColor;
+        List<IListViewItem> itemList = SkillManager.instance.GetPlayerSkillDataListAsItem(true);
+        _flexibleLV.ChangeItems(itemList);//리스트뷰에 들어갈 아이템 등록
+
+        _activeButton.style.unityBackgroundImageTintColor = new Color(activeColor.r, activeColor.g, activeColor.b, 0.1f);
+        _activeButton.Q<VisualElement>("OutLine").style.unityBackgroundImageTintColor = activeColor;
+        _activeButton.Q<Label>().style.color = activeColor;
+        _passiveButton.style.unityBackgroundImageTintColor = new Color(inactiveColor.r, inactiveColor.g, inactiveColor.b, 0f);
+        _passiveButton.Q<VisualElement>("OutLine").style.unityBackgroundImageTintColor = inactiveColor;
+        _passiveButton.Q<Label>().style.color = inactiveColor;
     }
-    private void OnCompanionSelectButtonClicked()
+    private void OnPassiveButtonClicked()
     {
-        List<IListViewItem> itemList = SkillManager.instance.GetSkillDataListAsItem(false);
-        _flexibleLV.ChangeItems(itemList);
-        _playerSelectButton.style.unityBackgroundImageTintColor = _playerSelectButton.style.color = inactiveColor;
-        _companionSelectButton.style.unityBackgroundImageTintColor = _companionSelectButton.style.color = activeColor;
+        List<IListViewItem> itemList = SkillManager.instance.GetPlayerSkillDataListAsItem(false);
+        _flexibleLV.ChangeItems(itemList);//리스트뷰에 들어갈 아이템 등록
+
+        _passiveButton.style.unityBackgroundImageTintColor = new Color(activeColor.r, activeColor.g, activeColor.b, 0.1f);
+        _passiveButton.Q<VisualElement>("OutLine").style.unityBackgroundImageTintColor = activeColor;
+        _passiveButton.Q<Label>().style.color = activeColor;
+        _activeButton.style.unityBackgroundImageTintColor = new Color(inactiveColor.r, inactiveColor.g, inactiveColor.b, 0f);
+        _activeButton.Q<VisualElement>("OutLine").style.unityBackgroundImageTintColor = inactiveColor;
+        _activeButton.Q<Label>().style.color = inactiveColor;
     }
 
     public void ToggleEquipBackground(bool isActive)

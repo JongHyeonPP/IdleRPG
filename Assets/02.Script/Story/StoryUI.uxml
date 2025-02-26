@@ -1,5 +1,5 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <engine:VisualElement name="Main" style="flex-grow: 1; width: 100%; height: 30%; position: absolute; bottom: -1px; background-color: rgba(248, 240, 240, 0.99); display: flex;">
+    <engine:VisualElement name="Main" style="flex-grow: 1; width: 100%; height: 30%; position: absolute; bottom: -1px; background-color: rgba(248, 240, 240, 0.99); display: none;">
         <engine:Label name="TextLabel" style="width: 100%; height: 711px; font-size: 70px;" />
         <engine:Button text="스킵하기" name="SkipButton" style="top: 532px; position: absolute; background-color: rgba(0, 0, 0, 0.55); width: 300px; height: 150px; font-size: 61px; left: 764px; right: 3px;" />
     </engine:VisualElement>
