@@ -103,15 +103,6 @@ public class GameManager : MonoBehaviour
         {
             _gameData.level = 1;
         }
-        _gameData.skillLevel ??= new();
-        _gameData.weaponCount ??= new();
-        _gameData.statLevel_Gold ??= new();
-        _gameData.statLevel_StatPoint ??= new();
-        _gameData.weaponCount ??= new();
-        _gameData.weaponLevel ??= new();
-        _gameData.skillFragment ??= new();
-        _gameData.equipedSkillArr ??= new string[5];
-        _gameData.companionWeaponIdArr ??= new string[3];
         string serializedData = JsonConvert.SerializeObject(_gameData, Formatting.Indented);
         Debug.Log("Game data loaded:\n" + serializedData);
     }
