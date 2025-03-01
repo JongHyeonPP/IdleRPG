@@ -11,7 +11,7 @@ public abstract class Attackable : MonoBehaviour
     protected float attackTerm = 1f;
     public Animator anim;
     public BigInteger hp;
-    //private Dictionary<> tempEffect = new();
+    
     protected Coroutine attackCoroutine;
     public bool isDead;
     protected EquipedSkill[] equipedSkillArr = new EquipedSkill[10];

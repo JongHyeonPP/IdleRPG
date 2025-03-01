@@ -15,10 +15,13 @@ MonoBehaviour:
   _weaponType: 1
   _weaponRarity: 0
   _power: 1
+  _maxHp: 0
   _criticalDamage: 1
   _critical: 1
-  _weaponSprite: {fileID: 21300000, guid: 1242d9257f164482a9504def032942ed, type: 3}
+  _resist: 0
+  _penetration: 0
+  _weaponSprite: {fileID: 21300000, guid: 808c843d573657e4699f7d23671cb9f5, type: 3}
   _textureSize: {x: 1, y: 1}
   _textureScale: 1
   _uID: Bow_001
-  _weaponName: "\uB098\uBB47\uAC00\uC9C0\uB85C \uB9CC\uB4E0 \uD65C"
+  _weaponName: "\uCD08\uBCF4\uC624\uD06C\uC758 \uD65C"

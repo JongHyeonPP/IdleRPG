@@ -1,5 +1,5 @@
 .unity-progress-bar__container {
-    min-height: 35px;
+    min-height: 50px;
     visibility: visible;
     display: flex;
     -unity-background-image-tint-color: rgb(255, 255, 255);

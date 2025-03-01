@@ -23,15 +23,17 @@ public static class BattleBroker
     public static Action<DropType, int> OnCurrencyInBattle;
 
     public static Action OnGoldSet;
+    public static Action OnStatPointSet;
     public static Action OnLevelExpSet;
     public static Action OnDiaSet;
-    public static Action OnEmeraldSet;
+    public static Action OnCloverSet;
     public static Action OnMaxStageSet;
     public static Func<bool> IsCanAttack;
 
     public static Action<int> SwitchToStory;
     public static Action SwitchBattle;
-    //동료 전투 컨트롤
+    //동료
     public static Action<object> StartCompanionAttack;
     public static Action StopCompanionAttack;
+    public static Action<int> OnCompanionExpSet; 
 }

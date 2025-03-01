@@ -5,84 +5,102 @@ public static class FormulaManager
 {
     public static int GetGoldRequired(int level)
     {
-
-        if (level <= 1000)
+        return 10;
+    }
+    public static int GetGoldStatus(int level, StatusType statusType)
+    {
+        //스탯마다 밸류가 달라야함.
+        switch (statusType)
         {
-            return Mathf.CeilToInt(
-                0.000005f * Mathf.Pow(level, 3)  
-                + 0.01f * Mathf.Pow(level, 2)   
-                + 5f * level                  
-                + 100f                          
-            );
+            case StatusType.MaxHp:
+                return 100;
+            case StatusType.Power:
+                if (level <= 1000)
+                {
+                    return level + 10;
+                }
+                else if (level <= 5000)
+                {
+                    return 1000 + (level - 1000) * 2 + 10;
+                }
+                else
+                {
+                    return 1000 + (5000 - 1000) * 2 + (level - 5000) * 3 + 10;
+                }
+            case StatusType.HpRecover:
+                return 0;
+            case StatusType.Critical:
+                return 0;
+            case StatusType.CriticalDamage:
+                return 0;
         }
-        else if (level <= 5000)
+        return 0;
+    }
+    public static int GetStatPointStatus(int level, StatusType statusType)
+    {
+        //스탯마다 밸류가 달라야함.
+        switch (statusType)
         {
-            return Mathf.CeilToInt(
-                0.00000001f * Mathf.Pow(level, 3.5f) 
-                + 100f * level                        
-            );
+            case StatusType.MaxHp:
+                return 0;
+            case StatusType.Power:
+                if (level <= 1000)
+                {
+                    return level + 10;
+                }
+                else if (level <= 5000)
+                {
+                    return 1000 + (level - 1000) * 2 + 10;
+                }
+                else
+                {
+                    return 1000 + (5000 - 1000) * 2 + (level - 5000) * 3 + 10;
+                }
+            case StatusType.HpRecover:
+                return 0;
+            case StatusType.Critical:
+                return 0;
+            case StatusType.CriticalDamage:
+                return 0;
+            case StatusType.GoldAscend:
+                return 0;
         }
-        else if (level <= 10000)
+        return 0;
+    }
+    public static string GetGoldStatRiseText(int currentValue, int nextValue, StatusType stat)
+    {
+        //텍스트를 얻는 기능 수행
+        switch (stat)
         {
-            return Mathf.CeilToInt(
-                0.0000000001f * Mathf.Pow(level, 4f)
-                + 2000f * level
-            );
-        }
-        else
-        {
-            return Mathf.CeilToInt(
-                10000f * level - 90000000f 
-            );
+            case StatusType.Power:
+            case StatusType.MaxHp:
+            case StatusType.HpRecover:
+                return $"{currentValue} -> {nextValue}";
+            case StatusType.CriticalDamage:
+                return $"{currentValue * 100f}% -> {nextValue * 100f}%";
+            case StatusType.Critical:
+                return $"{currentValue * 100f:F1}% -> {nextValue * 100f:F1}%";
+            default:
+                return "N/A";
         }
     }
-    public static int GetBasicStatRise(int level,StatusType stat)
+    public static string GetStatPointStatRiseText(int currentValue, int nextValue, StatusType stat)
     {
-        if(stat==StatusType.Power||stat==StatusType.MaxHp||stat==StatusType.HpRecover)
+        //텍스트를 얻는 기능 수행
+        switch (stat)
         {
-            if (level <= 1000)
-            {
-                return 1;
-            }
-            else if (level > 1000 && level <= 5000)
-            {
-                return 2;
-            }
-            else
-            {
-                return 3;
-            }
-        }
-        else if (stat == StatusType.Critical)
-        {
-            return 10;
-        }
-        else
-        {
-            return 1;
-        }
-    }
-    public static string GetStatRiseText(int level, StatusType stat)
-    {
-        int nextLevel = level + 1;
-        int statRise = GetBasicStatRise(level, stat);
-        if (stat == StatusType.Power || stat == StatusType.MaxHp || stat == StatusType.HpRecover)
-        {
-            return $"{level} -> {level+statRise}";
-        }
-        else if (stat == StatusType.CriticalDamage) 
-        {
-            return $"{level}% -> {nextLevel}%";
-        }
-        else if (stat == StatusType.Critical) 
-        {
-            float currentCritical = level * 0.1f; 
-            float nextCritical = nextLevel * 0.1f;
-            return $"{currentCritical:F1}% -> {nextCritical:F1}%";
-        }
-        else
-        {
-            return "N/A";
+            case StatusType.Power:
+                return $"공격력 +{currentValue} -> +{nextValue}";
+            case StatusType.MaxHp:
+                return $"체력 +{currentValue} -> +{nextValue}";
+            case StatusType.HpRecover:
+                return $"체력 회복량 +{currentValue} -> +{nextValue}";
+            case StatusType.CriticalDamage:
+                return $"치명타 공격력 +{currentValue * 100f}% -> +{nextValue * 100f}%";
+            case StatusType.GoldAscend:
+                return $"골드 획득량 +{currentValue * 100f:F1}% -> +{nextValue * 100f:F1}%";
+            default:
+                return "N/A";
         }
     }
 }

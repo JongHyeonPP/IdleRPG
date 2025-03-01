@@ -42,8 +42,8 @@ public class WeaponInfoUI : MonoBehaviour
     {
         Debug.Log("클릭 버튼");
         UIBroker.InactiveCurrentUI();
-        PlayerBroker.OnEquipWeapon?.Invoke(_currentWeapon);
-        StartBroker.GetGameData().weaponId = _currentWeapon.UID;
+        PlayerBroker.OnEquipWeapon?.Invoke(_currentWeapon, _currentWeapon.WeaponType);
+        StartBroker.GetGameData().playerWeaponId = _currentWeapon.UID;
         StartBroker.SaveLocal();
     }
     public void ShowWeaponInfo(WeaponData weaponData)

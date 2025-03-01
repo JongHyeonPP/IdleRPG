@@ -2,6 +2,8 @@ using EnumCollection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 
@@ -22,9 +24,6 @@ public class SkillManager : MonoBehaviour
     [SerializeField] Sprite uniqueFragmentSprite;
     [SerializeField] Sprite legendaryFragmentSprite;
     [SerializeField] Sprite mythicFragmentSprite;
-    [Header("SkillDataSet")]
-    public readonly List<SkillDataSet> activeSet = new();
-    public readonly List<SkillDataSet> passiveSet = new();
     private void Awake()
     {
         instance = this;
@@ -36,40 +35,6 @@ public class SkillManager : MonoBehaviour
         {
             skillDataDict.Add(skillData.name, skillData);
         }
-        SetSkillDataSets(true);
-        SetSkillDataSets(false);
-    }
-    private void SetSkillDataSets(bool isActiveSkill)
-    {
-        SkillData[] linqedSkillDataArr = playerSkillArr.Where(item => item.isActiveSkill==isActiveSkill).ToArray();
-        List<SkillDataSet> currentSet = isActiveSkill ? activeSet : passiveSet;
-
-        for (int i = 0; i < linqedSkillDataArr.Length; i+=4)
-        {
-            List<SkillData> dataSet = new()
-            {
-                linqedSkillDataArr[i]
-            };
-            if (i + 1 < linqedSkillDataArr.Length)
-            {
-                dataSet.Add(linqedSkillDataArr[i+1]);
-            }
-            if (i + 2 < linqedSkillDataArr.Length)
-            {
-                dataSet.Add(linqedSkillDataArr[i+2]);
-            }
-            if (i + 3 < linqedSkillDataArr.Length)
-            {
-                dataSet.Add(linqedSkillDataArr[i+3]);
-            }
-            currentSet.Add(new SkillDataSet(dataSet));
-        }
-        
-    }
-    public List<IListViewItem> GetPlayerSkillDataListAsItem(bool isActive)//or Passive
-    {
-        List<SkillDataSet> skillDataSets = isActive ? activeSet : passiveSet;
-        return skillDataSets.Select(item=>(IListViewItem)item).ToList();
     }
     public SkillData GetSkillData(string id)
     {
@@ -102,10 +67,38 @@ public class SkillManager : MonoBehaviour
         }
         return null;
     }
+    public string GetParsedComplexExplain(SkillData skillData, int skillLevel, string colorHex = "")
+    {
+        StringBuilder sb = new(skillData.complex);
+
+        // Color를 RichText용 Hex 코드로 변환
+
+        // 정규식 패턴: `<value>` 또는 `<value*숫자>`
+        string pattern = @"<value(?:\*(\d+))?>";
+
+        // 정규식으로 매칭하여 대체
+        sb = new StringBuilder(Regex.Replace(sb.ToString(), pattern, match =>
+        {
+            float multiplier = 1f; // 기본값 1
+            if (match.Groups[1].Success) // `<value*숫자>` 형식인 경우
+            {
+                multiplier = float.Parse(match.Groups[1].Value);
+            }
+
+            // 변환된 값
+            float value = skillData.value[skillLevel] * multiplier;
+
+            // RichText 적용
+            return $"<color=#{colorHex}>{value}</color>";
+        }));
+
+        return sb.ToString();
+    }
+
+#if UNITY_EDITOR
     [ContextMenu("SetUidAsObjectName")]
     public void SetUidAsObjectName()
     {
-        // 데이터 변경
         foreach (var x in playerSkillArr)
         {
             x.uid = x.name;
@@ -118,10 +111,9 @@ public class SkillManager : MonoBehaviour
             x.skillName = x.name;
             EditorUtility.SetDirty(x);
         }
-
-        // 변경 사항을 Unity 에디터에 반영 (한 번만 호출)
         
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
     }
+#endif
 }

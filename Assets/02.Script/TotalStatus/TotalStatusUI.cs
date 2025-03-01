@@ -35,8 +35,10 @@ public class TotalStatusUI : MonoBehaviour
         accSlot.Q<Label>("CategoriLabel").text = "ÀåÂø ¾Ç¼¼¼­¸®";
     }
 
-    private void OnEquipWeapon(object obj)
+    private void OnEquipWeapon(object obj, WeaponType weaponType)
     {
+        if (weaponType != WeaponType.Melee)
+            return;
         WeaponData weaponData = (WeaponData)obj;
         VisualElement equipIcon = weaponSlot.Q<VisualElement>("EquipIcon");
         if (weaponData == null)

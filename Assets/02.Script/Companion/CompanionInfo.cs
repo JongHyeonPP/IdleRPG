@@ -1,3 +1,4 @@
+using EnumCollection;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -5,6 +6,7 @@ using UnityEngine;
 public class CompanionStatus : ScriptableObject
 {
     public SkillData[] companionSkillArr;
+    public SkillData companionEffect; 
     public string companionName;
     public string companionJob;
 }

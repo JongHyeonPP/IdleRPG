@@ -53,7 +53,7 @@ public class UIManager : MonoBehaviour
         _companionInfoUI.root.style.display = DisplayStyle.None;
 
         UIBroker.OnMenuUIChange?.Invoke(0);
-        BattleManager.instance.InvokeActions();
+        //BattleManager.instance.InvokeActions();
         if (_active)
         {
             DeActiveUI(1);

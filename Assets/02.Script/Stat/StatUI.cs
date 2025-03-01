@@ -12,8 +12,7 @@ public class StatUI : MonoBehaviour
 {
     private GameData _gameData;
     private Coroutine _incrementCoroutine;
-    
-    private readonly StatusType[] _activeStats =
+    private readonly StatusType[] _statsByGold =
     {
         StatusType.Power,
         StatusType.MaxHp,
@@ -21,11 +20,24 @@ public class StatUI : MonoBehaviour
         StatusType.Critical,
         StatusType.CriticalDamage
     };
-    private Dictionary<StatusType, VisualElement> _statElements = new();
+    private readonly StatusType[] _statsByStatPoint =
+    {
+        StatusType.Power,
+        StatusType.MaxHp,
+        StatusType.HpRecover,
+        StatusType.CriticalDamage,
+        StatusType.GoldAscend
+    };
+
+    private readonly Dictionary<StatusType, VisualElement> _goldStatDict = new();
+    private readonly Dictionary<StatusType, VisualElement> _statPointStatDict = new();
     public VisualElement root { get; private set; }
-    private DraggableScrollView draggableScrollView;
-    Button[] categoriButtons;
-    VisualElement[] categoriPanels;
+    [SerializeField] DraggableScrollView _enhanceScrollView;
+    [SerializeField] DraggableScrollView _growScrollView;
+    private DraggableScrollView lockedScrollView;
+    private Button[] _categoriButtons;
+    private VisualElement[] _categoriPanels;
+    private Label _statPointLabel;
     //ButtonColor
     private readonly Color inactiveColor = new(0.7f, 0.7f, 0.7f);
     private readonly Color activeColor = new(1f, 1f, 1f);
@@ -35,28 +47,116 @@ public class StatUI : MonoBehaviour
     [SerializeField] private Sprite hpRecoverSprite;
     [SerializeField] private Sprite criticalSprite;
     [SerializeField] private Sprite criticalDamageSprite;
+    [SerializeField] private Sprite goldAscendSprite;
     private void Awake()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
-        draggableScrollView = GetComponent<DraggableScrollView>();
-        PlayerBroker.OnStatusLevelSet += UpdateStatText;
+        PlayerBroker.OnGoldStatusSet += UpdateGoldStatText;
+        PlayerBroker.OnStatPointStatusSet += UpdateStatPointStatText;
+        BattleBroker.OnStatPointSet += StatPointSet;
     }
+
+    private void StatPointSet()
+    {
+        _statPointLabel.text = $"STAT POINT : {_gameData.statPoint}"; 
+    }
+
     private void Start()
     {
         _gameData = StartBroker.GetGameData();
-        categoriPanels = root.Q<VisualElement>("PanelParent").Children().ToArray();
-        categoriButtons = root.Q<VisualElement>("ButtonParent").Children().Select(item=>(Button)item).ToArray();
+        _categoriPanels = root.Q<VisualElement>("PanelParent").Children().ToArray();
+        _categoriButtons = root.Q<VisualElement>("ButtonParent").Children().Select(item => (Button)item).ToArray();
         InitButton();
         InitEnhancePanel();
+        InitGrowPanel();
         OnCategoriButtonClick(0);
     }
+
+    private void InitGrowPanel()
+    {
+        _statPointLabel = _categoriPanels[1].Q<Label>("StatPointLabel");
+        StatPointSet();
+        foreach (var stat in _statsByStatPoint)
+        {
+            InitGrowElement(stat);
+        }
+    }
+
+    private void InitGrowElement(StatusType stat)
+    {
+        VisualElement elementRoot = _categoriPanels[1].Q<VisualElement>($"{stat}Element");
+        _statPointStatDict[stat] = elementRoot;
+        VisualElement button = elementRoot.Q<VisualElement>("EventVe");
+        Label levelLabel = elementRoot.Q<Label>("StatLevel");
+        Label riseLabel = elementRoot.Q<Label>("StatRise");
+        VisualElement statIcon = elementRoot.Q<VisualElement>("StatIcon");
+        Label statName = elementRoot.Q<Label>("StatName");
+        
+        Sprite iconSprite = null;
+        switch (stat)
+        {
+            case StatusType.Power:
+                statName.text = "STR";
+                iconSprite = powerSprite;
+                break;
+            case StatusType.MaxHp:
+                statName.text = "HP";
+                iconSprite = maxHpSprite;
+                break;
+            case StatusType.HpRecover:
+                statName.text = "VIT";
+                iconSprite = hpRecoverSprite;
+                break;
+
+            case StatusType.CriticalDamage:
+                statName.text = "CRI";
+                iconSprite = criticalDamageSprite;
+                break;
+            case StatusType.GoldAscend:
+                statName.text = "LUK";
+                iconSprite = goldAscendSprite;
+                break;
+        }
+        statIcon.style.backgroundImage = new(iconSprite);
+        button.RegisterCallback<PointerDownEvent>(evt => { OnPointerDown(stat, false); });
+        button.RegisterCallback<PointerUpEvent>(evt => { OnPointerUp(); });
+        if (!_gameData.statLevel_StatPoint.ContainsKey(stat))
+        {
+            _gameData.statLevel_StatPoint[stat] = 0;
+        }
+        int currentLevel = _gameData.statLevel_StatPoint[stat];
+        UpdateStatPointStatText(stat, currentLevel);
+    }
+
+    void Update()
+    {
+#if UNITY_ANDROID
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+
+            if (touch.phase == TouchPhase.Ended)
+            {
+                OnPointerUp();
+            }
+        }
+#endif
+
+#if UNITY_EDITOR || UNITY_STANDALONE
+        if (Input.GetMouseButtonUp(0)) // 마우스 왼쪽 버튼을 떼는 순간
+        {
+            OnPointerUp();
+        }
+#endif
+    }
+
 
     private void InitButton()
     {
         VisualElement buttonParent = root.Q<VisualElement>("ButtonParent");
         for (int i = 0; i < 3; i++)
         {
-            Button categoriButton = categoriButtons[i];
+            Button categoriButton = _categoriButtons[i];
             int index = i;//로컬 변수화
             categoriButton.RegisterCallback<ClickEvent>(evt =>
             {
@@ -67,7 +167,7 @@ public class StatUI : MonoBehaviour
 
     private void InitEnhancePanel()
     {
-        foreach (var stat in _activeStats)
+        foreach (var stat in _statsByGold)
         {
             InitEnhanceElement(stat);
         }
@@ -75,11 +175,10 @@ public class StatUI : MonoBehaviour
     }
     void InitEnhanceElement(StatusType stat)
     {
-        VisualElement elementRoot = categoriPanels[0].Q<VisualElement>($"{stat}Element");
-        _statElements[stat] = elementRoot;
-        Button button = elementRoot.Q<Button>("StatButton");
-        Label levelLabel = elementRoot.Q<Label>("StatLevel");
-        Label riseLabel = elementRoot.Q<Label>("StatRise");
+        VisualElement elementRoot = _categoriPanels[0].Q<VisualElement>($"{stat}Element");
+        _goldStatDict[stat] = elementRoot;
+        VisualElement button = elementRoot.Q<VisualElement>("EventVe");
+
         VisualElement statIcon = elementRoot.Q<VisualElement>("StatIcon");
         Label statName = elementRoot.Q<Label>("StatName");
 
@@ -108,92 +207,144 @@ public class StatUI : MonoBehaviour
                 break;
         }
         statIcon.style.backgroundImage = new(iconSprite);
-        button.RegisterCallback<PointerDownEvent>(evt => OnPointerDown(stat), TrickleDown.TrickleDown);
-        button.RegisterCallback<PointerUpEvent>(evt => OnPointerUp(), TrickleDown.TrickleDown);
+        button.RegisterCallback<PointerDownEvent>(evt => { OnPointerDown(stat, true); });
+        button.RegisterCallback<PointerUpEvent>(evt => { OnPointerUp(); });
         if (!_gameData.statLevel_Gold.ContainsKey(stat))
         {
-            _gameData.statLevel_Gold[stat] = 1;
+            _gameData.statLevel_Gold.Add(stat, 0);
         }
         int currentLevel = _gameData.statLevel_Gold[stat];
-        UpdateStatText(stat, currentLevel);
+        UpdateGoldStatText(stat, currentLevel);
     }
-
-
     private void OnCategoriButtonClick(int index)
     {
         for (int i = 0; i < 3; i++)
         {
             if (index == i)
             {
-                categoriPanels[i].style.display = DisplayStyle.Flex;
-                categoriButtons[i].style.unityBackgroundImageTintColor = new Color(activeColor.r,activeColor.g,activeColor.b, 0.1f);
-                categoriButtons[i].Q<VisualElement>("OutLine").style.unityBackgroundImageTintColor = activeColor;    
-                categoriButtons[i].Q<Label>().style.color = activeColor;    
+                _categoriPanels[i].style.display = DisplayStyle.Flex;
+                _categoriButtons[i].style.unityBackgroundImageTintColor = new Color(activeColor.r,activeColor.g,activeColor.b, 0.1f);
+                _categoriButtons[i].Q<VisualElement>("OutLine").style.unityBackgroundImageTintColor = activeColor;    
+                _categoriButtons[i].Q<Label>().style.color = activeColor;    
             }
             else
             {
-                categoriPanels[i].style.display = DisplayStyle.None;
-                categoriButtons[i].style.unityBackgroundImageTintColor = new Color(inactiveColor.r, inactiveColor.g, inactiveColor.b, 0f);
-                categoriButtons[i].Q<VisualElement>("OutLine").style.unityBackgroundImageTintColor = inactiveColor;
-                categoriButtons[i].Q<Label>().style.color = inactiveColor;
+                _categoriPanels[i].style.display = DisplayStyle.None;
+                _categoriButtons[i].style.unityBackgroundImageTintColor = new Color(inactiveColor.r, inactiveColor.g, inactiveColor.b, 0f);
+                _categoriButtons[i].Q<VisualElement>("OutLine").style.unityBackgroundImageTintColor = inactiveColor;
+                _categoriButtons[i].Q<Label>().style.color = inactiveColor;
             }
         }
     }
 
-    private void OnPointerDown(StatusType stat)//스텟버튼누르기
+    private void OnPointerDown(StatusType stat, bool isByGold)//스텟버튼누르기
     {
-        int currentLevel = _gameData.statLevel_Gold[stat];
-        int requiredGold = FormulaManager.GetGoldRequired(currentLevel); 
-
-        if (_gameData.gold < requiredGold) 
-        {
-           Debug.Log("골드가 없습니다.");
-           return; 
-        }
-        _gameData.gold -= requiredGold;
         if (_incrementCoroutine == null)
         {
-            _incrementCoroutine = StartCoroutine(IncreaseLevelContinuously(stat));
+            lockedScrollView = isByGold ? _enhanceScrollView : _growScrollView;
+            lockedScrollView.LockScrollPosition();
+            _incrementCoroutine = StartCoroutine(PointerDownCoroutine(stat, isByGold));
         }
-       
     }
+
+    private IEnumerator PointerDownCoroutine(StatusType stat, bool isByGold)
+    {
+        if (isByGold)
+        {
+            IncreaseGoldStat(stat);
+        }
+        else
+        {
+            IncreaseStatPointStat(stat);
+        }
+        yield return new WaitForSeconds(0.3f);
+        while (true)
+        {
+            if (isByGold)
+            {
+                IncreaseGoldStat(stat);
+            }
+            else
+            {
+                IncreaseStatPointStat(stat);
+            }
+            yield return new WaitForSeconds(0.08f);
+        }
+    }
+
     private void OnPointerUp()//버튼떼서 데이터저장
     {
         if (_incrementCoroutine != null)
         {
+            if (lockedScrollView)
+            {
+                lockedScrollView.UnlockScrollPosition();
+                lockedScrollView = null;
+            }
             StopCoroutine(_incrementCoroutine);
             _incrementCoroutine = null;
             GameManager.instance.SaveLocalData();
         }
     }
-    private IEnumerator IncreaseLevelContinuously(StatusType stat)
+
+    private void IncreaseGoldStat(StatusType stat)
     {
-        IncrementStat(stat);
-        while (true)
+        int currentLevel = _gameData.statLevel_Gold[stat];
+        int requiredGold = FormulaManager.GetGoldRequired(currentLevel);
+
+        if (_gameData.gold < requiredGold)
         {
-            yield return new WaitForSeconds(0.1f);
-            IncrementStat(stat);
+            Debug.Log("골드가 없습니다.");
+            return;
         }
-    }
-    private void IncrementStat(StatusType stat)
-    {
+        _gameData.gold -= requiredGold;
         _gameData.statLevel_Gold[stat]++;
-        PlayerBroker.OnStatusLevelSet(stat, _gameData.statLevel_Gold[stat]);
-        UpdateStatText(stat, _gameData.statLevel_Gold[stat]);
+        PlayerBroker.OnGoldStatusSet(stat, _gameData.statLevel_Gold[stat]);
+        BattleBroker.OnGoldSet?.Invoke();
+    }
+    private void IncreaseStatPointStat(StatusType stat)
+    {
+        int currentLevel = _gameData.statLevel_StatPoint[stat];
+
+        if (_gameData.statPoint==0)
+        {
+            Debug.Log("스탯 포인트가 없습니다.");
+            return;
+        }
+        _gameData.statPoint--;
+        _gameData.statLevel_StatPoint[stat]++;
+        PlayerBroker.OnStatPointStatusSet(stat, _gameData.statLevel_StatPoint[stat]);
+        BattleBroker.OnStatPointSet?.Invoke();
+
     }
 
-    private void UpdateStatText(StatusType stat, int level)
+
+    private void UpdateGoldStatText(StatusType statType, int level)
     {
-        var elementRoot = _statElements[stat];
-        var levelLabel = elementRoot.Q<Label>("StatLevel");
-        var riseLabel = elementRoot.Q<Label>("StatRise");
-        var priceLabel = elementRoot.Q<Label>("PriceLabel");
+        VisualElement elementRoot = _goldStatDict[statType];
+        Label levelLabel = elementRoot.Q<Label>("StatLevel");
+        Label riseLabel = elementRoot.Q<Label>("StatRise");
+        Label priceLabel = elementRoot.Q<Label>("PriceLabel");
 
-        levelLabel.text = $"Level: {level}";
+        levelLabel.text = $"Lv.{level}";
 
-        riseLabel.text = FormulaManager.GetStatRiseText(level, stat);
+        int currentStat = FormulaManager.GetGoldStatus(level, statType);
+        int nextStat = FormulaManager.GetGoldStatus(level+1, statType);
+        riseLabel.text = FormulaManager.GetGoldStatRiseText(currentStat, nextStat, statType);
 
         priceLabel.text = $"{FormulaManager.GetGoldRequired(level)}";
+    }
+    private void UpdateStatPointStatText(StatusType statType, int level)
+    {
+        VisualElement elementRoot = _statPointStatDict[statType];
+        Label levelLabel = elementRoot.Q<Label>("StatLevel");
+        Label riseLabel = elementRoot.Q<Label>("StatRise");
+
+        levelLabel.text = $"Lv.{level}";
+
+        int currentStat = FormulaManager.GetStatPointStatus(level, statType);
+        int nextStat = FormulaManager.GetStatPointStatus(level+1, statType);
+        riseLabel.text = FormulaManager.GetStatPointStatRiseText(currentStat, nextStat, statType);
     }
     #region UIChange
     private void OnEnable()

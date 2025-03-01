@@ -1,7 +1,6 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <engine:Template name="NoticeDot" src="project://database/Assets/02.Script/NoticeDot/NoticeDot.uxml?fileID=9197481963319205126&amp;guid=373d7667e06f6d94db8dcfc732fc89f9&amp;type=3#NoticeDot" />
     <engine:Template name="FragmentPanel" src="project://database/Assets/02.Script/Skill/SkillUI/FragmentPanel.uxml?fileID=9197481963319205126&amp;guid=7655cdff3b41fc544a7842e20bb7caf5&amp;type=3#FragmentPanel" />
-    <engine:Template name="DraggableListView" src="project://database/Assets/02.Script/ScrollTool/FlexibleListView.uxml?fileID=9197481963319205126&amp;guid=16efd8942fa594c479915add42228bc9&amp;type=3#FlexibleListView" />
     <engine:VisualElement name="SkillDataPanel" picking-mode="Ignore" style="flex-grow: 0; height: 1000px; bottom: 0; position: absolute; width: 100%; align-items: center; justify-content: center; -unity-font-definition: url(&quot;project://database/Assets/05.Font/Maplestory%20Light.ttf?fileID=12800000&amp;guid=b7853b5ad26567e41a3c4210e64c5419&amp;type=3#Maplestory Light&quot;); letter-spacing: 6px; -unity-background-image-tint-color: rgb(180, 129, 76); background-image: url(&quot;project://database/Assets/Asset/PixelFantasy/PixelHeroes/Common/UI/Common/SquareRadiantGradient.png?fileID=2800000&amp;guid=ec80180e021a44f4a30c70644a7bd65e&amp;type=3#SquareRadiantGradient&quot;);">
         <engine:VisualElement name="MainPanel" style="flex-grow: 0; width: 1023px; height: 94%; display: flex;">
             <engine:VisualElement name="UpperPanel" style="flex-grow: 0; height: 149px; flex-direction: row; align-items: center; background-color: rgba(0, 0, 0, 0); flex-shrink: 0; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/TitleBar.png?fileID=2800000&amp;guid=a331d5e1dd3208d4ab0085903c241b8a&amp;type=3#TitleBar&quot;); padding-bottom: 23px;">
@@ -34,7 +33,10 @@
                 </engine:VisualElement>
             </engine:VisualElement>
             <engine:VisualElement name="Separator" style="flex-grow: 1; width: 100%; align-self: center; height: 33px; background-color: rgba(180, 130, 83, 0); margin-top: 0; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/Separator.png?fileID=2800000&amp;guid=6905ee83a67947e4cb1e8e775a2e9794&amp;type=3#Separator&quot;);" />
-            <engine:Instance template="DraggableListView" name="FlexableListView" style="height: 100%; width: 95%; align-self: center;" />
+            <engine:VisualElement name="ScrollViewParent" style="flex-grow: 1; width: 100%; height: 100%;">
+                <engine:ScrollView name="ActiveScrollView" touch-scroll-type="Elastic" style="width: 100%; position: absolute; height: 100%;" />
+                <engine:ScrollView name="PassiveScrollView" touch-scroll-type="Elastic" style="width: 100%; position: absolute; height: 100%;" />
+            </engine:VisualElement>
             <engine:VisualElement name="EquipBackground" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.59); display: none;" />
         </engine:VisualElement>
         <engine:VisualElement name="Frame" picking-mode="Ignore" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/WindowStroke2.png?fileID=21300000&amp;guid=f1ad16e66091e1344a57f36d05134015&amp;type=3#WindowStroke2&quot;);" />

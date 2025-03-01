@@ -10,26 +10,35 @@ public class PlayerController : Attackable
     [SerializeField] private PlayerStatus _status;//플레이어의 능력치
     private CapsuleCollider2D _collider;//플레이어의 콜라이더
     private float _mp;
+    private GameData _gameData;
 
-    [SerializeField] Weapon playerWeapon;
     private void Awake()
     {
         InitEvent();
         StartCoroutine(MpGainRoop());
     }
+    
+
     private void Start()
     {
+        _gameData = StartBroker.GetGameData();
         SetSkillSkillsInBattle();
         PlayerBroker.OnSkillChanged += OnSkillChanged;
         SetDefaultAttack();
+        SetGoldStatus();
+        SetStatPointStatus();
+
     }
+
+
+
     private void SetSkillSkillsInBattle()
     {
-        string[] skillIdArr = StartBroker.GetGameData().equipedSkillArr;
+        string[] skillIdArr = _gameData.equipedSkillArr;
         for (int i = 0; i < skillIdArr.Length; i++)
         {
             string skillId = skillIdArr[i];
-            if (string.IsNullOrEmpty( skillId))
+            if (string.IsNullOrEmpty(skillId))
                 continue;
             SkillData skillData = SkillManager.instance.GetSkillData(skillId);
             EquipedSkill skillInBattle = new(skillData);
@@ -39,7 +48,8 @@ public class PlayerController : Attackable
     private void InitEvent()
     {
         _collider = GetComponent<CapsuleCollider2D>();
-        PlayerBroker.OnStatusLevelSet += OnStatusChange;
+        PlayerBroker.OnGoldStatusSet += OnGoldStatusSet;
+        PlayerBroker.OnStatPointStatusSet += OnStatPointStatusSet;
         BattleBroker.OnBossTimeLimit += OnDead;
         PlayerBroker.GetPlayerController += GetPlayerController;
         BattleBroker.OnStageEnter += OnStageEnter;
@@ -60,50 +70,57 @@ public class PlayerController : Attackable
         hp = _status.MaxHp;
         _mp = 0;
         StopAttack();
-        PlayerBroker.OnPlayerHpChanged(1f);
     }
 
-    private void OnStatusChange(StatusType type, int value)
+    private void OnGoldStatusSet(StatusType type, int value)
     {
         switch (type)
         {
             case StatusType.MaxHp:
-                _status.MaxHp += value;
+                _status._maxHp_Gold = value;
                 break;
             case StatusType.Power:
-                _status.Power += value;
+                _status._power_Gold = value;
                 break;
             case StatusType.HpRecover:
-                _status.HpRecover += value;
+                _status._hpRecover_Gold = value;
                 break;
             case StatusType.Critical:
-                _status.Critical += value;
+                _status._critical_Gold = value;
                 break;
             case StatusType.CriticalDamage:
-                _status.CriticalDamage += value;
-                break;
-            case StatusType.Resist:
-                _status.Resist += value;
-                break;
-            case StatusType.Penetration:
-                _status.Penetration += value;
-                break;
-            case StatusType.GoldAscend:
-                _status.GoldAscend += value;
-                break;
-            case StatusType.ExpAscend:
-                _status.ExpAscend += value;
+                _status._criticalDamage_Gold = value;
                 break;
             default:
-                Debug.Log($"{type.ToString()} is invalid type");
+                Debug.Log($"{type} is invalid type");
+                break;
+        }
+    }
+    private void OnStatPointStatusSet(StatusType type, int value)
+    {
+        switch (type)
+        {
+            case StatusType.MaxHp:
+                _status._maxHp_StatPoint = value;
+                break;
+            case StatusType.Power:
+                _status._power_StatPoint = value;
+                break;
+            case StatusType.HpRecover:
+                _status._hpRecover_StatPoint = value;
+                break;
+            case StatusType.CriticalDamage:
+                _status._criticalDamage_StatPoint = value;
+                break;
+            case StatusType.GoldAscend:
+                _status._goldAscend_StatPoint = value;
+                break;
+            default:
+                Debug.Log($"{type} is invalid type");
                 break;
         }
     }
 
-    public void ChangeWeapon()//0 : Melee, 1 : Bow, 2 : Magic
-    {
-
-    }
 
     //애니메이터의 움직임 변화
     public void MoveState(bool _isMove)
@@ -116,48 +133,32 @@ public class PlayerController : Attackable
     {
         return _status;
     }
-    //아무 스탯도 적용 안한 상태의 능력치 먼저 적용
-    public void InitDefaultStatus()
-    {
-        DefaultPlayerStatusInfo defaultStatus = new();
-        _status.MaxHp = defaultStatus.maxHp;
-        _status.Power = defaultStatus.power;
-        _status.HpRecover = defaultStatus.hpRecover;
-        _status.Critical = defaultStatus.critical;
-        _status.CriticalDamage = defaultStatus.criticalDamage;
-        _status.MaxMp = defaultStatus.maxMana;
-        _status.MpRecover = defaultStatus.manaRecover;
-        _status.Resist = 0;
-        _status.Penetration = 0;
-        _status.GoldAscend = 0;
-        _status.ExpAscend = 0;
-    }
     //스탯 업그레이드 정보를 플레이어의 스탯에 일괄적으로 적용한다.
-    public void SetStatus(Dictionary<StatusType, int> statLevel)
+    private int GetStatValueOrDefault(Dictionary<StatusType, int> dict, StatusType type)
     {
-        var statUpdaters = new Dictionary<StatusType, Action<int>>
-    {
-        { StatusType.MaxHp, value => _status.MaxHp += value },
-        { StatusType.Power, value => _status.Power += value },
-        { StatusType.HpRecover, value => _status.HpRecover += value },
-        { StatusType.Critical, value => _status.Critical += value },
-        { StatusType.CriticalDamage, value => _status.CriticalDamage += value },
-        { StatusType.MaxMp, value => _status.MaxMp += value },
-        { StatusType.MpRecover, value => _status.MpRecover += value },
-        { StatusType.Resist, value => _status.Resist += value },
-        { StatusType.Penetration, value => _status.Penetration += value },
-        { StatusType.GoldAscend, value => _status.GoldAscend += value },
-        { StatusType.ExpAscend, value => _status.ExpAscend += value },
-    };
-
-        foreach (var kvp in statUpdaters)
-        {
-            if (statLevel.TryGetValue(kvp.Key, out int value))
-            {
-                kvp.Value(value); // 키가 존재하면 값 업데이트
-            }
-        }
+        return dict.TryGetValue(type, out int value) ? value : 0;
     }
+
+    public void SetGoldStatus()
+    {
+        Dictionary<StatusType, int> statLevelDict = _gameData.statLevel_Gold;
+        _status._maxHp_Gold = FormulaManager.GetGoldStatus(GetStatValueOrDefault(statLevelDict, StatusType.MaxHp), StatusType.MaxHp);
+        _status._power_Gold = FormulaManager.GetGoldStatus(GetStatValueOrDefault(statLevelDict, StatusType.Power), StatusType.Power);
+        _status._hpRecover_Gold = FormulaManager.GetGoldStatus(GetStatValueOrDefault(statLevelDict, StatusType.HpRecover), StatusType.HpRecover);
+        _status._critical_Gold = FormulaManager.GetGoldStatus(GetStatValueOrDefault(statLevelDict, StatusType.Critical), StatusType.Critical);
+        _status._criticalDamage_Gold = FormulaManager.GetGoldStatus(GetStatValueOrDefault(statLevelDict, StatusType.CriticalDamage), StatusType.CriticalDamage);
+    }
+
+    public void SetStatPointStatus()
+    {
+        Dictionary<StatusType, int> statLevelDict = _gameData.statLevel_StatPoint;
+        _status._criticalDamage_StatPoint = FormulaManager.GetStatPointStatus(GetStatValueOrDefault(statLevelDict, StatusType.CriticalDamage), StatusType.CriticalDamage);
+        _status._goldAscend_StatPoint = FormulaManager.GetStatPointStatus(GetStatValueOrDefault(statLevelDict, StatusType.GoldAscend), StatusType.GoldAscend);
+        _status._hpRecover_StatPoint = FormulaManager.GetStatPointStatus(GetStatValueOrDefault(statLevelDict, StatusType.HpRecover), StatusType.HpRecover);
+        _status._maxHp_StatPoint = FormulaManager.GetStatPointStatus(GetStatValueOrDefault(statLevelDict, StatusType.MaxHp), StatusType.MaxHp);
+        _status._power_StatPoint = FormulaManager.GetStatPointStatus(GetStatValueOrDefault(statLevelDict, StatusType.Power), StatusType.Power);
+    }
+
     protected override void OnDead()
     {
         anim.ResetTrigger("Attack");
@@ -205,21 +206,27 @@ public class PlayerController : Attackable
         EquipedSkill currentSkill = new(SkillManager.instance.GetSkillData(skillId));
         equipedSkillArr[index] = currentSkill;
     }
-    private void OnDestroy()
+    private void InitPlayer()
     {
-        ClearEvent();
-    }
 
-    private void ClearEvent()
-    {
-        // PlayerBroker 이벤트 해제
-        PlayerBroker.OnStatusLevelSet -= OnStatusChange;
-        PlayerBroker.OnSkillChanged -= OnSkillChanged;
-        PlayerBroker.GetPlayerController -= GetPlayerController;
-
-        // BattleBroker 이벤트 해제
-        BattleBroker.OnBossTimeLimit -= OnDead;
-        BattleBroker.OnStageEnter -= OnStageEnter;
-        BattleBroker.OnBossEnter -= OnBossEnter;
+        
     }
+    //private void OnDestroy()
+    //{
+    //    ClearEvent();
+    //}
+
+    //private void ClearEvent()
+    //{
+    //     PlayerBroker 이벤트 해제
+    //    PlayerBroker.OnGoldStatusSet -= OnGoldStatusSet;
+    //    PlayerBroker.OnStatPointStatusSet -= OnStatPointStatusSet;
+    //    PlayerBroker.OnSkillChanged -= OnSkillChanged;
+    //    PlayerBroker.GetPlayerController -= GetPlayerController;
+
+    //     BattleBroker 이벤트 해제
+    //    BattleBroker.OnBossTimeLimit -= OnDead;
+    //    BattleBroker.OnStageEnter -= OnStageEnter;
+    //    BattleBroker.OnBossEnter -= OnBossEnter;
+    //}
 }

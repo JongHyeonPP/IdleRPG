@@ -27,7 +27,7 @@ public class CurrencyBarUI : MonoBehaviour
 
         PlayerBroker.OnSetName += SetName;
         BattleBroker.OnDiaSet += SetDia;
-        BattleBroker.OnEmeraldSet += SetEmerald;
+        BattleBroker.OnCloverSet += SetEmerald;
         BattleBroker.OnLevelExpSet += SetLevelExp;
         OnSetLevel(_gameData.level);
         SetName(_gameData.userName);
@@ -57,7 +57,7 @@ public class CurrencyBarUI : MonoBehaviour
     }
     private void SetEmerald()
     {
-        _emeraldLabel.text = _gameData.emerald.ToString();
+        _emeraldLabel.text = _gameData.clover.ToString();
     }
     private void SetDia()
     {

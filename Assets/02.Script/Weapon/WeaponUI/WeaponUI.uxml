@@ -18,7 +18,7 @@
             <engine:VisualElement name="Separator" style="flex-grow: 0; width: 100%; align-self: center; height: 20px; background-color: rgba(180, 130, 83, 0); margin-top: 0; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/Separator.png?fileID=2800000&amp;guid=6905ee83a67947e4cb1e8e775a2e9794&amp;type=3#Separator&quot;);" />
             <engine:VisualElement name="MainParentPanel" picking-mode="Ignore" style="flex-grow: 1; bottom: auto; height: 100%;">
                 <engine:VisualElement name="PlayerPanel" style="flex-grow: 1; width: 100%; height: 100%; position: absolute;">
-                    <engine:ScrollView name="PlayerScrollView" horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="Hidden" mode="Vertical" style="height: 100%; position: absolute; width: 100%; top: auto; left: auto; translate: 0 0; scale: 1 1; bottom: auto; padding-top: 10px; padding-right: 25px; padding-bottom: 10px; padding-left: 25px;">
+                    <engine:ScrollView name="PlayerScrollView" horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="Hidden" mode="Vertical" touch-scroll-type="Elastic" style="height: 100%; position: absolute; width: 100%; top: auto; left: auto; translate: 0 0; scale: 1 1; bottom: auto; padding-top: 10px; padding-right: 25px; padding-bottom: 10px; padding-left: 25px;">
                         <engine:VisualElement name="SlotContainer" style="flex-grow: 1; flex-direction: column; width: 100%; flex-wrap: wrap; justify-content: center;" />
                     </engine:ScrollView>
                 </engine:VisualElement>
@@ -38,13 +38,13 @@
                         </engine:Button>
                     </engine:VisualElement>
                     <engine:VisualElement name="CompanionScrollViewParent" style="flex-grow: 1;">
-                        <engine:ScrollView name="BowScrollView" horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="Hidden" mode="Vertical" style="position: absolute; width: 100%; height: 100%; padding-top: 10px; padding-right: 25px; padding-bottom: 10px; padding-left: 25px;">
+                        <engine:ScrollView name="BowScrollView" horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="Hidden" mode="Vertical" touch-scroll-type="Elastic" style="position: absolute; width: 100%; height: 100%; padding-top: 10px; padding-right: 25px; padding-bottom: 10px; padding-left: 25px;">
                             <engine:VisualElement name="SlotContainer" style="flex-grow: 1; flex-direction: row; width: 100%; flex-wrap: wrap; justify-content: center;" />
                         </engine:ScrollView>
-                        <engine:ScrollView name="ShieldScrollView" horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="Hidden" mode="Vertical" style="position: absolute; width: 100%; height: 100%; padding-top: 10px; padding-right: 25px; padding-bottom: 10px; padding-left: 25px;">
+                        <engine:ScrollView name="ShieldScrollView" horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="Hidden" mode="Vertical" touch-scroll-type="Elastic" style="position: absolute; width: 100%; height: 100%; padding-top: 10px; padding-right: 25px; padding-bottom: 10px; padding-left: 25px;">
                             <engine:VisualElement name="SlotContainer" style="flex-grow: 1; flex-direction: row; width: 100%; flex-wrap: wrap; justify-content: center;" />
                         </engine:ScrollView>
-                        <engine:ScrollView name="StaffScrollView" horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="Hidden" mode="Vertical" style="position: absolute; width: 100%; height: 100%; padding-top: 10px; padding-right: 25px; padding-bottom: 10px; padding-left: 25px;">
+                        <engine:ScrollView name="StaffScrollView" horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="Hidden" mode="Vertical" touch-scroll-type="Elastic" style="position: absolute; width: 100%; height: 100%; padding-top: 10px; padding-right: 25px; padding-bottom: 10px; padding-left: 25px;">
                             <engine:VisualElement name="SlotContainer" style="flex-grow: 1; flex-direction: row; width: 100%; flex-wrap: wrap; justify-content: center;" />
                         </engine:ScrollView>
                     </engine:VisualElement>

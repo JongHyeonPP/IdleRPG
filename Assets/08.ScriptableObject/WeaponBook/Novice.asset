@@ -12,31 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c648b1b66edd1b64bbd4da7100062dfe, type: 3}
   m_Name: Novice
   m_EditorClassIdentifier: 
-  _bookName: "\uCD08\uBCF4 \uC694\uBBF8"
-  _weapons:
-  - {fileID: 11400000, guid: 37089dd7c1ce1bf4a875ee79c60b359e, type: 2}
-  - {fileID: 11400000, guid: 5112c1e099528e446b7d098ab2a3622c, type: 2}
-  - {fileID: 11400000, guid: f77fef3715384c84dae9a15b3d6d3566, type: 2}
-  - {fileID: 11400000, guid: 8813c8f3523503e42ae8513ed18f0884, type: 2}
-  - {fileID: 11400000, guid: 44411c7d4a2e3c2458a0f011208f95c3, type: 2}
-  - {fileID: 11400000, guid: a397c19d8c81797429408bb4b91bf903, type: 2}
-  _displayName: Novice
-  _upgradeLevels: 120000001e0000003c00000078000000f0000000
-  _upgradeStats:
-  - 1
-  - 1
-  - 1
-  - 1
-  - 1
   bookId: Novice
   bookName: "\uCD08\uBCF4 \uC694\uBBF8"
   weapons:
   - {fileID: 11400000, guid: 37089dd7c1ce1bf4a875ee79c60b359e, type: 2}
   - {fileID: 11400000, guid: 5112c1e099528e446b7d098ab2a3622c, type: 2}
-  - {fileID: 11400000, guid: f77fef3715384c84dae9a15b3d6d3566, type: 2}
   - {fileID: 11400000, guid: 8813c8f3523503e42ae8513ed18f0884, type: 2}
-  - {fileID: 11400000, guid: 44411c7d4a2e3c2458a0f011208f95c3, type: 2}
-  - {fileID: 11400000, guid: a397c19d8c81797429408bb4b91bf903, type: 2}
   upgradeLevels: 120000001e0000003c00000078000000f0000000
   upgradeStats:
   - 1

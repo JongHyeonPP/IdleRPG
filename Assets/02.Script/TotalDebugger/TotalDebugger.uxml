@@ -1,15 +1,16 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <engine:Template name="CurrencyPanel" src="project://database/Assets/02.Script/TotalDebugger/CurrencyCategoriPanel.uxml?fileID=9197481963319205126&amp;guid=57025d13b2b6f0b4da9a40a812493358&amp;type=3#CurrencyCategoriPanel" />
-    <engine:Template name="StatusCategoriPanel" src="project://database/Assets/02.Script/TotalDebugger/StatusCategoriPanel.uxml?fileID=9197481963319205126&amp;guid=c6da34f46069f7044bd8a4723189996c&amp;type=3#StatusCategoriPanel" />
-    <engine:Template name="WeaponCategoriPanel" src="project://database/Assets/02.Script/TotalDebugger/WeaponCategoriPanel.uxml?fileID=9197481963319205126&amp;guid=2f628829bea5a6348ad92fdaad03e485&amp;type=3#WeaponCategoriPanel" />
-    <engine:Template name="SkillCategoriPanel" src="project://database/Assets/02.Script/TotalDebugger/SkillCategoriPanel.uxml?fileID=9197481963319205126&amp;guid=afcce273fcc77274ba79aba8d216ede1&amp;type=3#SkillCategoriPanel" />
-    <engine:Template name="MaterialCategoriPanel" src="project://database/Assets/02.Script/TotalDebugger/MaterialCategoriPanel.uxml?fileID=9197481963319205126&amp;guid=b38a715f2ff085340ae0f915edcf55b4&amp;type=3#MaterialCategoriPanel" />
+    <engine:Template name="CurrencyPanel" src="project://database/Assets/02.Script/TotalDebugger/CategoriPanel/CurrencyCategoriPanel.uxml?fileID=9197481963319205126&amp;guid=57025d13b2b6f0b4da9a40a812493358&amp;type=3#CurrencyCategoriPanel" />
+    <engine:Template name="StatusCategoriPanel" src="project://database/Assets/02.Script/TotalDebugger/CategoriPanel/StatusCategoriPanel.uxml?fileID=9197481963319205126&amp;guid=c6da34f46069f7044bd8a4723189996c&amp;type=3#StatusCategoriPanel" />
+    <engine:Template name="WeaponCategoriPanel" src="project://database/Assets/02.Script/TotalDebugger/CategoriPanel/WeaponCategoriPanel.uxml?fileID=9197481963319205126&amp;guid=2f628829bea5a6348ad92fdaad03e485&amp;type=3#WeaponCategoriPanel" />
+    <engine:Template name="SkillCategoriPanel" src="project://database/Assets/02.Script/TotalDebugger/CategoriPanel/SkillCategoriPanel.uxml?fileID=9197481963319205126&amp;guid=afcce273fcc77274ba79aba8d216ede1&amp;type=3#SkillCategoriPanel" />
+    <engine:Template name="MaterialCategoriPanel" src="project://database/Assets/02.Script/TotalDebugger/CategoriPanel/MaterialCategoriPanel.uxml?fileID=9197481963319205126&amp;guid=b38a715f2ff085340ae0f915edcf55b4&amp;type=3#MaterialCategoriPanel" />
     <engine:VisualElement name="LoadedPanel" style="height: 100%; flex-direction: column; background-color: rgb(115, 115, 115);">
         <engine:VisualElement name="CategoriPanel" style="flex-grow: 0; height: 47px; flex-direction: row; align-items: center; margin-left: 11px;">
             <engine:Button text="Currency" name="CurrencyButton" focusable="false" style="width: 100px; height: 30px;" />
             <engine:Button text="Status" name="StatusButton" focusable="false" style="width: 100px; height: 30px;" />
             <engine:Button text="Weapon" name="WeaponButton" focusable="false" style="width: 100px; height: 30px;" />
             <engine:Button text="Skill" name="SkillButton" focusable="false" style="width: 100px; height: 30px;" />
+            <engine:Button text="Companion" name="CompanionButton" focusable="false" style="width: 100px; height: 30px;" />
             <engine:Button text="Material" name="MaterialButton" focusable="false" style="width: 100px; height: 30px;" />
         </engine:VisualElement>
         <engine:VisualElement name="PanelParent" style="flex-grow: 0; height: 80%;">

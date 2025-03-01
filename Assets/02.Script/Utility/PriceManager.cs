@@ -8,7 +8,7 @@ public class PriceManager : MonoBehaviour
 {
     public static PriceManager instance;
     [SerializeField] PriceInfo _priceInfo;
-    public const int MAXSKILLLEVEL = 10;
+    public const int MAXPLAYERSKILLLEVEL = 10;
     public const int MAXCOMPANIONSKILLLEVEL = 20;
     public const int MAXWEAPONLEVEL = 20;
     private void Awake()

@@ -46,8 +46,8 @@ public class BattleManager : MonoBehaviour
 
     private void Start()
     {
-        
-        _controller = GameManager.controller;
+
+        _controller = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
         _ePool0.poolParent = _ePool1.poolParent = _poolParent;
         GameManager.instance.AutoSaveStart();
         _isMove = true;
@@ -55,8 +55,32 @@ public class BattleManager : MonoBehaviour
         isBattleActive = true;
         SetEvent();
         ControlView(false);
+        SetWeaponSprite(_gameData.playerWeaponId, WeaponType.Melee);
+        for (int i = 0; i < 3; i++)
+        {
+            WeaponType weaponType;
+            switch (i)
+            {
+                default:
+                    weaponType = WeaponType.Bow;
+                    break;
+                case 1:
+                    weaponType = WeaponType.Shield;
+                    break;
+                case 2:
+                    weaponType = WeaponType.Staff;
+                    break;
+            }
+            SetWeaponSprite(_gameData.companionWeaponIdArr[i], weaponType);
+        }
     }
-
+    private void SetWeaponSprite(string weaponId, WeaponType weaponType)
+    {
+        if (weaponId != null)
+            PlayerBroker.OnEquipWeapon(WeaponManager.instance.weaponDict[weaponId], weaponType);
+        else
+            PlayerBroker.OnEquipWeapon(null, weaponType);
+    }
     public void SetEvent()
     {
         //Event ¿¬°á
@@ -86,14 +110,7 @@ public class BattleManager : MonoBehaviour
                 break;
         }
     }
-    public void InvokeActions()
-    {
-        string weaponId = _gameData.weaponId;
-        if (weaponId != null)
-            PlayerBroker.OnEquipWeapon(WeaponManager.instance.weaponDict[weaponId]);
-        else
-            PlayerBroker.OnEquipWeapon(null);
-    }
+
 
     private bool IsCanAttack()
     {

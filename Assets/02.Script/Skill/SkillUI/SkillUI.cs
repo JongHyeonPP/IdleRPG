@@ -1,24 +1,31 @@
 using EnumCollection;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.Playables;
 using UnityEngine.UIElements;
 
 public class SkillUI : MonoBehaviour
 {
+    private GameData _gameData;
+    [SerializeField] SkillInfoUI _skillInfoUI;
     public VisualElement root { get; private set; }
-    [SerializeField] FlexibleListView _flexibleLV;
+    [SerializeField] DraggableScrollView _activeScrollView;
+    [SerializeField] DraggableScrollView _passiveScrollView;
+    private readonly Dictionary<string, VisualElement> _skillId_SlotDict = new();
     private VisualElement _equipBackground;
+    [SerializeField] VisualTreeAsset slotSetAsset;
     private Button _acquireButton;
     private Button _activeButton;
     private Button _passiveButton;
     [SerializeField] SkillAcquireUI skillAcquireUI;
     private NoticeDot _acquireNoticeDot;
     //ButtonColor
-    private readonly Color inactiveColor =  new (0.7f, 0.7f, 0.7f);
+    private readonly Color inactiveColor = new(0.7f, 0.7f, 0.7f);
     private readonly Color activeColor = new(1f, 1f, 1f);
     //Fragment
-    private Dictionary<Rarity, Label> fragmentDict = new();
+    private readonly Dictionary<Rarity, Label> fragmentDict = new();
     [SerializeField] Sprite[] fragmentSprites;
     private void Awake()
     {
@@ -30,20 +37,11 @@ public class SkillUI : MonoBehaviour
         skillAcquireUI.gameObject.SetActive(true);
         PlayerBroker.OnSkillLevelSet += OnSkillLevelChange;
         PlayerBroker.OnFragmentSet += OnFragmentSet;
-        _acquireNoticeDot =  new NoticeDot(_acquireButton, this);
+
+        _acquireNoticeDot = new NoticeDot(_acquireButton, this);
         _acquireNoticeDot.StartNotice();
+        _gameData = StartBroker.GetGameData();
     }
-
-    private void OnFragmentSet(Rarity rarity, int num)
-    {
-        fragmentDict[rarity].text = num.ToString();
-    }
-
-    private void OnSkillLevelChange(string skillId, int level)
-    {
-        _flexibleLV.listView.Rebuild();
-    }
-
     private void Start()
     {
         OnActiveButtonClicked();
@@ -53,11 +51,106 @@ public class SkillUI : MonoBehaviour
         });
         InitFragmentGrid();
         // 버튼 클릭 이벤트 등록
-        _acquireButton.RegisterCallback<ClickEvent>(evt=>OnAcquisitionButtonClicked());
-        _activeButton.RegisterCallback<ClickEvent>(evt=>OnActiveButtonClicked());
-        _passiveButton.RegisterCallback<ClickEvent>(evt=>OnPassiveButtonClicked());
+        _acquireButton.RegisterCallback<ClickEvent>(evt => OnAcquisitionButtonClicked());
+        _activeButton.RegisterCallback<ClickEvent>(evt => OnActiveButtonClicked());
+        _passiveButton.RegisterCallback<ClickEvent>(evt => OnPassiveButtonClicked());
+        SetScrollView();
+    }
+    private void SetScrollView()
+    {
+        SkillData[] skillDataArr = SkillManager.instance.playerSkillArr;
+        SetEachScrollView(skillDataArr.Where(item => item.isActiveSkill).ToArray(), _activeScrollView);
+        SetEachScrollView(skillDataArr.Where(item => !item.isActiveSkill).ToArray(), _passiveScrollView);
+    }
+    private void SetEachScrollView(SkillData[] dataArr, DraggableScrollView draggableScrollview)
+    {
+        int indexInSet = 0;
+        VisualElement currentSlotSet = null;
+        for (int i = 0; i < dataArr.Length; i++)
+        {
+            SkillData skillData = dataArr[i];
+            if (indexInSet == 0)
+            {
+                currentSlotSet = slotSetAsset.CloneTree();
+            }
+            VisualElement currentSlot = currentSlotSet.Q<VisualElement>($"SkillData_{indexInSet}");
+            SetSlot(draggableScrollview, skillData, currentSlot);
+            indexInSet = (indexInSet + 1) % 4;
+
+            if (indexInSet == 0)
+            {
+                draggableScrollview.scrollView.Add(currentSlotSet);
+                currentSlotSet = null;
+            }
+        }
+        if (currentSlotSet != null)
+        {
+            draggableScrollview.scrollView.Add(currentSlotSet);
+
+            for (int i = indexInSet; i <= 3; i++)
+            {
+                VisualElement currentSlot = currentSlotSet.Q<VisualElement>($"SkillData_{i}");
+                currentSlot.style.display = DisplayStyle.None;
+            }
+        }
+        if (dataArr.Length < 9)
+            draggableScrollview.scrollView.style.height = Length.Auto();
     }
 
+
+    private void SetSlot(DraggableScrollView draggableScrollview, SkillData skillData, VisualElement currentSlot)
+    {
+        if (!_gameData.skillLevel.TryGetValue(skillData.name, out int skillLevel))
+        {
+            skillLevel = 0;
+        }
+        VisualElement unacquired = currentSlot.Q<VisualElement>("Unacquired");
+        VisualElement acquired = currentSlot.Q<VisualElement>("Acquired");
+        if (skillLevel == 0)
+        {
+            acquired.style.display = DisplayStyle.None;
+            unacquired.style.display = DisplayStyle.Flex;
+        }
+        else if (skillLevel > 0)
+        {
+            acquired.style.display = DisplayStyle.Flex;
+            unacquired.style.display = DisplayStyle.None;
+
+            Label nameLabel = currentSlot.Q<Label>("NameLabel");
+            Label levelLabel = currentSlot.Q<Label>("LevelLabel");
+            nameLabel.text = skillData.name;
+            levelLabel.text = $"Lv.{skillLevel}";
+            ProgressBar containProgressBar = currentSlot.Q<ProgressBar>("ContainProgressBar");
+            VisualElement skillIcon = currentSlot.Q<VisualElement>("SkillIcon");
+            skillIcon.style.backgroundImage = new(skillData.iconSprite);
+        }
+        VisualElement clickVe = currentSlot.Q<VisualElement>("ClickVe");
+        clickVe.RegisterCallback<ClickEvent>(evt =>
+        {
+            if (!draggableScrollview._isDragging)
+                _skillInfoUI.ActiveUI(skillData, skillLevel);
+        });
+        _skillId_SlotDict.Add(skillData.uid, currentSlot);
+    }
+
+    private void OnFragmentSet(Rarity rarity, int num)
+    {
+        fragmentDict[rarity].text = num.ToString();
+    }
+    private void OnSkillLevelChange(string skillId, int skillLevel)
+    {
+        if (!_skillId_SlotDict.TryGetValue(skillId, out VisualElement currentSlot))
+        {
+            return;
+        }
+        VisualElement unacquired = currentSlot.Q<VisualElement>("Unacquired");
+        VisualElement acquired = currentSlot.Q<VisualElement>("Acquired");
+        acquired.style.display = DisplayStyle.Flex;
+        unacquired.style.display = DisplayStyle.None;
+        Label levelLabel = currentSlot.Q<Label>("LevelLabel");
+        levelLabel.text = $"Lv.{skillLevel}";
+        ProgressBar containProgressBar = currentSlot.Q<ProgressBar>("ContainProgressBar");
+    }
     private void InitFragmentGrid()
     {
         VisualElement fragmentGrid = root.Q<VisualElement>("FragmentGrid");
@@ -82,8 +175,8 @@ public class SkillUI : MonoBehaviour
 
     private void OnActiveButtonClicked()
     {
-        List<IListViewItem> itemList = SkillManager.instance.GetPlayerSkillDataListAsItem(true);
-        _flexibleLV.ChangeItems(itemList);//리스트뷰에 들어갈 아이템 등록
+        _activeScrollView.scrollView.style.display = DisplayStyle.Flex;
+        _passiveScrollView.scrollView.style.display = DisplayStyle.None;
 
         _activeButton.style.unityBackgroundImageTintColor = new Color(activeColor.r, activeColor.g, activeColor.b, 0.1f);
         _activeButton.Q<VisualElement>("OutLine").style.unityBackgroundImageTintColor = activeColor;
@@ -94,8 +187,8 @@ public class SkillUI : MonoBehaviour
     }
     private void OnPassiveButtonClicked()
     {
-        List<IListViewItem> itemList = SkillManager.instance.GetPlayerSkillDataListAsItem(false);
-        _flexibleLV.ChangeItems(itemList);//리스트뷰에 들어갈 아이템 등록
+        _activeScrollView.scrollView.style.display = DisplayStyle.None;
+        _passiveScrollView.scrollView.style.display = DisplayStyle.Flex;
 
         _passiveButton.style.unityBackgroundImageTintColor = new Color(activeColor.r, activeColor.g, activeColor.b, 0.1f);
         _passiveButton.Q<VisualElement>("OutLine").style.unityBackgroundImageTintColor = activeColor;

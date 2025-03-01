@@ -5,6 +5,7 @@ using UnityEngine.UIElements;
 
 public class CompanionUI : MonoBehaviour
 {
+    private GameData _gameData; 
     //UI Element
     public VisualElement root { get; private set;  }
     private VisualElement[] _panelArr;
@@ -30,7 +31,7 @@ public class CompanionUI : MonoBehaviour
 
         for (int i = 0; i < panelParent.childCount; i++)
         {
-            _panelArr[i] =  panelParent.ElementAt(i);
+            _panelArr[i] = panelParent.ElementAt(i);
         }
         for (int i = 0; i < buttonParent.childCount; i++)
         {
@@ -38,13 +39,34 @@ public class CompanionUI : MonoBehaviour
             _buttonArr[i] = (Button)buttonParent.ElementAt(i);
             buttonParent.ElementAt(i).RegisterCallback<ClickEvent>(evt => OnClickButton(index));
         }
+        InitCompanionPanel(clickVeParent);
+        OnClickButton(0);
+    }
+
+    private void InitCompanionPanel(VisualElement clickVeParent)
+    {
         for (int i = 0; i < clickVeParent.childCount; i++)
         {
             int index = i;
             _clickVeArr[i] = clickVeParent.ElementAt(i);
             clickVeParent.ElementAt(i).RegisterCallback<ClickEvent>(evt => OnClickClickVe(index));
         }
-        OnClickButton(0);
+        CompanionStatus[] statusArr = CompanionManager.instance.companionStatusArr;
+        VisualElement statusParent = root.Q<VisualElement>("StatusParent");
+        for (int i = 0; i < statusParent.childCount; i++)
+        {
+            
+            VisualElement statusElement = statusParent.ElementAt(i);
+            Label levelLabel = statusElement.Q<Label>("LevelLabel");
+            Label nameLabel = statusElement.Q<Label>("NameLabel");
+            nameLabel.text = CompanionManager.instance.companionStatusArr[i].companionName;
+            ProgressBar expProgressBar = statusElement.Q<ProgressBar>();
+            (int, int) levelExp = CompanionManager.instance.GetCompanionLevelExp(i);
+            levelLabel.text = $"Lv.{levelExp.Item1}";
+            expProgressBar.value = levelExp.Item2 / (float)CompanionManager.EXPINTERVAL;
+            expProgressBar.title = $"{levelExp.Item2}/{CompanionManager.EXPINTERVAL}";
+        }
+
     }
 
     private void OnClickClickVe(int companionIndex)

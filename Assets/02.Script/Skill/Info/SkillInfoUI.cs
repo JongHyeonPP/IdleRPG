@@ -22,6 +22,7 @@ public class SkillInfoUI : MonoBehaviour
     private Label coolNumLabel;
     private Label mpLabel;
     private Label fragmentLabel;
+    private readonly Color _valueColor = new(1.0f, 0.5f, 0.0f);
     //소유, 비소유 분기
     private VisualElement ownPanel;
     private VisualElement disownPanel;
@@ -71,7 +72,7 @@ public class SkillInfoUI : MonoBehaviour
         titleLabel.text = skillData.skillName;
         rarityLabel.text = $"[{skillData.rarity}]";
         simpleLabel.text = skillData.simple;
-        complexLabel.text = skillData.complex;
+        complexLabel.text = SkillManager.instance.GetParsedComplexExplain( skillData, skillLevel, ColorUtility.ToHtmlStringRGB(_valueColor));
         switch (skillData.skillCoolType)
         {
             case SkillCoolType.ByAtt:
@@ -94,7 +95,7 @@ public class SkillInfoUI : MonoBehaviour
         {
             ownPanel.style.display = DisplayStyle.Flex;
             disownPanel.style.display = DisplayStyle.None;
-            if (skillLevel == PriceManager.MAXSKILLLEVEL)
+            if (skillLevel == PriceManager.MAXPLAYERSKILLLEVEL)
             {
                 maxLevelLabel.style.display = DisplayStyle.Flex;
                 upgradeButton.style.display = DisplayStyle.None;
@@ -121,7 +122,7 @@ public class SkillInfoUI : MonoBehaviour
             _gameData.skillFragment[rarity] -= PriceManager.instance.GetRequireFragment_Skill(rarity, _gameData.skillLevel[uid]+1);
             PlayerBroker.OnFragmentSet(rarity, _gameData.skillFragment[rarity]);
             _gameData.skillLevel[uid]++;
-            if (_gameData.skillLevel[uid] == PriceManager.MAXSKILLLEVEL)
+            if (_gameData.skillLevel[uid] == PriceManager.MAXPLAYERSKILLLEVEL)
             {
                 maxLevelLabel.style.display = DisplayStyle.Flex;
                 upgradeButton.style.display = DisplayStyle.None;

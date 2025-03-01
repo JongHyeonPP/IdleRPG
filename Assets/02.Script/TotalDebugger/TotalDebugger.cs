@@ -15,7 +15,7 @@ public class TotalDebugger : EditorWindow
     private VisualElement currentPanel;//현재 활성화 된 패널
     //활성화 가능한 패널들
     private VisualElement currencyPanel;
-    private VisualElement statusPanel;
+    private VisualElement statPanel;
     private VisualElement weaponPanel;
     private VisualElement skillPanel;
     private VisualElement materialPanel;
@@ -25,7 +25,7 @@ public class TotalDebugger : EditorWindow
     //카테고리 열거형
     private enum Categori
     {
-        Currency, Status, Weapon, Skill, Material
+        Currency, Stat, Weapon, Skill, Material
     }
     // 반복 실행 변수
     private float nextActionTime;
@@ -44,6 +44,8 @@ public class TotalDebugger : EditorWindow
     [DllImport("user32.dll")]
     private static extern short GetAsyncKeyState(int vKey);
     private readonly int VK_LBUTTON = 0x01;
+    //Stat DropDown Variable
+    private ScrollView[] statScrollViewArr;
     //Weapon DropDown Variable
     private string currentWeaponType;
     private string currentWeaponValue;
@@ -57,8 +59,8 @@ public class TotalDebugger : EditorWindow
     {
         // EditorWindow를 열고 제목 설정
         var window = GetWindow<TotalDebugger>("Total Debugger");
-        window.minSize = new Vector2(600, 800); // 창의 최소 크기 설정
-        window.position = new Rect(600, 100, 600, 800); // 창의 초기 위치와 크기 설정
+        window.minSize = new Vector2(670, 800); // 창의 최소 크기 설정
+        window.position = new Rect(600, 100, 670, 800); // 창의 초기 위치와 크기 설정
     }
     public void CreateGUI()
     {
@@ -133,7 +135,7 @@ public class TotalDebugger : EditorWindow
     private void CurrencyAtStart()
     {
         currencyPanel.style.display = DisplayStyle.Flex;
-        statusPanel.style.display = DisplayStyle.None;
+        statPanel.style.display = DisplayStyle.None;
         weaponPanel.style.display = DisplayStyle.None;
         skillPanel.style.display = DisplayStyle.None;
         materialPanel.style.display = DisplayStyle.None;
@@ -157,12 +159,12 @@ public class TotalDebugger : EditorWindow
     private void InitCategoriPanel()
     {
         currencyPanel = rootVisualElement.Q<VisualElement>("CurrencyCategoriPanel");
-        statusPanel = rootVisualElement.Q<VisualElement>("StatusCategoriPanel");
+        statPanel = rootVisualElement.Q<VisualElement>("StatusCategoriPanel");
         weaponPanel = rootVisualElement.Q<VisualElement>("WeaponCategoriPanel");
         skillPanel = rootVisualElement.Q<VisualElement>("SkillCategoriPanel");
         materialPanel = rootVisualElement.Q<VisualElement>("MaterialCategoriPanel");
         InitCurrency();
-        InitStatus();
+        InitStat();
         InitWeapon();
         InitSkillData();
         InitMaterial();
@@ -236,8 +238,8 @@ public class TotalDebugger : EditorWindow
             case Categori.Currency:
                 CurrencyCase();
                 break;
-            case Categori.Status:
-                StatusCase();
+            case Categori.Stat:
+                StatCase();
                 break;
             case Categori.Weapon:
                 WeaponCase();
@@ -255,12 +257,19 @@ public class TotalDebugger : EditorWindow
             switch (dataName)
             {
                 case "Level":
+                    int prevLevel = _gameData.level;
                     if (isSet)
                         _gameData.level = (int)value;
                     else
                         _gameData.level += (int)value;
                     _gameData.level = Mathf.Max(_gameData.level, 1);
                     BattleBroker.OnLevelExpSet();
+                    int statPoint = _gameData.level - prevLevel;
+                    if (statPoint > 0)
+                    {
+                        _gameData.statPoint += statPoint;
+                        BattleBroker.OnStatPointSet?.Invoke();
+                    }
                     break;
                 case "Gold":
                     if (isSet)
@@ -278,13 +287,13 @@ public class TotalDebugger : EditorWindow
                     _gameData.dia = Mathf.Max(_gameData.dia, 0);
                     BattleBroker.OnDiaSet();
                     break;
-                case "Emerald":
+                case "Clover":
                     if (isSet)
-                        _gameData.emerald = (int)value;
+                        _gameData.clover = (int)value;
                     else
-                        _gameData.emerald += (int)value;
-                    _gameData.emerald = Mathf.Max(_gameData.emerald, 0);
-                    BattleBroker.OnEmeraldSet();
+                        _gameData.clover += (int)value;
+                    _gameData.clover = Mathf.Max(_gameData.clover, 0);
+                    BattleBroker.OnCloverSet();
                     break;
                 case "MaxStage":
                     if (isSet)
@@ -294,19 +303,48 @@ public class TotalDebugger : EditorWindow
                     _gameData.maxStageNum = Mathf.Clamp(_gameData.maxStageNum, 0, 299);
                     BattleBroker.OnMaxStageSet();
                     break;
+                case "StatPoint":
+                    if (isSet)
+                        _gameData.statPoint = (int)value;
+                    else
+                        _gameData.statPoint += (int)value;
+                    _gameData.statPoint = Mathf.Max(_gameData.statPoint, 0);
+                    BattleBroker.OnStatPointSet();
+                    break;
             }
         }
-        void StatusCase()
+        void StatCase()
         {
-            StatusType currentStatus = (StatusType)Enum.Parse(typeof(StatusType), dataName);
+            string[] splitted = dataName.Split("::");
+            string currency = splitted[0];
+            StatusType currentStatus = (StatusType)Enum.Parse(typeof(StatusType), splitted[1]);
+            Dictionary<StatusType, int> tempDict = null;
+            switch (currency)
+            {
+                case "Gold":
+                    tempDict = _gameData.statLevel_Gold;
+                    break;
+                case "StatPoint":
+                    tempDict = _gameData.statLevel_StatPoint;
+                    break;
+            }
             int tempValue;
             if (isSet)
                 tempValue = (int)value;
             else
-                tempValue = _gameData.statLevel_Gold[currentStatus] + (int)value;
-            _gameData.statLevel_Gold[currentStatus] = Mathf.Max(0, tempValue);
+                tempValue = tempDict[currentStatus] + (int)value;
+           tempDict[currentStatus] = Mathf.Max(0, tempValue);
+            switch (currency)
+            {
+                case "Gold":
+                    PlayerBroker.OnGoldStatusSet?.Invoke(currentStatus, _gameData.statLevel_Gold[currentStatus]);
+                    break;
+                case "StatPoint":
+                    PlayerBroker.OnStatPointStatusSet?.Invoke(currentStatus, _gameData.statLevel_StatPoint[currentStatus]);
+                    break;
+            }
 
-            PlayerBroker.OnStatusLevelSet?.Invoke(currentStatus, _gameData.statLevel_Gold[currentStatus]);
+            
         }
         void WeaponCase()
         {
@@ -359,7 +397,8 @@ public class TotalDebugger : EditorWindow
                 _gameData.skillLevel[dataName] = intValue;
             else
                 _gameData.skillLevel[dataName] += intValue;
-            _gameData.skillLevel[dataName] = Mathf.Clamp(_gameData.skillLevel[dataName], 0, PriceManager.MAXSKILLLEVEL);
+            int maxLevel = dataName.Contains("Player") ? PriceManager.MAXPLAYERSKILLLEVEL : PriceManager.MAXCOMPANIONSKILLLEVEL;
+            _gameData.skillLevel[dataName] = Mathf.Clamp(_gameData.skillLevel[dataName], 0, maxLevel);
             PlayerBroker.OnSkillLevelSet?.Invoke(dataName, intValue);
         }
         void MaterialCase()
@@ -392,7 +431,7 @@ public class TotalDebugger : EditorWindow
                 tempCurrent = currencyPanel;
                 break;
             case "Status":
-                tempCurrent = statusPanel;
+                tempCurrent = statPanel;
                 break;
             case "Weapon":
                 tempCurrent = weaponPanel;
@@ -417,25 +456,44 @@ public class TotalDebugger : EditorWindow
         VisualElement levelPanel = currencyPanel.Q<VisualElement>("LevelPanel");
         VisualElement goldPanel = currencyPanel.Q<VisualElement>("GoldPanel");
         VisualElement diaPanel = currencyPanel.Q<VisualElement>("DiaPanel");
-        VisualElement emeraldPanel = currencyPanel.Q<VisualElement>("EmeraldPanel");
+        VisualElement cloverPanel = currencyPanel.Q<VisualElement>("CloverPanel");
         VisualElement maxStagePanel = currencyPanel.Q<VisualElement>("MaxStagePanel");
+        VisualElement statPointPanel = currencyPanel.Q<VisualElement>("StatPointPanel");
         //SetDataPanel
         SetDataPanel(levelPanel, "Level", "Level", _gameData.level.ToString(), Categori.Currency, false, 120f, 33f);
         SetDataPanel(goldPanel, "Gold", "Gold", _gameData.gold.ToString(), Categori.Currency, true, 120f, 33f);
         SetDataPanel(diaPanel, "Dia", "Dia", _gameData.dia.ToString(), Categori.Currency, false, 120f, 33f);
-        SetDataPanel(emeraldPanel, "Emerald", "Emerald", _gameData.emerald.ToString(), Categori.Currency, false, 120f, 33f);
-        SetDataPanel(maxStagePanel, "MaxStage", "MaxStage", _gameData.maxStageNum.ToString(), Categori.Currency, false, 120f, 33f);
+        SetDataPanel(cloverPanel, "Clover", "Clover", _gameData.clover.ToString(), Categori.Currency, false, 120f, 33f);
+        SetDataPanel(maxStagePanel, "MaxStage", "Max Stage", _gameData.maxStageNum.ToString(), Categori.Currency, false, 120f, 33f);
+        SetDataPanel(statPointPanel, "StatPoint", "Stat Point", _gameData.statPoint.ToString(), Categori.Currency, false, 120f, 33f);
         //데이터 변경된 이후 Label Set
         BattleBroker.OnLevelExpSet += () => { levelPanel.Q<Label>("ValueLabel").text = _gameData.level.ToString(); };
         BattleBroker.OnGoldSet += () => { goldPanel.Q<Label>("ValueLabel").text = _gameData.gold.ToString(); };
         BattleBroker.OnDiaSet += () => { diaPanel.Q<Label>("ValueLabel").text = _gameData.dia.ToString(); };
-        BattleBroker.OnEmeraldSet += () => { emeraldPanel.Q<Label>("ValueLabel").text = _gameData.emerald.ToString(); };
+        BattleBroker.OnCloverSet += () => { cloverPanel.Q<Label>("ValueLabel").text = _gameData.clover.ToString(); };
         BattleBroker.OnMaxStageSet += () => { maxStagePanel.Q<Label>("ValueLabel").text = _gameData.maxStageNum.ToString(); };
+        BattleBroker.OnStatPointSet += () => { statPointPanel.Q<Label>("ValueLabel").text = _gameData.statPoint.ToString(); };
 
     }
-    private void InitStatus()
+    private void InitStat()
     {
-        ScrollView scrollView = statusPanel.Q<ScrollView>();
+        VisualElement scrollViewParent = statPanel.Q<VisualElement>("ScrollViewParent");
+        statScrollViewArr = scrollViewParent.Children().Select(item => (ScrollView)item).ToArray();
+        statScrollViewArr[0].style.display = DisplayStyle.Flex;
+        statScrollViewArr[1].style.display = DisplayStyle.None;
+        InitGoldStat();
+        InitStatPointStat();
+        //DropDown
+        DropdownField typeDropDown = statPanel.Q<DropdownField>("TypeDropDown");
+        typeDropDown.choices = new() { "Gold", "StatPoint" };
+        typeDropDown.value = typeDropDown.choices[0];
+        typeDropDown.RegisterValueChangedCallback(evt => OnStatDropDownChange(evt.newValue));
+    }
+
+    private void InitGoldStat()
+    {
+        ScrollView scrollView = statScrollViewArr[0];
+        scrollView.Add(CreateSeparatePanel("Gold Stat"));
         for (int i = 0; i < 5; i++)
         {
             TemplateContainer dataPanel = dataPanel_0.CloneTree();
@@ -443,40 +501,40 @@ public class TotalDebugger : EditorWindow
             switch (i)
             {
                 case 0://Power
-                    SetDataPanel(dataPanel, "Power", "Power", _gameData.statLevel_Gold[StatusType.Power].ToString(), Categori.Status, false, 120f, 33f);
-                    PlayerBroker.OnStatusLevelSet += (type, level) =>
+                    SetDataPanel(dataPanel, "Gold::Power", "Power", _gameData.statLevel_Gold[StatusType.Power].ToString(), Categori.Stat, false, 120f, 33f);
+                    PlayerBroker.OnGoldStatusSet += (type, level) =>
                     {
                         if (type == StatusType.Power)
                             dataPanel.Q<Label>("ValueLabel").text = _gameData.statLevel_Gold[StatusType.Power].ToString();
                     };
                     break;
                 case 1://MaxHp
-                    SetDataPanel(dataPanel, "MaxHp", "MaxHp", _gameData.statLevel_Gold[StatusType.MaxHp].ToString(), Categori.Status, false, 120f, 33f);
-                    PlayerBroker.OnStatusLevelSet += (type, level) =>
+                    SetDataPanel(dataPanel, "Gold::MaxHp", "MaxHp", _gameData.statLevel_Gold[StatusType.MaxHp].ToString(), Categori.Stat, false, 120f, 33f);
+                    PlayerBroker.OnGoldStatusSet += (type, level) =>
                     {
                         if (type == StatusType.MaxHp)
                             dataPanel.Q<Label>("ValueLabel").text = _gameData.statLevel_Gold[StatusType.MaxHp].ToString();
                     };
                     break;
                 case 2://HpRecover
-                    SetDataPanel(dataPanel, "HpRecover", "HpRecover", _gameData.statLevel_Gold[StatusType.HpRecover].ToString(), Categori.Status, false, 120f, 33f);
-                    PlayerBroker.OnStatusLevelSet += (type, level) =>
+                    SetDataPanel(dataPanel, "Gold::HpRecover", "HpRecover", _gameData.statLevel_Gold[StatusType.HpRecover].ToString(), Categori.Stat, false, 120f, 33f);
+                    PlayerBroker.OnGoldStatusSet += (type, level) =>
                     {
                         if (type == StatusType.HpRecover)
                             dataPanel.Q<Label>("ValueLabel").text = _gameData.statLevel_Gold[StatusType.HpRecover].ToString();
                     };
                     break;
                 case 3://Critical
-                    SetDataPanel(dataPanel, "Critical", "Critical", _gameData.statLevel_Gold[StatusType.Critical].ToString(), Categori.Status, false, 120f, 33f);
-                    PlayerBroker.OnStatusLevelSet += (type, level) =>
+                    SetDataPanel(dataPanel, "Gold::Critical", "Critical", _gameData.statLevel_Gold[StatusType.Critical].ToString(), Categori.Stat, false, 120f, 33f);
+                    PlayerBroker.OnGoldStatusSet += (type, level) =>
                     {
                         if (type == StatusType.Critical)
                             dataPanel.Q<Label>("ValueLabel").text = _gameData.statLevel_Gold[StatusType.Critical].ToString();
                     };
                     break;
                 case 4://CriticalDamage
-                    SetDataPanel(dataPanel, "CriticalDamage", "CriticalDamage", _gameData.statLevel_Gold[StatusType.CriticalDamage].ToString(), Categori.Status, false, 120f, 25f);
-                    PlayerBroker.OnStatusLevelSet += (type, level) =>
+                    SetDataPanel(dataPanel, "Gold::CriticalDamage", "Critical Damage", _gameData.statLevel_Gold[StatusType.CriticalDamage].ToString(), Categori.Stat, false, 120f, 25f);
+                    PlayerBroker.OnGoldStatusSet += (type, level) =>
                     {
                         if (type == StatusType.CriticalDamage)
                             dataPanel.Q<Label>("ValueLabel").text = _gameData.statLevel_Gold[StatusType.CriticalDamage].ToString();
@@ -484,8 +542,62 @@ public class TotalDebugger : EditorWindow
                     break;
             }
         }
-
     }
+    private void InitStatPointStat()
+    {
+        ScrollView scrollView = statScrollViewArr[1];
+        scrollView.Add(CreateSeparatePanel("StatPoint Stat"));
+        for (int i = 0; i < 5; i++)
+        {
+            TemplateContainer dataPanel = dataPanel_0.CloneTree();
+            scrollView.Add(dataPanel);
+            switch (i)
+            {
+                case 0://Power
+                    SetDataPanel(dataPanel, "StatPoint::Power", "Power", _gameData.statLevel_StatPoint[StatusType.Power].ToString(), Categori.Stat, false, 120f, 33f);
+                    PlayerBroker.OnStatPointStatusSet += (type, level) =>
+                    {
+                        if (type == StatusType.Power)
+                            dataPanel.Q<Label>("ValueLabel").text = _gameData.statLevel_StatPoint[StatusType.Power].ToString();
+                    };
+                    break;
+                case 1://MaxHp
+                    SetDataPanel(dataPanel, "StatPoint::MaxHp", "Max Hp", _gameData.statLevel_StatPoint[StatusType.MaxHp].ToString(), Categori.Stat, false, 120f, 33f);
+                    PlayerBroker.OnStatPointStatusSet += (type, level) =>
+                    {
+                        if (type == StatusType.MaxHp)
+                            dataPanel.Q<Label>("ValueLabel").text = _gameData.statLevel_StatPoint[StatusType.MaxHp].ToString();
+                    };
+                    break;
+                case 2://HpRecover
+                    SetDataPanel(dataPanel, "StatPoint::HpRecover", "Hp Recover", _gameData.statLevel_StatPoint[StatusType.HpRecover].ToString(), Categori.Stat, false, 120f, 33f);
+                    PlayerBroker.OnStatPointStatusSet += (type, level) =>
+                    {
+                        if (type == StatusType.HpRecover)
+                            dataPanel.Q<Label>("ValueLabel").text = _gameData.statLevel_StatPoint[StatusType.HpRecover].ToString();
+                    };
+                    break;
+
+                case 3://CriticalDamage
+                    SetDataPanel(dataPanel, "StatPoint::CriticalDamage", "Critical Damage", _gameData.statLevel_StatPoint[StatusType.CriticalDamage].ToString(), Categori.Stat, false, 120f, 25f);
+                    PlayerBroker.OnStatPointStatusSet += (type, level) =>
+                    {
+                        if (type == StatusType.CriticalDamage)
+                            dataPanel.Q<Label>("ValueLabel").text = _gameData.statLevel_StatPoint[StatusType.CriticalDamage].ToString();
+                    };
+                    break;
+                case 4://Gold Ascend
+                    SetDataPanel(dataPanel, "StatPoint::GoldAscend", "Gold Ascend", _gameData.statLevel_StatPoint[StatusType.GoldAscend].ToString(), Categori.Stat, false, 120f, 33f);
+                    PlayerBroker.OnStatPointStatusSet += (type, level) =>
+                    {
+                        if (type == StatusType.GoldAscend)
+                            dataPanel.Q<Label>("ValueLabel").text = _gameData.statLevel_StatPoint[StatusType.GoldAscend].ToString();
+                    };
+                    break;
+            }
+        }
+    }
+
     private void InitWeapon()
     {
         VisualElement scrollViewParent = weaponPanel.Q<VisualElement>("ScrollViewParent");
@@ -613,12 +725,10 @@ public class TotalDebugger : EditorWindow
         InitEachSkill(companionArr, skillScrollViewArr[1]);
         skillScrollViewArr[0].style.display = DisplayStyle.Flex;
         skillScrollViewArr[1].style.display = DisplayStyle.None;
-        //currentSkillType = "Player";
         //DropDown
         DropdownField typeDropDown = skillPanel.Q<DropdownField>("TypeDropDown");
         typeDropDown.choices = new() { "Player", "Companion" };
         typeDropDown.value = typeDropDown.choices[0];
-        //currentSkillType = "Player";
         typeDropDown.RegisterValueChangedCallback(evt => OnSkillDropDownChange(evt.newValue));
     }
     void InitEachSkill(SkillData[] skillDataArr, ScrollView scrollView)
@@ -654,6 +764,19 @@ public class TotalDebugger : EditorWindow
             skillScrollViewArr[1].style.display = DisplayStyle.Flex;
         }
     }
+    private void OnStatDropDownChange(string newValue)
+    {
+        if (newValue == "Gold")
+        {
+            statScrollViewArr[0].style.display = DisplayStyle.Flex;
+            statScrollViewArr[1].style.display = DisplayStyle.None;
+        }
+        else if (newValue == "StatPoint")
+        {
+            statScrollViewArr[0].style.display = DisplayStyle.None;
+            statScrollViewArr[1].style.display = DisplayStyle.Flex;
+        }
+    }
     private void InitMaterial()
     {
         Rarity[] rarityArr = (Rarity[])Enum.GetValues(typeof(Rarity));
@@ -683,9 +806,9 @@ public class TotalDebugger : EditorWindow
         VisualElement setVe = panel.Q<VisualElement>("SetVe");
         VisualElement plusVe = panel.Q<VisualElement>("PlusVe");
         VisualElement minusVe = panel.Q<VisualElement>("MinusVe");
-        SetHoverEventLikeButton(setVe, false);
-        SetHoverEventLikeButton(plusVe, true);
-        SetHoverEventLikeButton(minusVe, true);
+        SetHoverEventAsButton(setVe, false);
+        SetHoverEventAsButton(plusVe, true);
+        SetHoverEventAsButton(minusVe, true);
         TextField textField = panel.Q<TextField>();
         VisualElement buttonPanel = panel.Q<VisualElement>("ButtonPanel");
         dataLabel.text = displayName;
@@ -698,18 +821,13 @@ public class TotalDebugger : EditorWindow
         valueLabel.text = valueStr;
     }
 
-
-
-
-
-
     private VisualElement CreateSeparatePanel(string labelStr)
     {
         VisualElement result = separatePanel.CloneTree();
         result.Q<Label>().text = labelStr;
         return result;
     }
-    private void SetHoverEventLikeButton(VisualElement ve, bool _isChangeVe)
+    private void SetHoverEventAsButton(VisualElement ve, bool _isChangeVe)
     {
         // 원본 배경색 저장
         Color originalColor = ve.resolvedStyle.backgroundColor;

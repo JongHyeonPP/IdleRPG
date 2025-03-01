@@ -1,9 +1,11 @@
-using System;
+
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class DraggableScrollView : MonoBehaviour
 {
+
     public ScrollView scrollView;
     public bool _isDragging { get; private set; } // 드래그 상태 플래그
     private Vector2 _previousPointerPosition; // 이전 프레임에서의 터치/마우스 위치
@@ -14,10 +16,8 @@ public class DraggableScrollView : MonoBehaviour
     [SerializeField] private float _scrollSpeed = 1f;
     [SerializeField] private ScrollViewMode _mode;
     [SerializeField] protected UIDocument _targetDocument;
-    [SerializeField] private string _scrollViewName;//없으면 
+    [SerializeField] private string _scrollViewName;
 
-    //클릭 이벤트
-    public Action OnItemClicked;
     private void Awake()
     {
         InitScrollView();
@@ -36,30 +36,70 @@ public class DraggableScrollView : MonoBehaviour
         scrollView.horizontalScrollerVisibility = ScrollerVisibility.Hidden;
         scrollView.mode = _mode;
         _previousPointerPosition = Vector2.zero;
+#if UNITY_EDITOR || UNITY_STANDALONE
         SetEvents();
+#endif
+    }
+    private Coroutine _scrollLockCoroutine;
+    private Vector2 _lockedScrollPosition;
+
+    public void LockScrollPosition()
+    {
+        if (scrollView == null) return;
+
+        // 현재 스크롤 위치 저장
+        _lockedScrollPosition = scrollView.scrollOffset;
+
+        // 기존 코루틴이 실행 중이라면 중지
+        if (_scrollLockCoroutine != null)
+        {
+            StopCoroutine(_scrollLockCoroutine);
+        }
+
+        // 새 코루틴 실행
+        _scrollLockCoroutine = StartCoroutine(KeepScrollPosition());
     }
 
+    private IEnumerator KeepScrollPosition()
+    {
+        while (true)
+        {
+            // 스크롤 위치를 고정된 위치로 강제 설정
+            scrollView.scrollOffset = _lockedScrollPosition;
+            yield return null; // 매 프레임마다 실행
+        }
+    }
+    public void UnlockScrollPosition()
+    {
+        if (_scrollLockCoroutine != null)
+        {
+            StopCoroutine(_scrollLockCoroutine);
+            _scrollLockCoroutine = null;
+        }
+
+        scrollView.scrollOffset = _lockedScrollPosition;
+
+        scrollView.RegisterCallback<PointerMoveEvent>(BlockScrollEvent);
+        scrollView.RegisterCallback<WheelEvent>(BlockScrollEvent);
+
+        scrollView.schedule.Execute(() =>
+        {
+            scrollView.UnregisterCallback<PointerMoveEvent>(BlockScrollEvent);
+            scrollView.UnregisterCallback<WheelEvent>(BlockScrollEvent);
+        }).ExecuteLater(100); // 100ms (0.1초) 후 해제
+    }
+    private void BlockScrollEvent(EventBase evt)
+    {
+        evt.StopPropagation();
+    }
+#if UNITY_EDITOR || UNITY_STANDALONE
     void Update()
     {
         // 터치 또는 마우스 입력을 통해 드래그 상태를 판단
         bool pointerDown = false;
         Vector2 currentPointerPosition = Vector2.zero;
 
-#if UNITY_ANDROID || UNITY_IOS
-        if (Input.touchCount > 0)
-        {
-            Touch touch = Input.GetTouch(0);
-            currentPointerPosition = touch.position;
-            pointerDown = touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Began;
 
-            if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
-            {
-                _isDragging = false; // 드래그 종료
-            }
-        }
-#endif
-
-#if UNITY_EDITOR || UNITY_STANDALONE
         if (Input.GetMouseButton(0))
         {
             currentPointerPosition = Input.mousePosition;
@@ -69,7 +109,7 @@ public class DraggableScrollView : MonoBehaviour
         {
             _isDragging = false; // 드래그 종료
         }
-#endif
+
 
         // 드래그 판정
         if (pointerDown)
@@ -103,53 +143,61 @@ public class DraggableScrollView : MonoBehaviour
 
         scrollView.RegisterCallback<PointerMoveEvent>(evt =>
         {
-            if (_isDragging) // 드래그 중이면 스크롤 동작 수행
-            {
-                Vector2 newScrollOffset = _previousScrollOffset;
-
-                switch (scrollView.mode)
-                {
-                    case ScrollViewMode.Vertical:
-                        newScrollOffset.y += -evt.deltaPosition.y * _scrollSpeed;
-                        newScrollOffset.y = Mathf.Clamp(
-                            newScrollOffset.y,
-                            0,
-                            Mathf.Max(0, scrollView.contentContainer.resolvedStyle.height - scrollView.resolvedStyle.height)
-                        );
-                        break;
-
-                    case ScrollViewMode.Horizontal:
-                        newScrollOffset.x += -evt.deltaPosition.x * _scrollSpeed;
-                        newScrollOffset.x = Mathf.Clamp(
-                            newScrollOffset.x,
-                            0,
-                            Mathf.Max(0, scrollView.contentContainer.resolvedStyle.width - scrollView.resolvedStyle.width)
-                        );
-                        break;
-
-                    case ScrollViewMode.VerticalAndHorizontal:
-                        newScrollOffset.y += -evt.deltaPosition.y * _scrollSpeed;
-                        newScrollOffset.x += -evt.deltaPosition.x * _scrollSpeed;
-
-                        newScrollOffset.y = Mathf.Clamp(
-                            newScrollOffset.y,
-                            0,
-                            Mathf.Max(0, scrollView.contentContainer.resolvedStyle.height - scrollView.resolvedStyle.height)
-                        );
-
-                        newScrollOffset.x = Mathf.Clamp(
-                            newScrollOffset.x,
-                            0,
-                            Mathf.Max(0, scrollView.contentContainer.resolvedStyle.width - scrollView.resolvedStyle.width)
-                        );
-                        break;
-                }
-
-                scrollView.scrollOffset = newScrollOffset;
-                _previousScrollOffset = newScrollOffset;
-
-                evt.StopPropagation();
-            }
+            OnPointerMove(evt);
         });
     }
+
+    private void OnPointerMove(PointerMoveEvent evt)
+    {
+        if (_isDragging) // 드래그 중이면 스크롤 동작 수행
+        {
+            Vector2 newScrollOffset = _previousScrollOffset;
+
+            switch (scrollView.mode)
+            {
+                case ScrollViewMode.Vertical:
+                    newScrollOffset.y += -evt.deltaPosition.y * _scrollSpeed;
+                    newScrollOffset.y = Mathf.Clamp(
+                        newScrollOffset.y,
+                        0,
+                        Mathf.Max(0, scrollView.contentContainer.resolvedStyle.height - scrollView.resolvedStyle.height)
+                    );
+                    break;
+
+                case ScrollViewMode.Horizontal:
+                    newScrollOffset.x += -evt.deltaPosition.x * _scrollSpeed;
+                    newScrollOffset.x = Mathf.Clamp(
+                        newScrollOffset.x,
+                        0,
+                        Mathf.Max(0, scrollView.contentContainer.resolvedStyle.width - scrollView.resolvedStyle.width)
+                    );
+                    break;
+
+                case ScrollViewMode.VerticalAndHorizontal:
+                    newScrollOffset.y += -evt.deltaPosition.y * _scrollSpeed;
+                    newScrollOffset.x += -evt.deltaPosition.x * _scrollSpeed;
+
+                    newScrollOffset.y = Mathf.Clamp(
+                        newScrollOffset.y,
+                        0,
+                        Mathf.Max(0, scrollView.contentContainer.resolvedStyle.height - scrollView.resolvedStyle.height)
+                    );
+
+                    newScrollOffset.x = Mathf.Clamp(
+                        newScrollOffset.x,
+                        0,
+                        Mathf.Max(0, scrollView.contentContainer.resolvedStyle.width - scrollView.resolvedStyle.width)
+                    );
+                    break;
+            }
+
+            scrollView.scrollOffset = newScrollOffset;
+            _previousScrollOffset = newScrollOffset;
+
+            evt.StopPropagation();
+        }
+    }
+
+#endif
+
 }

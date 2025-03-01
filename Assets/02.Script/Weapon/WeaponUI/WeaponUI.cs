@@ -340,7 +340,15 @@ public class WeaponUI : MonoBehaviour, IBattleUI
     {
         VisualElement slot = _slotDict[weaponData.UID];
         Label levelLabel = slot.Q<Label>("LevelLabel");
-        levelLabel.text = $"+{level}";
+        if (level == 0)
+        {
+            levelLabel.text = string.Empty;
+        }
+        else
+        {
+            levelLabel.text = $"+{level}";
+        }
+        
 
         ProgressBar countProgressBar = slot.Q<ProgressBar>("CountProgressBar");
 

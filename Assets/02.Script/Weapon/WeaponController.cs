@@ -1,19 +1,21 @@
 using UnityEngine;
 using EnumCollection;
 using UnityEngine.VFX;
-public class Weapon : MonoBehaviour
+public class WeaponController : MonoBehaviour
 {
-    public WeaponData weaponData;
+    [HideInInspector]public WeaponData weaponData;
     [SerializeField] SpriteRenderer weaponRenderer;
     [SerializeField] Sprite defaultWeaponSprite;//아무 무기도 안 꼈을 시 들고 있을 몽둥이
-    private void Awake()//BattleManager.Start보다 먼저여야 함
+    public WeaponType weaponType;
+    private void Awake()//Start보다 먼저여야 함
     {
         PlayerBroker.OnEquipWeapon += OnEquipWeapon;
     }
-    private void OnEquipWeapon(object obj) => EquipWeapon((WeaponData)obj);
-    private void EquipWeapon(WeaponData obj)
+    private void OnEquipWeapon(object obj,WeaponType weaponType) => EquipWeapon((WeaponData)obj, weaponType);
+    private void EquipWeapon(WeaponData weaponData, WeaponType weaponType)
     {
-        WeaponData weaponData = obj;
+        if (weaponType != this.weaponType)
+            return;
         this.weaponData = weaponData;
         if (weaponData != null)
         {

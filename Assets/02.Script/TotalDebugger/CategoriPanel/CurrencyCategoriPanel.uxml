@@ -4,7 +4,8 @@
         <engine:Instance template="DataControlItem" name="LevelPanel" />
         <engine:Instance template="DataControlItem" name="GoldPanel" />
         <engine:Instance template="DataControlItem" name="DiaPanel" />
-        <engine:Instance template="DataControlItem" name="EmeraldPanel" />
+        <engine:Instance template="DataControlItem" name="CloverPanel" />
         <engine:Instance template="DataControlItem" name="MaxStagePanel" />
+        <engine:Instance template="DataControlItem" name="StatPointPanel" />
     </engine:VisualElement>
 </engine:UXML>

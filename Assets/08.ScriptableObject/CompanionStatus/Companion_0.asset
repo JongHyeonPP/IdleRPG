@@ -16,5 +16,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1ce7a8069c0f28d4e95d3936c4b2acd5, type: 2}
   - {fileID: 11400000, guid: 55eb4b30049d6824bbde9afd5971c682, type: 2}
   - {fileID: 11400000, guid: 839916fbdbfa99b42bd74b28e7205e35, type: 2}
+  companionEffect: {fileID: 11400000, guid: 39c065d07b4b3e146a3b3ae6b65f5a94, type: 2}
   companionName: "\uAD81\uC218\uC694\uBBF8"
   companionJob: "\uAD81\uC218"

@@ -15,10 +15,13 @@ MonoBehaviour:
   _weaponType: 2
   _weaponRarity: 0
   _power: 1
+  _maxHp: 0
   _criticalDamage: 1
   _critical: 1
-  _weaponSprite: {fileID: 21300000, guid: 85ecb2f1dc34e22468a7dc7ac5d23071, type: 3}
+  _resist: 0
+  _penetration: 0
+  _weaponSprite: {fileID: 21300000, guid: 7ac296aa739462b4a874bf49cb637f2c, type: 3}
   _textureSize: {x: 1, y: 1}
   _textureScale: 0.7
   _uID: Shield_001
-  _weaponName: "\uACE0\uBAA9\uB098\uBB34 \uBC29\uD328"
+  _weaponName: "\uCC38\uB098\uBB34 \uBC29\uD328"

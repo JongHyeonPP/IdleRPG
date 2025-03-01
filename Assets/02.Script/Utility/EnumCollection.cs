@@ -11,7 +11,7 @@ namespace EnumCollection
         //To Enemy
         Damage,
         //To Ally       
-        Heal, AttBuff
+        Heal, AttBuff, SpeedBuff,ReduceBuff 
     }
     public enum SkillTarget
     {
@@ -54,6 +54,6 @@ namespace EnumCollection
     }
     public enum SkillCoolType
     {
-        ByAtt, ByTime
+        ByAtt, ByTime, Passive
     }
 }

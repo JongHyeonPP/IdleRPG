@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System.IO;
 using UnityEditor;
 using UnityEngine;
@@ -8,13 +9,13 @@ public class PriceSetTool : MonoBehaviour
     [ContextMenu("SetSkillPrice")]
     public void SetSkillPrice()
     {
-        priceInfo.commonSkillPrice = new int[PriceManager.MAXSKILLLEVEL+1];
-        priceInfo.uncommonSkillPrice = new int[PriceManager.MAXSKILLLEVEL+1];
-        priceInfo.rareSkillPrice = new int[PriceManager.MAXSKILLLEVEL+1];
-        priceInfo.uniqueSkillPrice = new int[PriceManager.MAXSKILLLEVEL+1];
-        priceInfo.legendarySkillPrice = new int[PriceManager.MAXSKILLLEVEL+1];
-        priceInfo.mythicSkillPrice = new int[PriceManager.MAXSKILLLEVEL+1];
-        for (int i = 0; i <= PriceManager.MAXSKILLLEVEL; i++)
+        priceInfo.commonSkillPrice = new int[PriceManager.MAXPLAYERSKILLLEVEL+1];
+        priceInfo.uncommonSkillPrice = new int[PriceManager.MAXPLAYERSKILLLEVEL+1];
+        priceInfo.rareSkillPrice = new int[PriceManager.MAXPLAYERSKILLLEVEL+1];
+        priceInfo.uniqueSkillPrice = new int[PriceManager.MAXPLAYERSKILLLEVEL+1];
+        priceInfo.legendarySkillPrice = new int[PriceManager.MAXPLAYERSKILLLEVEL+1];
+        priceInfo.mythicSkillPrice = new int[PriceManager.MAXPLAYERSKILLLEVEL+1];
+        for (int i = 0; i <= PriceManager.MAXPLAYERSKILLLEVEL; i++)
         {
             int value;
             if (i == 0 || i == 1)
@@ -57,7 +58,16 @@ public class PriceSetTool : MonoBehaviour
     [ContextMenu("SetCompanionSkillPrice")]
     public void SetCompanionSkillPrice()
     {
-        for (int i = 0; i < PriceManager.MAXCOMPANIONSKILLLEVEL; i++)
+        priceInfo.companion0_SkillPrice0 = new PriceInfo.CompanionSkillPrice[PriceManager.MAXCOMPANIONSKILLLEVEL + 1];
+        priceInfo.companion0_SkillPrice1 = new PriceInfo.CompanionSkillPrice[PriceManager.MAXCOMPANIONSKILLLEVEL + 1];
+        priceInfo.companion0_SkillPrice2 = new PriceInfo.CompanionSkillPrice[PriceManager.MAXCOMPANIONSKILLLEVEL + 1];
+        priceInfo.companion1_SkillPrice0 = new PriceInfo.CompanionSkillPrice[PriceManager.MAXCOMPANIONSKILLLEVEL + 1];
+        priceInfo.companion1_SkillPrice1 = new PriceInfo.CompanionSkillPrice[PriceManager.MAXCOMPANIONSKILLLEVEL + 1];
+        priceInfo.companion1_SkillPrice2 = new PriceInfo.CompanionSkillPrice[PriceManager.MAXCOMPANIONSKILLLEVEL + 1];
+        priceInfo.companion2_SkillPrice0 = new PriceInfo.CompanionSkillPrice[PriceManager.MAXCOMPANIONSKILLLEVEL + 1];
+        priceInfo.companion2_SkillPrice1 = new PriceInfo.CompanionSkillPrice[PriceManager.MAXCOMPANIONSKILLLEVEL + 1];
+        priceInfo.companion2_SkillPrice2 = new PriceInfo.CompanionSkillPrice[PriceManager.MAXCOMPANIONSKILLLEVEL + 1];
+        for (int i = 0; i <= PriceManager.MAXCOMPANIONSKILLLEVEL; i++)
         {
             if (i == 0)
                 continue;
@@ -77,3 +87,4 @@ public class PriceSetTool : MonoBehaviour
         AssetDatabase.Refresh();
     }
 }
+#endif

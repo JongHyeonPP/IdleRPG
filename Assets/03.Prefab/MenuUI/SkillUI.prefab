@@ -9,10 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4354335309992124350}
-  - component: {fileID: 2783287221208307865}
-  - component: {fileID: 7032934771548314571}
+  - component: {fileID: 1539666635212149793}
   m_Layer: 0
-  m_Name: SkillListView
+  m_Name: ActiveScrollView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -33,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8129201785741373427}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2783287221208307865
+--- !u!114 &1539666635212149793
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -42,27 +41,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 191887273693608805}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92fce378b6ea86d468ce56b43549bb95, type: 3}
+  m_Script: {fileID: 11500000, guid: 71c60432944c33b4f9f042fae0f58511, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _scrollSpeed: 1
   _mode: 0
   _targetDocument: {fileID: 4130507394480058446}
-  _scrollViewName: FlexableListView
---- !u!114 &7032934771548314571
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 191887273693608805}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 23233c2880a95ff4fa5e9bd46c284990, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _itemTemplate: {fileID: 9197481963319205126, guid: 0dff791914ca2c54aa09adb866860a54, type: 3}
-  _skillInfoUI: {fileID: 0}
+  _scrollViewName: ActiveScrollView
 --- !u!1 &3473520005284205408
 GameObject:
   m_ObjectHideFlags: 0
@@ -95,6 +80,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4354335309992124350}
+  - {fileID: 652973782271754094}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4130507394480058446
@@ -128,5 +114,63 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 061a96f3f1e3bc14892b16a88c553bc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _flexibleLV: {fileID: 2783287221208307865}
+  _skillInfoUI: {fileID: 0}
+  _activeScrollView: {fileID: 1539666635212149793}
+  _passiveScrollView: {fileID: 3877618529942540150}
+  slotSetAsset: {fileID: 9197481963319205126, guid: 0dff791914ca2c54aa09adb866860a54, type: 3}
   skillAcquireUI: {fileID: 0}
+  fragmentSprites:
+  - {fileID: 21300000, guid: f00ebf5f3deae0f468a140750040a64c, type: 3}
+  - {fileID: 21300000, guid: 7651491213e74554d93849ed82c03fb5, type: 3}
+  - {fileID: 21300000, guid: 9577df180274c0846bb38a79770cea22, type: 3}
+  - {fileID: 21300000, guid: b5648c760c659924295a665a3ff30f13, type: 3}
+  - {fileID: 21300000, guid: d789ee68355ada448b195513d176f65a, type: 3}
+  - {fileID: 21300000, guid: d789ee68355ada448b195513d176f65a, type: 3}
+--- !u!1 &4831996715711964218
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 652973782271754094}
+  - component: {fileID: 3877618529942540150}
+  m_Layer: 0
+  m_Name: PassiveScrollView
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &652973782271754094
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4831996715711964218}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8129201785741373427}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3877618529942540150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4831996715711964218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71c60432944c33b4f9f042fae0f58511, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _scrollSpeed: 1
+  _mode: 0
+  _targetDocument: {fileID: 4130507394480058446}
+  _scrollViewName: PassiveScrollView

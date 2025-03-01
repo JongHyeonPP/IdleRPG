@@ -9,10 +9,8 @@ using GooglePlayGames;
 using GooglePlayGames.BasicApi;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
-using UnityEngine.Playables;
 using Random = UnityEngine.Random;
 using System.Numerics;
-using UnityEditor.Overlays;
 
 public class GameManager : MonoBehaviour
 {
@@ -20,7 +18,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameData _gameData;//로컬 데이터에 주기적으로 동기화할 값들로 구성된 클래스
 
     private float _saveInterval = 10f;//로컬 데이터에 자동 저장하는 간격(초)
-    public static PlayerController controller { get; private set; }//전투하는 플레이어, GameManager.controller를 싱글톤처럼 사용하기 위함
     public string userId { get; private set; }//구글 인증을 통해 나온 유저의 아이디
     private void Awake()
     {
@@ -33,14 +30,6 @@ public class GameManager : MonoBehaviour
             {
                 LoadGameData();
                 StartCoroutine(WaitAndInvokeOnDataLoadComplete());
-            };
-            //Battle에 최초 진입하면 플레이어의 스탯 등의 정보값을 초기화한다.
-            SceneManager.sceneLoaded += (scene, mode) =>
-            {
-                if (!controller && scene.name == "Battle")
-                {
-                    InitPlayer();
-                }
             };
         }
         else
@@ -58,13 +47,7 @@ public class GameManager : MonoBehaviour
     //ProcessAuthentication 과정은 비동기적으로 실행된다.
     public void LoadGoogleAuth() => PlayGamesPlatform.Instance.Authenticate(ProcessAuthentication);
     //Controller를 찾고 전투에 필요한 정보들을 세팅한다.
-    private void InitPlayer()
-    {
-        controller = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
-        controller.InitDefaultStatus();
-        controller.SetStatus(_gameData.statLevel_Gold);
-        controller.SetStatus(_gameData.statLevel_StatPoint);
-    }
+
     //데이터 로드 시간이 너무 짧으면 과정 연출이 애매해져서 최소 시간 할당했음.
     private IEnumerator WaitAndInvokeOnDataLoadComplete()
     {
@@ -128,6 +111,7 @@ public class GameManager : MonoBehaviour
         _gameData.weaponLevel ??= new();
         _gameData.skillFragment ??= new();
         _gameData.equipedSkillArr ??= new string[5];
+        _gameData.companionWeaponIdArr ??= new string[3];
         string serializedData = JsonConvert.SerializeObject(_gameData, Formatting.Indented);
         Debug.Log("Game data loaded:\n" + serializedData);
     }
@@ -168,10 +152,19 @@ public class GameManager : MonoBehaviour
         int value = 10 * (_gameData.currentStageNum + 1);
         //mainStageNum
         _gameData.exp += value;
-        if (_gameData.exp >= GetNeedExp())
+
+        while (true)
         {
-            _gameData.exp = 0;
-            _gameData.level++;
+            BigInteger needExp = GetNeedExp();
+            if (_gameData.exp < needExp)
+                break;
+            if (_gameData.exp >= needExp)
+            {
+                _gameData.exp -= needExp;
+                _gameData.level++;
+                _gameData.statPoint++;
+                BattleBroker.OnStatPointSet();
+            }
         }
         BattleBroker.OnLevelExpSet();
         BattleBroker.OnCurrencyInBattle(DropType.Exp, value);

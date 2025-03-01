@@ -1,5 +1,12 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <engine:VisualElement name="StatusPanel" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.4); padding-top: 13px; position: absolute; width: 100%; height: 100%;">
-        <engine:ScrollView name="ScrollView" />
+    <Style src="project://database/Assets/02.Script/TotalDebugger/CategoriPanel/CategoriPanel.uss?fileID=7433441132597879392&amp;guid=9a39d714698ee5e4d9f2720075cfa732&amp;type=3#CategoriPanel" />
+    <engine:VisualElement name="StatusPanel" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.4); position: absolute; width: 100%; height: 100%;">
+        <engine:VisualElement name="DropDownParent" style="flex-grow: 0; height: 60px; flex-direction: row; align-items: center; justify-content: flex-start; margin-left: 0; margin-right: 0; width: 519px; color: rgb(255, 255, 255); font-size: 23px; -unity-text-align: middle-left;">
+            <engine:DropdownField label="Type" name="TypeDropDown" choices="Value" index="0" focusable="false" style="left: 10px; margin-left: 10px; flex-grow: 1;" />
+        </engine:VisualElement>
+        <engine:VisualElement name="ScrollViewParent" style="flex-grow: 1;">
+            <engine:ScrollView name="GoldStatScrollView" style="height: 100%; position: absolute; width: 100%;" />
+            <engine:ScrollView name="StatPointStatScrollView" />
+        </engine:VisualElement>
     </engine:VisualElement>
 </engine:UXML>
