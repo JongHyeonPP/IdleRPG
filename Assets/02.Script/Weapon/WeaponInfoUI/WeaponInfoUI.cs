@@ -5,6 +5,7 @@ using UnityEngine.UIElements;
 
 public class WeaponInfoUI : MonoBehaviour
 {
+    private GameData _gameData;
     private VisualElement _weaponImage;
     private Label _weaponRarity;
     private Label _weaponName;
@@ -17,9 +18,10 @@ public class WeaponInfoUI : MonoBehaviour
     Dictionary<string, int> _weaponLevel;    
     private void Awake()
     {
+        _gameData = StartBroker.GetGameData();
         root = GetComponent<UIDocument>().rootVisualElement;
-        _weaponCount = StartBroker.GetGameData().weaponCount;
-        _weaponLevel = StartBroker.GetGameData().weaponLevel;
+        _weaponCount = _gameData.weaponCount;
+        _weaponLevel = _gameData.weaponLevel;
         root.style.display = DisplayStyle.None;
         InitWeaponInfo();
     }
@@ -40,10 +42,23 @@ public class WeaponInfoUI : MonoBehaviour
     }
     private void OnEquipClick()
     {
-        Debug.Log("클릭 버튼");
         UIBroker.InactiveCurrentUI();
         PlayerBroker.OnEquipWeapon?.Invoke(_currentWeapon, _currentWeapon.WeaponType);
-        StartBroker.GetGameData().playerWeaponId = _currentWeapon.UID;
+        switch (_currentWeapon.WeaponType)
+        {
+            case WeaponType.Melee:
+                _gameData.playerWeaponId = _currentWeapon.UID;
+                break;
+            case WeaponType.Bow:
+                _gameData.companionWeaponIdArr[0] = _currentWeapon.UID;
+                break;
+            case WeaponType.Shield:
+                _gameData.companionWeaponIdArr[1] = _currentWeapon.UID;
+                break;
+            case WeaponType.Staff:
+                _gameData.companionWeaponIdArr[2] = _currentWeapon.UID;
+                break;
+        }
         StartBroker.SaveLocal();
     }
     public void ShowWeaponInfo(WeaponData weaponData)

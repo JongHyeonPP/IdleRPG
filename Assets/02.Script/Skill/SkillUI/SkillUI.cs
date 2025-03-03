@@ -25,8 +25,7 @@ public class SkillUI : MonoBehaviour
     private readonly Color inactiveColor = new(0.7f, 0.7f, 0.7f);
     private readonly Color activeColor = new(1f, 1f, 1f);
     //Fragment
-    private readonly Dictionary<Rarity, Label> fragmentDict = new();
-    [SerializeField] Sprite[] fragmentSprites;
+    private readonly Dictionary<Rarity, Label> fragmentLabelDict = new();
     private void Awake()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
@@ -135,7 +134,7 @@ public class SkillUI : MonoBehaviour
 
     private void OnFragmentSet(Rarity rarity, int num)
     {
-        fragmentDict[rarity].text = num.ToString();
+        fragmentLabelDict[rarity].text = num.ToString();
     }
     private void OnSkillLevelChange(string skillId, int skillLevel)
     {
@@ -164,7 +163,8 @@ public class SkillUI : MonoBehaviour
             VisualElement fragment = fragmentGrid.Q<VisualElement>($"Fragment{rarity}");
             VisualElement iconVe = fragment.Q<VisualElement>("IconVe");
             Label numLabel = fragment.Q<Label>("NumLabel");
-            fragmentDict.Add(rarity, numLabel);
+            iconVe.style.backgroundImage = new(PriceManager.instance.fragmentSprites[(int)rarity]);
+            fragmentLabelDict.Add(rarity, numLabel);
             if (!StartBroker.GetGameData().skillFragment.TryGetValue(rarity, out int value))
             {
                 value = 0;

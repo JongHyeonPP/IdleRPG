@@ -5,7 +5,6 @@ using UnityEngine.UIElements;
 
 public class CompanionUI : MonoBehaviour
 {
-    private GameData _gameData; 
     //UI Element
     public VisualElement root { get; private set;  }
     private VisualElement[] _panelArr;
@@ -18,6 +17,10 @@ public class CompanionUI : MonoBehaviour
     private void Awake()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
+        
+    }
+    private void Start()
+    {
         InitUI();
     }
     private void InitUI()
@@ -51,7 +54,7 @@ public class CompanionUI : MonoBehaviour
             _clickVeArr[i] = clickVeParent.ElementAt(i);
             clickVeParent.ElementAt(i).RegisterCallback<ClickEvent>(evt => OnClickClickVe(index));
         }
-        CompanionStatus[] statusArr = CompanionManager.instance.companionStatusArr;
+        CompanionController[] companionArr = CompanionManager.instance.companionArr;
         VisualElement statusParent = root.Q<VisualElement>("StatusParent");
         for (int i = 0; i < statusParent.childCount; i++)
         {
@@ -59,7 +62,7 @@ public class CompanionUI : MonoBehaviour
             VisualElement statusElement = statusParent.ElementAt(i);
             Label levelLabel = statusElement.Q<Label>("LevelLabel");
             Label nameLabel = statusElement.Q<Label>("NameLabel");
-            nameLabel.text = CompanionManager.instance.companionStatusArr[i].companionName;
+            nameLabel.text = CompanionManager.instance.companionArr[i].companionStatus.companionName;
             ProgressBar expProgressBar = statusElement.Q<ProgressBar>();
             (int, int) levelExp = CompanionManager.instance.GetCompanionLevelExp(i);
             levelLabel.text = $"Lv.{levelExp.Item1}";

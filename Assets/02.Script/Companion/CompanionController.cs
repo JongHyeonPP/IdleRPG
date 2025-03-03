@@ -1,20 +1,21 @@
 using EnumCollection;
 using System;
 using System.Collections;
-using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 
 public class CompanionController : MonoBehaviour
 {
     [SerializeField] Animator anim;
     private Coroutine _attackCoroutine;
-    private WeaponController weaponController;
+    private WeaponController _weaponController;
+    public CompanionStatus companionStatus;
+
     void Start()
     {
         BattleBroker.StartCompanionAttack += StartCompanionMove;
         BattleBroker.StopCompanionAttack += StopCompanionMove;
-        weaponController = GetComponent<WeaponController>();
-        switch (weaponController.weaponType)
+        _weaponController = GetComponent<WeaponController>();
+        switch (_weaponController.weaponType)
         {
             default:
                 anim.SetFloat("SkillState", 0f);

@@ -46,15 +46,15 @@ public static class FormulaManager
             case StatusType.Power:
                 if (level <= 1000)
                 {
-                    return level + 10;
+                    return level;
                 }
                 else if (level <= 5000)
                 {
-                    return 1000 + (level - 1000) * 2 + 10;
+                    return 1000 + (level - 1000) * 2;
                 }
                 else
                 {
-                    return 1000 + (5000 - 1000) * 2 + (level - 5000) * 3 + 10;
+                    return 1000 + (5000 - 1000) * 2 + (level - 5000) * 3;
                 }
             case StatusType.HpRecover:
                 return 0;

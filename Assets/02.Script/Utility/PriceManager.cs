@@ -11,6 +11,7 @@ public class PriceManager : MonoBehaviour
     public const int MAXPLAYERSKILLLEVEL = 10;
     public const int MAXCOMPANIONSKILLLEVEL = 20;
     public const int MAXWEAPONLEVEL = 20;
+    public Sprite[] fragmentSprites;
     private void Awake()
     {
         instance = this;
@@ -53,7 +54,7 @@ public class PriceManager : MonoBehaviour
         }
         return int.MaxValue;
     }
-    public (int, int) GetRequireCompanionSkill_CloverFragment(int companionIndex, int skillIndex, int skillLevel)
+    public CompanionSkillPrice GetRequireCompanionSkill_CloverFragment(int companionIndex, int skillIndex, int skillLevel)
     {
         CompanionSkillPrice price = new();
 
@@ -102,10 +103,8 @@ public class PriceManager : MonoBehaviour
                 }
                 break;
         }
-
-        return (price.clover, price.fragment);
+        return price;
     }
-
 }
 
 

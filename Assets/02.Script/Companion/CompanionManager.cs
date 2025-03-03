@@ -4,7 +4,7 @@ public class CompanionManager : MonoBehaviour
 {
     private GameData _gameData;
     public static CompanionManager instance;
-    public CompanionStatus[] companionStatusArr;
+    public CompanionController[] companionArr;
     public static int EXPINTERVAL = 5;
     private void Awake()
     {
@@ -14,7 +14,7 @@ public class CompanionManager : MonoBehaviour
     public (int, int) GetCompanionLevelExp(int companionIndex)
     {
         int skillLevelSum = 0;
-        foreach (SkillData skillData in companionStatusArr[companionIndex].companionSkillArr)
+        foreach (SkillData skillData in companionArr[companionIndex].companionStatus.companionSkillArr)
         {
             if (!_gameData.skillLevel.TryGetValue(skillData.uid, out int currentLevel))
             {

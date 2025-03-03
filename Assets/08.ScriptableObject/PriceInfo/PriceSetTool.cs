@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using EnumCollection;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
@@ -70,17 +71,29 @@ public class PriceSetTool : MonoBehaviour
         for (int i = 0; i <= PriceManager.MAXCOMPANIONSKILLLEVEL; i++)
         {
             if (i == 0)
-                continue;
-            priceInfo.companion0_SkillPrice0[i] = new PriceInfo.CompanionSkillPrice() { clover = (i - 1) * 10, fragment = (i - 1) * 20 };
-            priceInfo.companion0_SkillPrice1[i] = new PriceInfo.CompanionSkillPrice() { clover = (i - 1) * 20, fragment = (i - 1) * 40 };
-            priceInfo.companion0_SkillPrice2[i] = new PriceInfo.CompanionSkillPrice() { clover = (i - 1) * 40, fragment = (i - 1) * 80 };
-            priceInfo.companion1_SkillPrice0[i] = new PriceInfo.CompanionSkillPrice() { clover = (i - 1) * 10, fragment = (i - 1) * 20 };
-            priceInfo.companion1_SkillPrice1[i] = new PriceInfo.CompanionSkillPrice() { clover = (i - 1) * 20, fragment = (i - 1) * 40 };
-            priceInfo.companion1_SkillPrice2[i] = new PriceInfo.CompanionSkillPrice() { clover = (i - 1) * 40, fragment = (i - 1) * 80 };
-            priceInfo.companion2_SkillPrice0[i] = new PriceInfo.CompanionSkillPrice() { clover = (i - 1) * 10, fragment = (i - 1) * 20 };
-            priceInfo.companion2_SkillPrice1[i] = new PriceInfo.CompanionSkillPrice() { clover = (i - 1) * 20, fragment = (i - 1) * 40 };
-            priceInfo.companion2_SkillPrice2[i] = new PriceInfo.CompanionSkillPrice() { clover = (i - 1) * 40, fragment = (i - 1) * 80 };
-
+            {
+                priceInfo.companion0_SkillPrice0[i] = new PriceInfo.CompanionSkillPrice() { clover = 0, fragment = 0, fragmentRarity = Rarity.Common };
+                priceInfo.companion0_SkillPrice1[i] = new PriceInfo.CompanionSkillPrice() { clover = 0, fragment = 0, fragmentRarity = Rarity.Uncommon };
+                priceInfo.companion0_SkillPrice2[i] = new PriceInfo.CompanionSkillPrice() { clover = 0, fragment = 0, fragmentRarity = Rarity.Rare };
+                priceInfo.companion1_SkillPrice0[i] = new PriceInfo.CompanionSkillPrice() { clover = 0, fragment = 0, fragmentRarity = Rarity.Common };
+                priceInfo.companion1_SkillPrice1[i] = new PriceInfo.CompanionSkillPrice() { clover = 0, fragment = 0, fragmentRarity = Rarity.Uncommon };
+                priceInfo.companion1_SkillPrice2[i] = new PriceInfo.CompanionSkillPrice() { clover = 0, fragment = 0, fragmentRarity = Rarity.Rare };
+                priceInfo.companion2_SkillPrice0[i] = new PriceInfo.CompanionSkillPrice() { clover = 0, fragment = 0, fragmentRarity = Rarity.Common };
+                priceInfo.companion2_SkillPrice1[i] = new PriceInfo.CompanionSkillPrice() { clover = 0, fragment = 0, fragmentRarity = Rarity.Uncommon };
+                priceInfo.companion2_SkillPrice2[i] = new PriceInfo.CompanionSkillPrice() { clover = 0, fragment = 0, fragmentRarity = Rarity.Rare };
+            }
+            else
+            {
+                priceInfo.companion0_SkillPrice0[i] = new PriceInfo.CompanionSkillPrice() { clover = (i - 1) * 10, fragment = (i - 1) * 20, fragmentRarity = Rarity.Common };
+                priceInfo.companion0_SkillPrice1[i] = new PriceInfo.CompanionSkillPrice() { clover = (i - 1) * 10, fragment = (i - 1) * 20, fragmentRarity = Rarity.Uncommon };
+                priceInfo.companion0_SkillPrice2[i] = new PriceInfo.CompanionSkillPrice() { clover = (i - 1) * 10, fragment = (i - 1) * 20, fragmentRarity = Rarity.Rare };
+                priceInfo.companion1_SkillPrice0[i] = new PriceInfo.CompanionSkillPrice() { clover = (i - 1) * 10, fragment = (i - 1) * 20, fragmentRarity = Rarity.Common };
+                priceInfo.companion1_SkillPrice1[i] = new PriceInfo.CompanionSkillPrice() { clover = (i - 1) * 10, fragment = (i - 1) * 20, fragmentRarity = Rarity.Uncommon };
+                priceInfo.companion1_SkillPrice2[i] = new PriceInfo.CompanionSkillPrice() { clover = (i - 1) * 10, fragment = (i - 1) * 20, fragmentRarity = Rarity.Rare };
+                priceInfo.companion2_SkillPrice0[i] = new PriceInfo.CompanionSkillPrice() { clover = (i - 1) * 10, fragment = (i - 1) * 20, fragmentRarity = Rarity.Common };
+                priceInfo.companion2_SkillPrice1[i] = new PriceInfo.CompanionSkillPrice() { clover = (i - 1) * 10, fragment = (i - 1) * 20, fragmentRarity = Rarity.Uncommon };
+                priceInfo.companion2_SkillPrice2[i] = new PriceInfo.CompanionSkillPrice() { clover = (i - 1) * 10, fragment = (i - 1) * 20, fragmentRarity = Rarity.Rare };
+            }
         }
         EditorUtility.SetDirty(priceInfo);
         AssetDatabase.SaveAssets();

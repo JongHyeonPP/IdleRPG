@@ -1,3 +1,4 @@
+using EnumCollection;
 using System;
 using UnityEngine;
 
@@ -36,5 +37,6 @@ public class PriceInfo : ScriptableObject
     {
         public int clover;
         public int fragment;
+        public Rarity fragmentRarity;
     }
 }

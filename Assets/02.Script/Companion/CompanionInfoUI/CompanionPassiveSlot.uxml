@@ -23,11 +23,11 @@
                 </engine:VisualElement>
                 <engine:Label text="강화" name="UpgradeLabel" style="margin-top: 7px; margin-right: 0; margin-bottom: 3px; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-size: 30px;" />
                 <engine:VisualElement name="CloverPanel" style="flex-grow: 0; width: 119px; background-color: rgba(0, 0, 0, 0.5); height: 40px; justify-content: center; margin-bottom: 4px; border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px;">
-                    <engine:VisualElement name="IconSprite" style="flex-grow: 0; width: 25px; height: 25px; flex-shrink: 0; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Icons/32/Clover.png?fileID=2800000&amp;guid=7e406199c949f1449bc592e1e4db1487&amp;type=3#Clover&quot;); margin-left: 5px;" />
+                    <engine:VisualElement name="CloverSprite" style="flex-grow: 0; width: 25px; height: 25px; flex-shrink: 0; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Icons/32/Clover.png?fileID=2800000&amp;guid=7e406199c949f1449bc592e1e4db1487&amp;type=3#Clover&quot;); margin-left: 5px;" />
                     <engine:Label text="3333" name="CloverLabel" style="position: absolute; right: 0;" />
                 </engine:VisualElement>
                 <engine:VisualElement name="FragmentPanel" style="flex-grow: 0; width: 119px; background-color: rgba(0, 0, 0, 0.5); height: 40px; justify-content: center; border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px;">
-                    <engine:VisualElement name="IconSprite" style="flex-grow: 0; width: 25px; height: 25px; flex-shrink: 0; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Icons/32/GemLong01.png?fileID=2800000&amp;guid=763282434841e654fa86476b044d6b64&amp;type=3#GemLong01&quot;);" />
+                    <engine:VisualElement name="FragmentSprite" style="flex-grow: 0; width: 25px; height: 25px; flex-shrink: 0; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Icons/32/GemLong01.png?fileID=2800000&amp;guid=763282434841e654fa86476b044d6b64&amp;type=3#GemLong01&quot;);" />
                     <engine:Label text="3333" name="FragmentLabel" style="position: absolute; right: 0;" />
                 </engine:VisualElement>
             </engine:Button>

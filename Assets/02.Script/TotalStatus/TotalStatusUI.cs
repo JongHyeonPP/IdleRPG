@@ -26,7 +26,6 @@ public class TotalStatusUI : MonoBehaviour
         InitEquipSlot();
         PlayerBroker.OnEquipWeapon += OnEquipWeapon;
     }
-
     private void InitEquipSlot()
     {
         weaponSlot = root.Q<VisualElement>("WeaponSlot");
@@ -34,7 +33,6 @@ public class TotalStatusUI : MonoBehaviour
         weaponSlot.Q<Label>("CategoriLabel").text = "ÀåÂø ¹«±â";
         accSlot.Q<Label>("CategoriLabel").text = "ÀåÂø ¾Ç¼¼¼­¸®";
     }
-
     private void OnEquipWeapon(object obj, WeaponType weaponType)
     {
         if (weaponType != WeaponType.Melee)
@@ -52,7 +50,6 @@ public class TotalStatusUI : MonoBehaviour
             weaponSlot.Q<Label>("NameLabel").text = weaponData.name;
         }
     }
-
     private void StatusPanelInit()
     {
         //EquipPanel
