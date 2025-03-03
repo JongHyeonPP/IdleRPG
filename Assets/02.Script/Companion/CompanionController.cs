@@ -62,7 +62,10 @@ public class CompanionController : MonoBehaviour
     }
     public IEnumerator AttackCoroutine()
     {
-        anim.SetTrigger("Attack");
-        yield return new WaitForSeconds(1f);
+        while (true)
+        {
+            anim.SetTrigger("Attack");
+            yield return new WaitForSeconds(1f);
+        }
     }
 }

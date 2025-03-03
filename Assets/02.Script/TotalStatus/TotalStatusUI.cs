@@ -13,8 +13,8 @@ public class TotalStatusUI : MonoBehaviour
     //StatusVe
     private Label _levelLabel;
     private Label _nameLabel;
-    private VisualElement weaponSlot;
-    private VisualElement accSlot;
+    private VisualElement _playerWeaponSlot;
+    private VisualElement[] _companionWeaponSlot = new VisualElement[3];
     private void Awake()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
@@ -28,26 +28,46 @@ public class TotalStatusUI : MonoBehaviour
     }
     private void InitEquipSlot()
     {
-        weaponSlot = root.Q<VisualElement>("WeaponSlot");
-        accSlot = root.Q<VisualElement>("AccSlot");
-        weaponSlot.Q<Label>("CategoriLabel").text = "장착 무기";
-        accSlot.Q<Label>("CategoriLabel").text = "장착 악세서리";
+        _playerWeaponSlot = root.Q<VisualElement>("PlayerWeaponSlot");
+        _playerWeaponSlot.Q<Label>("CategoriLabel").text = "플레이어 무기";
+        for (int i = 0; i < 3; i++)
+        {
+            _companionWeaponSlot[i] = root.Q<VisualElement>($"CompanionWeaponSlot_{i}");
+            _companionWeaponSlot[i].Q<Label>("CategoriLabel").text = $"동료 무기 {i+1}";
+        }
+    
     }
     private void OnEquipWeapon(object obj, WeaponType weaponType)
     {
-        if (weaponType != WeaponType.Melee)
-            return;
         WeaponData weaponData = (WeaponData)obj;
-        VisualElement equipIcon = weaponSlot.Q<VisualElement>("EquipIcon");
+        VisualElement currentWeaponSlot = null;
+        switch (weaponType)
+        {
+            case WeaponType.Melee:
+                currentWeaponSlot = _playerWeaponSlot;
+                break;
+            case WeaponType.Bow:
+                currentWeaponSlot = _companionWeaponSlot[0];
+                break;
+            case WeaponType.Shield:
+                currentWeaponSlot = _companionWeaponSlot[1];
+                break;
+            case WeaponType.Staff:
+                currentWeaponSlot = _companionWeaponSlot[2];
+                break;
+        }
+        VisualElement equipIcon = currentWeaponSlot.Q<VisualElement>("EquipIcon");
+        Label nameLabel = currentWeaponSlot.Q<Label>("NameLabel");
         if (weaponData == null)
         {
             equipIcon.style.backgroundImage = null;
+            nameLabel.text = "없음";
         }
         else
         {
             equipIcon.style.backgroundImage = new(weaponData.WeaponSprite);
             WeaponManager.instance.SetIconScale(weaponData, equipIcon);
-            weaponSlot.Q<Label>("NameLabel").text = weaponData.name;
+            nameLabel.text = weaponData.name;
         }
     }
     private void StatusPanelInit()
@@ -55,7 +75,7 @@ public class TotalStatusUI : MonoBehaviour
         //EquipPanel
         VisualElement weaponSlotRoot = root.Q<VisualElement>("WeaponSlot");
         VisualElement accessoriesSlotRoot = root.Q<VisualElement>("AccessoriesSlot");
-        VisualElement area = root.Q<VisualElement>("PlayerArea");
+        VisualElement area = root.Q<VisualElement>("PlayerSpriteArea");
         _levelLabel = area.Q<Label>("LevelLabel");
         _nameLabel = area.Q<Label>("NameLabel");
         PlayerBroker.OnSetName += SetName;

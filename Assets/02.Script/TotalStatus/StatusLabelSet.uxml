@@ -1,5 +1,5 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <engine:VisualElement name="StatusLabelSet" style="flex-grow: 1; flex-direction: row;">
+    <engine:VisualElement name="StatusLabelSet" style="flex-grow: 0; flex-direction: row; flex-shrink: 0; padding-bottom: 5px;">
         <engine:Label text="공격력" name="StatusTypeText" style="color: rgb(250, 195, 105);" />
         <engine:Label text="67,790" name="ValueText" style="-unity-text-align: upper-right; flex-grow: 1; color: rgb(255, 255, 255);" />
     </engine:VisualElement>
