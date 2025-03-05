@@ -43,7 +43,7 @@ public class StoryManager : MonoBehaviour
   
     private void LoadStoryPrefabs(int storyIndex)
     {
-
+        Debug.Log("Log");
         //ClearStoryPrefabs();
 
         StoryPrefabData storyData = storyPrefabsList.Find(x => x.storyIndex == storyIndex);
@@ -112,6 +112,7 @@ public class StoryManager : MonoBehaviour
                 
             }
         }
+        Debug.Log("Log_0");
         StartCoroutine(_storyUI.FadeEffect(false));
         cameracontroller.SwitchToCamera(true);
         yield return new WaitForSeconds(4f);

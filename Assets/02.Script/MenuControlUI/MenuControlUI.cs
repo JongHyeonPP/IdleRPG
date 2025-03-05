@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using Button = UnityEngine.UIElements.Button;
-public class MenuChangeUI : MonoBehaviour
+public class MenuControlUI : MonoBehaviour
 {
     //Controlled Componenet
 
@@ -16,7 +16,7 @@ public class MenuChangeUI : MonoBehaviour
     //[SerializeField] AdventureUI adventureUI;
     [SerializeField] StoreUI storeUI;
     //Etc
-    public VisualElement root { private get; set; }
+    public VisualElement root;
     [SerializeField] EquipedSkillUI equipedSkillUI;
     private readonly NoticeDot[] _noticeDotArr = new NoticeDot[6];
     private VisualElement[] buttonArr;
@@ -24,16 +24,12 @@ public class MenuChangeUI : MonoBehaviour
     private void Awake()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
-    }
-    private void Start()
-    {
-        var rootChild = root.Q<VisualElement>("MenuControlUI");
-        rootChild.Insert(0, equipedSkillUI.root);
-        equipedSkillUI.root.style.position = Position.Relative;
-        var mainElement = root.Q<VisualElement>("ButtonParent");
-        var menuParent = root.Q<VisualElement>("MenuParent");
-        buttonArr = new VisualElement[mainElement.childCount];
         UIBroker.OnMenuUINotice += OnMenuUINotice;
+        
+
+        var mainElement = root.Q<VisualElement>("ButtonParent");
+        
+        buttonArr = new VisualElement[mainElement.childCount];
         for (int i = 0; i < mainElement.childCount; i++)
         {
             int localIndex = i;
@@ -66,6 +62,14 @@ public class MenuChangeUI : MonoBehaviour
             buttonArr[i] = button;
         }
         ChangeUI(0);
+
+    }
+    private void Start()
+    {
+        var rootChild = root.Q<VisualElement>("MenuControlUI");
+        rootChild.Insert(0, equipedSkillUI.root);
+        equipedSkillUI.root.style.position = Position.Relative;
+        var menuParent = root.Q<VisualElement>("MenuParent");
         menuParent.Add(statUI.root);
         menuParent.Add(weaponUI.root);
         menuParent.Add(skillUI.root);

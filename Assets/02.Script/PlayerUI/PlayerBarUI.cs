@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 
 public class PlayerBarUI : MonoBehaviour
 {
-    private VisualElement _root;
+    public VisualElement root { get; private set; }
     private ProgressBar hpBar;
     private ProgressBar mpBar;
     void Awake()
@@ -16,9 +16,9 @@ public class PlayerBarUI : MonoBehaviour
 
     private void InitElement()
     {
-        _root = GetComponent<UIDocument>().rootVisualElement;
-        hpBar = _root.Q<ProgressBar>("HpBar");
-        mpBar = _root.Q<ProgressBar>("MpBar");
+        root = GetComponent<UIDocument>().rootVisualElement;
+        hpBar = root.Q<ProgressBar>("HpBar");
+        mpBar = root.Q<ProgressBar>("MpBar");
     }
 
     private void SetBarPosition(Camera currentCamera)

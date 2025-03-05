@@ -16,7 +16,8 @@
         "CurrencyBarUI",
         "Battle",
         "PlayerUI",
-        "Companion"
+        "Companion",
+        "MenuChangeUI"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

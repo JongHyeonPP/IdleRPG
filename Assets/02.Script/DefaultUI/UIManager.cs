@@ -9,21 +9,21 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] CurrencyBarUI _currencyBar;
     [SerializeField] TotalLabelUI _goldLabelUI;
-    [SerializeField] StatUI _statUI;
     [SerializeField] StageSelectUI _stageSelectUI;
     [SerializeField] BossTimerUI _bossTimerUI;
     [SerializeField] DuplicateLoginUI _duplicateLoginUI;
     [SerializeField] TotalStatusUI _totalStatusUI;
     [SerializeField] SkillInfoUI _skillInfoUI;
-    [SerializeField] WeaponUI _weaponUI;
     [SerializeField] EquipedSkillUI _equipedSkillUI;
     [SerializeField] WeaponInfoUI _weaponInfoUI;
     [SerializeField] SkillAcquireUI _skillAcquireUI;
     [SerializeField] PlayerBarUI _playerBarUI;
     [SerializeField] CompanionInfoUI _companionInfoUI;
     [SerializeField] StoryUI _storyUI;
-    private bool _active = false;
-    
+    [SerializeField] MenuControlUI _menuControlUI;
+    [SerializeField] CurrentStageUI _currentStageUI;
+    private bool _active { get; set; } = false;
+
     void Awake()
     {
         instance = this;
@@ -45,28 +45,24 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
-        _currencyBar.root.style.display = DisplayStyle.Flex;
-        _goldLabelUI.root.style.display = DisplayStyle.Flex;
-        _statUI.root.style.display = DisplayStyle.Flex;
-        _stageSelectUI.root.style.visibility = Visibility.Hidden;
-        _duplicateLoginUI.root.style.display = DisplayStyle.None;
-        _totalStatusUI.root.style.display = DisplayStyle.None;
-        _skillInfoUI.root.style.display = DisplayStyle.None;
-        _companionInfoUI.root.style.display = DisplayStyle.None;
-        _storyUI.root.style.display = DisplayStyle.None;
+        //_currencyBar.root.style.display = DisplayStyle.Flex;
+        //_goldLabelUI.root.style.display = DisplayStyle.Flex;
+        //_statUI.root.style.display = DisplayStyle.Flex;
+        //_stageSelectUI.root.style.visibility = Visibility.Hidden;
+        //_duplicateLoginUI.root.style.display = DisplayStyle.None;
+        //_totalStatusUI.root.style.display = DisplayStyle.None;
+        //_skillInfoUI.root.style.display = DisplayStyle.None;
+        //_companionInfoUI.root.style.display = DisplayStyle.None;
+        //_storyUI.root.style.display = DisplayStyle.None;
         UIBroker.OnMenuUIChange?.Invoke(0);
         //BattleManager.instance.InvokeActions();
-        if (_active)
-        {
-            DeActiveUI(1);
-        }
     }
     private void OnEnable()
     {
         BattleBroker.SwitchToStory += (int obj) =>
         {
             _active = true;
-            DeActiveUI(obj);
+            InactiveUI(obj);
         };
 
         BattleBroker.SwitchBattle += ActiveUI;
@@ -77,37 +73,40 @@ public class UIManager : MonoBehaviour
         //StartCoroutine(_storyUI.FadeEffect(false));
         _currencyBar.root.style.display = DisplayStyle.Flex;
         _goldLabelUI.root.style.display = DisplayStyle.Flex;
-        _statUI.root.style.display = DisplayStyle.Flex;
-        _stageSelectUI.root.style.visibility = Visibility.Hidden;
-        _duplicateLoginUI.root.style.display = DisplayStyle.Flex;
-        _totalStatusUI.root.style.display = DisplayStyle.Flex;
-        _skillInfoUI.root.style.display = DisplayStyle.Flex;
-        _weaponUI.root.style.display = DisplayStyle.Flex;
-        _bossTimerUI.root.style.display = DisplayStyle.Flex;
-        _equipedSkillUI.root.style.display = DisplayStyle.Flex;
-        _weaponInfoUI.root.style.display = DisplayStyle.None;
-        _skillAcquireUI.root.style.display = DisplayStyle.Flex;
-        _storyUI.root.style.display = DisplayStyle.None;
-       
-    }
-   
-    private void DeActiveUI(int obj)
-    {
-         StartCoroutine(_storyUI.FadeEffect(true,1));
-        _currencyBar.root.style.display = DisplayStyle.None;
-        _goldLabelUI.root.style.display = DisplayStyle.None;
-        _statUI.root.style.display = DisplayStyle.None;
         _stageSelectUI.root.style.visibility = Visibility.Hidden;
         _duplicateLoginUI.root.style.display = DisplayStyle.None;
         _totalStatusUI.root.style.display = DisplayStyle.None;
         _skillInfoUI.root.style.display = DisplayStyle.None;
-        _weaponUI.root.style.display = DisplayStyle.None;
+        _bossTimerUI.root.style.display = DisplayStyle.None;
+        _equipedSkillUI.root.style.display = DisplayStyle.None;
+        _weaponInfoUI.root.style.display = DisplayStyle.None;
+        _skillAcquireUI.root.style.display = DisplayStyle.None;
+        _storyUI.root.style.display = DisplayStyle.None;
+        _companionInfoUI.root.style.display = DisplayStyle.None;
+        _menuControlUI.root.style.display = DisplayStyle.Flex;
+        _playerBarUI.root.style.display = DisplayStyle.Flex;
+        _currentStageUI.root.style.display = DisplayStyle.Flex;
+    }
+
+    private void InactiveUI(int obj)
+    {
+        Debug.Log("Log1");
+        StartCoroutine(_storyUI.FadeEffect(true, 1));
+        _currencyBar.root.style.display = DisplayStyle.None;
+        _goldLabelUI.root.style.display = DisplayStyle.None;
+        _stageSelectUI.root.style.visibility = Visibility.Hidden;
+        _duplicateLoginUI.root.style.display = DisplayStyle.None;
+        _totalStatusUI.root.style.display = DisplayStyle.None;
+        _skillInfoUI.root.style.display = DisplayStyle.None;
         _bossTimerUI.root.style.display = DisplayStyle.None;
         _equipedSkillUI.root.style.display = DisplayStyle.None;
         _weaponInfoUI.root.style.display = DisplayStyle.None;
         _skillAcquireUI.root.style.display = DisplayStyle.None;
         _storyUI.root.style.display = DisplayStyle.Flex;
-      
+        _companionInfoUI.root.style.display = DisplayStyle.None;
+        _menuControlUI.root.style.display = DisplayStyle.None;
+        _playerBarUI.root.style.display = DisplayStyle.None;
+        _currentStageUI.root.style.display = DisplayStyle.None;
     }
 
     void EnableUIDocuments(MonoBehaviour uiElement)
@@ -117,5 +116,5 @@ public class UIManager : MonoBehaviour
             uiDoc.enabled = true;
         }
     }
-    
+
 }
