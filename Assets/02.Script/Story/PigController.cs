@@ -11,20 +11,33 @@ public class PigController : MonoBehaviour
    
     public IEnumerator TranslateBigPigs()
     {
-        
-        while (gameObject.name == "BigPig_Pink" && pig.transform.position.x > bigPigTargetX)
+
+        if (gameObject.name != "BigPig_Pink") yield break;
+
+        float duration = 1f;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
         {
-            pig.transform.Translate(Vector3.left * 5f * Time.deltaTime);
+            if (pig == null) yield break;
+            pig.transform.Translate(Vector3.left * 4f * Time.deltaTime);
+            elapsedTime += Time.deltaTime;
             yield return null;
         }
     }
     public IEnumerator TranslatePigs()
     {
+        if (gameObject.name != "Pig_Pink") yield break;
 
-        while (pig.transform.position.x > pigTargetX && gameObject.name=="Pig_Pink")
+        float duration = 2f;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
         {
-            pig.transform.Translate(Vector3.left * 5f * Time.deltaTime);
-            yield return null; 
+            if (pig == null) yield break;
+            pig.transform.Translate(Vector3.left * 2f * Time.deltaTime);
+            elapsedTime += Time.deltaTime;
+            yield return null;
         }
     }
 }

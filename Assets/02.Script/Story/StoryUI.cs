@@ -5,34 +5,24 @@ using UnityEngine.UIElements;
 
 public class StoryUI : MonoBehaviour
 {
-    private VisualElement _root;
+   
     private VisualElement _main;
     private Label _label;
     private Button _skipButton;
     private VisualElement _fadeElement;
-    private float _fadeDuration = 2f;
-
-    public System.Action OnSkip;
+    private float _fadeDuration = 3f;
+    public VisualElement root { get; private set; }
+    public StoryManager _storyManager;
 
     private void Awake()
     {
-        _root = GetComponent<UIDocument>().rootVisualElement;
-        _main = _root.Q<VisualElement>("Main");
-        _label = _root.Q<Label>("TextLabel");
-        _skipButton = _root.Q<Button>("SkipButton");
-        _fadeElement = _root.Q<VisualElement>("FadeElement");
+        root = GetComponent<UIDocument>().rootVisualElement;
+        _main = root.Q<VisualElement>("Main");
+        _label = root.Q<Label>("TextLabel");
+        _skipButton = root.Q<Button>("SkipButton");
+        _fadeElement = root.Q<VisualElement>("FadeElement");
 
-        _skipButton.clickable.clicked += () => OnSkip?.Invoke();
-    }
-
-    public void ShowStoryUI()
-    {
-        _main.style.display = DisplayStyle.Flex;
-    }
-
-    public void HideStoryUI()
-    {
-        _main.style.display = DisplayStyle.None;
+        _skipButton.clickable.clicked += () => Skip();
     }
 
     public void UpdateText(string talker, string text, Color color)
@@ -41,28 +31,80 @@ public class StoryUI : MonoBehaviour
         _label.text = $"{talker}: {text}";
     }
 
-    public IEnumerator FadeEffect(bool fadeIn)
+    public IEnumerator FadeEffect(bool storymode,int index=0)
     {
-        float startOpacity = fadeIn ? 1 : 0;
-        float endOpacity = fadeIn ? 0 : 1;
+        //_main.style.display = DisplayStyle.Flex;
+        //float elapsedTime = 0f;
+
+        //_fadeElement.style.display = DisplayStyle.Flex;
+        //_fadeElement.style.opacity = 1f;
+        //yield return new WaitForSeconds(3.0f);
+        ////  StartCoroutine(_storyManager.StoryStart(1));
+        //if(storymode&&index==1)
+        //{
+        //    _storyManager.StoryStart(index);
+        //}
+
+        //while (elapsedTime < _fadeDuration)
+        //{
+        //    elapsedTime += Time.deltaTime;
+        //    float opacity = Mathf.Lerp(1f, 0f, Mathf.SmoothStep(0f, 1f, elapsedTime / _fadeDuration));
+        //    _fadeElement.style.opacity = opacity;
+        //    yield return null;
+        //}
+
+        //_fadeElement.style.opacity = 0f;
+
+        // _main.style.display = DisplayStyle.Flex;
         float elapsedTime = 0f;
 
-        _fadeElement.style.display = DisplayStyle.Flex;
+      //  _fadeElement.style.display = DisplayStyle.Flex;
 
-        while (elapsedTime < _fadeDuration)
+        if (storymode)
         {
-            elapsedTime += Time.deltaTime;
-            float opacity = Mathf.Lerp(startOpacity, endOpacity, elapsedTime / _fadeDuration);
-            _fadeElement.style.opacity = opacity;
-            yield return null;
-        }
+            _main.style.display = DisplayStyle.Flex;
+            _fadeElement.style.display = DisplayStyle.Flex;
+            _fadeElement.style.opacity = 1f; 
+            yield return new WaitForSeconds(3.0f);
 
-        _fadeElement.style.opacity = endOpacity;
-        if (!fadeIn) _fadeElement.style.display = DisplayStyle.None;
+            if (index == 1)
+            {
+                _storyManager.StoryStart(index);
+                Debug.Log(index);
+            }
+
+            while (elapsedTime < _fadeDuration)
+            {
+                elapsedTime += Time.deltaTime;
+                float opacity = Mathf.Lerp(1f, 0f, Mathf.SmoothStep(0f, 1f, elapsedTime / _fadeDuration));
+                _fadeElement.style.opacity = opacity;
+                yield return null;
+            }
+            _fadeElement.style.opacity = 0f; 
+        }
+        else
+        {
+            _fadeElement.style.opacity = 1f; 
+          
+
+            while (elapsedTime < _fadeDuration)
+            {
+                elapsedTime += Time.deltaTime;
+                float opacity = Mathf.Lerp(0f, 1f, Mathf.SmoothStep(0f, 1f, elapsedTime / _fadeDuration));
+                _fadeElement.style.opacity = opacity;
+                yield return null;
+            }
+
+            _fadeElement.style.opacity = 0f; 
+        }
     }
     public void SetStoryText(string talker, string text, Color color)
     {
         _label.text = $"{talker}: {text}";
         _label.style.color = color;
+    }
+    private void Skip()
+    {
+        BattleBroker.SwitchBattle();
     }
 }
