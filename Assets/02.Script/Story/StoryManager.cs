@@ -18,63 +18,54 @@ public class StoryManager : MonoBehaviour
     private void Awake()
     {
         TextReader.LoadData();
+       // BattleBroker.SwitchToStory += StartStoryCoroutine;
     }
     private void OnEnable()
     {
-        StoryBroker.StoryModeStart += StartStoryCoroutine;
+        BattleBroker.SwitchBattle += ClearStoryPrefabs;
     }
-
     private void StartStoryCoroutine(int i)
     {
-        StartCoroutine(StoryStart(i)); 
+        //StartCoroutine(StoryStart(i));
     }
 
-    public IEnumerator StoryStart(int i)//첫시작
-    {
-         _storyUI.ShowStoryUI();
-        yield return StartCoroutine(_storyUI.FadeEffect(true));
-        cameracontroller.SwitchToCamera(false);
-        LoadStoryPrefabs(i);
-        if (i == 1)
-        {
-            yield return StartCoroutine(FirstStoryStart());//인덱스
-        }
 
-        yield return StartCoroutine(_storyUI.FadeEffect(false));
-        BattleBroker.SwitchBattle();
-        cameracontroller.SwitchToCamera(true);
-        _storyUI.HideStoryUI();
-        ClearStoryPrefabs();
+    public void StoryStart(int i)//첫시작
+    {
+       
+        LoadStoryPrefabs(i);
+        //cameracontroller.SwitchToCamera(false);
+       
+        //BattleBroker.SwitchBattle();
+        //cameracontroller.SwitchToCamera(true);
+        //ClearStoryPrefabs();
     }
   
     private void LoadStoryPrefabs(int storyIndex)
     {
 
-        ClearStoryPrefabs();
+        //ClearStoryPrefabs();
 
         StoryPrefabData storyData = storyPrefabsList.Find(x => x.storyIndex == storyIndex);
-        GameObject background = null; 
 
         foreach (var prefab in storyData.storyPrefabs)
         {
             GameObject obj = Instantiate(prefab, spawnPoint.position, Quaternion.identity);
             activePrefabs.Add(obj);
 
-            Transform backgroundTransform = obj.transform.Find("StoryBackground");
-            if (backgroundTransform != null)
-            {
-                background = backgroundTransform.gameObject;
-            }
+            
         }
 
-        if (background != null)
+        cameracontroller.SwitchToCamera(false);
+        if (storyIndex == 1)
         {
-            cameracontroller.SetStoryBackground(background.transform); 
+            StartCoroutine(FirstStoryStart());//인덱스
         }
     }
 
     private void ClearStoryPrefabs()
     {
+       
         foreach (var obj in activePrefabs)
         {
             Destroy(obj);
@@ -118,13 +109,18 @@ public class StoryManager : MonoBehaviour
                     }
                 }
                 StartCoroutine(_playercontroller.Run());
+                
             }
         }
+        StartCoroutine(_storyUI.FadeEffect(false));
+        cameracontroller.SwitchToCamera(true);
+        yield return new WaitForSeconds(4f);
+        
+        BattleBroker.SwitchBattle();
+        
+
         
     }
-    private void Skip()
-    {
-        BattleBroker.SwitchBattle();
-    }
+   
     
 }

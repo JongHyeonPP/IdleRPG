@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -20,6 +21,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] SkillAcquireUI _skillAcquireUI;
     [SerializeField] PlayerBarUI _playerBarUI;
     [SerializeField] CompanionInfoUI _companionInfoUI;
+    [SerializeField] StoryUI _storyUI;
     private bool _active = false;
     
     void Awake()
@@ -51,7 +53,7 @@ public class UIManager : MonoBehaviour
         _totalStatusUI.root.style.display = DisplayStyle.None;
         _skillInfoUI.root.style.display = DisplayStyle.None;
         _companionInfoUI.root.style.display = DisplayStyle.None;
-
+        _storyUI.root.style.display = DisplayStyle.None;
         UIBroker.OnMenuUIChange?.Invoke(0);
         //BattleManager.instance.InvokeActions();
         if (_active)
@@ -72,6 +74,7 @@ public class UIManager : MonoBehaviour
 
     private void ActiveUI()
     {
+        //StartCoroutine(_storyUI.FadeEffect(false));
         _currencyBar.root.style.display = DisplayStyle.Flex;
         _goldLabelUI.root.style.display = DisplayStyle.Flex;
         _statUI.root.style.display = DisplayStyle.Flex;
@@ -82,13 +85,15 @@ public class UIManager : MonoBehaviour
         _weaponUI.root.style.display = DisplayStyle.Flex;
         _bossTimerUI.root.style.display = DisplayStyle.Flex;
         _equipedSkillUI.root.style.display = DisplayStyle.Flex;
-        _weaponInfoUI.root.style.display = DisplayStyle.Flex;
+        _weaponInfoUI.root.style.display = DisplayStyle.None;
         _skillAcquireUI.root.style.display = DisplayStyle.Flex;
+        _storyUI.root.style.display = DisplayStyle.None;
+       
     }
-
+   
     private void DeActiveUI(int obj)
     {
-       
+         StartCoroutine(_storyUI.FadeEffect(true,1));
         _currencyBar.root.style.display = DisplayStyle.None;
         _goldLabelUI.root.style.display = DisplayStyle.None;
         _statUI.root.style.display = DisplayStyle.None;
@@ -101,6 +106,8 @@ public class UIManager : MonoBehaviour
         _equipedSkillUI.root.style.display = DisplayStyle.None;
         _weaponInfoUI.root.style.display = DisplayStyle.None;
         _skillAcquireUI.root.style.display = DisplayStyle.None;
+        _storyUI.root.style.display = DisplayStyle.Flex;
+      
     }
 
     void EnableUIDocuments(MonoBehaviour uiElement)
