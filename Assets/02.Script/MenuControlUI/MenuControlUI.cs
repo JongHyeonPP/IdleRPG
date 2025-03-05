@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.Design.Serialization;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,7 +18,7 @@ public class MenuChangeUI : MonoBehaviour
     //Etc
     public VisualElement root { private get; set; }
     [SerializeField] EquipedSkillUI equipedSkillUI;
-    private NoticeDot[] _noticeDotArr = new NoticeDot[6];
+    private readonly NoticeDot[] _noticeDotArr = new NoticeDot[6];
     private VisualElement[] buttonArr;
     private int currentIndex = -1;
     private void Awake()
@@ -32,6 +33,7 @@ public class MenuChangeUI : MonoBehaviour
         var mainElement = root.Q<VisualElement>("ButtonParent");
         var menuParent = root.Q<VisualElement>("MenuParent");
         buttonArr = new VisualElement[mainElement.childCount];
+        UIBroker.OnMenuUINotice += OnMenuUINotice;
         for (int i = 0; i < mainElement.childCount; i++)
         {
             int localIndex = i;
@@ -40,7 +42,6 @@ public class MenuChangeUI : MonoBehaviour
             button.RegisterCallback<ClickEvent>(evt => ChangeUI(localIndex));
             _noticeDotArr[i] = new(menuButton, this);
             _noticeDotArr[i].SetParentToRoot();
-            _noticeDotArr[i].StartNotice();
             switch (i)
             {
                 case 0:
@@ -78,6 +79,19 @@ public class MenuChangeUI : MonoBehaviour
         companionUI.root.ElementAt(0).style.height = Length.Percent(100);
         storeUI.root.ElementAt(0).style.height = Length.Percent(100);
     }
+
+    private void OnMenuUINotice(int menuIndex, bool isActive)
+    {
+        if (isActive)
+        {
+            _noticeDotArr[menuIndex].StartNotice();
+        }
+        else
+        {
+            _noticeDotArr[menuIndex].StopNotice();
+        }
+    }
+
     private void ChangeUI(int index)
     {
         if (currentIndex == index)

@@ -20,7 +20,7 @@ public class SkillUI : MonoBehaviour
     private Button _activeButton;
     private Button _passiveButton;
     [SerializeField] SkillAcquireUI skillAcquireUI;
-    private NoticeDot _acquireNoticeDot;
+    public NoticeDot acquireNoticeDot;
     //ButtonColor
     private readonly Color inactiveColor = new(0.7f, 0.7f, 0.7f);
     private readonly Color activeColor = new(1f, 1f, 1f);
@@ -34,11 +34,11 @@ public class SkillUI : MonoBehaviour
         _activeButton = root.Q<Button>("ActiveButton");
         _passiveButton = root.Q<Button>("PassiveButton");
         skillAcquireUI.gameObject.SetActive(true);
-        PlayerBroker.OnSkillLevelSet += OnSkillLevelChange;
+        PlayerBroker.OnSkillLevelSet += OnSkillLevelSet;
         PlayerBroker.OnFragmentSet += OnFragmentSet;
 
-        _acquireNoticeDot = new NoticeDot(_acquireButton, this);
-        _acquireNoticeDot.StartNotice();
+        acquireNoticeDot = new NoticeDot(_acquireButton, this);
+        acquireNoticeDot.StartNotice();
         _gameData = StartBroker.GetGameData();
     }
     private void Start()
@@ -114,20 +114,18 @@ public class SkillUI : MonoBehaviour
         {
             acquired.style.display = DisplayStyle.Flex;
             unacquired.style.display = DisplayStyle.None;
-
-            Label nameLabel = currentSlot.Q<Label>("NameLabel");
             Label levelLabel = currentSlot.Q<Label>("LevelLabel");
-            nameLabel.text = skillData.name;
             levelLabel.text = $"Lv.{skillLevel}";
-            ProgressBar containProgressBar = currentSlot.Q<ProgressBar>("ContainProgressBar");
-            VisualElement skillIcon = currentSlot.Q<VisualElement>("SkillIcon");
-            skillIcon.style.backgroundImage = new(skillData.iconSprite);
         }
+        VisualElement skillIcon = currentSlot.Q<VisualElement>("SkillIcon");
+        skillIcon.style.backgroundImage = new(skillData.iconSprite);
+        Label nameLabel = currentSlot.Q<Label>("NameLabel");
+        nameLabel.text = skillData.name;
         VisualElement clickVe = currentSlot.Q<VisualElement>("ClickVe");
         clickVe.RegisterCallback<ClickEvent>(evt =>
         {
             if (!draggableScrollview._isDragging)
-                _skillInfoUI.ActiveUI(skillData, skillLevel);
+                _skillInfoUI.ActiveUI(skillData);
         });
         _skillId_SlotDict.Add(skillData.uid, currentSlot);
     }
@@ -136,7 +134,7 @@ public class SkillUI : MonoBehaviour
     {
         fragmentLabelDict[rarity].text = num.ToString();
     }
-    private void OnSkillLevelChange(string skillId, int skillLevel)
+    private void OnSkillLevelSet(string skillId, int skillLevel)
     {
         if (!_skillId_SlotDict.TryGetValue(skillId, out VisualElement currentSlot))
         {
@@ -144,11 +142,19 @@ public class SkillUI : MonoBehaviour
         }
         VisualElement unacquired = currentSlot.Q<VisualElement>("Unacquired");
         VisualElement acquired = currentSlot.Q<VisualElement>("Acquired");
-        acquired.style.display = DisplayStyle.Flex;
-        unacquired.style.display = DisplayStyle.None;
-        Label levelLabel = currentSlot.Q<Label>("LevelLabel");
-        levelLabel.text = $"Lv.{skillLevel}";
-        ProgressBar containProgressBar = currentSlot.Q<ProgressBar>("ContainProgressBar");
+        if (skillLevel == 0)
+        {
+            acquired.style.display = DisplayStyle.None;
+            unacquired.style.display = DisplayStyle.Flex;
+        }
+        else
+        {
+            acquired.style.display = DisplayStyle.Flex;
+            unacquired.style.display = DisplayStyle.None;
+            Label levelLabel = currentSlot.Q<Label>("LevelLabel");
+            levelLabel.text = $"Lv.{skillLevel}";
+        }
+        
     }
     private void InitFragmentGrid()
     {
@@ -229,7 +235,7 @@ public class SkillUI : MonoBehaviour
         if (uiType == 2)
         {
             root.style.display = DisplayStyle.Flex;
-            _acquireNoticeDot.SetParentToRoot();
+            acquireNoticeDot.SetParentToRoot();
         }
         else
             root.style.display = DisplayStyle.None;

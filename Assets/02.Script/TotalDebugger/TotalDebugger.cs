@@ -343,8 +343,6 @@ public class TotalDebugger : EditorWindow
                     PlayerBroker.OnStatPointStatusSet?.Invoke(currentStatus, _gameData.statLevel_StatPoint[currentStatus]);
                     break;
             }
-
-            
         }
         void WeaponCase()
         {
@@ -397,9 +395,26 @@ public class TotalDebugger : EditorWindow
                 _gameData.skillLevel[dataName] = intValue;
             else
                 _gameData.skillLevel[dataName] += intValue;
-            int maxLevel = dataName.Contains("Player") ? PriceManager.MAXPLAYERSKILLLEVEL : PriceManager.MAXCOMPANIONSKILLLEVEL;
+            bool isPlayerSkill = dataName.Contains("Player");
+            int maxLevel = isPlayerSkill ? PriceManager.MAXPLAYERSKILLLEVEL : PriceManager.MAXCOMPANIONSKILLLEVEL;
             _gameData.skillLevel[dataName] = Mathf.Clamp(_gameData.skillLevel[dataName], 0, maxLevel);
             PlayerBroker.OnSkillLevelSet?.Invoke(dataName, _gameData.skillLevel[dataName]);
+            if (!isPlayerSkill)
+            {
+                for (int i = 0; i < CompanionManager.instance.companionArr.Length; i++)
+                {
+                    CompanionController companion = CompanionManager.instance.companionArr[i];
+                    foreach (SkillData skill in companion.companionStatus.companionSkillArr)
+                    {
+                        if (skill.uid == dataName)
+                        {
+                            BattleBroker.OnCompanionExpSet?.Invoke(i);
+                            return;
+                        }
+                    }
+                }
+                
+            }
         }
         void MaterialCase()
         {

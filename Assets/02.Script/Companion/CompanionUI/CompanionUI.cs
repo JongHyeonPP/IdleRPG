@@ -22,6 +22,7 @@ public class CompanionUI : MonoBehaviour
     private void Start()
     {
         InitUI();
+        BattleBroker.OnCompanionExpSet += OnCompanionExpSet;
     }
     private void InitUI()
     {
@@ -96,6 +97,17 @@ public class CompanionUI : MonoBehaviour
                 _buttonArr[i].Q<Label>().style.color = inactiveColor;
             }
         }
+    }
+    private void OnCompanionExpSet(int companionIndex)
+    {
+        (int, int) levelExp = CompanionManager.instance.GetCompanionLevelExp(companionIndex);
+        VisualElement status = root.Q<VisualElement>("StatusParent").ElementAt(companionIndex);
+
+        Label levelLabel = status.Q<Label>("LevelLabel");
+        ProgressBar expProgressBar = status.Q<ProgressBar>("ExpProgressBar");
+        levelLabel.text = $"Lv.{levelExp.Item1}";
+        expProgressBar.value = levelExp.Item2 / (float)CompanionManager.EXPINTERVAL;
+        expProgressBar.title = $"{levelExp.Item2}/{CompanionManager.EXPINTERVAL}";
     }
 
     #region UIChange

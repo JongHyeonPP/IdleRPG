@@ -34,12 +34,13 @@ public class EnemyStatusManager:MonoBehaviour
         {
             Destroy(this);
         }
+        BattleBroker.OnStageChange += OnStageChange;
+        BattleBroker.OnStageEnter += OnStageEnter;
+        BattleBroker.OnBossEnter += OnBossEnter;
     }
     private void Start()
     {
-        BattleBroker.OnStageChange+=OnStageChange;
-        BattleBroker.OnStageEnter+=OnStageEnter;
-        BattleBroker.OnBossEnter += OnBossEnter;
+        
     }
     private void OnStageChange(int stageNum)
     {

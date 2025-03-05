@@ -2,6 +2,7 @@ using EnumCollection;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using UnityEngine;
 
@@ -27,6 +28,7 @@ public abstract class Attackable : MonoBehaviour
     //AttackTerm 간격마다 우선 순위에 있는 스킬 사용
     private IEnumerator AttackRoop()
     {
+        GameData gameData = StartBroker.GetGameData();
         while (true)
         {
 
@@ -52,12 +54,29 @@ public abstract class Attackable : MonoBehaviour
             SkillData skillData = currentSkill.skillData;
             if (skillData.isAnim)
             {
-                yield return new WaitForSeconds(skillData.preDelay);
+                float speedValue = 0;
+                for (int i = 0; i < CompanionManager.instance.companionArr.Length; i++)
+                {
+                    CompanionController companion = CompanionManager.instance.companionArr[i];
+                    if (companion.companionStatus.companionEffect.type == SkillType.SpeedBuff)
+                    {
+                        speedValue += companion.companionStatus.companionEffect.value[CompanionManager.instance.GetCompanionLevelExp(i).Item1 ];
+                    }
+                    IEnumerable<SkillData> speedBuff = companion.companionStatus.companionSkillArr.Where(item => item.type == SkillType.SpeedBuff);
+                    foreach (SkillData speedSkill in speedBuff)
+                    {
+                        if (!gameData.skillLevel.ContainsKey(speedSkill.uid) || gameData.skillLevel[speedSkill.uid] == 0)
+                        {
+                            speedValue += speedSkill.value[gameData.skillLevel[speedSkill.uid]];
+                        }
+                    }
+                }
+                yield return new WaitForSeconds(skillData.preDelay*(1f/(1f+speedValue)));
                 AnimBehavior(currentSkill, skillData);
                 List<Attackable> targets = GetTargets(skillData.target, skillData.targetNum);
                 ActiveSkillToTarget(targets, currentSkill);
                 VisualEffectToTarget(targets);
-                yield return new WaitForSeconds(skillData.postDelay);
+                yield return new WaitForSeconds(skillData.postDelay* (1f / (1f + speedValue)));
             }
             else
             {

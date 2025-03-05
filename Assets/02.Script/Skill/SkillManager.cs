@@ -38,12 +38,13 @@ public class SkillManager : MonoBehaviour
     }
     public SkillData GetSkillData(string id)
     {
-        return skillDataDict[id];
+        if (skillDataDict.TryGetValue(id, out SkillData skillData))
+        {
+            return skillData;
+        }
+        return null;
     }
-    public Dictionary<string, SkillData> GetSkillDict()
-    {
-        return skillDataDict;
-    }
+
     public SkillAcquireInfo GetInfo(int i)
     {
         return acquireInfoArr[i];

@@ -26,6 +26,7 @@ public class NoticeDot
 
         _expand = _root.Q<VisualElement>("Notice_Expand");
         _mainPanel = _root.Q<VisualElement>("Notice_MainPanel");
+        InactiveNotice();
     }
     //렌더링 순위를 UIDocument 내에서 최상위에 위치시키는 메서드
     //DisplayStyle이 Flex인 시점에 호출해야 정상적으로 작동된다.
@@ -37,20 +38,32 @@ public class NoticeDot
     //Notice 띄울라면 이거 호출하면 됨
     public void StartNotice()
     {
+        if (isOperating)
+            return;
+        isOperating = true;
         _root.style.display = DisplayStyle.Flex;
-        _parentMono.StartCoroutine(AnimateLoop());
+        _parentMono.StartCoroutine(CoroutineWithHashSet(AnimateLoop()));
     }
     //Notice 감출라면 이거 호출하면 됨
     public void StopNotice()
     {
+        if (!isOperating)
+            return;
+        InactiveNotice();
+    }
+
+    private void InactiveNotice()
+    {
+        isOperating = false;
         _root.style.display = DisplayStyle.None;
         foreach (var x in _coroutineSet)
         {
             _parentMono.StopCoroutine(x);
         }
-        _expand.transform.scale =_mainPanel.transform.scale = Vector3.one;
+        _expand.transform.scale = _mainPanel.transform.scale = Vector3.one;
         _coroutineSet.Clear();
     }
+
     //SetparentToRoot를 발동하면 원래 부모의 좌표를 따라가지 않아서 별도로 위치 이동시킬 때 호출하면 됨
     public void OnPositionChange(float xChange, float yChange)
     {
@@ -72,6 +85,7 @@ public class NoticeDot
     private readonly VisualElement _mainPanel;
     private readonly VisualElement _expand;
     private HashSet<Coroutine> _coroutineSet = new();
+    private bool isOperating;
     //생성자를 이용해 사용해야 함. 게임 오브젝트 생성 X
     // MainPanel 애니메이션 설정
     private const float _bigScaleNum = 1.2f;

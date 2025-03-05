@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Playables;
 using UnityEngine.UIElements;
 
 public class CompanionInfoUI : MonoBehaviour
@@ -17,7 +18,6 @@ public class CompanionInfoUI : MonoBehaviour
     private int currentCompanionIndex;
     private void Awake()
     {
-        
         root = GetComponent<UIDocument>().rootVisualElement;
         Button exitButton = root.Q<Button>("ExitButton");
         exitButton.RegisterCallback<ClickEvent>(evt => OnExitButtonClick());
@@ -33,15 +33,77 @@ public class CompanionInfoUI : MonoBehaviour
         _levelLabel = root.Q<Label>("LevelLabel");
         _companionEffectLabel = root.Q<Label>("CompanionEffectLabel");
         _expProgressBar = root.Q<ProgressBar>("ExpProgressBar");
+        InitStatusPanel();
     }
+
     private void Start()
     {
         _companionManager = CompanionManager.instance;
         BattleBroker.OnCompanionExpSet += OnCompanionExpSet;
+        PlayerBroker.OnSkillLevelSet += OnSkillLevelSet;
         _gameData = StartBroker.GetGameData();
-
     }
 
+    private void OnSkillLevelSet(string skillUid, int skillLevel)
+    {
+        SkillData[] skillArr = _companionManager.companionArr[currentCompanionIndex].companionStatus.companionSkillArr;
+        SkillData skillData = null;
+        int skillIndex = -1;
+        for (int i = 0; i < skillArr.Length; i++)
+        {
+            SkillData x = skillArr[i];
+            if (x.uid == skillUid)
+            {
+               skillData = SkillManager.instance.GetSkillData(skillUid);
+                skillIndex = i;
+            }
+        }
+        if (skillData == null)
+            return;
+        //업 한 이후
+        _gameData.skillLevel[skillData.uid] = skillLevel;
+        _passiveSlotArr[skillIndex].Q<Label>("SkillLevelLabel").text = $"Lv.{skillLevel}";
+        if (skillLevel == PriceManager.MAXCOMPANIONSKILLLEVEL)
+        {
+            _passiveSlotArr[skillIndex].Q<Button>().style.display = DisplayStyle.None;
+            _passiveSlotArr[skillIndex].Q<VisualElement>("MaxLevelLabel").style.display = DisplayStyle.Flex;
+        }
+        else
+        {
+            _passiveSlotArr[skillIndex].Q<Button>().style.display = DisplayStyle.Flex;
+            _passiveSlotArr[skillIndex].Q<VisualElement>("MaxLevelLabel").style.display = DisplayStyle.None;
+            PriceInfo.CompanionSkillPrice afterPrice = PriceManager.instance.GetRequireCompanionSkill_CloverFragment(currentCompanionIndex, skillIndex, skillLevel + 1);
+            Label cloverLabel = _passiveSlotArr[skillIndex].Q<Label>("CloverLabel");
+            cloverLabel.text = afterPrice.clover.ToString();
+            Label fragmentLabel = _passiveSlotArr[skillIndex].Q<Label>("FragmentLabel");
+            fragmentLabel.text = afterPrice.fragment.ToString();
+        }
+        
+        StartBroker.SaveLocal();
+    }
+    private void OnPassiveButtonClick(int skillIndex)
+    {
+        string uid = _companionManager.companionArr[currentCompanionIndex].companionStatus.companionSkillArr[skillIndex].uid;
+        if (!_gameData.skillLevel.TryGetValue(uid, out int currentLevel))
+        {
+            currentLevel = 0;
+        }
+        PriceInfo.CompanionSkillPrice beforePrice = PriceManager.instance.GetRequireCompanionSkill_CloverFragment(currentCompanionIndex, skillIndex, currentLevel+1);
+        if (beforePrice.clover > _gameData.clover || beforePrice.fragment > _gameData.skillFragment[beforePrice.fragmentRarity])
+        {
+            Debug.Log("재화 부족");
+            return;
+        }
+        if (!_gameData.skillFragment.ContainsKey(beforePrice.fragmentRarity))
+        {
+            _gameData.skillFragment[beforePrice.fragmentRarity] = 0;
+        }
+        _gameData.clover -= beforePrice.clover;
+        _gameData.skillFragment[beforePrice.fragmentRarity] -= beforePrice.fragment;
+        _gameData.skillLevel[uid] = ++currentLevel;
+        PlayerBroker.OnSkillLevelSet(uid, currentLevel);
+        BattleBroker.OnCompanionExpSet(currentCompanionIndex);
+    }
     private void OnCompanionExpSet(int companionIndex)
     {
         (int, int) levelExp = CompanionManager.instance.GetCompanionLevelExp(companionIndex);
@@ -51,12 +113,24 @@ public class CompanionInfoUI : MonoBehaviour
         var companion = CompanionManager.instance.companionArr[currentCompanionIndex];
         _companionEffectLabel.text = SkillManager.instance.GetParsedComplexExplain(companion.companionStatus.companionEffect, levelExp.Item1);
     }
-
+    
     private void OnExitButtonClick()
     {
         UIBroker.InactiveCurrentUI?.Invoke();
     }
+    private void InitStatusPanel()
+    {
+        VisualElement passiveParent = root.Q<VisualElement>("PassiveParent");
+        _passiveSlotArr = new VisualElement[passiveParent.childCount];
+        for (int i = 0; i < _passiveSlotArr.Length; i++)
+        {
+            int skillIndex = i;
+            VisualElement passiveSlot = passiveParent.ElementAt(i);
+            _passiveSlotArr[skillIndex] = passiveSlot;
+            passiveSlot.Q<Button>().RegisterCallback<ClickEvent>(evt => OnPassiveButtonClick(skillIndex));
+        }
 
+    }
     internal void ActiveUI(int companionIndex)
     {
         UIBroker.InactiveCurrentUI += RefreshRenderLayer;
@@ -78,14 +152,10 @@ public class CompanionInfoUI : MonoBehaviour
         _jobLabel.text = companionStatus.companionJob;
         _nameLabel.text = companionStatus.companionName;
 
-
-        VisualElement passiveParent = root.Q<VisualElement>("PassiveParent");
-        _passiveSlotArr = new VisualElement[passiveParent.childCount];
-        for (int i = 0; i < passiveParent.childCount; i++)
+        for (int i = 0; i < _passiveSlotArr.Length; i++)
         {
             int skillIndex = i;
-            VisualElement passiveSlot = passiveParent.ElementAt(i);
-            _passiveSlotArr[skillIndex] = passiveSlot;
+            VisualElement passiveSlot = _passiveSlotArr[i];            
             SkillData skillData = _companionManager.companionArr[currentCompanionIndex].companionStatus.companionSkillArr[skillIndex];
             VisualElement iconSprite = passiveSlot.Q<VisualElement>("IconSprite");
             Label nameLabel = passiveSlot.Q<Label>("NameLabel");
@@ -114,9 +184,8 @@ public class CompanionInfoUI : MonoBehaviour
                 VisualElement fragmentSprite = passiveSlot.Q<VisualElement>("FragmentSprite");
                 fragmentSprite.style.backgroundImage = new(PriceManager.instance.fragmentSprites[(int)price.fragmentRarity]);
                 fragmentLabel.text = price.fragment.ToString();
-                iconSprite.style.backgroundImage = new(skillData.iconSprite);
-                _passiveSlotArr[skillIndex].Q<Button>().RegisterCallback<ClickEvent>(evt => OnPassiveButtonClick(skillIndex));
             }
+            iconSprite.style.backgroundImage = new(skillData.iconSprite);
         }
         OnCompanionExpSet(currentCompanionIndex);
         UIBroker.SwitchRenderTargetLayer(new string[] { "RenderTexture_0", $"RenderTexture_{currentCompanionIndex + 1}" });
@@ -128,52 +197,7 @@ public class CompanionInfoUI : MonoBehaviour
         UIBroker.InactiveCurrentUI -= RefreshRenderLayer;
     }
 
-    private void OnPassiveButtonClick(int skillIndex)
-    {
-        SkillData skillData = _companionManager.companionArr[currentCompanionIndex].companionStatus.companionSkillArr[skillIndex];
-        if (!_gameData.skillLevel.TryGetValue(skillData.uid, out int currentLevel))
-        {
-            currentLevel = 0;
-        }
-        //업 하기 전
-        PriceInfo.CompanionSkillPrice beforePrice = PriceManager.instance.GetRequireCompanionSkill_CloverFragment(currentCompanionIndex, skillIndex, currentLevel + 1);
-        if (!_gameData.skillFragment.ContainsKey(beforePrice.fragmentRarity))
-        {
-            _gameData.skillFragment[beforePrice.fragmentRarity] = 0;
-        }
-        if (beforePrice.clover > _gameData.clover || beforePrice.fragment > _gameData.skillFragment[beforePrice.fragmentRarity])
-        {
-            Debug.Log("재화 부족");
-            return;
-        }
-        else
-        {
-            _gameData.clover -= beforePrice.clover;
-            _gameData.skillFragment[beforePrice.fragmentRarity] -= beforePrice.fragment;
-        }
-        //업 한 이후
-        _gameData.skillLevel[skillData.uid] = ++currentLevel;
-        _passiveSlotArr[skillIndex].Q<Label>("SkillLevelLabel").text = $"Lv.{currentLevel}";
-        if (currentLevel == PriceManager.MAXCOMPANIONSKILLLEVEL)
-        {
-            _passiveSlotArr[skillIndex].Q<Button>().style.display = DisplayStyle.None;
-            _passiveSlotArr[skillIndex].Q<VisualElement>("MaxLevelLabel").style.display = DisplayStyle.Flex;
-        }
-        else
-        {
-            _passiveSlotArr[skillIndex].Q<Button>().style.display = DisplayStyle.Flex;
-            _passiveSlotArr[skillIndex].Q<VisualElement>("MaxLevelLabel").style.display = DisplayStyle.None;
-            PriceInfo.CompanionSkillPrice afterPrice = PriceManager.instance.GetRequireCompanionSkill_CloverFragment(currentCompanionIndex, skillIndex, currentLevel + 1);
-            Label cloverLabel = _passiveSlotArr[skillIndex].Q<Label>("CloverLabel");
-            cloverLabel.text = afterPrice.clover.ToString();
-            Label fragmentLabel = _passiveSlotArr[skillIndex].Q<Label>("FragmentLabel");
-            fragmentLabel.text = afterPrice.fragment.ToString();
-        }
 
-        PlayerBroker.OnSkillLevelSet(skillData.uid, currentLevel);
-        BattleBroker.OnCompanionExpSet(currentCompanionIndex);
-        StartBroker.SaveLocal();
-    }
 
     private void CategoriButtonInit()
     {

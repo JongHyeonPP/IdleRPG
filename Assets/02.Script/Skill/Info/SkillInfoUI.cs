@@ -62,8 +62,12 @@ public class SkillInfoUI : MonoBehaviour
         acquireButton.RegisterCallback<ClickEvent>(click => OnAcquireButtonClick());
     }
 
-    public void ActiveUI(SkillData skillData, int skillLevel)
+    public void ActiveUI(SkillData skillData)
     {
+        if (!_gameData.skillLevel.TryGetValue(skillData.name, out int skillLevel))
+        {
+            skillLevel = 0;
+        }
         currentSkillData = skillData;
         root.style.display = DisplayStyle.Flex;
         UIBroker.ActiveTranslucent(root, true);
