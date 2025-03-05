@@ -212,17 +212,23 @@ public class BattleManager : MonoBehaviour
         BattleBroker.OnStageEnter();
         if (stageNum > _gameData.maxStageNum)
         {
-            //switch (stageNum)
-            //{
-            //    case 1:
-            //        Debug.Log("최초 접속");
-            //        BattleBroker.SwitchToStory?.Invoke(1);
-            //        break;
-            //    case 21:
-            //        Debug.Log("두 번째 스토리");
-            //        break;
-            //}
+            switch (stageNum)
+            {
+                case 1:
+                    Debug.Log("최초 접속");
+                    ControlBattle(false);
+                    BattleBroker.SwitchToStory?.Invoke(1);
+                    break;
+                case 21:
+                    Debug.Log("두 번째 스토리");
+                    break;
+            }
             _gameData.maxStageNum = stageNum;
+        }
+        else
+        {
+            BattleBroker.SwitchBattle();
+            ControlBattle(true);
         }
         StartBroker.SaveLocal();
     }
