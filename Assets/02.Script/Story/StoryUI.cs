@@ -12,8 +12,8 @@ public class StoryUI : MonoBehaviour
     private VisualElement _fadeElement;
     private float _fadeDuration = 3f;
     public VisualElement root { get; private set; }
-    public StoryManager _storyManager;
-
+    public StoryManager storyManager;
+    public CameraController cameracontroller;
     private void Awake()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
@@ -33,32 +33,9 @@ public class StoryUI : MonoBehaviour
 
     public IEnumerator FadeEffect(bool storymode,int index=0)
     {
-        //_main.style.display = DisplayStyle.Flex;
-        //float elapsedTime = 0f;
-
-        //_fadeElement.style.display = DisplayStyle.Flex;
-        //_fadeElement.style.opacity = 1f;
-        //yield return new WaitForSeconds(3.0f);
-        ////  StartCoroutine(_storyManager.StoryStart(1));
-        //if(storymode&&index==1)
-        //{
-        //    _storyManager.StoryStart(index);
-        //}
-
-        //while (elapsedTime < _fadeDuration)
-        //{
-        //    elapsedTime += Time.deltaTime;
-        //    float opacity = Mathf.Lerp(1f, 0f, Mathf.SmoothStep(0f, 1f, elapsedTime / _fadeDuration));
-        //    _fadeElement.style.opacity = opacity;
-        //    yield return null;
-        //}
-
-        //_fadeElement.style.opacity = 0f;
-
-        // _main.style.display = DisplayStyle.Flex;
+        
         float elapsedTime = 0f;
 
-      //  _fadeElement.style.display = DisplayStyle.Flex;
 
         if (storymode)
         {
@@ -69,8 +46,8 @@ public class StoryUI : MonoBehaviour
 
             if (index == 1)
             {
-                _storyManager.StoryStart(index);
-                Debug.Log(index);
+                storyManager.StoryStart(index);
+               
             }
 
             while (elapsedTime < _fadeDuration)
@@ -95,7 +72,10 @@ public class StoryUI : MonoBehaviour
                 yield return null;
             }
 
-            _fadeElement.style.opacity = 0f; 
+            _fadeElement.style.opacity = 0f;
+            _main.style.display = DisplayStyle.None;
+            cameracontroller.SwitchToCamera(true);
+            BattleBroker.SwitchBattle();
         }
     }
     public void SetStoryText(string talker, string text, Color color)

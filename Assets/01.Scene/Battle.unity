@@ -2674,6 +2674,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: StoryUI
       objectReference: {fileID: 0}
+    - target: {fileID: 235994239389274707, guid: dfb4c5e2007083044b904359ad4047ad, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1091372717732947178, guid: dfb4c5e2007083044b904359ad4047ad, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2715,9 +2719,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6112157243826151909, guid: dfb4c5e2007083044b904359ad4047ad, type: 3}
+      propertyPath: storyManager
+      value: 
+      objectReference: {fileID: 1143818681}
+    - target: {fileID: 6112157243826151909, guid: dfb4c5e2007083044b904359ad4047ad, type: 3}
       propertyPath: _storyManager
       value: 
       objectReference: {fileID: 1143818681}
+    - target: {fileID: 6112157243826151909, guid: dfb4c5e2007083044b904359ad4047ad, type: 3}
+      propertyPath: cameracontroller
+      value: 
+      objectReference: {fileID: 32257158}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7668,6 +7680,10 @@ PrefabInstance:
       propertyPath: storyPrefabsList.Array.data[1].storyPrefabs.Array.size
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2556739093503143224, guid: e5439550a63f1134e9837ce477cad658, type: 3}
+      propertyPath: 'storyPrefabsList.Array.data[0].storyPrefabs.Array.data[0]'
+      value: 
+      objectReference: {fileID: 3561712498806173671, guid: 8309e3664614e8147be0043492694f98, type: 3}
     - target: {fileID: 2556739093503143224, guid: e5439550a63f1134e9837ce477cad658, type: 3}
       propertyPath: 'storyPrefabsList.Array.data[1].storyPrefabs.Array.data[0]'
       value: 
