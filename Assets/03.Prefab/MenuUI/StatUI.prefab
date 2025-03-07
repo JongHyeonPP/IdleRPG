@@ -66,12 +66,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39da074fc0de33d4dae04d3dddf2905f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _enhanceScrollView: {fileID: 0}
+  _growScrollView: {fileID: 0}
+  _rankScrollView: {fileID: 0}
   powerSprite: {fileID: -6684365553889529574, guid: 047a9f9127648ea41b30c24ddd72cffb, type: 3}
   maxHpSprite: {fileID: -8619046075498376970, guid: 5c5c9d7205ff87c4885f0180c3330442, type: 3}
   hpRecoverSprite: {fileID: 7191240054708495688, guid: a2f92ee5d2e8de643a87081c796dfffb, type: 3}
   criticalSprite: {fileID: -1474483200731260631, guid: 1365fe636f131084c89a86b0f374536f, type: 3}
   criticalDamageSprite: {fileID: 4588983878601450885, guid: 4249557c1c1ba184a9580e6954962d01, type: 3}
   goldAscendSprite: {fileID: 21300000, guid: 09475280c9e3a844c8ae12a6b2ea299f, type: 3}
+  stoneSprite: {fileID: 8399011212269539787, guid: 55808999630aa214d8bbeb5c5e2e3123, type: 3}
+  bronzeSprite: {fileID: 283712890811582696, guid: 01da2cb60e5e7754ea169408c8bb20bf, type: 3}
+  ironSprite: {fileID: 5103231540499187363, guid: 8fe0a18dce142534b97452012ee2b8e7, type: 3}
+  silverSprite: {fileID: -8584647517806083662, guid: d0a35b6936ee24c4ba90c7341c257504, type: 3}
+  goldSprite: {fileID: -3988769855312385993, guid: a4f46290503b08e4091f7f1b894f233f, type: 3}
 --- !u!1 &6712886191464720457
 GameObject:
   m_ObjectHideFlags: 0

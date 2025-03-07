@@ -56,4 +56,12 @@ namespace EnumCollection
     {
         ByAtt, ByTime, Passive
     }
+    public enum Rank
+    {
+        Stone,
+        Bronze,
+        Iron,
+        Silver,
+        Gold
+    }
 }
