@@ -7,6 +7,7 @@ using System.Collections;
 
 public class StageSelectUI : MonoBehaviour
 {
+    private const int NUMINPAGE = 20;
     [SerializeField] FlexibleListView _draggableLV;
     public VisualElement root { get; private set; }
     public VisualElement rootChild;
@@ -28,11 +29,6 @@ public class StageSelectUI : MonoBehaviour
         exitButton.RegisterCallback<ClickEvent>(evt=>OnExitButtonClick());
         leftButton.RegisterCallback<ClickEvent>(evt=>OnLeftButtonClick());
         rightButton.RegisterCallback<ClickEvent>(evt=>OnRightButtonClick());
-        BattleBroker.OnStageChange += OnStageChange;
-    }
-    private void Start()
-    {
-        ChangePage(StartBroker.GetGameData().currentStageNum / 20);
     }
 
     private void OnExitButtonClick()
@@ -112,20 +108,20 @@ public class StageSelectUI : MonoBehaviour
         ChangePage(_currentIndex);
     }
 
-    private void ChangePage(int index)
+    public void ChangePage(int index)
     {
         _currentIndex = index;
 
         Sprite sprite = backgroundSprites[index];
         backgroundImage.style.backgroundImage = new StyleBackground(sprite.texture);
-        int start = index * 20;
-        List<IListViewItem> items = StageInfoManager.instance.GetStageInfosAsItem(start, 20);
+        int start = index * NUMINPAGE;
+        List<IListViewItem> items = StageInfoManager.instance.GetStageInfosAsItem(start,NUMINPAGE);
 
         _draggableLV.ChangeItems(items);
+        Debug.Log("Change Page");
     }
-    private void OnStageChange(int stage)
+    public void OnStageChange(int stage)
     {
-        ChangePage(stage / 20);
-        ToggleUi(false);
+        ChangePage(stage / NUMINPAGE);
     }
 }

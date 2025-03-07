@@ -92,8 +92,6 @@ public class DataManager : MonoBehaviour
         }
         return default;
     }
-
-
     // 로컬 저장 (PlayerPrefs)
     public static void SaveToPlayerPrefs(string key, object data)
     {

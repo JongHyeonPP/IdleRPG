@@ -66,11 +66,10 @@ public class StatUI : MonoBehaviour
     private void Awake()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
-        PlayerBroker.OnGoldStatusSet += UpdateGoldStatText;
-        PlayerBroker.OnStatPointStatusSet += UpdateStatPointStatText;
+        PlayerBroker.OnGoldStatusLevelSet += UpdateGoldStatText;
+        PlayerBroker.OnStatPointStatusLevelSet += UpdateStatPointStatText;
         BattleBroker.OnStatPointSet += StatPointSet;
     }
-
     private void StatPointSet()
     {
         _statPointLabel.text = $"STAT POINT : {_gameData.statPoint}"; 
@@ -356,8 +355,7 @@ public class StatUI : MonoBehaviour
 
     private void IncreaseGoldStat(StatusType stat)
     {
-        int currentLevel = _gameData.statLevel_Gold[stat];
-        int requiredGold = FormulaManager.GetGoldRequired(currentLevel);
+        int requiredGold = FormulaManager.GetGoldRequired(_gameData.statLevel_Gold[stat]);
 
         if (_gameData.gold < requiredGold)
         {
@@ -366,7 +364,8 @@ public class StatUI : MonoBehaviour
         }
         _gameData.gold -= requiredGold;
         _gameData.statLevel_Gold[stat]++;
-        PlayerBroker.OnGoldStatusSet(stat, _gameData.statLevel_Gold[stat]);
+        
+        PlayerBroker.OnGoldStatusLevelSet(stat, _gameData.statLevel_Gold[stat]);
         BattleBroker.OnGoldSet?.Invoke();
     }
     private void IncreaseStatPointStat(StatusType stat)
@@ -380,7 +379,7 @@ public class StatUI : MonoBehaviour
         }
         _gameData.statPoint--;
         _gameData.statLevel_StatPoint[stat]++;
-        PlayerBroker.OnStatPointStatusSet(stat, _gameData.statLevel_StatPoint[stat]);
+        PlayerBroker.OnStatPointStatusLevelSet(stat, _gameData.statLevel_StatPoint[stat]);
         BattleBroker.OnStatPointSet?.Invoke();
 
     }

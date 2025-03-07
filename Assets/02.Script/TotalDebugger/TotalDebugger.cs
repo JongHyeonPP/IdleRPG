@@ -337,10 +337,10 @@ public class TotalDebugger : EditorWindow
             switch (currency)
             {
                 case "Gold":
-                    PlayerBroker.OnGoldStatusSet?.Invoke(currentStatus, _gameData.statLevel_Gold[currentStatus]);
+                    PlayerBroker.OnGoldStatusLevelSet?.Invoke(currentStatus, _gameData.statLevel_Gold[currentStatus]);
                     break;
                 case "StatPoint":
-                    PlayerBroker.OnStatPointStatusSet?.Invoke(currentStatus, _gameData.statLevel_StatPoint[currentStatus]);
+                    PlayerBroker.OnStatPointStatusLevelSet?.Invoke(currentStatus, _gameData.statLevel_StatPoint[currentStatus]);
                     break;
             }
         }
@@ -517,7 +517,7 @@ public class TotalDebugger : EditorWindow
             {
                 case 0://Power
                     SetDataPanel(dataPanel, "Gold::Power", "Power", _gameData.statLevel_Gold[StatusType.Power].ToString(), Categori.Stat, false, 120f, 33f);
-                    PlayerBroker.OnGoldStatusSet += (type, level) =>
+                    PlayerBroker.OnGoldStatusLevelSet += (type, level) =>
                     {
                         if (type == StatusType.Power)
                             dataPanel.Q<Label>("ValueLabel").text = _gameData.statLevel_Gold[StatusType.Power].ToString();
@@ -525,7 +525,7 @@ public class TotalDebugger : EditorWindow
                     break;
                 case 1://MaxHp
                     SetDataPanel(dataPanel, "Gold::MaxHp", "MaxHp", _gameData.statLevel_Gold[StatusType.MaxHp].ToString(), Categori.Stat, false, 120f, 33f);
-                    PlayerBroker.OnGoldStatusSet += (type, level) =>
+                    PlayerBroker.OnGoldStatusLevelSet += (type, level) =>
                     {
                         if (type == StatusType.MaxHp)
                             dataPanel.Q<Label>("ValueLabel").text = _gameData.statLevel_Gold[StatusType.MaxHp].ToString();
@@ -533,7 +533,7 @@ public class TotalDebugger : EditorWindow
                     break;
                 case 2://HpRecover
                     SetDataPanel(dataPanel, "Gold::HpRecover", "HpRecover", _gameData.statLevel_Gold[StatusType.HpRecover].ToString(), Categori.Stat, false, 120f, 33f);
-                    PlayerBroker.OnGoldStatusSet += (type, level) =>
+                    PlayerBroker.OnGoldStatusLevelSet += (type, level) =>
                     {
                         if (type == StatusType.HpRecover)
                             dataPanel.Q<Label>("ValueLabel").text = _gameData.statLevel_Gold[StatusType.HpRecover].ToString();
@@ -541,7 +541,7 @@ public class TotalDebugger : EditorWindow
                     break;
                 case 3://Critical
                     SetDataPanel(dataPanel, "Gold::Critical", "Critical", _gameData.statLevel_Gold[StatusType.Critical].ToString(), Categori.Stat, false, 120f, 33f);
-                    PlayerBroker.OnGoldStatusSet += (type, level) =>
+                    PlayerBroker.OnGoldStatusLevelSet += (type, level) =>
                     {
                         if (type == StatusType.Critical)
                             dataPanel.Q<Label>("ValueLabel").text = _gameData.statLevel_Gold[StatusType.Critical].ToString();
@@ -549,7 +549,7 @@ public class TotalDebugger : EditorWindow
                     break;
                 case 4://CriticalDamage
                     SetDataPanel(dataPanel, "Gold::CriticalDamage", "Critical Damage", _gameData.statLevel_Gold[StatusType.CriticalDamage].ToString(), Categori.Stat, false, 120f, 25f);
-                    PlayerBroker.OnGoldStatusSet += (type, level) =>
+                    PlayerBroker.OnGoldStatusLevelSet += (type, level) =>
                     {
                         if (type == StatusType.CriticalDamage)
                             dataPanel.Q<Label>("ValueLabel").text = _gameData.statLevel_Gold[StatusType.CriticalDamage].ToString();
@@ -570,7 +570,7 @@ public class TotalDebugger : EditorWindow
             {
                 case 0://Power
                     SetDataPanel(dataPanel, "StatPoint::Power", "Power", _gameData.statLevel_StatPoint[StatusType.Power].ToString(), Categori.Stat, false, 120f, 33f);
-                    PlayerBroker.OnStatPointStatusSet += (type, level) =>
+                    PlayerBroker.OnStatPointStatusLevelSet += (type, level) =>
                     {
                         if (type == StatusType.Power)
                             dataPanel.Q<Label>("ValueLabel").text = _gameData.statLevel_StatPoint[StatusType.Power].ToString();
@@ -578,7 +578,7 @@ public class TotalDebugger : EditorWindow
                     break;
                 case 1://MaxHp
                     SetDataPanel(dataPanel, "StatPoint::MaxHp", "Max Hp", _gameData.statLevel_StatPoint[StatusType.MaxHp].ToString(), Categori.Stat, false, 120f, 33f);
-                    PlayerBroker.OnStatPointStatusSet += (type, level) =>
+                    PlayerBroker.OnStatPointStatusLevelSet += (type, level) =>
                     {
                         if (type == StatusType.MaxHp)
                             dataPanel.Q<Label>("ValueLabel").text = _gameData.statLevel_StatPoint[StatusType.MaxHp].ToString();
@@ -586,7 +586,7 @@ public class TotalDebugger : EditorWindow
                     break;
                 case 2://HpRecover
                     SetDataPanel(dataPanel, "StatPoint::HpRecover", "Hp Recover", _gameData.statLevel_StatPoint[StatusType.HpRecover].ToString(), Categori.Stat, false, 120f, 33f);
-                    PlayerBroker.OnStatPointStatusSet += (type, level) =>
+                    PlayerBroker.OnStatPointStatusLevelSet += (type, level) =>
                     {
                         if (type == StatusType.HpRecover)
                             dataPanel.Q<Label>("ValueLabel").text = _gameData.statLevel_StatPoint[StatusType.HpRecover].ToString();
@@ -595,7 +595,7 @@ public class TotalDebugger : EditorWindow
 
                 case 3://CriticalDamage
                     SetDataPanel(dataPanel, "StatPoint::CriticalDamage", "Critical Damage", _gameData.statLevel_StatPoint[StatusType.CriticalDamage].ToString(), Categori.Stat, false, 120f, 25f);
-                    PlayerBroker.OnStatPointStatusSet += (type, level) =>
+                    PlayerBroker.OnStatPointStatusLevelSet += (type, level) =>
                     {
                         if (type == StatusType.CriticalDamage)
                             dataPanel.Q<Label>("ValueLabel").text = _gameData.statLevel_StatPoint[StatusType.CriticalDamage].ToString();
@@ -603,7 +603,7 @@ public class TotalDebugger : EditorWindow
                     break;
                 case 4://Gold Ascend
                     SetDataPanel(dataPanel, "StatPoint::GoldAscend", "Gold Ascend", _gameData.statLevel_StatPoint[StatusType.GoldAscend].ToString(), Categori.Stat, false, 120f, 33f);
-                    PlayerBroker.OnStatPointStatusSet += (type, level) =>
+                    PlayerBroker.OnStatPointStatusLevelSet += (type, level) =>
                     {
                         if (type == StatusType.GoldAscend)
                             dataPanel.Q<Label>("ValueLabel").text = _gameData.statLevel_StatPoint[StatusType.GoldAscend].ToString();

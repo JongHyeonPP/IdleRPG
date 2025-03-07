@@ -67,7 +67,7 @@ public class EnemyStatusManager:MonoBehaviour
     }
     private int GetMaxHp_Default()
     {
-        return 100;
+        return 10;
     }
     private float GetEvasion_Default()
     {
@@ -75,7 +75,7 @@ public class EnemyStatusManager:MonoBehaviour
     }
     private int GetMaxHp_Boss()
     {
-        return 1000;
+        return 100;
     }
     private float GetResist_Boss()
     {

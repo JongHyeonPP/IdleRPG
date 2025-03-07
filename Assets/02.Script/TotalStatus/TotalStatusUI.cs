@@ -25,6 +25,8 @@ public class TotalStatusUI : MonoBehaviour
         exitButton.RegisterCallback<ClickEvent>(click => UIBroker.InactiveCurrentUI?.Invoke());
         InitEquipSlot();
         PlayerBroker.OnEquipWeapon += OnEquipWeapon;
+        PlayerBroker.OnSetName += SetName;
+        BattleBroker.OnLevelExpSet += SetLevel;
     }
     private void InitEquipSlot()
     {
@@ -78,8 +80,7 @@ public class TotalStatusUI : MonoBehaviour
         VisualElement area = root.Q<VisualElement>("PlayerSpriteArea");
         _levelLabel = area.Q<Label>("LevelLabel");
         _nameLabel = area.Q<Label>("NameLabel");
-        PlayerBroker.OnSetName += SetName;
-        BattleBroker.OnLevelExpSet += SetLevel;
+
         SetLevel();
         SetName(StartBroker.GetGameData().userName);
 

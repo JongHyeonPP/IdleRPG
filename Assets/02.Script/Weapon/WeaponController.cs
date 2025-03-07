@@ -11,25 +11,18 @@ public class WeaponController : MonoBehaviour
     {
         PlayerBroker.OnEquipWeapon += OnEquipWeapon;
     }
-    private void OnEquipWeapon(object obj,WeaponType weaponType) => EquipWeapon((WeaponData)obj, weaponType);
+    private void OnEquipWeapon(object obj, WeaponType weaponType) => EquipWeapon((WeaponData)obj, weaponType);
     private void EquipWeapon(WeaponData weaponData, WeaponType weaponType)
     {
-        if (weaponType != this.weaponType)
-            return;
-        this.weaponData = weaponData;
-        if (weaponData != null)
-        {
-            weaponRenderer.sprite = weaponData.WeaponSprite;
-        }
-        else
+        if (weaponData == null)
         {
             weaponRenderer.sprite = defaultWeaponSprite;
+            return;
         }
+        if (this.weaponType != weaponType)
+            return;
+        this.weaponData = weaponData;
+        weaponRenderer.sprite = weaponData.WeaponSprite;
     }
     //»ö±òÀÌÆåÆ® ºÎ¿©
-
-
-
-
-
 }

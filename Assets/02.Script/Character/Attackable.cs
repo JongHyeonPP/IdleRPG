@@ -74,7 +74,7 @@ public abstract class Attackable : MonoBehaviour
                 yield return new WaitForSeconds(skillData.preDelay*(1f/(1f+speedValue)));
                 AnimBehavior(currentSkill, skillData);
                 List<Attackable> targets = GetTargets(skillData.target, skillData.targetNum);
-                ActiveSkillToTarget(targets, currentSkill);
+                ActiveSkillToTarget(targets, currentSkill);//ÇÙ½É
                 VisualEffectToTarget(targets);
                 yield return new WaitForSeconds(skillData.postDelay* (1f / (1f + speedValue)));
             }

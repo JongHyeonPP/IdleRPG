@@ -8,11 +8,11 @@ public static class PlayerBroker
     //PlayerController에서 능력치 얻어옴 - PlayerController
     public static Func<object> GetPlayerController;//PlayerController
     //골드로 올린 스탯 적용
-    public static Action<StatusType, int> OnGoldStatusSet;
+    public static Action<StatusType, int> OnGoldStatusLevelSet;
     //스탯 포인트로 올린 스탯 적용
-    public static Action<StatusType, int> OnStatPointStatusSet;
+    public static Action<StatusType, int> OnStatPointStatusLevelSet;
     //무기장착
-    public static Action<object, WeaponType> OnEquipWeapon;
+    public static Action<object, WeaponType> OnEquipWeapon;//WeaponData가 null이어서 기본 무기 처리할 때도 WeaponType 정보는 필요함... TotalStatusUI
     //무기 레벨 변경
     public static Action<string, int> OnWeaponLevelSet;
     //무기 개수 변경

@@ -48,8 +48,8 @@ public class PlayerController : Attackable
     private void InitEvent()
     {
         _collider = GetComponent<CapsuleCollider2D>();
-        PlayerBroker.OnGoldStatusSet += OnGoldStatusSet;
-        PlayerBroker.OnStatPointStatusSet += OnStatPointStatusSet;
+        PlayerBroker.OnGoldStatusLevelSet += OnGoldStatusSet;
+        PlayerBroker.OnStatPointStatusLevelSet += OnStatPointStatusSet;
         BattleBroker.OnBossTimeLimit += OnDead;
         PlayerBroker.GetPlayerController += GetPlayerController;
         BattleBroker.OnStageEnter += OnStageEnter;
@@ -72,8 +72,9 @@ public class PlayerController : Attackable
         StopAttack();
     }
 
-    private void OnGoldStatusSet(StatusType type, int value)
+    private void OnGoldStatusSet(StatusType type, int level)
     {
+        int value = FormulaManager.GetGoldStatus(level, type);
         switch (type)
         {
             case StatusType.MaxHp:
@@ -96,8 +97,9 @@ public class PlayerController : Attackable
                 break;
         }
     }
-    private void OnStatPointStatusSet(StatusType type, int value)
+    private void OnStatPointStatusSet(StatusType type, int level)
     {
+        int value = FormulaManager.GetStatPointStatus(level, type);
         switch (type)
         {
             case StatusType.MaxHp:

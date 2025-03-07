@@ -89,6 +89,10 @@ public class CompanionInfoUI : MonoBehaviour
             currentLevel = 0;
         }
         PriceInfo.CompanionSkillPrice beforePrice = PriceManager.instance.GetRequireCompanionSkill_CloverFragment(currentCompanionIndex, skillIndex, currentLevel+1);
+        if (!_gameData.skillFragment.ContainsKey(beforePrice.fragmentRarity))
+        {
+            _gameData.skillFragment[beforePrice.fragmentRarity] = 0;
+        }
         if (beforePrice.clover > _gameData.clover || beforePrice.fragment > _gameData.skillFragment[beforePrice.fragmentRarity])
         {
             Debug.Log("재화 부족");

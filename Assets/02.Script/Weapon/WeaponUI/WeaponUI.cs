@@ -36,7 +36,7 @@ public class WeaponUI : MonoBehaviour, IBattleUI
     private readonly Color inactiveColor = new(0.7f, 0.7f, 0.7f);
     private readonly Color activeColor = new(1f, 1f, 1f);
     //uidø° ¥Î«— Slot
-    private Dictionary<string, VisualElement> _slotDict = new();
+    private readonly Dictionary<string, VisualElement> _slotDict = new();
     private void Awake()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
@@ -332,17 +332,19 @@ public class WeaponUI : MonoBehaviour, IBattleUI
     private void OnWeaponCountSet(string weaponId, int count)
     {
         WeaponData weaponData = WeaponManager.instance.weaponDict[weaponId];
-        int level = _weaponLevel[weaponData.UID];
+        if (!_weaponLevel.TryGetValue(weaponId, out int level))
+        {
+            level = 0;
+        }
         SlotSet(weaponData, level, count);
     }
-
     private void SlotSet(WeaponData weaponData, int level, int count)
     {
         VisualElement slot = _slotDict[weaponData.UID];
         Label levelLabel = slot.Q<Label>("LevelLabel");
         if (level == 0)
         {
-            levelLabel.text = string.Empty;
+            levelLabel.text = string.Empty; 
         }
         else
         {
