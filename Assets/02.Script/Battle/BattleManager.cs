@@ -35,6 +35,7 @@ public class BattleManager : MonoBehaviour
     [SerializeField] Camera expandCamera;//전투 메인 카메라
     [SerializeField] Camera shrinkCamera;//전투 메인 카메라
     [HideInInspector] public Camera currentCamera;//전투 메인 카메라
+    [SerializeField] StageSelectUI _stageSelectUI;
     private void Awake()
     {
         if (instance == null)
@@ -77,7 +78,7 @@ public class BattleManager : MonoBehaviour
     private void SetWeaponSprite(string weaponId, WeaponType weaponType)
     {
         if (weaponId != null)
-            PlayerBroker.OnEquipWeapon(WeaponManager.instance.weaponDict[weaponId], weaponType);
+            PlayerBroker.OnEquipWeapon(WeaponManager.instance.weaponDict[weaponId],weaponType);
         else
             PlayerBroker.OnEquipWeapon(null, weaponType);
     }
@@ -243,6 +244,7 @@ public class BattleManager : MonoBehaviour
                     break;
             }
             _gameData.maxStageNum = stageNum;
+            _stageSelectUI.OnStageChange(stageNum);
         }
         else
         {

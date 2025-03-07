@@ -75,8 +75,11 @@ public class NoticeDot
         _root.style.left = currentLeft + xChange;
         _root.style.top = currentTop + yChange;
     }
-
     #endregion
+
+
+
+
     #region 몰라도 됨
     private VisualElement _parentRoot;
     private VisualElement _root;
@@ -100,14 +103,14 @@ public class NoticeDot
     private const float _expandMax = 5f; // 최대 크기
     private IEnumerator SetParentToRootCor()
     {
-        Vector2 unsettedPosition = _root.worldBound.position;
+        //Vector2 unsettedPosition = _root.worldBound.position;아으 ㅠㅠ
         
-        while (_root.worldBound.position == unsettedPosition)
+        for(int i =0;i<10;i++)
         {
             yield return null;
         }
         Vector2 worldPosition = _root.worldBound.position;
-        _root.RemoveFromHierarchy();
+        //_root.RemoveFromHierarchy();
         _parentRoot.Add(_root);
 
         Vector2 localPosition = _parentRoot.WorldToLocal(worldPosition);

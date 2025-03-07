@@ -90,7 +90,6 @@ public class UIManager : MonoBehaviour
 
     private void InactiveUI(int obj)
     {
-        Debug.Log("Log1");
         StartCoroutine(_storyUI.FadeEffect(true, 1));
         _currencyBar.root.style.display = DisplayStyle.None;
         _goldLabelUI.root.style.display = DisplayStyle.None;

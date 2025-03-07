@@ -45,7 +45,7 @@ public class SkillAcquireUI : MonoBehaviour
         {
             panel_1.style.visibility = Visibility.Hidden;
         }
-        CheckUnacquiredExist();
+        
     }
 
     private void OnLevelExpSet()
@@ -62,6 +62,7 @@ public class SkillAcquireUI : MonoBehaviour
                 kvp.Value.Q<VisualElement>("LockPanel").style.display = DisplayStyle.None;
             }
         }
+        CheckUnacquiredExist();
     }
 
 

@@ -1,9 +1,9 @@
 using EnumCollection;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Playables;
 using UnityEngine.UIElements;
 
 public class SkillUI : MonoBehaviour
@@ -38,7 +38,6 @@ public class SkillUI : MonoBehaviour
         PlayerBroker.OnFragmentSet += OnFragmentSet;
 
         acquireNoticeDot = new NoticeDot(_acquireButton, this);
-        acquireNoticeDot.StartNotice();
         _gameData = StartBroker.GetGameData();
     }
     private void Start()

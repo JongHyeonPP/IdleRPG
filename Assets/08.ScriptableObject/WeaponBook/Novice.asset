@@ -15,7 +15,6 @@ MonoBehaviour:
   bookId: Novice
   bookName: "\uCD08\uBCF4 \uC694\uBBF8"
   weapons:
-  - {fileID: 11400000, guid: 37089dd7c1ce1bf4a875ee79c60b359e, type: 2}
   - {fileID: 11400000, guid: 5112c1e099528e446b7d098ab2a3622c, type: 2}
   - {fileID: 11400000, guid: 8813c8f3523503e42ae8513ed18f0884, type: 2}
   upgradeLevels: 120000001e0000003c00000078000000f0000000
