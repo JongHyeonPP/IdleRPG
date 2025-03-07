@@ -70,7 +70,7 @@ public class UIManager : MonoBehaviour
 
     private void ActiveUI()
     {
-        //StartCoroutine(_storyUI.FadeEffect(false));
+       
         _currencyBar.root.style.display = DisplayStyle.Flex;
         _goldLabelUI.root.style.display = DisplayStyle.Flex;
         _stageSelectUI.root.style.visibility = Visibility.Hidden;

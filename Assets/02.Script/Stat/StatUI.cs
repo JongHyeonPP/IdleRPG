@@ -28,16 +28,26 @@ public class StatUI : MonoBehaviour
         StatusType.CriticalDamage,
         StatusType.GoldAscend
     };
-
+    private readonly Rank[] _rank =
+    {
+        Rank.Stone,
+        Rank.Bronze,
+        Rank.Iron,
+        Rank.Silver,
+        Rank.Gold
+    };
     private readonly Dictionary<StatusType, VisualElement> _goldStatDict = new();
     private readonly Dictionary<StatusType, VisualElement> _statPointStatDict = new();
+    private readonly Dictionary<Rank, VisualElement> _rankDict = new();
     public VisualElement root { get; private set; }
     [SerializeField] DraggableScrollView _enhanceScrollView;
     [SerializeField] DraggableScrollView _growScrollView;
+    [SerializeField] DraggableScrollView _rankScrollView;
     private DraggableScrollView lockedScrollView;
     private Button[] _categoriButtons;
     private VisualElement[] _categoriPanels;
     private Label _statPointLabel;
+    private Label _rankLabel;
     //ButtonColor
     private readonly Color inactiveColor = new(0.7f, 0.7f, 0.7f);
     private readonly Color activeColor = new(1f, 1f, 1f);
@@ -48,6 +58,11 @@ public class StatUI : MonoBehaviour
     [SerializeField] private Sprite criticalSprite;
     [SerializeField] private Sprite criticalDamageSprite;
     [SerializeField] private Sprite goldAscendSprite;
+    [SerializeField] private Sprite stoneSprite;
+    [SerializeField] private Sprite bronzeSprite;
+    [SerializeField] private Sprite ironSprite;
+    [SerializeField] private Sprite silverSprite;
+    [SerializeField] private Sprite goldSprite;
     private void Awake()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
@@ -68,9 +83,17 @@ public class StatUI : MonoBehaviour
         InitButton();
         InitEnhancePanel();
         InitGrowPanel();
+        InitPromotePanel();
         OnCategoriButtonClick(0);
     }
-
+    private void InitPromotePanel()
+    {
+        foreach (var rank in _rank)
+        {
+            InitPromteElement(rank);
+        }
+    }
+   
     private void InitGrowPanel()
     {
         _statPointLabel = _categoriPanels[1].Q<Label>("StatPointLabel");
@@ -80,7 +103,51 @@ public class StatUI : MonoBehaviour
             InitGrowElement(stat);
         }
     }
+    private void InitPromteElement(Rank rank)
+    {
+        VisualElement elementRoot = _categoriPanels[2].Q<VisualElement>($"{rank}Element");
+        Label rankNameLabel = elementRoot.Q<Label>("RankName");
+        Label rankAbilityLabel = elementRoot.Q<Label>("RankAbility");
+        Label recommandLevelLabel = elementRoot.Q<Label>("RecommandLabel");
+        Label completeLabel = elementRoot.Q<Label>("completeLabel");
+        VisualElement Icon = elementRoot.Q<VisualElement>("Icon");
+        Sprite iconSprite = null;
+        switch (rank)
+        {
+            case Rank.Stone:
+                rankNameLabel.text = "스톤";
+                rankAbilityLabel.text = "공격력x1 체력x1".Trim(); ;
+                recommandLevelLabel.text = "권장 레벨 1";
+                iconSprite = stoneSprite;
+                break;
+            case Rank.Bronze:
+                rankNameLabel.text = "브론즈";
+                rankAbilityLabel.text = "공격력x2 체력x2".Trim(); ;
+                recommandLevelLabel.text = "권장 레벨 50";
+                iconSprite = bronzeSprite;
+                break;
+            case Rank.Iron:
+                rankNameLabel.text = "아이언";
+                rankAbilityLabel.text = "공격력x5 체력x5".Trim(); ;
+                recommandLevelLabel.text = "권장 레벨 90";
+                iconSprite = ironSprite;
+                break;
 
+            case Rank.Silver:
+                rankNameLabel.text = "실버";
+                rankAbilityLabel.text = "공격력x18 체력x18".Trim(); ;
+                recommandLevelLabel.text = "권장 레벨 180";
+                iconSprite = silverSprite;
+                break;
+            case Rank.Gold:
+                rankNameLabel.text = "골드";
+                rankAbilityLabel.text = "공격력x25 체력x25".Trim(); ;
+                recommandLevelLabel.text = "권장 레벨 300";
+                iconSprite = goldSprite;
+                break;
+        }
+        Icon.style.backgroundImage = new(iconSprite);
+    }
     private void InitGrowElement(StatusType stat)
     {
         VisualElement elementRoot = _categoriPanels[1].Q<VisualElement>($"{stat}Element");

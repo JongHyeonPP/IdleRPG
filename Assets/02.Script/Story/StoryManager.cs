@@ -18,33 +18,24 @@ public class StoryManager : MonoBehaviour
     private void Awake()
     {
         TextReader.LoadData();
-       // BattleBroker.SwitchToStory += StartStoryCoroutine;
+     
     }
     private void OnEnable()
     {
         BattleBroker.SwitchBattle += ClearStoryPrefabs;
     }
-    private void StartStoryCoroutine(int i)
-    {
-        //StartCoroutine(StoryStart(i));
-    }
-
+   
 
     public void StoryStart(int i)//Ã¹½ÃÀÛ
     {
        
         LoadStoryPrefabs(i);
-        //cameracontroller.SwitchToCamera(false);
        
-        //BattleBroker.SwitchBattle();
-        //cameracontroller.SwitchToCamera(true);
-        //ClearStoryPrefabs();
     }
   
     private void LoadStoryPrefabs(int storyIndex)
     {
-        Debug.Log("Log");
-        //ClearStoryPrefabs();
+       
 
         StoryPrefabData storyData = storyPrefabsList.Find(x => x.storyIndex == storyIndex);
 
@@ -112,14 +103,11 @@ public class StoryManager : MonoBehaviour
                 
             }
         }
-        Debug.Log("Log_0");
+      
         StartCoroutine(_storyUI.FadeEffect(false));
-        cameracontroller.SwitchToCamera(true);
+       
         yield return new WaitForSeconds(4f);
-        
-        BattleBroker.SwitchBattle();
-        
-
+      
         
     }
    
