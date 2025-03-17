@@ -66,9 +66,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39da074fc0de33d4dae04d3dddf2905f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enhanceScrollView: {fileID: 0}
-  _growScrollView: {fileID: 0}
+  _enhanceScrollView: {fileID: 4529368881605270002}
+  _growScrollView: {fileID: 5532494530554024040}
   _rankScrollView: {fileID: 0}
+  _promoteAbilityUI: {fileID: 0}
   powerSprite: {fileID: -6684365553889529574, guid: 047a9f9127648ea41b30c24ddd72cffb, type: 3}
   maxHpSprite: {fileID: -8619046075498376970, guid: 5c5c9d7205ff87c4885f0180c3330442, type: 3}
   hpRecoverSprite: {fileID: 7191240054708495688, guid: a2f92ee5d2e8de643a87081c796dfffb, type: 3}
@@ -91,7 +92,7 @@ GameObject:
   - component: {fileID: 7359516785476535393}
   - component: {fileID: 4529368881605270002}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: EnhanceScrollView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -139,7 +140,7 @@ GameObject:
   - component: {fileID: 7694491210824782751}
   - component: {fileID: 5532494530554024040}
   m_Layer: 0
-  m_Name: GameObject (1)
+  m_Name: GrowScrollView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
