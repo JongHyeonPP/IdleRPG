@@ -1,7 +1,9 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <engine:VisualElement name="Main" style="flex-grow: 1; width: 100%; height: 30%; position: absolute; bottom: -1px; background-color: rgb(248, 240, 240); display: none;">
-        <engine:Label name="TextLabel" style="width: 100%; height: 711px; font-size: 70px;" />
-        <engine:Button text="스킵하기" name="SkipButton" style="top: 532px; position: absolute; background-color: rgba(0, 0, 0, 0.55); width: 300px; height: 150px; font-size: 61px; left: 764px; right: 3px;" />
+    <engine:VisualElement name="Main" style="flex-grow: 1; width: 100%; height: 30%; position: absolute; bottom: -1px; background-color: rgb(176, 133, 69); display: flex; background-image: none;">
+        <engine:Label name="TextLabel" style="width: 70%; height: 684px; font-size: 54px; left: auto; right: -291px; -unity-font-definition: url(&quot;project://database/Assets/05.Font/Maplestory%20Light.ttf?fileID=12800000&amp;guid=b7853b5ad26567e41a3c4210e64c5419&amp;type=3#Maplestory Light&quot;); top: 27px;" />
+        <engine:Button text="스킵하기" name="SkipButton" style="top: 532px; position: absolute; background-color: rgba(255, 255, 255, 0.55); width: 300px; height: 150px; font-size: 61px; left: 764px; right: 3px; -unity-font-definition: url(&quot;project://database/Assets/05.Font/Maplestory%20Light.ttf?fileID=12800000&amp;guid=b7853b5ad26567e41a3c4210e64c5419&amp;type=3#Maplestory Light&quot;);" />
+        <engine:VisualElement name="Frame" picking-mode="Ignore" style="flex-grow: 1; width: 100%; height: 723px; position: absolute; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/WindowStroke2.png?fileID=21300000&amp;guid=f1ad16e66091e1344a57f36d05134015&amp;type=3#WindowStroke2&quot;);" />
+        <engine:Button name="Image" style="top: auto; bottom: 655px; height: 315px; width: 250px; left: auto; right: -33px; background-color: rgba(188, 188, 188, 0); background-image: url(&quot;project://database/Assets/07.Texture/RenderTexture/PlayerCompanionRenderTexture.renderTexture?fileID=8400000&amp;guid=702b6e7164ab6d7439554990f2b5d509&amp;type=2#PlayerCompanionRenderTexture&quot;);" />
     </engine:VisualElement>
-    <engine:VisualElement name="FadeElement" style="flex-grow: 1; background-color: rgb(0, 0, 0); display: flex;" />
+    <engine:VisualElement name="FadeElement" style="flex-grow: 1; background-color: rgb(0, 0, 0); display: none;" />
 </engine:UXML>

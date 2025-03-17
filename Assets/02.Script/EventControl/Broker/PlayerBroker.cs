@@ -30,5 +30,9 @@ public static class PlayerBroker
     //스킬 레벨 바꼈을 때
     public static Action<string, int> OnSkillLevelSet;//Skill Id, Skill Level
     //스킬 파편 개수 바꼈을 때
-    public static Action<Rarity, int> OnFragmentSet;//Skill Id, Skill Level
+    public static Action<Rarity, int> OnFragmentSet;//Skill Id, Skill Level                                                
+    public static Func<int> GetPlayerRankIndex = () => 0;//현재 달성된 최고 랭크를 가져오기
+    public static Action<int> OnPromoteRank;//승급
+    public static Action<StatusType, float> OnPromoteStatusSet;//승급으로 능력치 적용
+
 }

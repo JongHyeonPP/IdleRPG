@@ -1,3 +1,4 @@
+using EnumCollection;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ public class StoryManager : MonoBehaviour
     private List<GameObject> activePrefabs = new List<GameObject>();
     public Transform spawnPoint;
     public StoryUI _storyUI;
+    public RenderCamera _renderCamera;
     private void Awake()
     {
         TextReader.LoadData();
@@ -23,10 +25,15 @@ public class StoryManager : MonoBehaviour
     private void OnEnable()
     {
         BattleBroker.SwitchBattle += ClearStoryPrefabs;
+        BattleBroker.ChallengeRank += OnChallengeRank;
     }
-   
+    private void OnChallengeRank(Rank rank)
+    {
+       
 
-    public void StoryStart(int i)//√πΩ√¿€
+    }
+
+    public void StoryStart(int i)
     {
        
         LoadStoryPrefabs(i);
@@ -46,11 +53,11 @@ public class StoryManager : MonoBehaviour
 
             
         }
-
+        _renderCamera.SpawnStoryPlayer(storyIndex);
         cameracontroller.SwitchToCamera(false);
         if (storyIndex == 1)
         {
-            StartCoroutine(FirstStoryStart());//¿Œµ¶Ω∫
+            StartCoroutine(FirstStoryStart());
         }
     }
 
@@ -65,6 +72,11 @@ public class StoryManager : MonoBehaviour
     }
     private IEnumerator FirstStoryStart()
     {
+        
+        RenderTexture renderTexture = _renderCamera.GetRenderTexture(); 
+
+        _storyUI.SetImage(renderTexture);
+
         foreach (var playercontroller in FindObjectsOfType<StoryPlayerController>())
         {
             _playercontroller = playercontroller;
@@ -77,6 +89,7 @@ public class StoryManager : MonoBehaviour
             TextData textData = TextReader.GetTextData(i);
             Color textColor = (textData.Talker == "µ≈¡ˆ") ? Color.red : Color.black;
             _storyUI.SetStoryText(textData.Talker, textData.Text, textColor);
+            _renderCamera.SetCharacterDisplayTarget(textData.Talker);
             if (i == 3)
             {
                 foreach (var pig in FindObjectsOfType<PigController>())
@@ -105,10 +118,11 @@ public class StoryManager : MonoBehaviour
         }
       
         StartCoroutine(_storyUI.FadeEffect(false));
-       
-        yield return new WaitForSeconds(4f);
-      
         
+        yield return new WaitForSeconds(4f);
+        _renderCamera.ClearTarget("≥™");
+        _renderCamera.ClearTarget("µ≈¡ˆ");
+
     }
    
     

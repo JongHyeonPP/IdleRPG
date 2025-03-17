@@ -14,6 +14,7 @@ public class StoryUI : MonoBehaviour
     public VisualElement root { get; private set; }
     public StoryManager storyManager;
     public CameraController cameracontroller;
+    private Button _renderTextureimage;
     private void Awake()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
@@ -21,7 +22,7 @@ public class StoryUI : MonoBehaviour
         _label = root.Q<Label>("TextLabel");
         _skipButton = root.Q<Button>("SkipButton");
         _fadeElement = root.Q<VisualElement>("FadeElement");
-
+        _renderTextureimage= root.Q<Button>("Image");
         _skipButton.clickable.clicked += () => Skip();
     }
 
@@ -41,6 +42,7 @@ public class StoryUI : MonoBehaviour
         {
             _main.style.display = DisplayStyle.Flex;
             _fadeElement.style.display = DisplayStyle.Flex;
+
             _fadeElement.style.opacity = 1f; 
             yield return new WaitForSeconds(3.0f);
 
@@ -77,6 +79,12 @@ public class StoryUI : MonoBehaviour
             cameracontroller.SwitchToCamera(true);
             BattleBroker.SwitchBattle();
         }
+    }
+    public void SetImage(RenderTexture renderTexture)
+    {
+        var Image = root.Q<Button>("Image");
+        Image.style.backgroundImage = Background.FromRenderTexture(renderTexture);
+
     }
     public void SetStoryText(string talker, string text, Color color)
     {

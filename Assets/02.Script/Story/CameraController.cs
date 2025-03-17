@@ -20,7 +20,6 @@ public class CameraController : MonoBehaviour
     
     public void SwitchToCamera(bool ismaincamera)//true는 메인카메라활성화,false는 스토리카메라활성화
     {
-        Debug.Log("Switching to camera: " + (ismaincamera ? "Main Camera" : "Story Camera"));
         if (mainCamera == null)
         {
             mainCamera = BattleManager.instance.currentCamera;

@@ -38,16 +38,15 @@ public class StatUI : MonoBehaviour
     };
     private readonly Dictionary<StatusType, VisualElement> _goldStatDict = new();
     private readonly Dictionary<StatusType, VisualElement> _statPointStatDict = new();
-    private readonly Dictionary<Rank, VisualElement> _rankDict = new();
     public VisualElement root { get; private set; }
     [SerializeField] DraggableScrollView _enhanceScrollView;
     [SerializeField] DraggableScrollView _growScrollView;
     [SerializeField] DraggableScrollView _rankScrollView;
+    [SerializeField] PromoteAbilityUI _promoteAbilityUI;
     private DraggableScrollView lockedScrollView;
     private Button[] _categoriButtons;
     private VisualElement[] _categoriPanels;
     private Label _statPointLabel;
-    private Label _rankLabel;
     //ButtonColor
     private readonly Color inactiveColor = new(0.7f, 0.7f, 0.7f);
     private readonly Color activeColor = new(1f, 1f, 1f);
@@ -80,6 +79,7 @@ public class StatUI : MonoBehaviour
         _gameData = StartBroker.GetGameData();
         _categoriPanels = root.Q<VisualElement>("PanelParent").Children().ToArray();
         _categoriButtons = root.Q<VisualElement>("ButtonParent").Children().Select(item => (Button)item).ToArray();
+        _promoteAbilityUI.gameObject.SetActive(true);
         InitButton();
         InitEnhancePanel();
         InitGrowPanel();
@@ -88,10 +88,12 @@ public class StatUI : MonoBehaviour
     }
     private void InitPromotePanel()
     {
+        var abilitybutton = _categoriPanels[2].Q<Button>("AbilityButton");
         foreach (var rank in _rank)
         {
             InitPromteElement(rank);
         }
+        abilitybutton.RegisterCallback<ClickEvent>(evt => OnShowInfoPromotionAbility());
     }
    
     private void InitGrowPanel()
@@ -109,9 +111,13 @@ public class StatUI : MonoBehaviour
         Label rankNameLabel = elementRoot.Q<Label>("RankName");
         Label rankAbilityLabel = elementRoot.Q<Label>("RankAbility");
         Label recommandLevelLabel = elementRoot.Q<Label>("RecommandLabel");
-        Label completeLabel = elementRoot.Q<Label>("completeLabel");
+        Label completeLabel = elementRoot.Q<Label>("CompleteLabel");
         VisualElement Icon = elementRoot.Q<VisualElement>("Icon");
+        var button = elementRoot.Q<Button>("ChallengeButton");
+
         Sprite iconSprite = null;
+        int currentRankIndex = PlayerBroker.GetPlayerRankIndex?.Invoke() ?? 0;
+        int thisRankIndex = (int)rank;
         switch (rank)
         {
             case Rank.Stone:
@@ -147,6 +153,24 @@ public class StatUI : MonoBehaviour
                 break;
         }
         Icon.style.backgroundImage = new(iconSprite);
+        if (thisRankIndex <= currentRankIndex)
+        {
+            completeLabel.style.display = DisplayStyle.Flex;
+            button.style.display = DisplayStyle.None;
+            recommandLevelLabel.style.display = DisplayStyle.None;
+        }
+        else
+        {
+            completeLabel.style.display = DisplayStyle.None;
+            button.style.display = DisplayStyle.Flex;
+            recommandLevelLabel.style.display = DisplayStyle.Flex;
+            button.clicked += () => BattleBroker.ChallengeRank?.Invoke(rank);
+        }
+    }
+    
+    private void OnShowInfoPromotionAbility()
+    {
+        _promoteAbilityUI.ShowPromoteInfo();
     }
     private void InitGrowElement(StatusType stat)
     {

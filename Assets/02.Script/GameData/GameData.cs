@@ -23,6 +23,7 @@ public class GameData
     public Dictionary<StatusType, int> statLevel_Gold=new();
     [JsonConverter(typeof(EnumDictConverter<StatusType>))]
     public Dictionary<StatusType, int> statLevel_StatPoint=new();
+    public Dictionary<StatusType, float> stat_Promote = new();
     public string playerWeaponId;
     public string[] companionWeaponIdArr = new string[3];
     public string[] equipedSkillArr = new string[5];

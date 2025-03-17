@@ -8,10 +8,10 @@ public class PlayerStatus : MonoBehaviour, ICharacterStatus
 
     public int _maxHp_Gold;
     public int _maxHp_StatPoint;
-
+    public int _maxHp_Promote;
     public int _power_Gold;
     public int _power_StatPoint;
-
+    public int _power_Promote;
     public int _hpRecover_Gold;
     public int _hpRecover_StatPoint;
     
@@ -19,7 +19,7 @@ public class PlayerStatus : MonoBehaviour, ICharacterStatus
 
     public float _criticalDamage_Gold;
     public float _criticalDamage_StatPoint;
-
+    public float _criticalDamage_Promote;
     public float _goldAscend_StatPoint;
     [SerializeField] WeaponController playerWeapon;
     #endregion

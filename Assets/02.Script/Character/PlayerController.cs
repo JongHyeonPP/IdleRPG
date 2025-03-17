@@ -54,6 +54,7 @@ public class PlayerController : Attackable
         PlayerBroker.GetPlayerController += GetPlayerController;
         BattleBroker.OnStageEnter += OnStageEnter;
         BattleBroker.OnBossEnter += OnBossEnter;
+        PlayerBroker.OnPromoteStatusSet += OnPromoteStatusSet;
     }
 
     private PlayerController GetPlayerController() => this;
@@ -122,7 +123,26 @@ public class PlayerController : Attackable
                 break;
         }
     }
+    private void OnPromoteStatusSet(StatusType statusType, float value)
+    {
+        switch (statusType)
+        {
+            case StatusType.MaxHp:
+                _status._maxHp_Promote += (int)value; 
+                break;
 
+            case StatusType.Power:
+                _status._power_Promote += (int)value;
+                break;
+
+            case StatusType.CriticalDamage:
+                _status._criticalDamage_Promote += (int)value;
+                break;
+            default:
+                Debug.LogWarning($"Unknown status type: {statusType}");
+                break;
+        }
+    }
 
     //애니메이터의 움직임 변화
     public void MoveState(bool _isMove)

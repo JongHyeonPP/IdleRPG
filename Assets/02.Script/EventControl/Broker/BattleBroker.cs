@@ -35,5 +35,7 @@ public static class BattleBroker
     //µ¿·á
     public static Action<object> StartCompanionAttack;
     public static Action StopCompanionAttack;
-    public static Action<int> OnCompanionExpSet; 
+    public static Action<int> OnCompanionExpSet;
+    //½Â±Þ
+    public static Action<Rank> ChallengeRank;
 }
