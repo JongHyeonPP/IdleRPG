@@ -44,7 +44,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52ce1870d78d4e14cbbd52e3b52c1917, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  companionStatusArr:
-  - {fileID: 11400000, guid: 08e1ed444d49e814aaffe07d48b70598, type: 2}
-  - {fileID: 11400000, guid: 42b493b149db63f4782848f25f9d77de, type: 2}
-  - {fileID: 11400000, guid: cf51206f81cb9854cb0dddc465db450e, type: 2}
+  companionArr:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  companionPromoteData: {fileID: 11400000, guid: 00e7fb30524b4b04585591082119e5aa, type: 2}
+  commonColor: {r: 0.03137255, g: 0.8392157, b: 1, a: 1}
+  uncommonColor: {r: 0, g: 0.7921569, b: 0, a: 1}
+  rareColor: {r: 0.90588236, g: 0.90588236, b: 0, a: 1}
+  uniqueColor: {r: 1, g: 0, b: 0, a: 1}
+  legendaryColor: {r: 0.69803923, g: 0, b: 0.69803923, a: 1}
+  mythicColor: {r: 0, g: 1, b: 0.7176471, a: 1}

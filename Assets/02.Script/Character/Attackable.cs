@@ -58,10 +58,10 @@ public abstract class Attackable : MonoBehaviour
                 for (int i = 0; i < CompanionManager.instance.companionArr.Length; i++)
                 {
                     CompanionController companion = CompanionManager.instance.companionArr[i];
-                    if (companion.companionStatus.companionEffect.type == SkillType.SpeedBuff)
-                    {
-                        speedValue += companion.companionStatus.companionEffect.value[CompanionManager.instance.GetCompanionLevelExp(i).Item1 ];
-                    }
+                    //if (companion.companionStatus.companionEffect.type == SkillType.SpeedBuff)
+                    //{
+                    //    speedValue += companion.companionStatus.companionEffect.value[CompanionManager.instance.GetCompanionLevelExp(i).Item1 ];
+                    //}
                     IEnumerable<SkillData> speedBuff = companion.companionStatus.companionSkillArr.Where(item => item.type == SkillType.SpeedBuff);
                     foreach (SkillData speedSkill in speedBuff)
                     {

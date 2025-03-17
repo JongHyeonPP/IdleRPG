@@ -18,14 +18,16 @@ public class TotalDebugger : EditorWindow
     private VisualElement statPanel;
     private VisualElement weaponPanel;
     private VisualElement skillPanel;
+    private VisualElement companionPanel;
     private VisualElement materialPanel;
     //동적으로 할당할 데이터 패널
     private VisualTreeAsset dataPanel_0;
+    private VisualTreeAsset dataPanel_1;
     private VisualTreeAsset separatePanel;
     //카테고리 열거형
     private enum Categori
     {
-        Currency, Stat, Weapon, Skill, Material
+        Currency, Stat, Weapon, Skill,Companion, Material
     }
     // 반복 실행 변수
     private float nextActionTime;
@@ -44,13 +46,17 @@ public class TotalDebugger : EditorWindow
     [DllImport("user32.dll")]
     private static extern short GetAsyncKeyState(int vKey);
     private readonly int VK_LBUTTON = 0x01;
-    //Stat DropDown Variable
+    //Stat Dropdown Variable
     private ScrollView[] statScrollViewArr;
-    //Weapon DropDown Variable
+    //Weapon Dropdown Variable
     private string currentWeaponType;
     private string currentWeaponValue;
     private ScrollView[] weaponScrollViewArr;
-    //Skill DropDown Variable
+    //Companion Dropdown Variable
+    private string currentCompanionType;
+    private int currentCompanionIndex;
+    private ScrollView[] companionScrollViewArr;
+    //Skill Dropdown Variable
     private ScrollView[] skillScrollViewArr;
 
     [MenuItem("Window/Total Debugger")]
@@ -65,6 +71,7 @@ public class TotalDebugger : EditorWindow
     public void CreateGUI()
     {
         dataPanel_0 = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/02.Script/TotalDebugger/DataPanel_0.uxml");
+        dataPanel_1 = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/02.Script/TotalDebugger/DataPanel_1.uxml");
         separatePanel = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/02.Script/TotalDebugger/SeparatePanel.uxml");
         // UXML 파일 로드
         VisualTreeAsset visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/02.Script/TotalDebugger/TotalDebugger.uxml");
@@ -138,6 +145,7 @@ public class TotalDebugger : EditorWindow
         statPanel.style.display = DisplayStyle.None;
         weaponPanel.style.display = DisplayStyle.None;
         skillPanel.style.display = DisplayStyle.None;
+        companionPanel.style.display = DisplayStyle.None;
         materialPanel.style.display = DisplayStyle.None;
         currentPanel = currencyPanel;
     }
@@ -148,12 +156,14 @@ public class TotalDebugger : EditorWindow
         Button statusButton = categoriPanel.Q<Button>("StatusButton");
         Button weaponButton = categoriPanel.Q<Button>("WeaponButton");
         Button skillButton = categoriPanel.Q<Button>("SkillButton");
+        Button companionButton = categoriPanel.Q<Button>("CompanionButton");
         Button materialButton = categoriPanel.Q<Button>("MaterialButton");
-        currencyButton.RegisterCallback<ClickEvent>(evt => ChangeCategori("Currency"));
-        statusButton.RegisterCallback<ClickEvent>(evt => ChangeCategori("Status"));
-        weaponButton.RegisterCallback<ClickEvent>(evt => ChangeCategori("Weapon"));
-        skillButton.RegisterCallback<ClickEvent>(evt => ChangeCategori("Skill"));
-        materialButton.RegisterCallback<ClickEvent>(evt => ChangeCategori("Material"));
+        currencyButton.RegisterCallback<ClickEvent>(evt => ChangeCategori(Categori.Currency));
+        statusButton.RegisterCallback<ClickEvent>(evt => ChangeCategori(Categori.Stat));
+        weaponButton.RegisterCallback<ClickEvent>(evt => ChangeCategori(Categori.Weapon));
+        skillButton.RegisterCallback<ClickEvent>(evt => ChangeCategori(Categori.Skill));
+        companionButton.RegisterCallback<ClickEvent>(evt => ChangeCategori(Categori.Companion));
+        materialButton.RegisterCallback<ClickEvent>(evt => ChangeCategori(Categori.Material));
     }
 
     private void InitCategoriPanel()
@@ -162,11 +172,13 @@ public class TotalDebugger : EditorWindow
         statPanel = rootVisualElement.Q<VisualElement>("StatusCategoriPanel");
         weaponPanel = rootVisualElement.Q<VisualElement>("WeaponCategoriPanel");
         skillPanel = rootVisualElement.Q<VisualElement>("SkillCategoriPanel");
+        companionPanel = rootVisualElement.Q<VisualElement>("CompanionCategoriPanel");
         materialPanel = rootVisualElement.Q<VisualElement>("MaterialCategoriPanel");
         InitCurrency();
         InitStat();
         InitWeapon();
         InitSkillData();
+        InitCompanion();
         InitMaterial();
     }
 
@@ -225,7 +237,7 @@ public class TotalDebugger : EditorWindow
         int intValue = isPlus ? 1 : -1;
         if (currentIsBigInteger)
         {
-            BigInteger bigValue = new BigInteger(intValue);
+            BigInteger bigValue = new(intValue);
             ValueEvent(dataName, bigValue, valueLabel, false, categori);
         }
         else
@@ -246,6 +258,9 @@ public class TotalDebugger : EditorWindow
                 break;
             case Categori.Skill:
                 SkillCase();
+                break;
+            case Categori.Companion:
+                CompanionCase();
                 break;
             case Categori.Material:
                 MaterialCase();
@@ -416,6 +431,17 @@ public class TotalDebugger : EditorWindow
                 
             }
         }
+        void CompanionCase()
+        {
+            int intValue = (int)value;
+            int techIndex = int.Parse(dataName.Split('_')[1]);
+            if (isSet)
+                _gameData.companionPromoteTech[currentCompanionIndex][techIndex] = intValue;
+            else
+                _gameData.companionPromoteTech[currentCompanionIndex][techIndex] += intValue;
+            _gameData.companionPromoteTech[currentCompanionIndex][techIndex] = Math.Clamp(_gameData.companionPromoteTech[currentCompanionIndex][techIndex], 0, 3);
+            PlayerBroker.OnCompanionPromoteTechSet?.Invoke(currentCompanionIndex, techIndex, intValue);
+        }
         void MaterialCase()
         {
             int intValue = (int)value;
@@ -437,24 +463,27 @@ public class TotalDebugger : EditorWindow
         }
     }
 
-    private void ChangeCategori(string categoriStr)
+    private void ChangeCategori(Categori categori)
     {
         VisualElement tempCurrent = null;
-        switch (categoriStr)
+        switch (categori)
         {
-            case "Currency":
+            case Categori.Currency:
                 tempCurrent = currencyPanel;
                 break;
-            case "Status":
+            case Categori.Stat:
                 tempCurrent = statPanel;
                 break;
-            case "Weapon":
+            case Categori.Weapon:
                 tempCurrent = weaponPanel;
                 break;
-            case "Skill":
+            case Categori.Skill:
                 tempCurrent = skillPanel;
                 break;
-            case "Material":
+            case Categori.Companion:
+                tempCurrent = companionPanel;
+                break;
+            case Categori.Material:
                 tempCurrent = materialPanel;
                 break;
         }
@@ -498,11 +527,11 @@ public class TotalDebugger : EditorWindow
         statScrollViewArr[1].style.display = DisplayStyle.None;
         InitGoldStat();
         InitStatPointStat();
-        //DropDown
-        DropdownField typeDropDown = statPanel.Q<DropdownField>("TypeDropDown");
-        typeDropDown.choices = new() { "Gold", "StatPoint" };
-        typeDropDown.value = typeDropDown.choices[0];
-        typeDropDown.RegisterValueChangedCallback(evt => OnStatDropDownChange(evt.newValue));
+        //Dropdown
+        DropdownField typeDropdown = statPanel.Q<DropdownField>("TypeDropdown");
+        typeDropdown.choices = new() { "Gold", "StatPoint" };
+        typeDropdown.value = typeDropdown.choices[0];
+        typeDropdown.RegisterValueChangedCallback(evt => OnStatDropdownChange(evt.newValue));
     }
 
     private void InitGoldStat()
@@ -618,21 +647,20 @@ public class TotalDebugger : EditorWindow
         VisualElement scrollViewParent = weaponPanel.Q<VisualElement>("ScrollViewParent");
         weaponScrollViewArr = scrollViewParent.Children().Select(item => (ScrollView)item).ToArray();
 
-        //DropDown
-        DropdownField typeDropDown = weaponPanel.Q<DropdownField>("TypeDropDown");
-        DropdownField valueDropDown = weaponPanel.Q<DropdownField>("ValueDropDown");
-        typeDropDown.choices = new() { "Player", "Companion" };
-        valueDropDown.choices = new() { "Level", "Count" };
-        typeDropDown.value = typeDropDown.choices[0];
-        valueDropDown.value = valueDropDown.choices[0];
+        //Dropdown
+        DropdownField typeDropdown = weaponPanel.Q<DropdownField>("TypeDropdown");
+        DropdownField valueDropdown = weaponPanel.Q<DropdownField>("ValueDropdown");
+        typeDropdown.choices = new() { "Player", "Companion" };
+        valueDropdown.choices = new() { "Level", "Count" };
+        typeDropdown.value = typeDropdown.choices[0];
+        valueDropdown.value = valueDropdown.choices[0];
         currentWeaponType = "Player";
         currentWeaponValue = "Level";
 
         //ScrollView
-        typeDropDown.RegisterValueChangedCallback(evt => OnWeaponDropDownChange(evt.newValue, true));
-        valueDropDown.RegisterValueChangedCallback(evt => OnWeaponDropDownChange(evt.newValue, false));
-        List<WeaponData> playerDict = WeaponManager.instance.GetWeaponDataByRole(true);
-        List<WeaponData> companionDict = WeaponManager.instance.GetWeaponDataByRole(false);
+        typeDropdown.RegisterValueChangedCallback(evt => OnWeaponDropdownChange(evt.newValue, true));
+        valueDropdown.RegisterValueChangedCallback(evt => OnWeaponDropdownChange(evt.newValue, false));
+        
         InitEachWeapon(true, true, 0);//player's level
         InitEachWeapon(false, true, 1);//companion's level
         InitEachWeapon(true, false, 2);//player's count
@@ -648,42 +676,43 @@ public class TotalDebugger : EditorWindow
                 weaponScrollViewArr[i].style.display = DisplayStyle.None;
             }
         }
-        void InitEachWeapon(bool isPlayer/*orCompanion*/, bool isLevel/*orCount*/, int scrollViewIndex)
-        {
-            string who = isPlayer ? "Player" : "Companion";
-            string what = isLevel ? "Level" : "Count";
-            List<WeaponData> targetDict = isPlayer ? playerDict : companionDict;
-            VisualElement separatePanel = CreateSeparatePanel($"{who}'s Weapon {what}");
-            weaponScrollViewArr[scrollViewIndex].Add(separatePanel);
-            Dictionary<string, int> targetDataDict = isLevel ? _gameData.weaponLevel : _gameData.weaponCount;
+    }
+    void InitEachWeapon(bool isPlayer/*orCompanion*/, bool isLevel/*orCount*/, int scrollViewIndex)
+    {
+        List<WeaponData> playerDict = WeaponManager.instance.GetWeaponDataByRole(true);
+        List<WeaponData> companionDict = WeaponManager.instance.GetWeaponDataByRole(false);
+        string who = isPlayer ? "Player" : "Companion";
+        string what = isLevel ? "Level" : "Count";
+        List<WeaponData> targetDict = isPlayer ? playerDict : companionDict;
+        VisualElement separatePanel = CreateSeparatePanel($"{who}'s Weapon {what}");
+        weaponScrollViewArr[scrollViewIndex].Add(separatePanel);
+        Dictionary<string, int> targetDataDict = isLevel ? _gameData.weaponLevel : _gameData.weaponCount;
 
-            foreach (var weaponData in targetDict)
+        foreach (var weaponData in targetDict)
+        {
+            string uid = weaponData.UID;
+            TemplateContainer dataPanel = dataPanel_0.CloneTree();
+            weaponScrollViewArr[scrollViewIndex].Add(dataPanel);
+            if (!targetDataDict.TryGetValue(uid, out int value))
             {
-                string uid = weaponData.UID;
-                TemplateContainer dataPanel = dataPanel_0.CloneTree();
-                weaponScrollViewArr[scrollViewIndex].Add(dataPanel);
-                if (!targetDataDict.TryGetValue(uid, out int value))
-                {
-                    value = 0;
-                }
-                SetDataPanel(dataPanel, $"{uid}::{who}::{what}", uid.ToString(), value.ToString(), Categori.Weapon, false);
-                if (isLevel)
-                    PlayerBroker.OnWeaponLevelSet += (settedId, level) =>
-                    {
-                        if (uid == settedId)
-                            dataPanel.Q<Label>("ValueLabel").text = _gameData.weaponLevel[uid].ToString();
-                    };
-                else
-                    PlayerBroker.OnWeaponCountSet += (settedId, Count) =>
-                    {
-                        if (uid == settedId)
-                            dataPanel.Q<Label>("ValueLabel").text = _gameData.weaponCount[uid].ToString();
-                    };
+                value = 0;
             }
+            SetDataPanel(dataPanel, $"{uid}::{who}::{what}", uid.ToString(), value.ToString(), Categori.Weapon, false);
+            if (isLevel)
+                PlayerBroker.OnWeaponLevelSet += (settedId, level) =>
+                {
+                    if (uid == settedId)
+                        dataPanel.Q<Label>("ValueLabel").text = _gameData.weaponLevel[uid].ToString();
+                };
+            else
+                PlayerBroker.OnWeaponCountSet += (settedId, Count) =>
+                {
+                    if (uid == settedId)
+                        dataPanel.Q<Label>("ValueLabel").text = _gameData.weaponCount[uid].ToString();
+                };
         }
     }
-
-    private void OnWeaponDropDownChange(string newValue, bool isType)
+    private void OnWeaponDropdownChange(string newValue, bool isType)
     {
         if (isType)
         {
@@ -740,12 +769,13 @@ public class TotalDebugger : EditorWindow
         InitEachSkill(companionArr, skillScrollViewArr[1]);
         skillScrollViewArr[0].style.display = DisplayStyle.Flex;
         skillScrollViewArr[1].style.display = DisplayStyle.None;
-        //DropDown
-        DropdownField typeDropDown = skillPanel.Q<DropdownField>("TypeDropDown");
-        typeDropDown.choices = new() { "Player", "Companion" };
-        typeDropDown.value = typeDropDown.choices[0];
-        typeDropDown.RegisterValueChangedCallback(evt => OnSkillDropDownChange(evt.newValue));
+        //Dropdown
+        DropdownField typeDropdown = skillPanel.Q<DropdownField>("TypeDropdown");
+        typeDropdown.choices = new() { "Player", "Companion" };
+        typeDropdown.value = typeDropdown.choices[0];
+        typeDropdown.RegisterValueChangedCallback(evt => OnSkillDropdownChange(evt.newValue));
     }
+
     void InitEachSkill(SkillData[] skillDataArr, ScrollView scrollView)
     {
         for (int i = 0; i < skillDataArr.Length; i++)
@@ -766,7 +796,7 @@ public class TotalDebugger : EditorWindow
             };
         }
     }
-    private void OnSkillDropDownChange(string newValue)
+    private void OnSkillDropdownChange(string newValue)
     {
         if (newValue == "Player")
         {
@@ -779,7 +809,7 @@ public class TotalDebugger : EditorWindow
             skillScrollViewArr[1].style.display = DisplayStyle.Flex;
         }
     }
-    private void OnStatDropDownChange(string newValue)
+    private void OnStatDropdownChange(string newValue)
     {
         if (newValue == "Gold")
         {
@@ -792,6 +822,181 @@ public class TotalDebugger : EditorWindow
             statScrollViewArr[1].style.display = DisplayStyle.Flex;
         }
     }
+    private void InitCompanion()
+    {
+        VisualElement scrollViewParent = companionPanel.Q<VisualElement>("ScrollViewParent");
+        companionScrollViewArr = scrollViewParent.Children().Select(item => (ScrollView)item).ToArray();
+
+        //Dropdown
+        DropdownField typeDropdown = companionPanel.Q<DropdownField>("TypeDropdown");
+        DropdownField companionDropdown = companionPanel.Q<DropdownField>("CompanionDropdown");
+        typeDropdown.choices = new() { "PromoteEffect", "PromoteTech" };
+        companionDropdown.choices = new() { "Companion_0", "Companion_1", "Companion_2" };
+        typeDropdown.value = typeDropdown.choices[0];
+        companionDropdown.value = companionDropdown.choices[0];
+        currentCompanionType = "PromoteEffect";
+        currentCompanionIndex = 0;
+
+        //ScrollView
+        typeDropdown.RegisterValueChangedCallback(evt => OnCompanionDropdownChange(evt.newValue, true));
+        companionDropdown.RegisterValueChangedCallback(evt => OnCompanionDropdownChange(evt.newValue, false));
+        InitCompanion_PromoteEffect(0, 0);
+        InitCompanion_PromoteEffect(1, 1);
+        InitCompanion_PromoteEffect(2, 2);
+        InitCompanion_PromoteTech(0, 3);
+        InitCompanion_PromoteTech(1, 4);
+        InitCompanion_PromoteTech(2, 5);
+        for (int i = 0; i < companionScrollViewArr.Length; i++)
+        {
+            if (i == 0)
+            {
+                companionScrollViewArr[i].style.display = DisplayStyle.Flex;
+            }
+            else
+            {
+                companionScrollViewArr[i].style.display = DisplayStyle.None;
+            }
+        }
+    }
+
+    private void InitCompanion_PromoteEffect(int companionIndex, int scrollViewIndex)
+    {
+        VisualElement separatePanel = CreateSeparatePanel($"Companion_{companionIndex}'s Promote Effect");
+        companionScrollViewArr[scrollViewIndex].Add(separatePanel);
+        Dictionary<int, (StatusType, Rarity)> effect = _gameData.companionPromoteEffect[companionIndex];
+        for (int i = 0; i < 5; i++)//Effect Index Roop
+        {
+            TemplateContainer panel_1Template = dataPanel_1.CloneTree();
+            companionScrollViewArr[scrollViewIndex].Add(panel_1Template);
+            panel_1Template.Q<Label>("DataLabel").text = $"Effect_{i}";
+            DropdownField statDropdown = panel_1Template.Q<DropdownField>("Dropdown_0");
+            DropdownField rarityDropdown = panel_1Template.Q<DropdownField>("Dropdown_1");
+            int effectIndex = i;
+            //StatDropdown
+
+            statDropdown.label = "Stat";
+            List<string> statList = new() {"None", "Power", "CriticalDamage", "MaxHp", "HpRecover", "MaxMp", "MpRecover", "GoldAscend", "Resist", "Penetration", "ExpAscend"};
+            statDropdown.choices = statList;
+            
+
+            //RarityDropdown
+            rarityDropdown.label = "Rarity";
+            List<string> rarityList = new(Enum.GetNames(typeof(Rarity)));
+            rarityList.Insert(0, "None");
+            rarityDropdown.choices = rarityList;
+
+            if (effect.TryGetValue(i, out (StatusType, Rarity) tuple))
+            {
+                statDropdown.value = tuple.Item1.ToString();
+                rarityDropdown.value = tuple.Item2.ToString();
+            }
+            else
+            {
+                statDropdown.value = statDropdown.choices[0];
+                rarityDropdown.value = rarityDropdown.choices[0];
+            }
+            PlayerBroker.OnCompanionPromoteEffectSet += (index_0, index_1, value) =>
+            {
+                if (value!=null&& (companionIndex == index_0) && (effectIndex == index_1))
+                {
+                    statDropdown.value = value.Value.Item1.ToString();
+                    rarityDropdown.value = value.Value.Item2.ToString();
+                }
+            };
+            statDropdown.RegisterValueChangedCallback(evt => OnCompanionPanelDropdown_PromoteEffect(statDropdown.value, rarityDropdown.value, effectIndex));
+            rarityDropdown.RegisterValueChangedCallback(evt => OnCompanionPanelDropdown_PromoteEffect(statDropdown.value, rarityDropdown.value, effectIndex));
+        }
+    }
+
+    private void OnCompanionPanelDropdown_PromoteEffect(string statStr, string rarityStr, int effectIndex)
+    {
+        if (Enum.TryParse(statStr, out StatusType statusType) && Enum.TryParse(rarityStr, out Rarity rarity))
+        {
+            PlayerBroker.OnCompanionPromoteEffectSet(currentCompanionIndex, effectIndex, new(statusType, rarity));
+            _gameData.companionPromoteEffect[currentCompanionIndex][effectIndex] = new(statusType, rarity);
+        }
+        else
+        {
+            PlayerBroker.OnCompanionPromoteEffectSet( currentCompanionIndex, effectIndex, null);
+            _gameData.companionPromoteEffect[currentCompanionIndex].Remove(effectIndex);
+        }
+        
+        StartBroker.SaveLocal();
+    }
+
+    private void InitCompanion_PromoteTech(int companionIndex, int scrollViewIndex)
+    {
+        VisualElement separatePanel = CreateSeparatePanel($"Companion_{companionIndex}'s Promote Tech");
+        companionScrollViewArr[scrollViewIndex].Add(separatePanel);
+        for (int i = 0; i < 2; i++)
+        {
+            int techIndex = i;
+            TemplateContainer panel_0Template = dataPanel_0.CloneTree();
+            companionScrollViewArr[scrollViewIndex].Add(panel_0Template);
+            panel_0Template.Q<Label>("DataLabel").text = $"Tech_{i}";
+            SetDataPanel(panel_0Template, $"Tech_{i}", $"Tech_{i}", _gameData.companionPromoteTech[companionIndex][i].ToString(), Categori.Companion, false, 120f, 33f);
+            PlayerBroker.OnCompanionPromoteTechSet += (companionArg, techArg, value) =>
+            {
+                if (companionArg == companionIndex && techArg == techIndex)
+                    panel_0Template.Q<Label>("ValueLabel").text = _gameData.companionPromoteTech[companionArg][techArg].ToString();
+            };
+        }
+    }
+
+    private void OnCompanionDropdownChange(string newValue, bool isType)
+    {
+        if (isType)
+        {
+            currentCompanionType = newValue;
+        }
+        else
+        {
+            currentCompanionIndex = int.Parse( newValue.Split('_')[1]);
+        }
+        int newIndex = -1;
+        if (currentCompanionType == "PromoteEffect")
+        {
+            switch (currentCompanionIndex)
+            {
+                case 0:
+                    newIndex = 0;
+                    break;
+                case 1:
+                    newIndex = 1;
+                    break;
+                case 2:
+                    newIndex = 2;
+                    break;
+            }
+        }
+        else if (currentCompanionType == "PromoteTech")
+        {
+            switch (currentCompanionIndex)
+            {
+                case 0:
+                    newIndex = 3;
+                    break;
+                case 1:
+                    newIndex = 4;
+                    break;
+                case 2:
+                    newIndex = 5;
+                    break;
+            }
+        }
+        for (int i = 0; i < companionScrollViewArr.Length; i++)
+        {
+            if (i == newIndex)
+            {
+                companionScrollViewArr[i].style.display = DisplayStyle.Flex;
+            }
+            else
+            {
+                companionScrollViewArr[i].style.display = DisplayStyle.None;
+            }
+        }
+    }
+
     private void InitMaterial()
     {
         Rarity[] rarityArr = (Rarity[])Enum.GetValues(typeof(Rarity));

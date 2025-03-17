@@ -94,7 +94,7 @@ public class BattleManager : MonoBehaviour
         BattleBroker.IsCanAttack += IsCanAttack;
         UIBroker.OnMenuUIChange += OnMenuUIChange;
         BattleBroker.OnStageChange(_gameData.currentStageNum);
-        BattleBroker.SwitchBattle += () => ControlBattle(true);
+        BattleBroker.SwitchToBattle += () => ControlBattle(true);
         BattleBroker.SwitchToStory += (stageId) => ControlBattle(false);
     }
     private void OnMenuUIChange(int index)
@@ -228,6 +228,7 @@ public class BattleManager : MonoBehaviour
     }
     private void OnStageChange(int stageNum)
     {
+        _gameData.currentStageNum = stageNum;
         currentStageInfo = StageInfoManager.instance.GetStageInfo(stageNum);
         BattleBroker.OnStageEnter();
         if (stageNum > _gameData.maxStageNum)
@@ -248,7 +249,7 @@ public class BattleManager : MonoBehaviour
         }
         else
         {
-            BattleBroker.SwitchBattle();
+            BattleBroker.SwitchToBattle();
             ControlBattle(true);
         }
         StartBroker.SaveLocal();

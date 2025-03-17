@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12089a047c185d140975ee0404774413, type: 3}
+  m_Name: CompanionAppearanceData_1-1_1
+  m_EditorClassIdentifier: 
+  clothBack_0Sprite: {fileID: 21300000, guid: f960480ad743b4fce936a0d974b62e30, type: 3}
+  clothBack_1Sprite: {fileID: 0}
+  clothHelmetSprite: {fileID: 0}
+  clothBodySprite: {fileID: -6681826896505735217, guid: ed2fe3501599f426681db821c78346f9, type: 3}
+  clothLeftArmSprite: {fileID: 4727151419576123659, guid: ed2fe3501599f426681db821c78346f9, type: 3}
+  clothRightArmSprite: {fileID: 3257957675272099778, guid: ed2fe3501599f426681db821c78346f9, type: 3}
+  clothLeftFootSprite: {fileID: -5865075824875758407, guid: e7744aef89ec54890b94be6c6f34ff87, type: 3}
+  clothRightFootSprite: {fileID: -4101195301054798837, guid: e7744aef89ec54890b94be6c6f34ff87, type: 3}
+  clothBodyArmorSprite: {fileID: 9212973412628086815, guid: de4eb868b9bfd4670bce4ff5974f89ca, type: 3}
+  clothLeftShoulderSprite: {fileID: 1434601832812514426, guid: de4eb868b9bfd4670bce4ff5974f89ca, type: 3}
+  clothRightShoulderSprite: {fileID: -3293430866661876501, guid: de4eb868b9bfd4670bce4ff5974f89ca, type: 3}
+  bodyLeftArmSprite: {fileID: 5223213533427645220, guid: 470cfb1e4f7865c40b83d403037c90c9, type: 3}
+  bodyRightArmSprite: {fileID: 2554473656886179314, guid: 470cfb1e4f7865c40b83d403037c90c9, type: 3}
+  bodyBodySprite: {fileID: 2792606791867966216, guid: 470cfb1e4f7865c40b83d403037c90c9, type: 3}
+  bodyLeftFootSprite: {fileID: 5053251350606442050, guid: 470cfb1e4f7865c40b83d403037c90c9, type: 3}
+  bodyRightFootSprite: {fileID: 1583482623376728253, guid: 470cfb1e4f7865c40b83d403037c90c9, type: 3}
+  bodyHeadSprite: {fileID: 3923885903126733222, guid: 470cfb1e4f7865c40b83d403037c90c9, type: 3}
+  bodyHairSprite: {fileID: 21300000, guid: 7ce63253b35484946b3f790c2e4b54dc, type: 3}
+  bodyFaceHairSprite: {fileID: 0}
+  bodyBackEyeSprite: {fileID: 2180892833989144798, guid: 74b32804ee39a482bb8fd056b05603ae, type: 3}
+  bodyFrontEyeSprite: {fileID: 9123283813751135976, guid: 74b32804ee39a482bb8fd056b05603ae, type: 3}
+  hairColor: {r: 0.18867922, g: 0.18867922, b: 0.18867922, a: 1}
+  eyeColor: {r: 0.1882353, g: 0.1882353, b: 0.1882353, a: 1}

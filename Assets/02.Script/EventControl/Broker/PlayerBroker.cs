@@ -1,7 +1,5 @@
 using EnumCollection;
 using System;
-using System.Collections.Generic;
-using UnityEngine;
 
 public static class PlayerBroker
 {
@@ -34,5 +32,7 @@ public static class PlayerBroker
     public static Func<int> GetPlayerRankIndex = () => 0;//현재 달성된 최고 랭크를 가져오기
     public static Action<int> OnPromoteRank;//승급
     public static Action<StatusType, float> OnPromoteStatusSet;//승급으로 능력치 적용
-
+    public static Action<int, int, (StatusType, Rarity)?> OnCompanionPromoteEffectSet;// CompanionIndex, EffectIndex, Value
+    public static Action<int, int, int> OnCompanionPromoteTechSet;//CompanionIndex, TechIndex, Value
+    public static Action<int> CompanionTechRenderSet;
 }

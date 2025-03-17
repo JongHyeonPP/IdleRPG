@@ -31,7 +31,7 @@ public static class BattleBroker
     public static Func<bool> IsCanAttack;
 
     public static Action<int> SwitchToStory;
-    public static Action SwitchBattle;
+    public static Action SwitchToBattle;
     //µ¿·á
     public static Action<object> StartCompanionAttack;
     public static Action StopCompanionAttack;

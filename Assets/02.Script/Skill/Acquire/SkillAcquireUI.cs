@@ -19,6 +19,7 @@ public class SkillAcquireUI : MonoBehaviour
         _draggableScrollView = GetComponent<DraggableScrollView>();
         BattleBroker.OnLevelExpSet += OnLevelExpSet;
         PlayerBroker.OnSkillLevelSet += OnSkillLevelSet;
+        PlayerBroker.OnSkillLevelSet +=(str, num)=> OnLevelExpSet();
         _gameData = StartBroker.GetGameData();
     }
     private void Start()
@@ -142,13 +143,13 @@ public class SkillAcquireUI : MonoBehaviour
             }
             if (!_gameData.skillLevel.ContainsKey(info.SkillData.uid)||_gameData.skillLevel[info.SkillData.uid]==0)
             {
-                _skillUI.acquireNoticeDot.StartNotice();
                 UIBroker.OnMenuUINotice(2, true);
+                _skillUI.skillAcquireNotice.StartNotice();
                 return;
             }
         }
-        _skillUI.acquireNoticeDot.StopNotice();
         UIBroker.OnMenuUINotice(2, false);
+        _skillUI.skillAcquireNotice.StopNotice();
     }
     public void ActiveUI()
     {

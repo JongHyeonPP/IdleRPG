@@ -15,25 +15,19 @@ public class NoticeDot
             Debug.LogError("UIDocument를 찾을 수 없습니다.");
             return;
         }
-
-        _parentRoot = uiDocument.rootVisualElement;
-        _root = parentVe.Q<VisualElement>("NoticeDot");
-        if (_root == null)
+        root = parentVe.Q<VisualElement>("NoticeDot");
+        if (root == null)
         {
             Debug.LogError("Invalid Notice Dot");
             return;
         }
 
-        _expand = _root.Q<VisualElement>("Notice_Expand");
-        _mainPanel = _root.Q<VisualElement>("Notice_MainPanel");
+        _expand = root.Q<VisualElement>("Notice_Expand");
+        _mainPanel = root.Q<VisualElement>("Notice_MainPanel");
         InactiveNotice();
     }
     //렌더링 순위를 UIDocument 내에서 최상위에 위치시키는 메서드
     //DisplayStyle이 Flex인 시점에 호출해야 정상적으로 작동된다.
-    public void SetParentToRoot()
-    {
-        _parentMono.StartCoroutine(SetParentToRootCor());
-    }
 
     //Notice 띄울라면 이거 호출하면 됨
     public void StartNotice()
@@ -41,7 +35,7 @@ public class NoticeDot
         if (isOperating)
             return;
         isOperating = true;
-        _root.style.display = DisplayStyle.Flex;
+        root.style.visibility = Visibility.Visible;
         _parentMono.StartCoroutine(CoroutineWithHashSet(AnimateLoop()));
     }
     //Notice 감출라면 이거 호출하면 됨
@@ -55,7 +49,7 @@ public class NoticeDot
     private void InactiveNotice()
     {
         isOperating = false;
-        _root.style.display = DisplayStyle.None;
+        root.style.visibility = Visibility.Hidden;
         foreach (var x in _coroutineSet)
         {
             _parentMono.StopCoroutine(x);
@@ -65,24 +59,15 @@ public class NoticeDot
     }
 
     //SetparentToRoot를 발동하면 원래 부모의 좌표를 따라가지 않아서 별도로 위치 이동시킬 때 호출하면 됨
-    public void OnPositionChange(float xChange, float yChange)
+    public void OnPositionSet(float xSet, float ySet)
     {
-        // 현재 위치 가져오기
-        float currentLeft = _root.resolvedStyle.left;
-        float currentTop = _root.resolvedStyle.top;
-
-        // 변경된 위치 적용
-        _root.style.left = currentLeft + xChange;
-        _root.style.top = currentTop + yChange;
+        root.style.left = xSet;
+        root.style.top = ySet;
     }
     #endregion
 
-
-
-
     #region 몰라도 됨
-    private VisualElement _parentRoot;
-    private VisualElement _root;
+    public VisualElement root;
     private MonoBehaviour _parentMono;//코루틴 발동 매개체
     //readonly=>생성자 초기화
     private readonly VisualElement _mainPanel;
@@ -101,23 +86,6 @@ public class NoticeDot
     // Expand 애니메이션 설정
     private const float _expandMin = 1f; // 최소 크기
     private const float _expandMax = 5f; // 최대 크기
-    private IEnumerator SetParentToRootCor()
-    {
-        //Vector2 unsettedPosition = _root.worldBound.position;아으 ㅠㅠ
-        
-        for(int i =0;i<10;i++)
-        {
-            yield return null;
-        }
-        Vector2 worldPosition = _root.worldBound.position;
-        //_root.RemoveFromHierarchy();
-        _parentRoot.Add(_root);
-
-        Vector2 localPosition = _parentRoot.WorldToLocal(worldPosition);
-        _root.style.position = Position.Absolute;
-        _root.style.left = localPosition.x;
-        _root.style.top = localPosition.y;
-    }
     private IEnumerator AnimateLoop()
     {
         while (true)

@@ -11,6 +11,8 @@ public class SkillUI : MonoBehaviour
     private GameData _gameData;
     [SerializeField] SkillInfoUI _skillInfoUI;
     public VisualElement root { get; private set; }
+    [SerializeField] UIDocument notice;
+    public NoticeDot skillAcquireNotice;
     [SerializeField] DraggableScrollView _activeScrollView;
     [SerializeField] DraggableScrollView _passiveScrollView;
     private readonly Dictionary<string, VisualElement> _skillId_SlotDict = new();
@@ -20,7 +22,6 @@ public class SkillUI : MonoBehaviour
     private Button _activeButton;
     private Button _passiveButton;
     [SerializeField] SkillAcquireUI skillAcquireUI;
-    public NoticeDot acquireNoticeDot;
     //ButtonColor
     private readonly Color inactiveColor = new(0.7f, 0.7f, 0.7f);
     private readonly Color activeColor = new(1f, 1f, 1f);
@@ -37,8 +38,8 @@ public class SkillUI : MonoBehaviour
         PlayerBroker.OnSkillLevelSet += OnSkillLevelSet;
         PlayerBroker.OnFragmentSet += OnFragmentSet;
 
-        acquireNoticeDot = new NoticeDot(_acquireButton, this);
         _gameData = StartBroker.GetGameData();
+        skillAcquireNotice = new(notice.rootVisualElement.Q<VisualElement>("SkillAcquire"), this);
     }
     private void Start()
     {
@@ -234,10 +235,13 @@ public class SkillUI : MonoBehaviour
         if (uiType == 2)
         {
             root.style.display = DisplayStyle.Flex;
-            acquireNoticeDot.SetParentToRoot();
+            skillAcquireNotice.root.style.display = DisplayStyle.Flex;
         }
         else
+        {
             root.style.display = DisplayStyle.None;
+            skillAcquireNotice.root.style.display = DisplayStyle.None;
+        }
     }
     #endregion
 }

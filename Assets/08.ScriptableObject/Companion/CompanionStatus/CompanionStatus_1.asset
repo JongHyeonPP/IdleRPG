@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d54ea04a6255fd24b9c351314d19965b, type: 3}
+  m_Name: CompanionStatus_1
+  m_EditorClassIdentifier: 
+  companionSkillArr:
+  - {fileID: 11400000, guid: fbe84476e9af6f9439c4bdd530686e9c, type: 2}
+  - {fileID: 11400000, guid: 38f90df14df6ef74bb32cbf5597afa9d, type: 2}
+  - {fileID: 11400000, guid: 750ce9fe4a9742b4e9d3bfa1bfe54a84, type: 2}
+  companionTechData_0: {fileID: 11400000, guid: 162dddd4d8bc5064fa37c33c333a25af, type: 2}
+  companionTechData_1_0: {fileID: 11400000, guid: cf7d10fe5a9d04d4eafa3a46e7405eef, type: 2}
+  companionTechData_1_1: {fileID: 11400000, guid: a3eda4e24160d5e4daacea85aeb32b1f, type: 2}
+  companionTechData_2_0: {fileID: 11400000, guid: 89cd51e8822faa14ebcd7457aa5146e4, type: 2}
+  companionTechData_2_1: {fileID: 11400000, guid: acae30f4511be5e4fa6e8c0fd119ba1d, type: 2}
+  companionTechData_3_0: {fileID: 11400000, guid: 108a1cad5dbe71049b334647596729b3, type: 2}
+  companionTechData_3_1: {fileID: 11400000, guid: d35ab9a42260897418017f5d82629ad2, type: 2}
+  companionName: "\uC804\uC0AC\uC694\uBBF8"

@@ -3886,6 +3886,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 6323902443355028417}
+  companionStatus: {fileID: 11400000, guid: 08e1ed444d49e814aaffe07d48b70598, type: 2}
 --- !u!114 &-3284946102617984611
 MonoBehaviour:
   m_ObjectHideFlags: 0

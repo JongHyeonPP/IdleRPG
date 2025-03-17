@@ -1,5 +1,7 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <engine:Template name="CompanionInfoSlot" src="project://database/Assets/02.Script/Companion/CompanionUI/CompanionStatusSlot.uxml?fileID=9197481963319205126&amp;guid=7726cdf8e6e170e40bc4d939c2e84603&amp;type=3#CompanionStatusSlot" />
+    <engine:Template name="TechPlank" src="project://database/Assets/02.Script/Companion/CompanionUI/TechPlank.uxml?fileID=9197481963319205126&amp;guid=49dd167a7054d6846be30c2b3e398269&amp;type=3#TechPlank" />
+    <engine:Template name="TechClickPanel" src="project://database/Assets/02.Script/Companion/CompanionUI/TechClickPanel.uxml?fileID=9197481963319205126&amp;guid=104d984926dceaf409bdc182a05d23de&amp;type=3#TechClickPanel" />
     <engine:VisualElement name="SkillDataPanel" picking-mode="Ignore" style="flex-grow: 0; height: 1000px; bottom: 0; position: absolute; width: 100%; -unity-font-definition: url(&quot;project://database/Assets/05.Font/Maplestory%20Light.ttf?fileID=12800000&amp;guid=b7853b5ad26567e41a3c4210e64c5419&amp;type=3#Maplestory Light&quot;); -unity-background-image-tint-color: rgb(180, 129, 76); background-image: url(&quot;project://database/Assets/Asset/PixelFantasy/PixelHeroes/Common/UI/Common/SquareRadiantGradient.png?fileID=2800000&amp;guid=ec80180e021a44f4a30c70644a7bd65e&amp;type=3#SquareRadiantGradient&quot;); align-items: center; justify-content: center; color: rgb(255, 255, 255); font-size: 45px;">
         <engine:VisualElement name="MainPanel" style="flex-grow: 0; width: 1011px; height: 950px;">
             <engine:VisualElement name="ButtonParent" style="flex-grow: 0; height: 120px; flex-shrink: 0; flex-direction: row; justify-content: flex-start; align-items: center; color: rgb(255, 255, 255); font-size: 40px; visibility: visible; letter-spacing: 30px; background-image: url(&quot;project://database/Assets/Asset/Wooden_UI/Wooden_UI_png/Plank_03.png?fileID=2800000&amp;guid=1ca0074b57581f7489d8e9355b1b4ac9&amp;type=3#Plank_03&quot;); -unity-background-image-tint-color: rgb(183, 183, 183); padding-left: 10px; width: 100%;">
@@ -15,7 +17,7 @@
             <engine:VisualElement name="PanelParent" style="flex-grow: 1; position: relative; width: 100%; height: 100%;">
                 <engine:VisualElement name="CompanionPanel" style="flex-grow: 1; align-items: center; justify-content: center; display: none;">
                     <engine:Label text="동료는 플레이어의 능력을 올려줍니다." name="InfoLabel" style="position: absolute; align-self: center; top: 25px; font-size: 45px;" />
-                    <engine:VisualElement name="ClickVeParent" picking-mode="Ignore" style="flex-grow: 0; width: 958px; height: 478px; display: flex; align-items: center; justify-content: center; position: absolute; flex-direction: row;">
+                    <engine:VisualElement name="CompanionClickVeParent" picking-mode="Ignore" style="flex-grow: 0; width: 958px; height: 478px; display: flex; align-items: center; justify-content: center; position: absolute; flex-direction: row;">
                         <engine:VisualElement name="ClickVe_0" style="flex-grow: 1; width: 100%; height: 100%;" />
                         <engine:VisualElement name="ClickVe_1" style="flex-grow: 1; width: 100%; height: 100%;" />
                         <engine:VisualElement name="ClickVe_2" style="flex-grow: 1; width: 100%; height: 100%;" />
@@ -33,8 +35,51 @@
                         <engine:Instance template="CompanionInfoSlot" picking-mode="Ignore" name="Status_2" style="position: relative; height: 100%; width: 300px;" />
                     </engine:VisualElement>
                 </engine:VisualElement>
-                <engine:VisualElement name="JobPanel" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; align-items: center;">
-                    <engine:VisualElement name="VisualElement" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/07.Texture/RenderTexture/CompanionJobRenderTexture.renderTexture?fileID=8400000&amp;guid=ca762ce57407c7f4abd2d8d8b839c79f&amp;type=2#CompanionJobRenderTexture&quot;); width: 800px; height: 800px;" />
+                <engine:VisualElement name="TechPanel" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; align-items: center;">
+                    <engine:VisualElement name="TechButtonParent" style="flex-grow: 0; height: 99px; flex-direction: row; flex-shrink: 0; letter-spacing: 30px; color: rgb(255, 255, 255); font-size: 40px; background-color: rgba(0, 0, 0, 0.36); padding-top: 0; padding-left: 10px; width: 100%; align-items: center;">
+                        <engine:Button name="BowButton" style="height: 80px; width: 220px; margin-left: 20px; background-color: rgba(255, 255, 255, 0); background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel1.png?fileID=21300000&amp;guid=9eba597d30b7a114ea7924c3748871ed&amp;type=3#UniversalPanel1&quot;); border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; margin-right: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-background-image-tint-color: rgba(255, 255, 255, 0);">
+                            <engine:VisualElement name="OutLine" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel1Outline.png?fileID=21300000&amp;guid=9411c12f93fbda143a9a1d7c02c9e378&amp;type=3#UniversalPanel1Outline&quot;); position: absolute; width: 100%; height: 100%; -unity-background-image-tint-color: rgb(255, 255, 255);" />
+                            <engine:Label text="궁수요미" name="Label" style="position: absolute; width: 100%; height: 100%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; letter-spacing: 20px;" />
+                        </engine:Button>
+                        <engine:Button name="ShieldButton" style="height: 80px; width: 220px; margin-left: 20px; background-color: rgba(255, 255, 255, 0); background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel1.png?fileID=21300000&amp;guid=9eba597d30b7a114ea7924c3748871ed&amp;type=3#UniversalPanel1&quot;); border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; margin-right: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-background-image-tint-color: rgba(255, 255, 255, 0); letter-spacing: 40px;">
+                            <engine:VisualElement name="OutLine" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel1Outline.png?fileID=21300000&amp;guid=9411c12f93fbda143a9a1d7c02c9e378&amp;type=3#UniversalPanel1Outline&quot;); position: absolute; width: 100%; height: 100%; -unity-background-image-tint-color: rgb(255, 255, 255);" />
+                            <engine:Label text="전사요미" name="Label" style="position: absolute; width: 100%; height: 100%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; letter-spacing: 20px;" />
+                        </engine:Button>
+                        <engine:Button name="StaffButton" style="height: 80px; width: 220px; margin-left: 20px; background-color: rgba(255, 255, 255, 0); background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel1.png?fileID=21300000&amp;guid=9eba597d30b7a114ea7924c3748871ed&amp;type=3#UniversalPanel1&quot;); border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; margin-right: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-background-image-tint-color: rgba(255, 255, 255, 0);">
+                            <engine:VisualElement name="OutLine" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel1Outline.png?fileID=21300000&amp;guid=9411c12f93fbda143a9a1d7c02c9e378&amp;type=3#UniversalPanel1Outline&quot;); position: absolute; width: 100%; height: 100%; -unity-background-image-tint-color: rgb(255, 255, 255);" />
+                            <engine:Label text="법사요미" name="Label" style="position: absolute; width: 100%; height: 100%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; letter-spacing: 20px;" />
+                        </engine:Button>
+                    </engine:VisualElement>
+                    <engine:VisualElement name="Padding" style="flex-grow: 1; height: 10px;" />
+                    <engine:ScrollView vertical-scroller-visibility="Hidden" horizontal-scroller-visibility="Hidden" touch-scroll-type="Elastic" style="width: 100%; height: 100%;">
+                        <engine:VisualElement name="ScrolledElement" style="flex-grow: 0; height: 1055px; flex-direction: row;">
+                            <engine:VisualElement name="TechPlankParent" style="flex-grow: 0; width: 298px; flex-shrink: 0; padding-left: 0; -unity-text-align: middle-center; -unity-font-definition: url(&quot;project://database/Assets/05.Font/Maplestory%20Bold.ttf?fileID=12800000&amp;guid=cb734c07d35dbf549a5a6fce9ebf42b1&amp;type=3#Maplestory Bold&quot;); font-size: 36px; letter-spacing: 15px; color: rgb(255, 255, 255); -unity-text-outline-width: 1px; -unity-text-outline-color: rgb(0, 0, 0); padding-top: 0;">
+                                <engine:Instance template="TechPlank" name="TechPlank_0" style="flex-shrink: 0; position: relative; flex-grow: 1; margin-top: 68px; top: 0;" />
+                                <engine:Instance template="TechPlank" name="TechPlank_1" style="position: relative; flex-grow: 1; top: 20px;" />
+                                <engine:Instance template="TechPlank" name="TechPlank_2" style="position: relative; flex-grow: 1; top: 50px;" />
+                                <engine:Instance template="TechPlank" name="TechPlank_3" style="position: relative; flex-grow: 1; top: 88px;" />
+                            </engine:VisualElement>
+                            <engine:VisualElement name="RenderParent" style="flex-grow: 1; overflow: visible; flex-shrink: 0; align-items: center; justify-content: flex-start; display: flex;">
+                                <engine:VisualElement name="RenderTexture" style="flex-grow: 0; background-image: url(&quot;project://database/Assets/07.Texture/RenderTexture/CompanionJobRenderTexture.renderTexture?fileID=8400000&amp;guid=ca762ce57407c7f4abd2d8d8b839c79f&amp;type=2#CompanionJobRenderTexture&quot;); width: 1050px; height: 1050px; flex-shrink: 0; position: absolute; align-items: center;">
+                                    <engine:VisualElement name="TechClickParent" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; align-items: center; font-size: 35px;">
+                                        <engine:Instance template="TechClickPanel" name="TechClickPanel_0_0" style="align-items: center;" />
+                                        <engine:VisualElement name="LabelSet_1" style="flex-grow: 0; flex-shrink: 0; width: 419px; top: 243px;">
+                                            <engine:Instance template="TechClickPanel" name="TechClickPanel_1_0" style="position: absolute; left: 0; align-items: center;" />
+                                            <engine:Instance template="TechClickPanel" name="TechClickPanel_1_1" style="position: absolute; right: 0; align-items: center;" />
+                                        </engine:VisualElement>
+                                        <engine:VisualElement name="LabelSet_2" style="flex-grow: 0; flex-shrink: 0; width: 419px; top: 520px;">
+                                            <engine:Instance template="TechClickPanel" name="TechClickPanel_2_0" style="position: absolute; left: 0; align-items: center;" />
+                                            <engine:Instance template="TechClickPanel" name="TechClickPanel_2_1" style="position: absolute; right: 0; align-items: center;" />
+                                        </engine:VisualElement>
+                                        <engine:VisualElement name="LabelSet_3" style="flex-grow: 0; flex-shrink: 0; width: 419px; top: 813px;">
+                                            <engine:Instance template="TechClickPanel" name="TechClickPanel_3_0" style="position: absolute; left: 0; align-items: center;" />
+                                            <engine:Instance template="TechClickPanel" name="TechClickPanel_3_1" style="position: absolute; right: 0; align-items: center;" />
+                                        </engine:VisualElement>
+                                    </engine:VisualElement>
+                                </engine:VisualElement>
+                            </engine:VisualElement>
+                        </engine:VisualElement>
+                    </engine:ScrollView>
                 </engine:VisualElement>
             </engine:VisualElement>
         </engine:VisualElement>

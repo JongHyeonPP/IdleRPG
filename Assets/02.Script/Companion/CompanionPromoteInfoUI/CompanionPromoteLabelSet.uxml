@@ -1,0 +1,17 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:VisualElement name="CompanionPromoteLabelSet" style="flex-grow: 1; font-size: 35px; align-items: center; -unity-font-definition: url(&quot;project://database/Assets/05.Font/Maplestory%20Light.ttf?fileID=12800000&amp;guid=b7853b5ad26567e41a3c4210e64c5419&amp;type=3#Maplestory Light&quot;); color: rgb(195, 195, 195); flex-direction: row; justify-content: center; letter-spacing: 5px; margin-left: 5px;">
+        <engine:Label text="추가 공격력(%)" name="CategoriLabel" />
+        <engine:Label text=":" name="ColonsLabel" />
+        <engine:Label text="3" name="CommonLabel" />
+        <engine:Label text="/" name="SeparatorLabel" style="margin-right: 5px; margin-left: 5px;" />
+        <engine:Label text="4" name="UncommonLabel" />
+        <engine:Label text="/" name="SeparatorLabel" style="margin-right: 5px; margin-left: 5px;" />
+        <engine:Label text="6" name="RareLabel" />
+        <engine:Label text="/" name="SeparatorLabel" style="margin-right: 5px; margin-left: 5px;" />
+        <engine:Label text="9" name="UniqueLabel" />
+        <engine:Label text="/" name="SeparatorLabel" style="margin-right: 5px; margin-left: 5px;" />
+        <engine:Label text="14" name="LegendaryLabel" />
+        <engine:Label text="/" name="SeparatorLabel" style="margin-right: 5px; margin-left: 5px;" />
+        <engine:Label text="20" name="MythicLabel" />
+    </engine:VisualElement>
+</engine:UXML>

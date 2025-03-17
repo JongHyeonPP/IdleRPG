@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -8,55 +7,65 @@ public class CompanionUI : MonoBehaviour
     //UI Element
     public VisualElement root { get; private set;  }
     private VisualElement[] _panelArr;
-    private Button[] _buttonArr;
-    private VisualElement[] _clickVeArr;
+    private Button[] _panelButtonArr;
+    
     private readonly Color inactiveColor = new(0.7f, 0.7f, 0.7f);
     private readonly Color activeColor = new(1f, 1f, 1f);
     [SerializeField] CompanionInfoUI _companionInfoUI;
 
+    //Companion
+    [SerializeField] CompanionTechUI _companionTechUI;
+    private VisualElement[] _companionClickVeArr;
+    //Tech
+    private Button[] _techButtonArr;
+    private Material _grayMaterial;
     private void Awake()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
-        
     }
     private void Start()
     {
-        InitUI();
-        BattleBroker.OnCompanionExpSet += OnCompanionExpSet;
-    }
-    private void InitUI()
-    {
         VisualElement panelParent = root.Q<VisualElement>("PanelParent");
-        VisualElement buttonParent = root.Q<VisualElement>("ButtonParent");
-        VisualElement clickVeParent = root.Q<VisualElement>("ClickVeParent");
         _panelArr = new VisualElement[panelParent.childCount];
-        _buttonArr = new Button[buttonParent.childCount];
-        _clickVeArr = new VisualElement[clickVeParent.childCount];
-
         for (int i = 0; i < panelParent.childCount; i++)
         {
             _panelArr[i] = panelParent.ElementAt(i);
         }
+
+        InitPanelButton();
+        InitCompanionPanel();
+        InitTechPanel();
+        BattleBroker.OnCompanionExpSet += OnCompanionExpSet;
+        
+    }
+    private void InitPanelButton()
+    {
+        VisualElement buttonParent = root.Q<VisualElement>("ButtonParent");
+        
+        _panelButtonArr = new Button[buttonParent.childCount];
+        
         for (int i = 0; i < buttonParent.childCount; i++)
         {
             int index = i;
-            _buttonArr[i] = (Button)buttonParent.ElementAt(i);
-            buttonParent.ElementAt(i).RegisterCallback<ClickEvent>(evt => OnClickButton(index));
+            _panelButtonArr[i] = (Button)buttonParent.ElementAt(i);
+            buttonParent.ElementAt(i).RegisterCallback<ClickEvent>(evt => OnPanelButtonClick(index));
         }
-        InitCompanionPanel(clickVeParent);
-        OnClickButton(0);
+        OnPanelButtonClick(0);
     }
 
-    private void InitCompanionPanel(VisualElement clickVeParent)
+    private void InitCompanionPanel()
     {
-        for (int i = 0; i < clickVeParent.childCount; i++)
+        VisualElement companionClickVeParent = _panelArr[0].Q<VisualElement>("CompanionClickVeParent");
+        _companionClickVeArr = new VisualElement[companionClickVeParent.childCount];
+        
+        for (int i = 0; i < companionClickVeParent.childCount; i++)
         {
             int index = i;
-            _clickVeArr[i] = clickVeParent.ElementAt(i);
-            clickVeParent.ElementAt(i).RegisterCallback<ClickEvent>(evt => OnClickClickVe(index));
+            _companionClickVeArr[i] = companionClickVeParent.ElementAt(i);
+            companionClickVeParent.ElementAt(i).RegisterCallback<ClickEvent>(evt => OnClickCompanionVe(index));
         }
         CompanionController[] companionArr = CompanionManager.instance.companionArr;
-        VisualElement statusParent = root.Q<VisualElement>("StatusParent");
+        VisualElement statusParent = _panelArr[0].Q<VisualElement>("StatusParent");
         for (int i = 0; i < statusParent.childCount; i++)
         {
             
@@ -70,31 +79,120 @@ public class CompanionUI : MonoBehaviour
             expProgressBar.value = levelExp.Item2 / (float)CompanionManager.EXPINTERVAL;
             expProgressBar.title = $"{levelExp.Item2}/{CompanionManager.EXPINTERVAL}";
         }
+    }
+    private void InitTechPanel()
+    {
+        VisualElement techPlankParent = _panelArr[1].Q<VisualElement>("TechPlankParent");
+        Label[] plankLabelArr = techPlankParent.Children().Select(item =>item.Q<Label>()).ToArray();
+        plankLabelArr[0].text = "기본 직업";
+        plankLabelArr[1].text = "1차 전직";
+        plankLabelArr[2].text = "2차 전직";
+        plankLabelArr[3].text = "3차 전직";
+        InitTechButton();
 
     }
+    private void InitTechButton()
+    {
+        VisualElement techButtonParent = root.Q<VisualElement>("TechButtonParent");
 
-    private void OnClickClickVe(int companionIndex)
+        _techButtonArr = new Button[techButtonParent.childCount];
+
+        for (int i = 0; i < techButtonParent.childCount; i++)
+        {
+            int index = i;
+            _techButtonArr[i] = (Button)techButtonParent.ElementAt(i);
+            techButtonParent.ElementAt(i).RegisterCallback<ClickEvent>(evt => OnTechButtonClick(index));
+        }
+        OnTechButtonClick(0);
+    }
+
+    private void OnTechButtonClick(int newIndex)
+    {
+        for (int i = 0; i < _techButtonArr.Length; i++)
+        {
+            if (i == newIndex)
+            {
+                _techButtonArr[i].style.unityBackgroundImageTintColor = new Color(activeColor.r, activeColor.g, activeColor.b, 0.1f);
+                _techButtonArr[i].Q<VisualElement>("OutLine").style.unityBackgroundImageTintColor = activeColor;
+                _techButtonArr[i].Q<Label>().style.color = activeColor;
+            }
+            else
+            {
+                _techButtonArr[i].style.unityBackgroundImageTintColor = new Color(inactiveColor.r, inactiveColor.g, inactiveColor.b, 0f);
+                _techButtonArr[i].Q<VisualElement>("OutLine").style.unityBackgroundImageTintColor = inactiveColor;
+                _techButtonArr[i].Q<Label>().style.color = inactiveColor;
+            }
+        }
+        PlayerBroker.CompanionTechRenderSet(newIndex);
+        InitTechClickPanel(newIndex, 0,0);
+
+        InitTechClickPanel(newIndex, 1,0);
+        InitTechClickPanel(newIndex, 1,1);
+        
+        InitTechClickPanel(newIndex, 2,0);
+        InitTechClickPanel(newIndex, 2,1);
+        
+        InitTechClickPanel(newIndex, 3,0);
+        InitTechClickPanel(newIndex, 3,1);
+    }
+    private void InitTechClickPanel(int companionIndex, int techIndex_0, int techIndex_1)
+    {
+        CompanionStatus companionStatus = CompanionManager.instance.companionArr[companionIndex].companionStatus;
+        CompanionTechData companionTechData;
+        VisualElement techClickPanel = _panelArr[1].Q<VisualElement>($"TechClickPanel_{techIndex_0}_{techIndex_1}");
+        switch (techIndex_0)
+        {
+            default:
+                companionTechData = companionStatus.companionTechData_0;
+                break;
+            case 1:
+                if (techIndex_1 == 0)
+                    companionTechData = companionStatus.companionTechData_1_0;
+                else
+                    companionTechData = companionStatus.companionTechData_1_1;
+                break;
+            case 2:
+                if (techIndex_1 == 0)
+                    companionTechData = companionStatus.companionTechData_2_0;
+                else
+                    companionTechData = companionStatus.companionTechData_2_1;
+                break;
+            case 3:
+                if (techIndex_1 == 0)
+                    companionTechData = companionStatus.companionTechData_3_0;
+                else
+                    companionTechData = companionStatus.companionTechData_3_1;
+                break;
+        }
+        techClickPanel.Q<Label>("TechNameLabel").text = companionTechData.techName;
+        techClickPanel.Q<Button>("TechButton").RegisterCallback<ClickEvent>(evt=>OnClickTechVe(companionIndex, techIndex_0, techIndex_1));
+    }
+    private void OnClickTechVe(int companionIndex, int techIndex_0, int techIndex_1)
+    {
+        _companionTechUI.ActiveUI(companionIndex, techIndex_0, techIndex_1);
+    }
+    private void OnClickCompanionVe(int companionIndex)
     {
         _companionInfoUI.ActiveUI(companionIndex);
     }
 
-    private void OnClickButton(int currentIndex)
+    private void OnPanelButtonClick(int currentIndex)
     {
         for (int i = 0; i < _panelArr.Length; i++)
         {
             if (i == currentIndex)
             {
                 _panelArr[i].style.display = DisplayStyle.Flex;
-                _buttonArr[i].style.unityBackgroundImageTintColor = new Color(activeColor.r, activeColor.g, activeColor.b, 0.1f);
-                _buttonArr[i].Q<VisualElement>("OutLine").style.unityBackgroundImageTintColor = activeColor;
-                _buttonArr[i].Q<Label>().style.color = activeColor;
+                _panelButtonArr[i].style.unityBackgroundImageTintColor = new Color(activeColor.r, activeColor.g, activeColor.b, 0.1f);
+                _panelButtonArr[i].Q<VisualElement>("OutLine").style.unityBackgroundImageTintColor = activeColor;
+                _panelButtonArr[i].Q<Label>().style.color = activeColor;
             }
             else
             {
                 _panelArr[i].style.display = DisplayStyle.None;
-                _buttonArr[i].style.unityBackgroundImageTintColor = new Color(inactiveColor.r, inactiveColor.g, inactiveColor.b, 0f);
-                _buttonArr[i].Q<VisualElement>("OutLine").style.unityBackgroundImageTintColor = inactiveColor;
-                _buttonArr[i].Q<Label>().style.color = inactiveColor;
+                _panelButtonArr[i].style.unityBackgroundImageTintColor = new Color(inactiveColor.r, inactiveColor.g, inactiveColor.b, 0f);
+                _panelButtonArr[i].Q<VisualElement>("OutLine").style.unityBackgroundImageTintColor = inactiveColor;
+                _panelButtonArr[i].Q<Label>().style.color = inactiveColor;
             }
         }
     }
