@@ -75,7 +75,7 @@ public class StoryUI : MonoBehaviour
             _fadeElement.style.opacity = 0f;
             _main.style.display = DisplayStyle.None;
             cameracontroller.SwitchToCamera(true);
-            BattleBroker.SwitchBattle();
+            BattleBroker.SwitchToBattle();
         }
     }
     public void SetStoryText(string talker, string text, Color color)
@@ -85,6 +85,6 @@ public class StoryUI : MonoBehaviour
     }
     private void Skip()
     {
-        BattleBroker.SwitchBattle();
+        BattleBroker.SwitchToBattle();
     }
 }

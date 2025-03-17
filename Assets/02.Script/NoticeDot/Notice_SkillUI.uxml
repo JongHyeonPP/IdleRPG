@@ -1,0 +1,4 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:Template name="NoticeDot" src="project://database/Assets/02.Script/NoticeDot/NoticeDot.uxml?fileID=9197481963319205126&amp;guid=373d7667e06f6d94db8dcfc732fc89f9&amp;type=3#NoticeDot" />
+    <engine:Instance template="NoticeDot" name="SkillAcquire" picking-mode="Ignore" style="bottom: 1046px; right: 43px; position: absolute;" />
+</engine:UXML>

@@ -3,5 +3,5 @@
         <engine:Label name="TextLabel" style="width: 100%; height: 711px; font-size: 70px;" />
         <engine:Button text="스킵하기" name="SkipButton" style="top: 532px; position: absolute; background-color: rgba(0, 0, 0, 0.55); width: 300px; height: 150px; font-size: 61px; left: 764px; right: 3px;" />
     </engine:VisualElement>
-    <engine:VisualElement name="FadeElement" style="flex-grow: 1; background-color: rgb(0, 0, 0); display: flex;" />
+    <engine:VisualElement name="FadeElement" style="flex-grow: 1; background-color: rgb(0, 0, 0); display: none;" />
 </engine:UXML>

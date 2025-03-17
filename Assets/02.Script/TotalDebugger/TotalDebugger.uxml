@@ -4,6 +4,7 @@
     <engine:Template name="WeaponCategoriPanel" src="project://database/Assets/02.Script/TotalDebugger/CategoriPanel/WeaponCategoriPanel.uxml?fileID=9197481963319205126&amp;guid=2f628829bea5a6348ad92fdaad03e485&amp;type=3#WeaponCategoriPanel" />
     <engine:Template name="SkillCategoriPanel" src="project://database/Assets/02.Script/TotalDebugger/CategoriPanel/SkillCategoriPanel.uxml?fileID=9197481963319205126&amp;guid=afcce273fcc77274ba79aba8d216ede1&amp;type=3#SkillCategoriPanel" />
     <engine:Template name="MaterialCategoriPanel" src="project://database/Assets/02.Script/TotalDebugger/CategoriPanel/MaterialCategoriPanel.uxml?fileID=9197481963319205126&amp;guid=b38a715f2ff085340ae0f915edcf55b4&amp;type=3#MaterialCategoriPanel" />
+    <engine:Template name="CompanionCategoriPanel" src="project://database/Assets/02.Script/TotalDebugger/CategoriPanel/CompanionCategoriPanel.uxml?fileID=9197481963319205126&amp;guid=e9c255b9afc76bc45a4bb548a860033b&amp;type=3#CompanionCategoriPanel" />
     <engine:VisualElement name="LoadedPanel" style="height: 100%; flex-direction: column; background-color: rgb(115, 115, 115);">
         <engine:VisualElement name="CategoriPanel" style="flex-grow: 0; height: 47px; flex-direction: row; align-items: center; margin-left: 11px;">
             <engine:Button text="Currency" name="CurrencyButton" focusable="false" style="width: 100px; height: 30px;" />
@@ -18,6 +19,7 @@
             <engine:Instance template="StatusCategoriPanel" name="StatusCategoriPanel" style="height: 100%; flex-grow: 1; position: absolute; width: 100%;" />
             <engine:Instance template="WeaponCategoriPanel" name="WeaponCategoriPanel" style="flex-grow: 1; position: absolute; width: 100%; height: 100%;" />
             <engine:Instance template="SkillCategoriPanel" name="SkillCategoriPanel" style="height: 100%; position: absolute; display: none; width: 100%;" />
+            <engine:Instance template="CompanionCategoriPanel" name="CompanionCategoriPanel" style="position: absolute; width: 100%; height: 100%;" />
             <engine:Instance template="MaterialCategoriPanel" name="MaterialCategoriPanel" style="height: 100%; position: absolute; display: none; width: 100%;" />
         </engine:VisualElement>
         <engine:VisualElement name="BottomPadding" style="flex-grow: 1; background-color: rgb(58, 58, 58);" />

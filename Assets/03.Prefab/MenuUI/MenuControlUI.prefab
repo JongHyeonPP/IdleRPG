@@ -48,7 +48,7 @@ MonoBehaviour:
   m_PanelSettings: {fileID: 11400000, guid: f2f0eb129a3062647b27e4d7a574aeaa, type: 2}
   m_ParentUI: {fileID: 0}
   sourceAsset: {fileID: 9197481963319205126, guid: 66378e23e8801664780d3b71e5fb2add, type: 3}
-  m_SortingOrder: 1
+  m_SortingOrder: 3
   m_WorldSpaceSizeMode: 1
   m_WorldSpaceWidth: 1920
   m_WorldSpaceHeight: 1080
@@ -68,3 +68,7 @@ MonoBehaviour:
   weaponUI: {fileID: 0}
   skillUI: {fileID: 0}
   weaponBookUI: {fileID: 0}
+  companionUI: {fileID: 0}
+  storeUI: {fileID: 0}
+  notice: {fileID: 0}
+  equipedSkillUI: {fileID: 0}

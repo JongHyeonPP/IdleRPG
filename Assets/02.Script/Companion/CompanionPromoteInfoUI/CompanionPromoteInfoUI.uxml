@@ -1,0 +1,46 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:Template name="CompanionPromoteLabelSet" src="project://database/Assets/02.Script/Companion/CompanionPromoteInfoUI/CompanionPromoteLabelSet.uxml?fileID=9197481963319205126&amp;guid=9444ef7ffb4a5094fa6d7427b24f379d&amp;type=3#CompanionPromoteLabelSet" />
+    <engine:Template name="ExitButton" src="project://database/Assets/02.Script/DefaultUI/ExitButton.uxml?fileID=9197481963319205126&amp;guid=56c49e16b4a3e0641931b48714473123&amp;type=3#ExitButton" />
+    <engine:VisualElement name="Background" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.55);" />
+    <engine:VisualElement name="CompanionPromoteInfoUI" style="flex-grow: 0; position: absolute; background-color: rgba(152, 97, 6, 0); align-self: center; width: 985px; height: 1432px; font-size: 39px; color: rgb(255, 255, 255); background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/Window.png?fileID=21300000&amp;guid=63655f4cc96936340989153c4eccea19&amp;type=3#Window&quot;); -unity-background-image-tint-color: rgb(115, 75, 30); align-items: center; justify-content: center; -unity-font-definition: url(&quot;project://database/Assets/05.Font/Maplestory%20Light.ttf?fileID=12800000&amp;guid=b7853b5ad26567e41a3c4210e64c5419&amp;type=3#Maplestory Light&quot;); letter-spacing: 10px; text-shadow: 2px 2px 0 rgb(0, 0, 0); bottom: 412px;">
+        <engine:VisualElement name="Frame" style="flex-grow: 1; position: absolute; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/WindowStroke.png?fileID=21300000&amp;guid=8a7a753f989769c4ebd7f236420af813&amp;type=3#WindowStroke&quot;); width: 102%; height: 102%;" />
+        <engine:VisualElement name="MainPanel" style="flex-grow: 0; width: 92%; height: 96%; flex-shrink: 0;">
+            <engine:VisualElement name="TitlePanel" style="flex-grow: 0; height: 114px; background-color: rgba(0, 0, 0, 0); flex-direction: row; justify-content: center; align-items: center; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/TitleBar.png?fileID=2800000&amp;guid=a331d5e1dd3208d4ab0085903c241b8a&amp;type=3#TitleBar&quot;); padding-bottom: 29px; font-size: 45px; -unity-text-outline-color: rgb(0, 0, 0);">
+                <engine:Label text="동료 승급 옵션" />
+            </engine:VisualElement>
+            <engine:VisualElement name="MainPanel_0" style="flex-grow: 0; height: 210px; align-items: center; justify-content: center;">
+                <engine:Label text="클로버를 사용하여 랜덤 옵션을 부여할 수 있습니다." style="font-size: 35px;" />
+            </engine:VisualElement>
+            <engine:VisualElement name="MainPanel_1" style="flex-grow: 0; height: 746px; background-color: rgba(0, 0, 0, 0.39); border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px; font-size: 35px; justify-content: center; padding-top: 50px; padding-bottom: 50px;">
+                <engine:Instance template="CompanionPromoteLabelSet" name="PowerLabelSet" style="flex-grow: 1;" />
+                <engine:Instance template="CompanionPromoteLabelSet" name="CriticalDamageLabelSet" style="flex-grow: 1;" />
+                <engine:Instance template="CompanionPromoteLabelSet" name="MaxHpLabelSet" style="flex-grow: 1;" />
+                <engine:Instance template="CompanionPromoteLabelSet" name="HpRecoverLabelSet" style="flex-grow: 1;" />
+                <engine:Instance template="CompanionPromoteLabelSet" name="MaxMpLabelSet" style="flex-grow: 1;" />
+                <engine:Instance template="CompanionPromoteLabelSet" name="MpRecoverLabelSet" style="flex-grow: 1;" />
+                <engine:Instance template="CompanionPromoteLabelSet" name="GoldAscendLabelSet" style="flex-grow: 1;" />
+                <engine:Instance template="CompanionPromoteLabelSet" name="ResistLabelSet" style="flex-grow: 1;" />
+                <engine:Instance template="CompanionPromoteLabelSet" name="PenetrationLabelSet" style="flex-grow: 1;" />
+                <engine:Instance template="CompanionPromoteLabelSet" name="ExpAscendLabelSet" style="flex-grow: 1;" />
+            </engine:VisualElement>
+            <engine:VisualElement name="MainPanel_2" style="flex-grow: 1; padding-left: 57px; padding-top: 42px; font-size: 35px;">
+                <engine:Label text="*카테고리 간의 부여 확률은 모두 동일합니다." />
+                <engine:Label text="*옵션 색상별 확률" />
+                <engine:VisualElement name="ProbabilityLabelSet" style="flex-direction: row; color: rgb(195, 195, 195); padding-left: 20px;">
+                    <engine:Label text="0%" name="CommonLabel" />
+                    <engine:Label text="/" name="SeparatorLabel" style="margin-right: 5px; margin-left: 5px;" />
+                    <engine:Label text="0%" name="UncommonLabel" />
+                    <engine:Label text="/" name="SeparatorLabel" style="margin-right: 5px; margin-left: 5px;" />
+                    <engine:Label text="0%" name="RareLabel" />
+                    <engine:Label text="/" name="SeparatorLabel" style="margin-right: 5px; margin-left: 5px;" />
+                    <engine:Label text="0%" name="UniqueLabel" />
+                    <engine:Label text="/" name="SeparatorLabel" style="margin-right: 5px; margin-left: 5px;" />
+                    <engine:Label text="0%" name="LegendaryLabel" />
+                    <engine:Label text="/" name="SeparatorLabel" style="margin-right: 5px; margin-left: 5px;" />
+                    <engine:Label text="0%" name="MythicLabel" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+        </engine:VisualElement>
+        <engine:Instance template="ExitButton" name="ExitButton" style="position: absolute; bottom: -160px;" />
+    </engine:VisualElement>
+</engine:UXML>

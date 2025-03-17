@@ -1,0 +1,11 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:Template name="NoticeDot" src="project://database/Assets/02.Script/NoticeDot/NoticeDot.uxml?fileID=9197481963319205126&amp;guid=373d7667e06f6d94db8dcfc732fc89f9&amp;type=3#NoticeDot" />
+    <engine:VisualElement name="Parent" picking-mode="Ignore" style="flex-grow: 1; position: absolute; bottom: 0; flex-direction: row; justify-content: center; width: 100%; height: 106px; align-self: center; left: -14px;">
+        <engine:Instance template="NoticeDot" name="MenuButton_0" picking-mode="Ignore" style="flex-grow: 1; align-items: flex-end;" />
+        <engine:Instance template="NoticeDot" name="MenuButton_1" picking-mode="Ignore" style="flex-grow: 1; align-items: flex-end;" />
+        <engine:Instance template="NoticeDot" name="MenuButton_2" picking-mode="Ignore" style="flex-grow: 1; align-items: flex-end;" />
+        <engine:Instance template="NoticeDot" name="MenuButton_3" picking-mode="Ignore" style="flex-grow: 1; align-items: flex-end;" />
+        <engine:Instance template="NoticeDot" name="MenuButton_4" picking-mode="Ignore" style="flex-grow: 1; align-items: flex-end;" />
+        <engine:Instance template="NoticeDot" name="MenuButton_5" picking-mode="Ignore" style="flex-grow: 1; align-items: flex-end;" />
+    </engine:VisualElement>
+</engine:UXML>

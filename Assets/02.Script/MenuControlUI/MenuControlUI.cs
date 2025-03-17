@@ -16,19 +16,21 @@ public class MenuControlUI : MonoBehaviour
     //[SerializeField] AdventureUI adventureUI;
     [SerializeField] StoreUI storeUI;
     //Etc
-    public VisualElement root;
-    [SerializeField] EquipedSkillUI equipedSkillUI;
+    public VisualElement root { private set; get; }
+    public UIDocument notice;
     private readonly NoticeDot[] _noticeDotArr = new NoticeDot[6];
+    [SerializeField] EquipedSkillUI equipedSkillUI;
     private VisualElement[] buttonArr;
     private int currentIndex = -1;
     private void Awake()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
-        UIBroker.OnMenuUINotice += OnMenuUINotice;
-        
-
         var mainElement = root.Q<VisualElement>("ButtonParent");
-        
+        var noticeParent = notice.rootVisualElement.Q<VisualElement>("Parent");
+        for (int i = 0; i < 6; i++)
+        {
+            _noticeDotArr[i] = new NoticeDot(noticeParent.ElementAt(i), this);
+        }
         buttonArr = new VisualElement[mainElement.childCount];
         for (int i = 0; i < mainElement.childCount; i++)
         {
@@ -36,8 +38,7 @@ public class MenuControlUI : MonoBehaviour
             VisualElement menuButton = mainElement.ElementAt(localIndex);
             Button button = menuButton.Q<Button>();
             button.RegisterCallback<ClickEvent>(evt => ChangeUI(localIndex));
-            _noticeDotArr[i] = new(menuButton, this);
-            _noticeDotArr[i].SetParentToRoot();
+            UIBroker.OnMenuUINotice += OnMenuUINotice;
             switch (i)
             {
                 case 0:
@@ -61,9 +62,18 @@ public class MenuControlUI : MonoBehaviour
             }
             buttonArr[i] = button;
         }
-        ChangeUI(0);
+        
 
     }
+
+    private void OnMenuUINotice(int dotIndex, bool isActive)
+    {
+        if (isActive)
+            _noticeDotArr[dotIndex].StartNotice();
+        else
+            _noticeDotArr[dotIndex].StopNotice();
+    }
+
     private void Start()
     {
         var rootChild = root.Q<VisualElement>("MenuControlUI");
@@ -82,34 +92,20 @@ public class MenuControlUI : MonoBehaviour
         skillUI.root.ElementAt(0).style.height = Length.Percent(100);
         companionUI.root.ElementAt(0).style.height = Length.Percent(100);
         storeUI.root.ElementAt(0).style.height = Length.Percent(100);
-    }
-
-    private void OnMenuUINotice(int menuIndex, bool isActive)
-    {
-        if (isActive)
-        {
-            _noticeDotArr[menuIndex].StartNotice();
-        }
-        else
-        {
-            _noticeDotArr[menuIndex].StopNotice();
-        }
+        ChangeUI(0);
     }
 
     private void ChangeUI(int index)
     {
         if (currentIndex == index)
             return;
-
-
         UIBroker.OnMenuUIChange?.Invoke(index);
-
         buttonArr[index].style.top = -30f;
         if (currentIndex > -1)
         {
-            _noticeDotArr[index].OnPositionChange(0, -30);
+            _noticeDotArr[index].OnPositionSet(0, -30);
             buttonArr[currentIndex].style.top = 0f;
-            _noticeDotArr[currentIndex].OnPositionChange(0, 30);
+            _noticeDotArr[currentIndex].OnPositionSet(0, 0);
         }
         currentIndex = index;
     }

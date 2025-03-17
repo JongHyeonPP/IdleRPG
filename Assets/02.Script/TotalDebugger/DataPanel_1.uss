@@ -1,0 +1,17 @@
+#DropdownPanel .unity-popup-field__label {
+    min-width: 60px;
+    font-size: 21px;
+    -unity-text-align: middle-left;
+}
+
+#DropdownPanel .unity-base-field__input {
+    min-width: 120px;
+    max-width: 120px;
+    min-height: 40px;
+    max-height: 40px;
+}
+
+#DropdownPanel .unity-base-popup-field__text {
+    font-size: 15px;
+    margin-left: 10px;
+}

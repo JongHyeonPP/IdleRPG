@@ -17,13 +17,6 @@ public class SkillManager : MonoBehaviour
     public SkillData defaultAttackData;
     [Header("SkillAcquireInfo")]
     [SerializeField] SkillAcquireInfo[] acquireInfoArr;//Inspector
-    [Header("Fragment")]
-    [SerializeField] Sprite commonFragmentSprite;
-    [SerializeField] Sprite uncommonFragmentSprite;
-    [SerializeField] Sprite rareFragmentSprite;
-    [SerializeField] Sprite uniqueFragmentSprite;
-    [SerializeField] Sprite legendaryFragmentSprite;
-    [SerializeField] Sprite mythicFragmentSprite;
     private void Awake()
     {
         instance = this;
@@ -48,25 +41,6 @@ public class SkillManager : MonoBehaviour
     public SkillAcquireInfo GetInfo(int i)
     {
         return acquireInfoArr[i];
-    }
-    public Sprite GetFragmentSprite(Rarity rarity)
-    {
-        switch (rarity)
-        {
-            case Rarity.Common:
-                return commonFragmentSprite;
-            case Rarity.Uncommon:
-                return uncommonFragmentSprite;
-            case Rarity.Rare:
-                return rareFragmentSprite;
-            case Rarity.Unique:
-                return uniqueFragmentSprite;
-            case Rarity.Legendary:
-                return legendaryFragmentSprite;
-            case Rarity.Mythic:
-                return mythicFragmentSprite;
-        }
-        return null;
     }
     public string GetParsedComplexExplain(SkillData skillData, int skillLevel, string colorHex = "")
     {
@@ -96,25 +70,25 @@ public class SkillManager : MonoBehaviour
         return sb.ToString();
     }
 
-#if UNITY_EDITOR
-    [ContextMenu("SetUidAsObjectName")]
-    public void SetUidAsObjectName()
-    {
-        foreach (var x in playerSkillArr)
-        {
-            x.uid = x.name;
-            x.skillName = x.name;
-            EditorUtility.SetDirty(x);
-        }
-        foreach (var x in companionSkillArr)
-        {
-            x.uid = x.name;
-            x.skillName = x.name;
-            EditorUtility.SetDirty(x);
-        }
+//#if UNITY_EDITOR
+//    [ContextMenu("SetUidAsObjectName")]
+//    public void SetUidAsObjectName()
+//    {
+//        foreach (var x in playerSkillArr)
+//        {
+//            x.uid = x.name;
+//            x.skillName = x.name;
+//            EditorUtility.SetDirty(x);
+//        }
+//        foreach (var x in companionSkillArr)
+//        {
+//            x.uid = x.name;
+//            x.skillName = x.name;
+//            EditorUtility.SetDirty(x);
+//        }
         
-        AssetDatabase.SaveAssets();
-        AssetDatabase.Refresh();
-    }
-#endif
+//        AssetDatabase.SaveAssets();
+//        AssetDatabase.Refresh();
+//    }
+//#endif
 }

@@ -22,7 +22,7 @@ public class StoryManager : MonoBehaviour
     }
     private void OnEnable()
     {
-        BattleBroker.SwitchBattle += ClearStoryPrefabs;
+        BattleBroker.SwitchToBattle += ClearStoryPrefabs;
     }
    
 

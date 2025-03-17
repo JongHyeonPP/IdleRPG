@@ -2,7 +2,7 @@
     <Style src="project://database/Assets/02.Script/Skill/Info/SkillInfoUI.uss?fileID=7433441132597879392&amp;guid=3f65db093b0b9ba4289fb9043e9f6615&amp;type=3#SkillInfoUI" />
     <engine:VisualElement name="SkillInfoUI" picking-mode="Ignore" style="flex-grow: 1; justify-content: center; align-items: center; -unity-font-definition: url(&quot;project://database/Assets/05.Font/Maplestory%20Light.ttf?fileID=12800000&amp;guid=b7853b5ad26567e41a3c4210e64c5419&amp;type=3#Maplestory Light&quot;); -unity-text-outline-width: 0.5px; -unity-text-outline-color: rgb(0, 0, 0); letter-spacing: 5px;">
         <engine:VisualElement name="MainPanel" style="flex-grow: 0; height: 828px; width: 1008px; align-items: center; justify-content: center;">
-            <engine:VisualElement name="Vertical" style="flex-grow: 0; background-color: rgb(132, 92, 47); width: 912px; height: 735px;">
+            <engine:VisualElement name="Vertical" style="flex-grow: 0; background-color: rgb(132, 92, 47); width: 912px; height: 735px; background-image: none;">
                 <engine:VisualElement name="Upper" style="flex-grow: 0; padding-top: 21px; padding-left: 41px; flex-direction: row; height: 271px;">
                     <engine:VisualElement name="SkillIconArea" style="flex-grow: 0; width: 200px; height: 200px;">
                         <engine:VisualElement name="SkillIcon" style="flex-grow: 0; flex-shrink: 0; width: 200px; height: 200px; background-image: url(&quot;project://database/Assets/Asset/Skill_Icon_Pack/red/red_01.PNG?fileID=2800000&amp;guid=275a5bfa4f581a5459d5535d663454ef&amp;type=3#red_01&quot;); justify-content: flex-end; background-size: 90% 90%;">

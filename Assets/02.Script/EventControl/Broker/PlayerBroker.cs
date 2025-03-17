@@ -1,7 +1,5 @@
 using EnumCollection;
 using System;
-using System.Collections.Generic;
-using UnityEngine;
 
 public static class PlayerBroker
 {
@@ -31,4 +29,9 @@ public static class PlayerBroker
     public static Action<string, int> OnSkillLevelSet;//Skill Id, Skill Level
     //스킬 파편 개수 바꼈을 때
     public static Action<Rarity, int> OnFragmentSet;//Skill Id, Skill Level
+
+    public static Action<int, int, (StatusType, Rarity)?> OnCompanionPromoteEffectSet;// CompanionIndex, EffectIndex, Value
+    public static Action<int, int, int> OnCompanionPromoteTechSet;//CompanionIndex, TechIndex, Value
+
+    public static Action<int> CompanionTechRenderSet;
 }
