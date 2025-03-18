@@ -2,10 +2,10 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
-public class Struct_EnumTuple_DictConverter<K, T1, T2> : JsonConverter
+public class Struct_StructTuple_DictArrConverter<K, T1, T2> : JsonConverter
     where K : struct
-    where T1 : Enum
-    where T2 : Enum
+    where T1 : struct
+    where T2 : struct
 {
     public override bool CanConvert(Type objectType)
     {
@@ -41,10 +41,10 @@ public class Struct_EnumTuple_DictConverter<K, T1, T2> : JsonConverter
             foreach (var kvp in arrayData[i])
             {
                 if (TryParseStruct(kvp.Key, out K parsedK) &&
-                    Enum.TryParse(typeof(T1), kvp.Value[0], out object parsedT1) &&
-                    Enum.TryParse(typeof(T2), kvp.Value[1], out object parsedT2))
+                    TryParseStruct(kvp.Value[0], out T1 parsedT1) &&
+                    TryParseStruct(kvp.Value[1], out T2 parsedT2))
                 {
-                    dict[parsedK] = ((T1)parsedT1, (T2)parsedT2);
+                    dict[parsedK] = (parsedT1, parsedT2);
                 }
             }
             result[i] = dict;
@@ -55,7 +55,17 @@ public class Struct_EnumTuple_DictConverter<K, T1, T2> : JsonConverter
 
     private bool TryParseStruct<T>(string input, out T result) where T : struct
     {
-        if (typeof(T) == typeof(int))
+        Type type = typeof(T);
+
+        if (type.IsEnum)
+        {
+            if (Enum.TryParse(type, input, out object parsedEnum))
+            {
+                result = (T)parsedEnum;
+                return true;
+            }
+        }
+        else if (type == typeof(int))
         {
             if (int.TryParse(input, out int parsedInt))
             {
@@ -63,7 +73,7 @@ public class Struct_EnumTuple_DictConverter<K, T1, T2> : JsonConverter
                 return true;
             }
         }
-        else if (typeof(T) == typeof(float))
+        else if (type == typeof(float))
         {
             if (float.TryParse(input, out float parsedFloat))
             {
@@ -71,11 +81,27 @@ public class Struct_EnumTuple_DictConverter<K, T1, T2> : JsonConverter
                 return true;
             }
         }
-        else if (typeof(T) == typeof(bool))
+        else if (type == typeof(bool))
         {
             if (bool.TryParse(input, out bool parsedBool))
             {
                 result = (T)(object)parsedBool;
+                return true;
+            }
+        }
+        else if (type == typeof(double))
+        {
+            if (double.TryParse(input, out double parsedDouble))
+            {
+                result = (T)(object)parsedDouble;
+                return true;
+            }
+        }
+        else if (type == typeof(decimal))
+        {
+            if (decimal.TryParse(input, out decimal parsedDecimal))
+            {
+                result = (T)(object)parsedDecimal;
                 return true;
             }
         }

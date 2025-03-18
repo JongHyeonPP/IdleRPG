@@ -181,7 +181,7 @@ public class GameManager : MonoBehaviour
         SaveLocalData();
     }
     // Context Menu를 이용하여 companionPromote에 고정된 값 추가
-    [ContextMenu("Fill Companion Promote Data")]
+    [ContextMenu("Fill Companion Promote")]
     public void FillCompanionPromote()
     {
         if (_gameData == null)
@@ -211,7 +211,7 @@ public class GameManager : MonoBehaviour
     }
 
     // Context Menu를 이용하여 companionPromote 값 출력
-    [ContextMenu("Print Companion Promote Data")]
+    [ContextMenu("Print Companion Promote")]
     public void PrintCompanionPromote()
     {
         if (_gameData == null)
@@ -229,20 +229,31 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-    [ContextMenu("Initialize Companion Job Degrees")]
-    public void InitializeCompanionJobDegrees()
+    [ContextMenu("Fill Stat Promote")]
+    public void FillStatPromote()
     {
-        int[][] companionJobDegree = _gameData.companionPromoteTech;
+        _gameData.stat_Promote.Clear();
 
-        companionJobDegree[0][0] = 0;
-        companionJobDegree[0][1] = 1;
+        _gameData.stat_Promote[1] = (StatusType.MaxHp, 5);
+        _gameData.stat_Promote[2] = (StatusType.Power, 10);
+        _gameData.stat_Promote[3] = (StatusType.HpRecover, 7);
+        _gameData.stat_Promote[4] = (StatusType.Critical, 3);
+        _gameData.stat_Promote[5] = (StatusType.CriticalDamage, 8);
+        _gameData.stat_Promote[6] = (StatusType.Resist, 4);
+        _gameData.stat_Promote[7] = (StatusType.Penetration, 6);
+        _gameData.stat_Promote[8] = (StatusType.GoldAscend, 2);
+        _gameData.stat_Promote[9] = (StatusType.ExpAscend, 1);
+        _gameData.stat_Promote[10] = (StatusType.MaxMp, 0);
+        _gameData.stat_Promote[11] = (StatusType.MpRecover, 0);
 
-        companionJobDegree[1][0] = 3;
-        companionJobDegree[1][1] = 0;
-
-        companionJobDegree[2][0] = 2;
-        companionJobDegree[2][1] = 1;
-
-        Debug.Log("Companion job degrees initialized.");
+        SaveLocalData();
+    }
+    [ContextMenu("Print Stat Promote")]
+    public void PrintStatPromote()
+    {
+        foreach (var kvp in _gameData.stat_Promote)
+        {
+            Debug.Log($"ID: {kvp.Key}, Type: {kvp.Value.Item1}, Value: {kvp.Value.Item2}");
+        }
     }
 }

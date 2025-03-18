@@ -195,30 +195,30 @@ public class PromoteAbilityUI : MonoBehaviour
     }
     private void SaveAbilityData(StatusType abilityName, float abilityValue)
     {
-        if (_gameData.stat_Promote.ContainsKey(abilityName))
-        {
-            _gameData.stat_Promote[abilityName] = abilityValue; 
-        }
-        else
-        {
-            _gameData.stat_Promote.Add(abilityName, abilityValue); 
-        }
+        //if (_gameData.stat_Promote.ContainsKey(abilityName))
+        //{
+        //    _gameData.stat_Promote[abilityName] = abilityValue; 
+        //}
+        //else
+        //{
+        //    _gameData.stat_Promote.Add(abilityName, abilityValue); 
+        //}
 
     }
     private void LoadSavedAbilities()
     {
-        foreach (var entry in _gameData.stat_Promote)
-        {
-            var abilityButton = root.Q<Button>("AbilityButton");
-            var abilityLabel = abilityButton.Q<Label>("AbilityLabel");
-            string abilityNameInKorean = GetKoreanAbilityName(entry.Key.ToString());
-            abilityLabel.text = $"{abilityNameInKorean}: {entry.Value}%";
+        //foreach (var entry in _gameData.stat_Promote)
+        //{
+        //    var abilityButton = root.Q<Button>("AbilityButton");
+        //    var abilityLabel = abilityButton.Q<Label>("AbilityLabel");
+        //    string abilityNameInKorean = GetKoreanAbilityName(entry.Key.ToString());
+        //    abilityLabel.text = $"{abilityNameInKorean}: {entry.Value}%";
 
-            int rankIndex = Mathf.Clamp((int)entry.Value / 10, 0, labelColors.Length - 1);
-            Color selectedColor = labelColors[rankIndex];
-            selectedColor.a = 1.0f;
-            abilityLabel.style.color = new StyleColor(selectedColor);
-        }
+        //    int rankIndex = Mathf.Clamp((int)entry.Value / 10, 0, labelColors.Length - 1);
+        //    Color selectedColor = labelColors[rankIndex];
+        //    selectedColor.a = 1.0f;
+        //    abilityLabel.style.color = new StyleColor(selectedColor);
+        //}
     }
     private StatusType GetStatusTypeFromAbilityName(string abilityName)
     {

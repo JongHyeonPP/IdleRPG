@@ -538,109 +538,95 @@ public class TotalDebugger : EditorWindow
     {
         ScrollView scrollView = statScrollViewArr[0];
         scrollView.Add(CreateSeparatePanel("Gold Stat"));
-        for (int i = 0; i < 5; i++)
+
+        // 필요한 StatusType만 리스트로 정의 (필요한 경우 필터링 가능)
+        StatusType[] goldStatTypes = new StatusType[]
+        {
+        StatusType.Power,
+        StatusType.MaxHp,
+        StatusType.HpRecover,
+        StatusType.Critical,
+        StatusType.CriticalDamage
+        };
+
+        foreach (StatusType type in goldStatTypes)
         {
             TemplateContainer dataPanel = dataPanel_0.CloneTree();
             scrollView.Add(dataPanel);
-            switch (i)
+
+            // _gameData.statLevel_Gold에서 값이 없으면 0을 기본값으로 설정
+            if (!_gameData.statLevel_Gold.ContainsKey(type))
             {
-                case 0://Power
-                    SetDataPanel(dataPanel, "Gold::Power", "Power", _gameData.statLevel_Gold[StatusType.Power].ToString(), Categori.Stat, false, 120f, 33f);
-                    PlayerBroker.OnGoldStatusLevelSet += (type, level) =>
-                    {
-                        if (type == StatusType.Power)
-                            dataPanel.Q<Label>("ValueLabel").text = _gameData.statLevel_Gold[StatusType.Power].ToString();
-                    };
-                    break;
-                case 1://MaxHp
-                    SetDataPanel(dataPanel, "Gold::MaxHp", "MaxHp", _gameData.statLevel_Gold[StatusType.MaxHp].ToString(), Categori.Stat, false, 120f, 33f);
-                    PlayerBroker.OnGoldStatusLevelSet += (type, level) =>
-                    {
-                        if (type == StatusType.MaxHp)
-                            dataPanel.Q<Label>("ValueLabel").text = _gameData.statLevel_Gold[StatusType.MaxHp].ToString();
-                    };
-                    break;
-                case 2://HpRecover
-                    SetDataPanel(dataPanel, "Gold::HpRecover", "HpRecover", _gameData.statLevel_Gold[StatusType.HpRecover].ToString(), Categori.Stat, false, 120f, 33f);
-                    PlayerBroker.OnGoldStatusLevelSet += (type, level) =>
-                    {
-                        if (type == StatusType.HpRecover)
-                            dataPanel.Q<Label>("ValueLabel").text = _gameData.statLevel_Gold[StatusType.HpRecover].ToString();
-                    };
-                    break;
-                case 3://Critical
-                    SetDataPanel(dataPanel, "Gold::Critical", "Critical", _gameData.statLevel_Gold[StatusType.Critical].ToString(), Categori.Stat, false, 120f, 33f);
-                    PlayerBroker.OnGoldStatusLevelSet += (type, level) =>
-                    {
-                        if (type == StatusType.Critical)
-                            dataPanel.Q<Label>("ValueLabel").text = _gameData.statLevel_Gold[StatusType.Critical].ToString();
-                    };
-                    break;
-                case 4://CriticalDamage
-                    SetDataPanel(dataPanel, "Gold::CriticalDamage", "Critical Damage", _gameData.statLevel_Gold[StatusType.CriticalDamage].ToString(), Categori.Stat, false, 120f, 25f);
-                    PlayerBroker.OnGoldStatusLevelSet += (type, level) =>
-                    {
-                        if (type == StatusType.CriticalDamage)
-                            dataPanel.Q<Label>("ValueLabel").text = _gameData.statLevel_Gold[StatusType.CriticalDamage].ToString();
-                    };
-                    break;
+                _gameData.statLevel_Gold[type] = 0;
             }
+
+            // SetDataPanel 실행
+            SetDataPanel(
+                dataPanel,
+                $"Gold::{type}",
+                type.ToString(),
+                _gameData.statLevel_Gold[type].ToString(),
+                Categori.Stat,
+                false,
+                120f,
+                25f
+            );
+
+            // 값 변경 시 업데이트 처리
+            PlayerBroker.OnGoldStatusLevelSet += (changedType, level) =>
+            {
+                if (changedType == type)
+                    dataPanel.Q<Label>("ValueLabel").text = _gameData.statLevel_Gold.ContainsKey(type) ? _gameData.statLevel_Gold[type].ToString() : "0";
+            };
         }
     }
     private void InitStatPointStat()
     {
         ScrollView scrollView = statScrollViewArr[1];
         scrollView.Add(CreateSeparatePanel("StatPoint Stat"));
-        for (int i = 0; i < 5; i++)
+
+        // 필요한 StatusType만 리스트로 정의
+        StatusType[] statPointStatTypes = new StatusType[]
+        {
+        StatusType.Power,
+        StatusType.MaxHp,
+        StatusType.HpRecover,
+        StatusType.CriticalDamage,
+        StatusType.GoldAscend
+        };
+
+        foreach (StatusType type in statPointStatTypes)
         {
             TemplateContainer dataPanel = dataPanel_0.CloneTree();
             scrollView.Add(dataPanel);
-            switch (i)
-            {
-                case 0://Power
-                    SetDataPanel(dataPanel, "StatPoint::Power", "Power", _gameData.statLevel_StatPoint[StatusType.Power].ToString(), Categori.Stat, false, 120f, 33f);
-                    PlayerBroker.OnStatPointStatusLevelSet += (type, level) =>
-                    {
-                        if (type == StatusType.Power)
-                            dataPanel.Q<Label>("ValueLabel").text = _gameData.statLevel_StatPoint[StatusType.Power].ToString();
-                    };
-                    break;
-                case 1://MaxHp
-                    SetDataPanel(dataPanel, "StatPoint::MaxHp", "Max Hp", _gameData.statLevel_StatPoint[StatusType.MaxHp].ToString(), Categori.Stat, false, 120f, 33f);
-                    PlayerBroker.OnStatPointStatusLevelSet += (type, level) =>
-                    {
-                        if (type == StatusType.MaxHp)
-                            dataPanel.Q<Label>("ValueLabel").text = _gameData.statLevel_StatPoint[StatusType.MaxHp].ToString();
-                    };
-                    break;
-                case 2://HpRecover
-                    SetDataPanel(dataPanel, "StatPoint::HpRecover", "Hp Recover", _gameData.statLevel_StatPoint[StatusType.HpRecover].ToString(), Categori.Stat, false, 120f, 33f);
-                    PlayerBroker.OnStatPointStatusLevelSet += (type, level) =>
-                    {
-                        if (type == StatusType.HpRecover)
-                            dataPanel.Q<Label>("ValueLabel").text = _gameData.statLevel_StatPoint[StatusType.HpRecover].ToString();
-                    };
-                    break;
 
-                case 3://CriticalDamage
-                    SetDataPanel(dataPanel, "StatPoint::CriticalDamage", "Critical Damage", _gameData.statLevel_StatPoint[StatusType.CriticalDamage].ToString(), Categori.Stat, false, 120f, 25f);
-                    PlayerBroker.OnStatPointStatusLevelSet += (type, level) =>
-                    {
-                        if (type == StatusType.CriticalDamage)
-                            dataPanel.Q<Label>("ValueLabel").text = _gameData.statLevel_StatPoint[StatusType.CriticalDamage].ToString();
-                    };
-                    break;
-                case 4://Gold Ascend
-                    SetDataPanel(dataPanel, "StatPoint::GoldAscend", "Gold Ascend", _gameData.statLevel_StatPoint[StatusType.GoldAscend].ToString(), Categori.Stat, false, 120f, 33f);
-                    PlayerBroker.OnStatPointStatusLevelSet += (type, level) =>
-                    {
-                        if (type == StatusType.GoldAscend)
-                            dataPanel.Q<Label>("ValueLabel").text = _gameData.statLevel_StatPoint[StatusType.GoldAscend].ToString();
-                    };
-                    break;
+            // _gameData.statLevel_StatPoint에서 값이 없으면 0을 기본값으로 설정
+            if (!_gameData.statLevel_StatPoint.ContainsKey(type))
+            {
+                _gameData.statLevel_StatPoint[type] = 0;
             }
+
+            // SetDataPanel 실행
+            SetDataPanel(
+                dataPanel,
+                $"StatPoint::{type}",
+                type.ToString().Replace("MaxHp", "Max Hp").Replace("HpRecover", "Hp Recover").Replace("CriticalDamage", "Critical Damage").Replace("GoldAscend", "Gold Ascend"),
+                _gameData.statLevel_StatPoint[type].ToString(),
+                Categori.Stat,
+                false,
+                120f,
+                25f
+            );
+
+            // 값 변경 시 업데이트 처리
+            PlayerBroker.OnStatPointStatusLevelSet += (changedType, level) =>
+            {
+                if (changedType == type)
+                    dataPanel.Q<Label>("ValueLabel").text = _gameData.statLevel_StatPoint.ContainsKey(type) ? _gameData.statLevel_StatPoint[type].ToString() : "0";
+            };
         }
     }
+
 
     private void InitWeapon()
     {
