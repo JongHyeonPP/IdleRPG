@@ -29,8 +29,8 @@ public class BattleManager : MonoBehaviour
     private float _enemySpace = 1f;// enemies의 배열 한 칸당 실제로 떨어지게 되는 x 간격
     private int _enemyBundleNum = 10;//적이 위치할 수 있는 배열의 크기. 실제로 적이 몇 명 할당될지는 DetermineEnemyNum가 정의한다.
     private int _currentTargetIndex;//현재 마주보고 있는 캐릭터의 enemies에서의 인덱스
-    private bool isBattleActive = false; // 전투 루프 활성화 여부
-    private StageInfo currentStageInfo;//현재 진행 중인 스테이지의 전투 정보... 적 종류, 개수, 스테이지 이름...
+    private bool _isBattleActive = false; // 전투 루프 활성화 여부
+    private StageInfo _currentStageInfo;//현재 진행 중인 스테이지의 전투 정보... 적 종류, 개수, 스테이지 이름...
     private BattleType battleType;//전투의 타입. Default, Boss, Die
     [SerializeField] Camera expandCamera;//전투 메인 카메라
     [SerializeField] Camera shrinkCamera;//전투 메인 카메라
@@ -53,7 +53,7 @@ public class BattleManager : MonoBehaviour
         GameManager.instance.AutoSaveStart();
         _isMove = true;
         _controller.MoveState(true);
-        isBattleActive = true;
+        _isBattleActive = true;
         SetEvent();
         ControlView(false);
         SetWeaponSprite(_gameData.playerWeaponId, WeaponType.Melee);
@@ -85,7 +85,6 @@ public class BattleManager : MonoBehaviour
     public void SetEvent()
     {
         //Event 연결
-        BattleBroker.OnStageEnter += OnStageEnter;
         BattleBroker.OnStageChange += OnStageChange;
         BattleBroker.OnBossEnter += OnBossEnter;
         BattleBroker.OnEnemyDead += OnEnemyDead;
@@ -93,10 +92,12 @@ public class BattleManager : MonoBehaviour
         BattleBroker.GetBattleType += () => battleType;
         BattleBroker.IsCanAttack += IsCanAttack;
         UIBroker.OnMenuUIChange += OnMenuUIChange;
+        BattleBroker.SwitchToBattle += SwitchToBattle;
         BattleBroker.OnStageChange(_gameData.currentStageNum);
-        BattleBroker.SwitchToBattle += () => ControlBattle(true);
-        BattleBroker.SwitchToStory += (stageId) => ControlBattle(false);
     }
+
+
+
     private void OnMenuUIChange(int index)
     {
         switch (index)
@@ -120,19 +121,19 @@ public class BattleManager : MonoBehaviour
 
     private void OnPlayerDead()
     {
-        isBattleActive = false;
+        _isBattleActive = false;
     }
 
     private void FixedUpdate()
     {
-        if (!isBattleActive)
+        if (!_isBattleActive)
             return;
         MoveByPlayer();
     }
     private void Update()
     {
 
-        if (!isBattleActive)
+        if (!_isBattleActive)
             return;
         BattleLoop();
     }
@@ -229,15 +230,16 @@ public class BattleManager : MonoBehaviour
     private void OnStageChange(int stageNum)
     {
         _gameData.currentStageNum = stageNum;
-        currentStageInfo = StageInfoManager.instance.GetStageInfo(stageNum);
-        BattleBroker.OnStageEnter();
+        
         if (stageNum > _gameData.maxStageNum)
         {
+            //전투 멈춤
+            _isBattleActive = false;
             switch (stageNum)
             {
                 case 1:
                     Debug.Log("최초 접속");
-                    ControlBattle(false);
+                    
                     BattleBroker.SwitchToStory?.Invoke(1);
                     break;
                 case 21:
@@ -245,30 +247,22 @@ public class BattleManager : MonoBehaviour
                     break;
             }
             _gameData.maxStageNum = stageNum;
-            _stageSelectUI.OnStageChange(stageNum);
         }
         else
         {
+            _currentStageInfo = StageInfoManager.instance.GetStageInfo(stageNum);
             BattleBroker.SwitchToBattle();
-            ControlBattle(true);
         }
         StartBroker.SaveLocal();
-    }
-    private void OnStageEnter()
-    {
-        battleType = BattleType.Default;
-        ChangeBackground();
-        ClearEntireBattle();
-        InitDefaultPools();
-        isBattleActive = true; // 전투 루프 활성화
     }
 
     private void OnBossEnter()
     {
-        ClearEntireBattle();
-        InitBossPools();
-        battleType = BattleType.Boss;
-        isBattleActive = true; // 전투 루프 활성화
+        ControlBattle(_currentStageInfo, true);
+    }
+    private void SwitchToBattle()
+    {
+        ControlBattle(_currentStageInfo);
     }
 
     private void ClearEntireBattle()
@@ -276,12 +270,11 @@ public class BattleManager : MonoBehaviour
         ClearActiveDrop();
         if (_enemies != null)
             ClearActiveEnemy();
-        isBattleActive = false; // 전투 루프 비활성화
     }
 
     private void ChangeBackground()
     {
-        Background background = currentStageInfo.background;
+        Background background = _currentStageInfo.background;
         foreach (BackgroundPiece piece in _pieces)
         {
             piece.ChangeBackground(background);
@@ -292,24 +285,24 @@ public class BattleManager : MonoBehaviour
     {
         _ePool0.ClearPool();
         _ePool1.ClearPool();
-        if (currentStageInfo.enemy_0)
-            _ePool0.InitializePool(currentStageInfo.enemy_0, currentStageInfo.enemyNum);
-        if (currentStageInfo.enemy_1)
-            _ePool1.InitializePool(currentStageInfo.enemy_1, currentStageInfo.enemyNum);
+        if (_currentStageInfo.enemy_0)
+            _ePool0.InitializePool(_currentStageInfo.enemy_0, _currentStageInfo.enemyNum);
+        if (_currentStageInfo.enemy_1)
+            _ePool1.InitializePool(_currentStageInfo.enemy_1, _currentStageInfo.enemyNum);
     }
 
     private void InitBossPools()
     {
         _ePool0.ClearPool();
         _ePool1.ClearPool();
-        _ePool0.InitializePool(currentStageInfo.boss, 1);
+        _ePool0.InitializePool(_currentStageInfo.boss, 1);
     }
 
     private EnemyController[] MakeDefaultEnemies()
     {
         EnemyController[] result = new EnemyController[_enemyBundleNum];
         int currentNum = 0;
-        int enemyNum = currentStageInfo.enemyNum;
+        int enemyNum = _currentStageInfo.enemyNum;
         int index = 0;
 
         while (currentNum < enemyNum)
@@ -386,7 +379,7 @@ public class BattleManager : MonoBehaviour
     private IEnumerator StageEnterAfterWhile()
     {
         yield return new WaitForSeconds(1.5f);
-        BattleBroker.OnStageChange(_gameData.currentStageNum);
+        BattleBroker.SwitchToBattle();
     }
 
     private void DropItem(Vector3 position)
@@ -436,22 +429,6 @@ public class BattleManager : MonoBehaviour
         }
         _enemies = null;
     }
-    //private void OnDestroy()
-    //{
-    //    ClearEvent();
-    //}
-    //private void ClearEvent()
-    //{
-    //    // BattleBroker 이벤트 해제
-    //    BattleBroker.OnStageEnter -= OnStageEnter;
-    //    BattleBroker.OnStageChange -= OnStageChange;
-    //    BattleBroker.OnBossEnter -= OnBossEnter;
-    //    BattleBroker.OnEnemyDead -= OnEnemyDead;
-    //    BattleBroker.GetBattleType -= () => battleType;
-
-    //    // PlayerBroker 이벤트 해제
-    //    PlayerBroker.OnPlayerDead -= OnPlayerDead;
-    //}
     private void ControlView(bool isExpand)
     {
         if (isExpand)//넓은 공간을 보여줌
@@ -470,9 +447,21 @@ public class BattleManager : MonoBehaviour
         }
         
     }
-    public void ControlBattle(bool isActive)
+    public void ControlBattle(StageInfo stageInfo, bool _isBossStage = false)
     {
-        isBattleActive = isActive;
+            ClearEntireBattle();
+            if (_isBossStage)
+            {
+                battleType = BattleType.Boss;
+                InitBossPools();
+            }
+            else
+            {
+                battleType = BattleType.Default;
+                InitDefaultPools();
+            }
+            ChangeBackground();
+            _isBattleActive = true; // 전투 루프 활성화
     }
     [ContextMenu("RestartBattle")]
     public void RestartBattle()

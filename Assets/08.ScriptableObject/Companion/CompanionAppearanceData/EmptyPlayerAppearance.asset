@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12089a047c185d140975ee0404774413, type: 3}
+  m_Name: EmptyPlayerAppearance
+  m_EditorClassIdentifier: 
+  clothBack_0Sprite: {fileID: 0}
+  clothBack_1Sprite: {fileID: 0}
+  clothHelmetSprite: {fileID: 0}
+  clothBodySprite: {fileID: 0}
+  clothLeftArmSprite: {fileID: 0}
+  clothRightArmSprite: {fileID: 0}
+  clothLeftFootSprite: {fileID: 0}
+  clothRightFootSprite: {fileID: 0}
+  clothBodyArmorSprite: {fileID: 0}
+  clothLeftShoulderSprite: {fileID: 0}
+  clothRightShoulderSprite: {fileID: 0}
+  bodyLeftArmSprite: {fileID: 5223213533427645220, guid: d24756e433435b249be5737019648d69, type: 3}
+  bodyRightArmSprite: {fileID: 2554473656886179314, guid: d24756e433435b249be5737019648d69, type: 3}
+  bodyBodySprite: {fileID: 2792606791867966216, guid: d24756e433435b249be5737019648d69, type: 3}
+  bodyLeftFootSprite: {fileID: 5053251350606442050, guid: d24756e433435b249be5737019648d69, type: 3}
+  bodyRightFootSprite: {fileID: 1583482623376728253, guid: d24756e433435b249be5737019648d69, type: 3}
+  bodyHeadSprite: {fileID: 3923885903126733222, guid: d24756e433435b249be5737019648d69, type: 3}
+  bodyHairSprite: {fileID: 0}
+  bodyFaceHairSprite: {fileID: 0}
+  bodyBackEyeSprite: {fileID: -3937601588158904074, guid: c920fe39c134a47ecb95473c8ed70fa7, type: 3}
+  bodyFrontEyeSprite: {fileID: -5273283658981390841, guid: c920fe39c134a47ecb95473c8ed70fa7, type: 3}
+  hairColor: {r: 0, g: 0, b: 0, a: 1}
+  eyeColor: {r: 0, g: 0, b: 0, a: 1}

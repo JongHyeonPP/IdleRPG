@@ -11,19 +11,9 @@ public class TotalLabelUI : MonoBehaviour
 
         BattleBroker.OnGoldSet += SetGold;
         SetGold();
-        BattleBroker.OnStageEnter += OnStageEnter;
-        BattleBroker.OnBossEnter += OnBossEnter;
     }
 
-    private void OnBossEnter()
-    {
-        root.style.display = DisplayStyle.None; 
-    }
 
-    private void OnStageEnter()
-    {
-        root.style.display = DisplayStyle.Flex;
-    }
 
     private void SetGold()
     {

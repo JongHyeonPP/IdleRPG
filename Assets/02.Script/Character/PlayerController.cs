@@ -52,7 +52,7 @@ public class PlayerController : Attackable
         PlayerBroker.OnStatPointStatusLevelSet += OnStatPointStatusSet;
         BattleBroker.OnBossTimeLimit += OnDead;
         PlayerBroker.GetPlayerController += GetPlayerController;
-        BattleBroker.OnStageEnter += OnStageEnter;
+        BattleBroker.SwitchToBattle += SwitchToBattle;
         BattleBroker.OnBossEnter += OnBossEnter;
         PlayerBroker.OnPromoteStatusSet += OnPromoteStatusSet;
     }
@@ -64,9 +64,8 @@ public class PlayerController : Attackable
         hp = _status.MaxHp;
         _mp = 0;
         StopAttack();
-        anim.SetTrigger("Revive");
     }
-    private void OnStageEnter()
+    private void SwitchToBattle()
     {
         hp = _status.MaxHp;
         _mp = 0;
@@ -192,7 +191,7 @@ public class PlayerController : Attackable
     private IEnumerator DeadAfterWhile()
     {
         yield return new WaitForSeconds(1f);
-        BattleBroker.OnStageEnter();
+        BattleBroker.SwitchToBattle();
         anim.SetTrigger("Revive");
     }
 
@@ -233,22 +232,5 @@ public class PlayerController : Attackable
 
         
     }
-    //private void OnDestroy()
-    //{
-    //    ClearEvent();
-    //}
 
-    //private void ClearEvent()
-    //{
-    //     PlayerBroker 이벤트 해제
-    //    PlayerBroker.OnGoldStatusSet -= OnGoldStatusSet;
-    //    PlayerBroker.OnStatPointStatusSet -= OnStatPointStatusSet;
-    //    PlayerBroker.OnSkillChanged -= OnSkillChanged;
-    //    PlayerBroker.GetPlayerController -= GetPlayerController;
-
-    //     BattleBroker 이벤트 해제
-    //    BattleBroker.OnBossTimeLimit -= OnDead;
-    //    BattleBroker.OnStageEnter -= OnStageEnter;
-    //    BattleBroker.OnBossEnter -= OnBossEnter;
-    //}
 }

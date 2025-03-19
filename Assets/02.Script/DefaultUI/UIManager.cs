@@ -28,16 +28,12 @@ public class UIManager : MonoBehaviour
     void Awake()
     {
         instance = this;
+        BattleBroker.SwitchToStory += ActiveStoryUI;
+        BattleBroker.SwitchToBattle += ActiveBattleUI;
     }
     void Start()
     {
         UIBroker.OnMenuUIChange?.Invoke(0);
-    }
-    private void OnEnable()
-    {
-        BattleBroker.SwitchToStory += ActiveStoryUI;
-
-        BattleBroker.SwitchToBattle += ActiveBattleUI;
     }
 
     private void ActiveBattleUI()
@@ -81,5 +77,9 @@ public class UIManager : MonoBehaviour
         _currentStageUI.root.style.display = DisplayStyle.None;
         _companionPromoteInfoUI.root.style.display = DisplayStyle.None;
         _companionTechUI.root.style.display = DisplayStyle.None;
+    }
+    private void ActiveBossUI()
+    {
+        _bossTimerUI.root.style.display = DisplayStyle.Flex;
     }
 }

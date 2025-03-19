@@ -7,8 +7,7 @@ public static class BattleBroker
     public static Action<Vector3> OnEnemyDead;
     //스테이지 변경
     public static Action<int> OnStageChange;
-    //일반 스테이지 입장
-    public static Action OnStageEnter;
+    //
     //보스 스테이지 입장
     public static Action OnBossEnter;
     //보스 스테이지 시간 초과 시

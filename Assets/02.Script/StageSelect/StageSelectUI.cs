@@ -29,6 +29,7 @@ public class StageSelectUI : MonoBehaviour
         exitButton.RegisterCallback<ClickEvent>(evt=>OnExitButtonClick());
         leftButton.RegisterCallback<ClickEvent>(evt=>OnLeftButtonClick());
         rightButton.RegisterCallback<ClickEvent>(evt=>OnRightButtonClick());
+        BattleBroker.OnStageChange += OnStageChange;
     }
 
     private void OnExitButtonClick()

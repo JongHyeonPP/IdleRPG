@@ -27,6 +27,8 @@ public class AppearanceController : MonoBehaviour
     [SerializeField] SpriteRenderer _bodyRightArm;
     [SerializeField] SpriteRenderer _bodyLeftFoot;
     [SerializeField] SpriteRenderer _bodyRightFoot;
+    [Header("Set In Editor")]
+    [SerializeField] AppearanceData _defaultAppearanceData;
 
     public void SetAppearance(AppearanceData appearanceData)
     {
@@ -63,5 +65,9 @@ public class AppearanceController : MonoBehaviour
         _bodyLeftFrontEye.color = appearanceData.eyeColor;
         _bodyRightFrontEye.color = appearanceData.eyeColor;
     }
-
+    [ContextMenu("SetDefaultAppearance")]
+    public void SetDefaultAppearacne()
+    {
+        SetAppearance(_defaultAppearanceData);
+    }
 }

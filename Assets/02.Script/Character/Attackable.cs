@@ -8,13 +8,13 @@ using UnityEngine;
 
 public abstract class Attackable : MonoBehaviour
 {
-    public Attackable target;
+    [HideInInspector]public Attackable target;
     protected float attackTerm = 1f;
     public Animator anim;
     public BigInteger hp;
     
     protected Coroutine attackCoroutine;
-    public bool isDead;
+    [HideInInspector]public bool isDead;
     protected EquipedSkill[] equipedSkillArr = new EquipedSkill[10];
     private EquipedSkill _defaultAttack;
     protected void SetDefaultAttack()

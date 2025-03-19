@@ -15,7 +15,6 @@ public class BossTimerUI : MonoBehaviour
     {
         root = GetComponent<UIDocument>().rootVisualElement;
         BattleBroker.OnBossEnter += OnBossEnter;
-        BattleBroker.OnStageEnter += OnStageEnter;
         BattleBroker.OnBossHpChanged += OnBossAttack;
         BattleBroker.OnBossClear += StopTimer;
         PlayerBroker.OnPlayerDead += StopTimer;
@@ -23,14 +22,9 @@ public class BossTimerUI : MonoBehaviour
         _hpBar = root.Q<VisualElement>("HpBar").Q<ProgressBar>("ProgressBar");
     }
 
-    private void OnStageEnter()
-    {
-        root.style.display = DisplayStyle.None;
-    }
 
     private void OnBossEnter()
     {
-        root.style.display = DisplayStyle.Flex;
         _currentTime = _entireTime; // 타이머 초기화
         _hpBar.value = 1f;
         // 타이머 시작

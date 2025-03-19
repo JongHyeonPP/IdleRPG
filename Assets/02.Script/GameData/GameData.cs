@@ -47,5 +47,6 @@ public class GameData
         new int[2],
         new int[2]
     };
-
+    [JsonConverter(typeof(TupleArr_Converter<int, int>))]
+    public (int, int)[] currentCompanionPromoteTech = new (int, int)[3];
 }

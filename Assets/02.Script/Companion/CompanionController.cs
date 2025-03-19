@@ -5,11 +5,17 @@ using UnityEngine;
 
 public class CompanionController : MonoBehaviour
 {
+    private GameData _gameData;
     [SerializeField] Animator anim;
     private Coroutine _attackCoroutine;
     private WeaponController _weaponController;
     public CompanionStatus companionStatus;
-
+    [SerializeField] int _companionIndex;
+    private AppearanceController _appearanceController;
+    private void Awake()
+    {
+        _gameData = StartBroker.GetGameData();
+    }
     void Start()
     {
         BattleBroker.StartCompanionAttack += StartCompanionMove;
@@ -29,6 +35,58 @@ public class CompanionController : MonoBehaviour
                 anim.SetFloat("SkillState", 1f);
                 anim.SetFloat("NormalState", 1f);
                 break;
+        }
+        PlayerBroker.OnCompanionAppearanceChange += OnCompanionAppearanceChange;
+        _appearanceController = GetComponent<AppearanceController>();
+        AppearanceData appearanceData;
+        (int, int) currentTech = _gameData.currentCompanionPromoteTech[_companionIndex];
+        switch (currentTech.Item1)
+        {
+            default:
+                appearanceData = companionStatus.companionTechData_0.appearanceData;
+                break;
+            case 1:
+                switch (currentTech.Item2)
+                {
+                    default:
+                        appearanceData = companionStatus.companionTechData_1_0.appearanceData;
+                        break;
+                    case 1:
+                        appearanceData = companionStatus.companionTechData_1_1.appearanceData;
+                        break;
+                }
+                break;
+            case 2:
+                switch (currentTech.Item2)
+                {
+                    default:
+                        appearanceData = companionStatus.companionTechData_2_0.appearanceData;
+                        break;
+                    case 1:
+                        appearanceData = companionStatus.companionTechData_2_1.appearanceData;
+                        break;
+                }
+                break;
+            case 3:
+                switch (currentTech.Item2)
+                {
+                    default:
+                        appearanceData = companionStatus.companionTechData_3_0.appearanceData;
+                        break;
+                    case 1:
+                        appearanceData = companionStatus.companionTechData_3_1.appearanceData;
+                        break;
+                }
+                break;
+        }
+        _appearanceController.SetAppearance(appearanceData);
+    }
+
+    private void OnCompanionAppearanceChange(int companionIndex, AppearanceData data)
+    {
+        if (companionIndex == _companionIndex)
+        {
+            _appearanceController.SetAppearance(data);
         }
     }
 

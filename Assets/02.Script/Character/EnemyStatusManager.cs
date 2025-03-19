@@ -7,8 +7,6 @@ using UnityEngine;
 public class EnemyStatusManager:MonoBehaviour
 {
     public static EnemyStatusManager instance;
-
-    private int _stageNum;//현재 스테이지 번호
     
     //일반몹과 보스몹이 갖는 스탯
     public BigInteger maxHp { get; private set; }
@@ -34,17 +32,8 @@ public class EnemyStatusManager:MonoBehaviour
         {
             Destroy(this);
         }
-        BattleBroker.OnStageChange += OnStageChange;
-        BattleBroker.OnStageEnter += OnStageEnter;
+        BattleBroker.SwitchToBattle += OnStageEnter;
         BattleBroker.OnBossEnter += OnBossEnter;
-    }
-    private void Start()
-    {
-        
-    }
-    private void OnStageChange(int stageNum)
-    {
-        _stageNum = stageNum;
     }
     private void OnStageEnter()
     {

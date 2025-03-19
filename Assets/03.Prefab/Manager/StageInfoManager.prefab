@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7810459626597755582}
   - component: {fileID: 1581727065790679093}
   m_Layer: 0
-  m_Name: StageInfo
+  m_Name: StageInfoManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a6aca65944137243af628e8c5c568f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _stageInfoArr:
+  _normalStageInfoArr:
   - {fileID: 11400000, guid: c1049461f7cec9e418a11c07cf164f58, type: 2}
   - {fileID: 11400000, guid: 91bd484bca168a2429bb342fbb2dc5c6, type: 2}
   - {fileID: 11400000, guid: 7435d09974e447f41b43f8b1c7df634f, type: 2}
@@ -345,3 +345,30 @@ MonoBehaviour:
   - {fileID: 11400000, guid: caa9b8e0990f81e4e9049d3e06e503de, type: 2}
   - {fileID: 11400000, guid: fa53dc8f9a816354c9b11a4be32e7a9d, type: 2}
   - {fileID: 11400000, guid: b127b02ee9cc0ca41814d6befc0b38ab, type: 2}
+  _companion_0_1:
+  - {fileID: 11400000, guid: 7c54d57314c29f047b15b524d701404d, type: 2}
+  - {fileID: 0}
+  _companion_0_2:
+  - {fileID: 0}
+  - {fileID: 0}
+  _companion_0_3:
+  - {fileID: 0}
+  - {fileID: 0}
+  _companion_1_1:
+  - {fileID: 0}
+  - {fileID: 0}
+  _companion_1_2:
+  - {fileID: 0}
+  - {fileID: 0}
+  _companion_1_3:
+  - {fileID: 0}
+  - {fileID: 0}
+  _companion_2_1:
+  - {fileID: 0}
+  - {fileID: 0}
+  _companion_2_2:
+  - {fileID: 0}
+  - {fileID: 0}
+  _companion_2_3:
+  - {fileID: 0}
+  - {fileID: 0}

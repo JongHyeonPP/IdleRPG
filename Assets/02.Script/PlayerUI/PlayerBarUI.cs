@@ -43,7 +43,7 @@ public class PlayerBarUI : MonoBehaviour
     private void InitEvent()
     {
         PlayerBroker.OnPlayerHpChanged += OnPlayerHpChanged;
-        BattleBroker.OnStageEnter += OnStageEnter;
+        BattleBroker.SwitchToBattle += OnStageEnter;
         PlayerBroker.OnPlayerMpChanged += OnPlayerMpChanged;
     }
 

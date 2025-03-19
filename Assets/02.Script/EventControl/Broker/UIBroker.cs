@@ -15,5 +15,7 @@ public static class UIBroker
     public static Action<int, bool> OnMenuUINotice;
     public static Action<Camera> SetBarPosition;
 
+
+
     public static Action<string[]> SwitchRenderTargetLayer { get; set; }
 }
