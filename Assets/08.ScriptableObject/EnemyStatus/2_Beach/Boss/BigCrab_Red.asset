@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigCrab_Red
   m_EditorClassIdentifier: 
   prefab: {fileID: 4237970080465125930, guid: 69c828f7135b4ae4a9d542aaab753f00, type: 3}
-  _skills: []
+  isMonster: 0
+  isBoss: 1

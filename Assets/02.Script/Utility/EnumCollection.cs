@@ -50,7 +50,7 @@ namespace EnumCollection
     }
     public enum BattleType
     {
-        Default, Boss, None,Story
+        Default, Boss,CompanionTech, Story, None
     }
     public enum SkillCoolType
     {

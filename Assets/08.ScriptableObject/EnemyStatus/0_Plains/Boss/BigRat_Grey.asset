@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigRat_Grey
   m_EditorClassIdentifier: 
   prefab: {fileID: 5137085100473819022, guid: 9f3315d08971e2e4d83d2d6dc7064423, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 1

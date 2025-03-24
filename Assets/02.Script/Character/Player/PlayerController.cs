@@ -52,20 +52,15 @@ public class PlayerController : Attackable
         PlayerBroker.OnStatPointStatusLevelSet += OnStatPointStatusSet;
         BattleBroker.OnBossTimeLimit += OnDead;
         PlayerBroker.GetPlayerController += GetPlayerController;
-        BattleBroker.SwitchToBattle += SwitchToBattle;
-        BattleBroker.OnBossEnter += OnBossEnter;
+        BattleBroker.SwitchToBattle += InitToBattle;
+        BattleBroker.SwitchToBoss += InitToBattle;
+        BattleBroker.SwitchToCompanionBattle += (arg0, arg1)=> InitToBattle();
         PlayerBroker.OnPromoteStatusSet += OnPromoteStatusSet;
     }
 
     private PlayerController GetPlayerController() => this;
 
-    private void OnBossEnter()
-    {
-        hp = _status.MaxHp;
-        _mp = 0;
-        StopAttack();
-    }
-    private void SwitchToBattle()
+    private void InitToBattle()
     {
         hp = _status.MaxHp;
         _mp = 0;

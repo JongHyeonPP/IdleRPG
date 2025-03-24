@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigDeer
   m_EditorClassIdentifier: 
   prefab: {fileID: 175464996610553772, guid: 0c8d0bbbb84cf1c419a6e5ce5dd863e0, type: 3}
-  _skills: []
+  isMonster: 0
+  isBoss: 1

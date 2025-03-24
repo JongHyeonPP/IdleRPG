@@ -3,10 +3,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using BigInteger = System.Numerics.BigInteger;
 public class BattleManager : MonoBehaviour
 {
     public static BattleManager instance;
     private GameData _gameData;
+
     [Header("Enemy Pool")]
     //두 가지 적이 섞여 나오도록 오브젝트 풀을 두 가지 생성
     [SerializeField] EnemyPool _ePool0;
@@ -16,7 +18,9 @@ public class BattleManager : MonoBehaviour
     [SerializeField] HashSet<ExpDrop> activeExp = new();
     [SerializeField] Transform _spawnSpot;//풀링된 오브젝트가 활성화되면서 나올 위치 정보
     [SerializeField] Transform _poolParent;//비활성화 돼 풀에 들어간 오브젝트가 들어갈 공간
+
     [Header("Etc")]
+    private StageInfo _currentStageInfo;//현재 진행 중인 스테이지의 전투 정보... 적 종류, 개수, 스테이지 이름...
     private PlayerController _controller;//GameManager로부터 얻어온 controller 정보
     [SerializeField] CompanionController[] _companions;
     [SerializeField] List<BackgroundPiece> _pieces;//위치를 지속적으로 변경하면서 보일 배경 이미지들
@@ -30,7 +34,7 @@ public class BattleManager : MonoBehaviour
     private int _enemyBundleNum = 10;//적이 위치할 수 있는 배열의 크기. 실제로 적이 몇 명 할당될지는 DetermineEnemyNum가 정의한다.
     private int _currentTargetIndex;//현재 마주보고 있는 캐릭터의 enemies에서의 인덱스
     private bool _isBattleActive = false; // 전투 루프 활성화 여부
-    private StageInfo _currentStageInfo;//현재 진행 중인 스테이지의 전투 정보... 적 종류, 개수, 스테이지 이름...
+
     private BattleType battleType;//전투의 타입. Default, Boss, Die
     [SerializeField] Camera expandCamera;//전투 메인 카메라
     [SerializeField] Camera shrinkCamera;//전투 메인 카메라
@@ -84,16 +88,47 @@ public class BattleManager : MonoBehaviour
     }
     public void SetEvent()
     {
-        //Event 연결
+
+        //Battle
         BattleBroker.OnStageChange += OnStageChange;
-        BattleBroker.OnBossEnter += OnBossEnter;
+        BattleBroker.SwitchToBattle += SwitchToBattle;
+        BattleBroker.SwitchToBoss += SwitchToBoss;
+        BattleBroker.SwitchToCompanionBattle += SwitchToCompanionBattle;
         BattleBroker.OnEnemyDead += OnEnemyDead;
         PlayerBroker.OnPlayerDead += OnPlayerDead;
         BattleBroker.GetBattleType += () => battleType;
         BattleBroker.IsCanAttack += IsCanAttack;
-        UIBroker.OnMenuUIChange += OnMenuUIChange;
-        BattleBroker.SwitchToBattle += SwitchToBattle;
+        UIBroker.OnMenuUIChange += OnMenuUIChange;  
         BattleBroker.OnStageChange(_gameData.currentStageNum);
+        PlayerBroker.OnCompanionPromoteTechSet += OnCompanionPromoteTechSet;
+        //EnemyStatus
+        EnemyBroker.GetEnemyMaxHp += () =>
+        {
+            return BigInteger.TryParse(_currentStageInfo.enemyStatusFromStage.maxHp, out var maxHp)
+                ? maxHp
+                : BigInteger.Zero;
+        };
+
+        EnemyBroker.GetEnemyResist += () => _currentStageInfo.enemyStatusFromStage.resist;
+
+        EnemyBroker.GetBossMaxHp += () =>
+        {
+            return BigInteger.TryParse(_currentStageInfo.bossStatusFromStage.maxHp, out var maxHp)
+                ? maxHp
+                : BigInteger.Zero;
+        };
+
+        EnemyBroker.GetBossResist += () => _currentStageInfo.bossStatusFromStage.resist;
+
+        EnemyBroker.GetBossPower += () =>
+        {
+            return BigInteger.TryParse(_currentStageInfo.bossStatusFromStage.power, out var power)
+                ? power
+                : BigInteger.Zero;
+        };
+
+        EnemyBroker.GetBossPenetration += () => _currentStageInfo.bossStatusFromStage.penetration;
+
     }
 
 
@@ -168,7 +203,7 @@ public class BattleManager : MonoBehaviour
                 _controller.MoveState(false);
                 _controller.StartAttack();
                 BattleBroker.StartCompanionAttack?.Invoke(_controller.target);
-                if (battleType == BattleType.Boss)
+                if (battleType == BattleType.Boss || battleType == BattleType.CompanionTech)
                     _controller.target.StartAttack();
             }
             _isMove = false;
@@ -193,6 +228,7 @@ public class BattleManager : MonoBehaviour
                     _enemies = MakeDefaultEnemies();
                     break;
                 case BattleType.Boss:
+                case BattleType.CompanionTech:
                     _enemies = MakeBoss();
                     break;
             }
@@ -250,21 +286,29 @@ public class BattleManager : MonoBehaviour
         }
         else
         {
-            _currentStageInfo = StageInfoManager.instance.GetStageInfo(stageNum);
+            
             BattleBroker.SwitchToBattle();
         }
         StartBroker.SaveLocal();
     }
 
-    private void OnBossEnter()
+    private void SwitchToBoss()
     {
+        battleType = BattleType.Boss;
         ControlBattle(_currentStageInfo, true);
     }
     private void SwitchToBattle()
     {
+        _currentStageInfo = StageInfoManager.instance.GetNormalStageInfo(_gameData.currentStageNum);
+        battleType = BattleType.Default;
         ControlBattle(_currentStageInfo);
     }
-
+    private void SwitchToCompanionBattle(int companionIndex, (int, int) tech)
+    {
+        _currentStageInfo =  StageInfoManager.instance.GetCompanionTechStageInfo(companionIndex, tech);
+        battleType = BattleType.CompanionTech;
+        ControlBattle(_currentStageInfo, true);
+    }
     private void ClearEntireBattle()
     {
         ClearActiveDrop();
@@ -281,21 +325,21 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    private void InitDefaultPools()
+    private void InitDefaultPools(StageInfo stageInfo)
     {
         _ePool0.ClearPool();
         _ePool1.ClearPool();
-        if (_currentStageInfo.enemy_0)
-            _ePool0.InitializePool(_currentStageInfo.enemy_0, _currentStageInfo.enemyNum);
-        if (_currentStageInfo.enemy_1)
-            _ePool1.InitializePool(_currentStageInfo.enemy_1, _currentStageInfo.enemyNum);
+        if (stageInfo.enemy_0)
+            _ePool0.InitializePool(stageInfo.enemy_0, stageInfo.enemyNum);
+        if (stageInfo.enemy_1)
+            _ePool1.InitializePool(stageInfo.enemy_1, stageInfo.enemyNum);
     }
 
-    private void InitBossPools()
+    private void InitBossPools(StageInfo stageInfo)
     {
         _ePool0.ClearPool();
         _ePool1.ClearPool();
-        _ePool0.InitializePool(_currentStageInfo.boss, 1);
+        _ePool0.InitializePool(stageInfo.boss, 1);
     }
 
     private EnemyController[] MakeDefaultEnemies()
@@ -363,17 +407,35 @@ public class BattleManager : MonoBehaviour
         DropItem(position);
         if (battleType == BattleType.Boss)
         {
+            
+            _gameData.currentStageNum++;
+            
             OnBossStageClear();
-           BattleBroker.OnBossClear?.Invoke();
         }
+        else if (battleType == BattleType.CompanionTech)
+        {
+            int companionNum = _currentStageInfo.companionTechIndex.companionNum;
+            int techIndex_0 = _currentStageInfo.companionTechIndex.techIndex_0;
+            int techIndex_1 = _currentStageInfo.companionTechIndex.techIndex_1;
+            PlayerBroker.OnCompanionPromoteTechSet(companionNum, techIndex_0, techIndex_1);
+            StartBroker.SaveLocal();
+            OnBossStageClear();
+        }
+    }
+    private void OnCompanionPromoteTechSet(int companionNum, int techIndex_0, int techIndex_1)
+    {
+        _gameData.companionPromoteTech[companionNum][techIndex_1] = techIndex_0;
     }
     private void OnBossStageClear()
     {
+        BattleBroker.OnBossClear?.Invoke();
         battleType = BattleType.None;
-        _gameData.currentStageNum++;
         _isMove = true;
+        BattleBroker.StopCompanionAttack();
         _controller.MoveState(true);
+        _currentStageInfo = StageInfoManager.instance.GetNormalStageInfo(_gameData.currentStageNum);
         StartCoroutine(StageEnterAfterWhile());
+        BattleBroker.OnBossClear?.Invoke();
     }
 
     private IEnumerator StageEnterAfterWhile()
@@ -381,7 +443,6 @@ public class BattleManager : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
         BattleBroker.SwitchToBattle();
     }
-
     private void DropItem(Vector3 position)
     {
         DropBase dropBase;
@@ -452,13 +513,12 @@ public class BattleManager : MonoBehaviour
             ClearEntireBattle();
             if (_isBossStage)
             {
-                battleType = BattleType.Boss;
-                InitBossPools();
+                
+                InitBossPools(stageInfo);
             }
             else
             {
-                battleType = BattleType.Default;
-                InitDefaultPools();
+                InitDefaultPools(stageInfo);
             }
             ChangeBackground();
             _isBattleActive = true; // 전투 루프 활성화

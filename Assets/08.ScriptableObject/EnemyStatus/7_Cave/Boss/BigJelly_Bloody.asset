@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigJelly_Bloody
   m_EditorClassIdentifier: 
   prefab: {fileID: 962762296102085024, guid: 365789a481d33eb448b3e48c442f833e, type: 3}
-  _skills: []
+  isMonster: 0
+  isBoss: 1

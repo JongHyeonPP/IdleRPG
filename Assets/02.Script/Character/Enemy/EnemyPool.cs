@@ -43,6 +43,7 @@ public class EnemyPool : MonoBehaviour
         else
         {
             enemy = InstantiateEnemy();
+            enemy.hp = _enemyStatus.MaxHp;
         }
         enemy.gameObject.SetActive(true);
         return enemy;

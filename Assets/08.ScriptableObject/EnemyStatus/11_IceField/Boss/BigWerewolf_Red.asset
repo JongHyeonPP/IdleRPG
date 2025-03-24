@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigWerewolf_Red
   m_EditorClassIdentifier: 
   prefab: {fileID: 7860622597078178051, guid: c2ad189c55622a14c9fb3bbdc0c772bb, type: 3}
-  _skills: []
+  isMonster: 0
+  isBoss: 1

@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigTortoise
   m_EditorClassIdentifier: 
   prefab: {fileID: 5128610095809254111, guid: 6e3b5b25dd46bc34bb4767072a6af6c9, type: 3}
-  _skills: []
+  isMonster: 0
+  isBoss: 1

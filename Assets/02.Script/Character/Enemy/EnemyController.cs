@@ -10,14 +10,15 @@ public class EnemyController : Attackable, IMoveByPlayer
     private EnemyPool _pool;//비활성화 시 들어갈 풀
     private EnemyController[] _enemies;//활성화 시 들어갈 배열
     private int _indexInArr;//배열에서의 인덱스
-    [SerializeField]private EnemyStatus _status;//전투에 사용할 스탯
-    private SpriteRenderer _bodyRenderer;//몸체의 스프라이트 렌더러
+    private EnemyStatus _status;//전투에 사용할 스탯
+    private SpriteRenderer[] _bodyRendererArr;//몸체의 스프라이트 렌더러
     private float deadDuration = 1f;//죽는데 걸리는 시간
+    public bool IsMonster => _status.isMonster;
     private void Start()
     {
         MediatorManager<IMoveByPlayer>.RegisterMediator(this);
-        anim = GetComponent<Animator>();
-        _bodyRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
+        anim = GetComponentInChildren<Animator>();
+        _bodyRendererArr = GetComponentsInChildren<SpriteRenderer>();
         SetDefaultAttack();
     }
     public override ICharacterStatus GetStatus()
@@ -32,22 +33,51 @@ public class EnemyController : Attackable, IMoveByPlayer
     protected override void OnDead()
     {
         BattleBroker.OnEnemyDead?.Invoke(transform.position);
-        _enemies[_indexInArr].isDead = true;
+        isDead = true;
         anim.SetBool("Die", true);
-        StartCoroutine(DeadAfterWhile());
-        StartCoroutine(FadeOutBodyRenderer());
+        StartCoroutine(OnDeadCoroutine());
     }
 
-    private IEnumerator DeadAfterWhile()
+    private IEnumerator OnDeadCoroutine()
     {
-        yield return new WaitForSeconds(1f);
+        yield return FadeOutAllRenderer();
+        InitAfterDead();
+    }
+    private IEnumerator FadeOutAllRenderer()
+    {
+        float fadeSecond = 1f;
+        foreach (var renderer in _bodyRendererArr)
+            StartCoroutine(FadeOutEachRenderer(renderer, fadeSecond));
+        yield return new WaitForSeconds(fadeSecond);
+    }
+    private IEnumerator FadeOutEachRenderer(SpriteRenderer renderer, float fadeSecond)
+    {
+        float duration = 1f; // 1초 동안 페이드 아웃
+        float elapsedTime = 0f;
+
+        // 기존 색상을 가져옵니다.
+        Color color = renderer.color;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float alpha = Mathf.Lerp(1f, 0f, elapsedTime / duration); // 알파 값 계산
+            renderer.color = new Color(color.r, color.g, color.b, alpha); // 알파 값만 변경
+            yield return null;
+        }
+    }
+    private void InitAfterDead()
+    {
         _enemies[_indexInArr] = null;
         _enemies = null;
         _indexInArr = -1;
         _pool.ReturnToPool(this);
         isDead = false;
-        Color color = _bodyRenderer.color;
-        _bodyRenderer.color = new Color(color.r, color.g, color.b, 1f);
+        foreach(SpriteRenderer renderer in _bodyRendererArr)
+        {
+            Color color = renderer.color;
+            renderer.color = new Color(color.r, color.g, color.b, 1f);
+        }
     }
 
     public void SetCurrentInfo(EnemyController[] enemies, int indexInPool)
@@ -59,25 +89,10 @@ public class EnemyController : Attackable, IMoveByPlayer
     {
         transform.Translate(translation);
     }
-    private IEnumerator FadeOutBodyRenderer()
-    {
-        float duration = 1f; // 1초 동안 페이드 아웃
-        float elapsedTime = 0f;
 
-        // 기존 색상을 가져옵니다.
-        Color color = _bodyRenderer.color;
-
-        while (elapsedTime < duration)
-        {
-            elapsedTime += Time.deltaTime;
-            float alpha = Mathf.Lerp(1f, 0f, elapsedTime / duration); // 알파 값 계산
-            _bodyRenderer.color = new Color(color.r, color.g, color.b, alpha); // 알파 값만 변경
-            yield return null;
-        }
-    }
     protected override void OnReceiveSkill()
     {
-        if (BattleBroker.GetBattleType()==BattleType.Boss)
+        if (BattleBroker.GetBattleType()==BattleType.Boss||BattleBroker.GetBattleType()==BattleType.CompanionTech)
         {
             // 로그로 계산
             double logValue1 = BigInteger.Log(hp);

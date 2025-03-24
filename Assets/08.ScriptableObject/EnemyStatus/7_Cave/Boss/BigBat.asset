@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigBat
   m_EditorClassIdentifier: 
   prefab: {fileID: 5197541462379281757, guid: 80199621adf7bb84e979c26ac1f4f53b, type: 3}
-  _skills: []
+  isMonster: 0
+  isBoss: 1

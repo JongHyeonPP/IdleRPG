@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigGolem_Earth
   m_EditorClassIdentifier: 
   prefab: {fileID: 213048579874933140, guid: 1dbb34151858e084ea0b5180a2489c7c, type: 3}
-  _skills: []
+  isMonster: 0
+  isBoss: 1

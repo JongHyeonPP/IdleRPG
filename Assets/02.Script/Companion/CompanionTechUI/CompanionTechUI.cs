@@ -52,7 +52,7 @@ public class CompanionTechUI : MonoBehaviour
         }
         else
         {
-            
+            BattleBroker.SwitchToCompanionBattle(_currentCompanionIndex, _currentTech);
         }
         UIBroker.InactiveCurrentUI();
     }

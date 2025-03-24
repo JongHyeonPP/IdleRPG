@@ -18,5 +18,17 @@ MonoBehaviour:
   dropProb: 0
   enemy_0: {fileID: 0}
   enemy_1: {fileID: 0}
-  boss: {fileID: 11400000, guid: 36a0074aa544b9e408e43031d4e36e32, type: 2}
+  boss: {fileID: 11400000, guid: 004064ceff7cd7e4fbdd437b8024fb20, type: 2}
   enemyNum: 0
+  enemyStatusFromStage:
+    maxHp: 
+    resist: 0
+  bossStatusFromStage:
+    maxHp: 100
+    resist: 0
+    power: 10
+    penetration: 0
+  companionTechIndex:
+    companionNum: 0
+    techIndex_0: 1
+    techIndex_1: 0

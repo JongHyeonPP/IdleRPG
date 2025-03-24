@@ -5,7 +5,9 @@ using UnityEngine;
 public class StageInfoManager : MonoBehaviour
 {
     public static StageInfoManager instance;
+    [Header("Normal Stage")]
     [SerializeField] StageInfo[] _normalStageInfoArr;
+    [Header("Companion Tech Stage")]
     [SerializeField] StageInfo[] _companion_0_1;
     [SerializeField] StageInfo[] _companion_0_2;
     [SerializeField] StageInfo[] _companion_0_3;
@@ -47,7 +49,7 @@ public class StageInfoManager : MonoBehaviour
 
         return items;
     }
-    public StageInfo GetStageInfo(int stageNum) => _normalStageInfoArr[stageNum-1];
+    public StageInfo GetNormalStageInfo(int stageNum) => _normalStageInfoArr[stageNum-1];
     public StageInfo GetCompanionTechStageInfo(int companionIndex, (int, int) companionTech)
     {
         StageInfo result = null;
@@ -91,28 +93,32 @@ public class StageInfoManager : MonoBehaviour
                         result =  _companion_2_2[companionTech.Item2];
                         break;
                     case 3:
-                        return _companion_2_3[companionTech.Item2];
+                        result = _companion_2_3[companionTech.Item2];
                         break;
                 }
                 break;
         }
         return result;
     }
-//#if UNITY_EDITOR
-//    [ContextMenu("Temp")]
-//    public void Temp()
-//    {
-//        foreach (var x in _normalStageInfoArr)
-//        {
-//            x.stageNum++;
-
-//            // 변경된 ScriptableObject를 Unity가 감지하도록 설정
-//            EditorUtility.SetDirty(x);
-//        }
-
-//        // 변경된 데이터를 애셋 파일에 저장
-//        AssetDatabase.SaveAssets();
-//        AssetDatabase.Refresh();
-//    }
-//#endif
+#if UNITY_EDITOR
+    [ContextMenu("SetEnemyStatusInStage")]
+    public void Temp()
+    {
+        foreach (StageInfo x in _normalStageInfoArr)
+        {
+            x.enemyStatusFromStage.maxHp = 10.ToString();
+            x.enemyStatusFromStage.resist = 0f;
+        }
+        foreach (StageInfo x in _normalStageInfoArr)
+        {
+            x.bossStatusFromStage.maxHp = 100.ToString();
+            x.bossStatusFromStage.resist = 0f;
+            x.bossStatusFromStage.power = 10.ToString();
+            x.bossStatusFromStage.penetration = 0f;
+        }
+        // 변경된 데이터를 애셋 파일에 저장
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+    }
+#endif
 }

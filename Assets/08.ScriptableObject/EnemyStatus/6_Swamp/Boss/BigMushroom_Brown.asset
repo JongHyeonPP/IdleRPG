@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigMushroom_Brown
   m_EditorClassIdentifier: 
   prefab: {fileID: 7878245274409795428, guid: 543dffd6f2eb26e4db7f44e7db19ebf5, type: 3}
-  _skills: []
+  isMonster: 0
+  isBoss: 1

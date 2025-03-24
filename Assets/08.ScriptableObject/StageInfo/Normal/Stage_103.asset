@@ -20,3 +20,15 @@ MonoBehaviour:
   enemy_1: {fileID: 11400000, guid: af62093ff9a20bd418761cb19142b4e2, type: 2}
   boss: {fileID: 11400000, guid: 115df0e6c4efb4a479370c0d657eb395, type: 2}
   enemyNum: 4
+  enemyStatusFromStage:
+    maxHp: 10
+    resist: 0
+  bossStatusFromStage:
+    maxHp: 100
+    resist: 0
+    power: 10
+    penetration: 0
+  companionTechIndex:
+    companionNum: 0
+    techIndex_0: 0
+    techIndex_1: 0

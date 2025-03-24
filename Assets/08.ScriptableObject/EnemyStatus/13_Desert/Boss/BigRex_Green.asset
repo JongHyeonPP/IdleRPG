@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigRex_Green
   m_EditorClassIdentifier: 
   prefab: {fileID: 120625104677365346, guid: c2fd0e2b975f9d242af0c62686a8cc58, type: 3}
-  _skills: []
+  isMonster: 0
+  isBoss: 1

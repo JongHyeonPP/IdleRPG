@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigMegaPumpkin_Purple
   m_EditorClassIdentifier: 
   prefab: {fileID: 5987003745974595738, guid: c7b43fc7258a1f243a42a3c6edcfe03e, type: 3}
-  _skills: []
+  isMonster: 0
+  isBoss: 1

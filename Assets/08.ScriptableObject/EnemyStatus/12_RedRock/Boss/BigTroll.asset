@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigTroll
   m_EditorClassIdentifier: 
   prefab: {fileID: 6423368943838986219, guid: 5f442d808c48ee04bb5bc1f7cdfbe4a3, type: 3}
-  _skills: []
+  isMonster: 0
+  isBoss: 1

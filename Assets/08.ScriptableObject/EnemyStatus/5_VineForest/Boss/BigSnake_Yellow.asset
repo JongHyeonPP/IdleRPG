@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigSnake_Yellow
   m_EditorClassIdentifier: 
   prefab: {fileID: 2720176634438703112, guid: fabab23e7a079864798d4d32eb601c2a, type: 3}
-  _skills: []
+  isMonster: 0
+  isBoss: 1

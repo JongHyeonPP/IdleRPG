@@ -15,14 +15,14 @@ MonoBehaviour:
   clothBack_0Sprite: {fileID: 21300000, guid: de168099179ad440da6d3722e61c5d48, type: 3}
   clothBack_1Sprite: {fileID: 0}
   clothHelmetSprite: {fileID: 21300000, guid: 55f9451f0589c468d858e125fecff6ec, type: 3}
-  clothBodySprite: {fileID: 2936672403855040199, guid: 0ed89491ffac8486188d7c6908fbaeab, type: 3}
-  clothLeftArmSprite: {fileID: -4768667168338800802, guid: 0ed89491ffac8486188d7c6908fbaeab, type: 3}
-  clothRightArmSprite: {fileID: -8675011627427599730, guid: a05ebb241a0b14dec9a0d4bdd31301a3, type: 3}
+  clothBodySprite: {fileID: -1260554252667011832, guid: 84347eea08bcc447cbcaad17970de138, type: 3}
+  clothLeftArmSprite: {fileID: 4793823035164055853, guid: 84347eea08bcc447cbcaad17970de138, type: 3}
+  clothRightArmSprite: {fileID: -1674636886376740765, guid: 84347eea08bcc447cbcaad17970de138, type: 3}
   clothLeftFootSprite: {fileID: 833241388433121645, guid: d71632c7a95ba4b0ebb77cc484f78047, type: 3}
   clothRightFootSprite: {fileID: -6513186012226528670, guid: d71632c7a95ba4b0ebb77cc484f78047, type: 3}
-  clothBodyArmorSprite: {fileID: 5365374274956500225, guid: 6f3d1631932544df184a5799f81cd020, type: 3}
-  clothLeftShoulderSprite: {fileID: -5111501549431357387, guid: 6f3d1631932544df184a5799f81cd020, type: 3}
-  clothRightShoulderSprite: {fileID: 7382776086313256540, guid: 6f3d1631932544df184a5799f81cd020, type: 3}
+  clothBodyArmorSprite: {fileID: 0}
+  clothLeftShoulderSprite: {fileID: 0}
+  clothRightShoulderSprite: {fileID: 0}
   bodyLeftArmSprite: {fileID: -2679891834695985245, guid: 5bc9c55e31d7c4c3380f05786b90bb35, type: 3}
   bodyRightArmSprite: {fileID: -3786673782929868589, guid: 5bc9c55e31d7c4c3380f05786b90bb35, type: 3}
   bodyBodySprite: {fileID: 9192335604100010203, guid: 5bc9c55e31d7c4c3380f05786b90bb35, type: 3}

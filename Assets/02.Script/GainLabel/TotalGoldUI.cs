@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.UIElements;
-public class TotalLabelUI : MonoBehaviour
+public class TotalGoldUI : MonoBehaviour
 {
     public VisualElement root { get; private set; }
     private Label _goldLabel;

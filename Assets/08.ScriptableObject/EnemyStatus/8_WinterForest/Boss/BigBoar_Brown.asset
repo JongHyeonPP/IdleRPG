@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigBoar_Brown
   m_EditorClassIdentifier: 
   prefab: {fileID: 193193950079454934, guid: be3d1b3e763babf4e9af35be6ee27bdf, type: 3}
-  _skills: []
+  isMonster: 0
+  isBoss: 1

@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigSalamandra_Fire
   m_EditorClassIdentifier: 
   prefab: {fileID: 1344187224804894081, guid: 6f5e446f9172bd446a2fb9f6f1620779, type: 3}
-  _skills: []
+  isMonster: 0
+  isBoss: 1

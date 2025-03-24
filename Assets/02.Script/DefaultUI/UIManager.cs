@@ -8,7 +8,7 @@ public class UIManager : MonoBehaviour
     public static UIManager instance;
 
     [SerializeField] CurrencyBarUI _currencyBar;
-    [SerializeField] TotalLabelUI _goldLabelUI;
+    [SerializeField] TotalGoldUI _totalGoldUI;
     [SerializeField] StageSelectUI _stageSelectUI;
     [SerializeField] BossTimerUI _bossTimerUI;
     [SerializeField] DuplicateLoginUI _duplicateLoginUI;
@@ -30,6 +30,8 @@ public class UIManager : MonoBehaviour
         instance = this;
         BattleBroker.SwitchToStory += ActiveStoryUI;
         BattleBroker.SwitchToBattle += ActiveBattleUI;
+        BattleBroker.SwitchToBoss += ActiveBossUI;
+        BattleBroker.SwitchToCompanionBattle += (arg0, arg1) => ActiveBossUI();
     }
     void Start()
     {
@@ -39,7 +41,7 @@ public class UIManager : MonoBehaviour
     private void ActiveBattleUI()
     {
         _currencyBar.root.style.display = DisplayStyle.Flex;
-        _goldLabelUI.root.style.display = DisplayStyle.Flex;
+        _totalGoldUI.root.style.display = DisplayStyle.Flex;
         _stageSelectUI.root.style.visibility = Visibility.Hidden;
         _duplicateLoginUI.root.style.display = DisplayStyle.None;
         _totalStatusUI.root.style.display = DisplayStyle.None;
@@ -61,7 +63,7 @@ public class UIManager : MonoBehaviour
     {
         StartCoroutine(_storyUI.FadeEffect(true, 1));
         _currencyBar.root.style.display = DisplayStyle.None;
-        _goldLabelUI.root.style.display = DisplayStyle.None;
+        _totalGoldUI.root.style.display = DisplayStyle.None;
         _stageSelectUI.root.style.visibility = Visibility.Hidden;
         _duplicateLoginUI.root.style.display = DisplayStyle.None;
         _totalStatusUI.root.style.display = DisplayStyle.None;
@@ -81,5 +83,7 @@ public class UIManager : MonoBehaviour
     private void ActiveBossUI()
     {
         _bossTimerUI.root.style.display = DisplayStyle.Flex;
+        _totalGoldUI.root.style.display = DisplayStyle.None;
+        _currentStageUI.root.style.display = DisplayStyle.None;
     }
 }

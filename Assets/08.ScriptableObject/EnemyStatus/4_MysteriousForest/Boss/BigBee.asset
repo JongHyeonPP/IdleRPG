@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigBee
   m_EditorClassIdentifier: 
   prefab: {fileID: 2520911103489457074, guid: 4cc1f3d1b3f17674390a4bcc79891aff, type: 3}
-  _skills: []
+  isMonster: 0
+  isBoss: 1

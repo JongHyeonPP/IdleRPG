@@ -167,7 +167,8 @@ public abstract class Attackable : MonoBehaviour
                 hp = hp - calcedValue;
                 if (hp < 0)
                     hp = 0;
-                if (this is EnemyController)
+                EnemyController enemyController = this as EnemyController;
+                if (enemyController != null && enemyController.IsMonster)
                     anim.SetTrigger("Hit");
                 break;
             case SkillType.Heal:

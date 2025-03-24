@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 public class AppearanceController : MonoBehaviour
@@ -64,10 +65,22 @@ public class AppearanceController : MonoBehaviour
         _bodyFaceHair.color = appearanceData.hairColor;
         _bodyLeftFrontEye.color = appearanceData.eyeColor;
         _bodyRightFrontEye.color = appearanceData.eyeColor;
+
+
     }
+#if UNITY_EDITOR
     [ContextMenu("SetDefaultAppearance")]
     public void SetDefaultAppearacne()
     {
         SetAppearance(_defaultAppearanceData);
+        EditorUtility.SetDirty(gameObject);
     }
+    [ContextMenu("SetPositionTemp")]
+    public void SetPositionTemp()
+    {
+        transform.GetChild(0).localPosition = new(0, 0.08f, 0);
+        transform.GetChild(0).localScale = new(1.5f, 1.5f, 1.5f);
+        EditorUtility.SetDirty(gameObject);
+    }
+#endif
 }

@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigDuck_Yellow
   m_EditorClassIdentifier: 
   prefab: {fileID: 2050775968956554112, guid: 1ceda93d2eaafa94d97e9e727124d5c4, type: 3}
-  _skills: []
+  isMonster: 0
+  isBoss: 1

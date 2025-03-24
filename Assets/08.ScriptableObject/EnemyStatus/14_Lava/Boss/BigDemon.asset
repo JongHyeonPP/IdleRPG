@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigDemon
   m_EditorClassIdentifier: 
   prefab: {fileID: 1524244270776647753, guid: 6233ce4797bdaf3458a892202a3dd5c8, type: 3}
-  _skills: []
+  isMonster: 0
+  isBoss: 1

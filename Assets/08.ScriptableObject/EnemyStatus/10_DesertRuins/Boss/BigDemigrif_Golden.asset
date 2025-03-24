@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigDemigrif_Golden
   m_EditorClassIdentifier: 
   prefab: {fileID: 7603960505685391456, guid: 35fc4b6e03e24114b86d05dec449ed2c, type: 3}
-  _skills: []
+  isMonster: 0
+  isBoss: 1

@@ -7,9 +7,6 @@ public static class BattleBroker
     public static Action<Vector3> OnEnemyDead;
     //스테이지 변경
     public static Action<int> OnStageChange;
-    //
-    //보스 스테이지 입장
-    public static Action OnBossEnter;
     //보스 스테이지 시간 초과 시
     public static Action OnBossTimeLimit;
     //보스 스테이지 클리어 시
@@ -31,10 +28,13 @@ public static class BattleBroker
 
     public static Action<int> SwitchToStory;
     public static Action SwitchToBattle;
+    public static Action SwitchToBoss;
+    public static Action<int, (int,int)> SwitchToCompanionBattle;
     //동료
     public static Action<object> StartCompanionAttack;
     public static Action StopCompanionAttack;
     public static Action<int> OnCompanionExpSet;
     //승급
     public static Action<Rank> ChallengeRank;
+
 }

@@ -1,8 +1,12 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <engine:Template name="BossTimerBar" src="project://database/Assets/02.Script/BossTimer/BossTimerBar.uxml?fileID=9197481963319205126&amp;guid=3767628264e900e4c946786f56dac063&amp;type=3#BossTimerBar" />
     <engine:Template name="BossHpBar" src="project://database/Assets/02.Script/BossTimer/BossHpBar.uxml?fileID=9197481963319205126&amp;guid=aeaad8750de43644f9b30065df77aada&amp;type=3#BossHpBar" />
-    <engine:VisualElement name="BossTimerUI" style="flex-grow: 1; margin-top: 370px;">
-        <engine:Instance template="BossTimerBar" name="TimerBar" />
-        <engine:Instance template="BossHpBar" name="HpBar" style="bottom: 24px; top: 23px;" />
+    <engine:VisualElement name="BossTimerUI" picking-mode="Ignore" style="flex-grow: 0; flex-direction: row; justify-content: center; top: 370px; align-items: center;">
+        <engine:VisualElement name="Vertical" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); align-items: center; justify-content: center; height: 124px; flex-shrink: 0; width: 586px; position: relative;">
+            <engine:VisualElement name="Background" style="flex-grow: 1; position: absolute; width: 513px; height: 129px; right: 0; background-color: rgba(0, 0, 0, 0.6); border-top-left-radius: 9px; border-top-right-radius: 9px; border-bottom-right-radius: 9px; border-bottom-left-radius: 9px;" />
+            <engine:Instance template="BossTimerBar" name="TimerBar" style="flex-grow: 0; flex-shrink: 0; margin-bottom: 15px;" />
+            <engine:Instance template="BossHpBar" name="HpBar" style="margin-top: 15px;" />
+        </engine:VisualElement>
+        <engine:Button text="run" name="RunButton" style="width: 96px; height: 130px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 10px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; background-color: rgba(188, 188, 188, 0); background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel1.png?fileID=21300000&amp;guid=9eba597d30b7a114ea7924c3748871ed&amp;type=3#UniversalPanel1&quot;); -unity-background-image-tint-color: rgba(0, 0, 0, 0.8); font-size: 42px; -unity-font-definition: url(&quot;project://database/Assets/Asset/SPUM/Basic_Resources/Font/PixelFont.ttf?fileID=12800000&amp;guid=3e53c1bee5e5e43219f0342dc04f5be0&amp;type=3#PixelFont&quot;); color: rgb(255, 255, 255);" />
     </engine:VisualElement>
 </engine:UXML>

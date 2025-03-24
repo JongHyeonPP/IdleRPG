@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigOgre_Red
   m_EditorClassIdentifier: 
   prefab: {fileID: 5162138585682697224, guid: 58f5513b557d4fb4a91cef7a272b3c9f, type: 3}
-  _skills: []
+  isMonster: 0
+  isBoss: 1
