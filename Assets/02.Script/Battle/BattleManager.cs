@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using BigInteger = System.Numerics.BigInteger;
+using Random = UnityEngine.Random;
 public class BattleManager : MonoBehaviour
 {
     public static BattleManager instance;
@@ -27,7 +28,7 @@ public class BattleManager : MonoBehaviour
     private EnemyController[] _enemies = null;//현재 나와서 전투 대기 중인 적들 정보
     private int _lastEnemyIndex;//_enemies 배열 중 끝에 있는 적의 인덱스
     private float _enemyPlayerDistance = 1.5f;//멈춰서 공격하는 시점의 적과 나의 간격
-    private float _bossPlayerDistance = 2.5f;//멈춰서 공격하는 시점의 보스와 나의 간격
+    private float _bossPlayerDistance = 2f;//멈춰서 공격하는 시점의 보스와 나의 간격
     private bool _isMove;//캐릭터가 움직이고 있는지. 실제로는 적들과 배경이 움직이고 있는지라고 할 수 있다.
     private float _speed = 2.5f;//움직이는 속도
     private float _enemySpace = 1f;// enemies의 배열 한 칸당 실제로 떨어지게 되는 x 간격
@@ -36,9 +37,6 @@ public class BattleManager : MonoBehaviour
     private bool _isBattleActive = false; // 전투 루프 활성화 여부
 
     private BattleType battleType;//전투의 타입. Default, Boss, Die
-    [SerializeField] Camera expandCamera;//전투 메인 카메라
-    [SerializeField] Camera shrinkCamera;//전투 메인 카메라
-    [HideInInspector] public Camera currentCamera;//전투 메인 카메라
     [SerializeField] StageSelectUI _stageSelectUI;
     private void Awake()
     {
@@ -59,7 +57,8 @@ public class BattleManager : MonoBehaviour
         _controller.MoveState(true);
         _isBattleActive = true;
         SetEvent();
-        ControlView(false);
+        BattleBroker.OnStageChange(_gameData.currentStageNum);
+        BattleBroker.RefreshStageSelectUI(_gameData.currentStageNum);//CurrentStageUI갱신
         SetWeaponSprite(_gameData.playerWeaponId, WeaponType.Melee);
         for (int i = 0; i < 3; i++)
         {
@@ -88,7 +87,6 @@ public class BattleManager : MonoBehaviour
     }
     public void SetEvent()
     {
-
         //Battle
         BattleBroker.OnStageChange += OnStageChange;
         BattleBroker.SwitchToBattle += SwitchToBattle;
@@ -98,56 +96,70 @@ public class BattleManager : MonoBehaviour
         PlayerBroker.OnPlayerDead += OnPlayerDead;
         BattleBroker.GetBattleType += () => battleType;
         BattleBroker.IsCanAttack += IsCanAttack;
-        UIBroker.OnMenuUIChange += OnMenuUIChange;  
-        BattleBroker.OnStageChange(_gameData.currentStageNum);
+
         PlayerBroker.OnCompanionPromoteTechSet += OnCompanionPromoteTechSet;
+        BattleBroker.GetNeedExp = GetNeedExp;
+        //Drop
+        BattleBroker.OnExpByDrop += GetExpByDrop;
+        BattleBroker.OnGoldByDrop += GetGoldByDrop;
+        BattleBroker.GetStageRewardValue = GetStageReward;
         //EnemyStatus
-        EnemyBroker.GetEnemyMaxHp += () =>
+        EnemyBroker.GetEnemyMaxHp = (enemyType) =>
         {
-            return BigInteger.TryParse(_currentStageInfo.enemyStatusFromStage.maxHp, out var maxHp)
-                ? maxHp
-                : BigInteger.Zero;
+            switch (enemyType)
+            {
+                case EnemyType.Enemy:
+                    return BigInteger.Parse(_currentStageInfo.enemyStatusFromStage.maxHp);
+                case EnemyType.Boss:
+                    return BigInteger.Parse(_currentStageInfo.bossStatusFromStage.maxHp);
+                case EnemyType.Chest:
+                    return BigInteger.Parse(_currentStageInfo.chestStatusFromStage.maxHp);
+            }
+            return 0;
         };
 
-        EnemyBroker.GetEnemyResist += () => _currentStageInfo.enemyStatusFromStage.resist;
-
-        EnemyBroker.GetBossMaxHp += () =>
+        EnemyBroker.GetEnemyResist = (enemyType) => 
         {
-            return BigInteger.TryParse(_currentStageInfo.bossStatusFromStage.maxHp, out var maxHp)
-                ? maxHp
-                : BigInteger.Zero;
+            switch (enemyType)
+            {
+                case EnemyType.Enemy:
+                    return _currentStageInfo.enemyStatusFromStage.resist;
+                case EnemyType.Boss:
+                    return _currentStageInfo.bossStatusFromStage.resist;
+                case EnemyType.Chest:
+                    return _currentStageInfo.chestStatusFromStage.resist;
+            }
+            return 0f;
         };
 
-        EnemyBroker.GetBossResist += () => _currentStageInfo.bossStatusFromStage.resist;
-
-        EnemyBroker.GetBossPower += () =>
+        EnemyBroker.GetEnemyPower = (enemyType) =>
         {
-            return BigInteger.TryParse(_currentStageInfo.bossStatusFromStage.power, out var power)
-                ? power
-                : BigInteger.Zero;
+            switch (enemyType)
+            {
+                case EnemyType.Enemy:
+                    return 0;
+                case EnemyType.Boss:
+                    return BigInteger.Parse(_currentStageInfo.bossStatusFromStage.power);
+                case EnemyType.Chest:
+                    return 0;
+            }
+            return 0;
         };
 
-        EnemyBroker.GetBossPenetration += () => _currentStageInfo.bossStatusFromStage.penetration;
-
+        EnemyBroker.GetEnemyPenetration = (enemyType) =>
+        {
+            switch (enemyType)
+            {
+                case EnemyType.Enemy:
+                    return 0f;
+                case EnemyType.Boss:
+                    return _currentStageInfo.bossStatusFromStage.penetration;
+                case EnemyType.Chest:
+                    return 0f;
+            }
+            return 0f;
+        };
     }
-
-
-
-    private void OnMenuUIChange(int index)
-    {
-        switch (index)
-        {
-            default:
-
-                ControlView(true);
-                break;
-            case 0:
-            case 2:
-                ControlView(false);
-                break;
-        }
-    }
-
 
     private bool IsCanAttack()
     {
@@ -196,23 +208,23 @@ public class BattleManager : MonoBehaviour
     private void TargetCase()
     {
         float xDistance = _controller.target.transform.position.x - _controller.transform.position.x;
-        if (xDistance < ((battleType == BattleType.Default) ? _enemyPlayerDistance : _bossPlayerDistance))
+        if (xDistance < ((battleType == BattleType.Default) ? _enemyPlayerDistance : _bossPlayerDistance))//멈추고 공격 시작
         {
             if (_isMove)
             {
                 _controller.MoveState(false);
                 _controller.StartAttack();
-                BattleBroker.StartCompanionAttack?.Invoke(_controller.target);
+                BattleBroker.ControllCompanionMove?.Invoke(2);
                 if (battleType == BattleType.Boss || battleType == BattleType.CompanionTech)
                     _controller.target.StartAttack();
             }
             _isMove = false;
         }
-        else
+        else//움직인다.
         {
             _controller.MoveState(true);
             _isMove = true;
-            BattleBroker.StopCompanionAttack?.Invoke();
+            BattleBroker.ControllCompanionMove.Invoke(1);
         }
     }
 
@@ -249,44 +261,49 @@ public class BattleManager : MonoBehaviour
 
     public void MoveByPlayer()
     {
-        List<IMoveByPlayer> ros = MediatorManager<IMoveByPlayer>.GetRegisteredObjects();
+        List<IMoveByPlayer> rObjs = MediatorManager<IMoveByPlayer>.GetRegisteredObjects();
 
-        foreach (IMoveByPlayer ro in ros)
+        foreach (IMoveByPlayer rObj in rObjs)
         {
             if (_isMove)
             {
-                ro.MoveByCharacter(_speed * Time.fixedDeltaTime * Vector2.left);
+                rObj.MoveByPlayer(_speed * Time.fixedDeltaTime * Vector2.left);
             }
             else
             {
-                ro.MoveByCharacter(Vector3.zero);
+                rObj.MoveByPlayer(Vector3.zero);
             }
         }
     }
     private void OnStageChange(int stageNum)
     {
         _gameData.currentStageNum = stageNum;
-        
         if (stageNum > _gameData.maxStageNum)
         {
-            //전투 멈춤
-            _isBattleActive = false;
-            switch (stageNum)
-            {
-                case 1:
-                    Debug.Log("최초 접속");
-                    
-                    BattleBroker.SwitchToStory?.Invoke(1);
-                    break;
-                case 21:
-                    Debug.Log("두 번째 스토리");
-                    break;
-            }
             _gameData.maxStageNum = stageNum;
+            if (stageNum == 1 || stageNum == 21)
+            {
+                _isBattleActive = false;
+                //전투 멈춤
+                switch (stageNum)
+                {
+                    case 1:
+                        Debug.Log("최초 접속");
+
+                        BattleBroker.SwitchToStory?.Invoke(1);
+                        break;
+                    case 21:
+                        Debug.Log("두 번째 스토리");
+                        break;
+                }
+            }
+            else
+            {
+                BattleBroker.SwitchToBattle();
+            }
         }
         else
         {
-            
             BattleBroker.SwitchToBattle();
         }
         StartBroker.SaveLocal();
@@ -309,12 +326,7 @@ public class BattleManager : MonoBehaviour
         battleType = BattleType.CompanionTech;
         ControlBattle(_currentStageInfo, true);
     }
-    private void ClearEntireBattle()
-    {
-        ClearActiveDrop();
-        if (_enemies != null)
-            ClearActiveEnemy();
-    }
+
 
     private void ChangeBackground()
     {
@@ -401,50 +413,54 @@ public class BattleManager : MonoBehaviour
     {
         enemy.transform.SetParent(_spawnSpot);
         enemy.transform.localPosition = new Vector2(_enemySpace * index, 0);
+        enemy.SetHpBarPosition();
+        enemy.enemyHpBar.SetDisplay(true);
     }
     private void OnEnemyDead(Vector3 position)
     {
         DropItem(position);
         if (battleType == BattleType.Boss)
         {
-            
             _gameData.currentStageNum++;
-            
-            OnBossStageClear();
+            OnBossCompanionStageClear();
         }
         else if (battleType == BattleType.CompanionTech)
         {
-            int companionNum = _currentStageInfo.companionTechIndex.companionNum;
-            int techIndex_0 = _currentStageInfo.companionTechIndex.techIndex_0;
-            int techIndex_1 = _currentStageInfo.companionTechIndex.techIndex_1;
-            PlayerBroker.OnCompanionPromoteTechSet(companionNum, techIndex_0, techIndex_1);
-            StartBroker.SaveLocal();
-            OnBossStageClear();
+            int companionIndex = _currentStageInfo.companionTechInfo.companionNum;
+            int techIndex_0 = _currentStageInfo.companionTechInfo.techIndex_0;
+            int techIndex_1 = _currentStageInfo.companionTechInfo.techIndex_1;
+            PlayerBroker.OnCompanionPromoteTechSet(companionIndex, techIndex_0, techIndex_1);
+            CompanionTechData techData = CompanionManager.instance.GetCompanionTechData(companionIndex, techIndex_0, techIndex_1);
+            _gameData.dia += techData.dia;
+            _gameData.clover += techData.clover;
+            BattleBroker.OnDiaSet();
+            BattleBroker.OnCloverSet();
+            OnBossCompanionStageClear();
         }
     }
     private void OnCompanionPromoteTechSet(int companionNum, int techIndex_0, int techIndex_1)
     {
         _gameData.companionPromoteTech[companionNum][techIndex_1] = techIndex_0;
     }
-    private void OnBossStageClear()
+    private void OnBossCompanionStageClear()
     {
-        BattleBroker.OnBossClear?.Invoke();
         battleType = BattleType.None;
         _isMove = true;
-        BattleBroker.StopCompanionAttack();
+        BattleBroker.ControllCompanionMove(0);
         _controller.MoveState(true);
-        _currentStageInfo = StageInfoManager.instance.GetNormalStageInfo(_gameData.currentStageNum);
         StartCoroutine(StageEnterAfterWhile());
-        BattleBroker.OnBossClear?.Invoke();
     }
 
     private IEnumerator StageEnterAfterWhile()
     {
         yield return new WaitForSeconds(1.5f);
-        BattleBroker.SwitchToBattle();
+        BattleBroker.OnStageChange(_gameData.currentStageNum);
+        BattleBroker.OnBossClear?.Invoke();
+        BattleBroker.RefreshStageSelectUI(_gameData.currentStageNum);
     }
     private void DropItem(Vector3 position)
     {
+        //int dropNum = _currentStageInfo.enemyStatusFromStage.
         DropBase dropBase;
         if (UtilityManager.CalculateProbability(0.5f))
         {
@@ -463,20 +479,20 @@ public class BattleManager : MonoBehaviour
             dropBase.StartDropMove();
         }
     }
-    private void ClearActiveDrop()
-    {
-        foreach (ExpDrop x in activeExp)
-        {
-            _dPool.ReturnToPool(x);
-        }
-        activeExp.Clear();
+    //private void ClearActiveDrop()
+    //{
+    //    foreach (ExpDrop x in activeExp)
+    //    {
+    //        _dPool.ReturnToPool(x);
+    //    }
+    //    activeExp.Clear();
 
-        foreach (GoldDrop x in activeGold)
-        {
-            _dPool.ReturnToPool(x);
-        }
-        activeGold.Clear();
-    }
+    //    foreach (GoldDrop x in activeGold)
+    //    {
+    //        _dPool.ReturnToPool(x);
+    //    }
+    //    activeGold.Clear();
+    //}
 
     private void ClearActiveEnemy()
     {
@@ -485,47 +501,98 @@ public class BattleManager : MonoBehaviour
             if (enemy)
             {
                 MediatorManager<IMoveByPlayer>.UnregisterMediator(enemy);
+                enemy.StopAllCoroutines();
+                if (enemy.enemyHpBar)
+                    enemy.enemyHpBar.pool.ReturnToPool(enemy.enemyHpBar);
                 Destroy(enemy.gameObject);
             }
         }
         _enemies = null;
     }
-    private void ControlView(bool isExpand)
-    {
-        if (isExpand)//넓은 공간을 보여줌
-        {
-            expandCamera.gameObject.SetActive(true);
-            shrinkCamera.gameObject.SetActive(false);
-            currentCamera = expandCamera;
-            UIBroker.SetBarPosition?.Invoke(expandCamera);
-        }
-        else//적은 공간을 보여줌
-        {
-            expandCamera.gameObject.SetActive(false);
-            shrinkCamera.gameObject.SetActive(true);
-            currentCamera = shrinkCamera;
-            UIBroker.SetBarPosition?.Invoke(shrinkCamera);
-        }
-        
-    }
     public void ControlBattle(StageInfo stageInfo, bool _isBossStage = false)
     {
-            ClearEntireBattle();
-            if (_isBossStage)
-            {
-                
-                InitBossPools(stageInfo);
-            }
-            else
-            {
-                InitDefaultPools(stageInfo);
-            }
-            ChangeBackground();
-            _isBattleActive = true; // 전투 루프 활성화
+        if (_enemies != null)
+            ClearActiveEnemy();
+        if (_isBossStage)
+        {
+
+            InitBossPools(stageInfo);
+        }
+        else
+        {
+            InitDefaultPools(stageInfo);
+        }
+        ChangeBackground();
+        _isBattleActive = true; // 전투 루프 활성화
     }
+    public void GetGoldByDrop(int value)
+    {
+        _gameData.gold += value;
+        BattleBroker.OnGoldSet();
+    }
+    public void GetExpByDrop(int value)
+    {
+        
+        _gameData.exp += value;
+
+        while (true)
+        {
+            BigInteger needExp = BattleBroker.GetNeedExp();
+            if (_gameData.exp < needExp)
+                break;
+            if (_gameData.exp >= needExp)
+            {
+                _gameData.exp -= needExp;
+                _gameData.level++;
+                _gameData.statPoint++;
+                BattleBroker.OnStatPointSet();
+            }
+        }
+        BattleBroker.OnLevelExpSet();
+    }
+    private BigInteger GetNeedExp()
+    {
+        return _gameData.level * 100;
+    }
+    private int GetStageReward(DropType dropType)
+    {
+        int baseValue = 0;
+
+        if (battleType == BattleType.Default)
+        {
+            switch (dropType)
+            {
+                case DropType.Gold:
+                    baseValue = _currentStageInfo.enemyStatusFromStage.gold;
+                    break;
+                case DropType.Exp:
+                    baseValue = _currentStageInfo.enemyStatusFromStage.exp;
+                    break;
+            }
+        }
+        else if (battleType == BattleType.Boss)
+        {
+            switch (dropType)
+            {
+                case DropType.Gold:
+                    baseValue = _currentStageInfo.bossStatusFromStage.gold;
+                    break;
+                case DropType.Exp:
+                    baseValue = _currentStageInfo.bossStatusFromStage.exp;
+                    break;
+            }
+        }
+
+        // ±10% 범위의 랜덤 int 생성
+        int min = Mathf.FloorToInt(baseValue * 0.9f);
+        int max = Mathf.CeilToInt(baseValue * 1.1f) + 1; // Random.Range의 max는 exclusive
+        int result = Random.Range(min, max);
+        return result;
+    }
+
     [ContextMenu("RestartBattle")]
     public void RestartBattle()
     {
-        BattleBroker.OnStageChange(_gameData.currentStageNum);
+        SwitchToBattle();
     }
 }

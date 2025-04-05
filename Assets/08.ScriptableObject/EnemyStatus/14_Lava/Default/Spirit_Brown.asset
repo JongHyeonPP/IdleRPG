@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Spirit_Brown
   m_EditorClassIdentifier: 
   prefab: {fileID: 2440212686632273286, guid: 3cf206d31822a404b84c823af3e90542, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

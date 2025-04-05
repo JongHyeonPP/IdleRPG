@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: BigFrog_Red
   m_EditorClassIdentifier: 
   prefab: {fileID: 1142785901279295290, guid: aae3778bcdca53d4ba1d8a83be47fff4, type: 3}
-  isMonster: 0
-  isBoss: 1
+  isMonster: 1
+  enemyType: 1

@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: BigSpirit_Blue
   m_EditorClassIdentifier: 
   prefab: {fileID: 4054891035455531101, guid: 2d132963982b49b4c991fbb8c0693d12, type: 3}
-  isMonster: 0
-  isBoss: 1
+  isMonster: 1
+  enemyType: 1

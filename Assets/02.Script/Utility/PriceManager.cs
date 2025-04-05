@@ -12,6 +12,7 @@ public class PriceManager : MonoBehaviour
     public const int MAXCOMPANIONSKILLLEVEL = 20;
     public const int MAXWEAPONLEVEL = 20;
     public Sprite[] fragmentSprites;
+    public Color[] rarityColor;
     private void Awake()
     {
         instance = this;

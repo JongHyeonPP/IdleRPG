@@ -97,6 +97,7 @@ public class EquipedSkillUI : MonoBehaviour
         switch (uiType)
         {
             case 0:
+            case 1:
             case 2:
                 root.style.display = DisplayStyle.Flex;
                 break;

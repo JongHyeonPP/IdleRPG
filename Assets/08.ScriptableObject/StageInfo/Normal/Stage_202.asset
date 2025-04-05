@@ -21,14 +21,24 @@ MonoBehaviour:
   boss: {fileID: 11400000, guid: a2836eb42dee4c54e884da72aca238f1, type: 2}
   enemyNum: 4
   enemyStatusFromStage:
-    maxHp: 10
+    maxHp: 100
     resist: 0
+    gold: 2020
+    exp: 2020
   bossStatusFromStage:
     maxHp: 100
     resist: 0
     power: 10
     penetration: 0
-  companionTechIndex:
+    gold: 20200
+    exp: 20200
+  chestStatusFromStage:
+    maxHp: 
+    resist: 0
+    gold: 0
+    exp: 0
+  companionTechInfo:
     companionNum: 0
     techIndex_0: 0
     techIndex_1: 0
+    recommendLevel: 0

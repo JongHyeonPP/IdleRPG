@@ -1,3 +1,4 @@
+using System.Numerics;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.UIElements;
@@ -42,10 +43,20 @@ public class CurrencyBarUI : MonoBehaviour
     }
     private void SetLevelExp()
     {
-        float value = GameManager.instance.GetExpPercent();
+        float value = GetExpPercent();
         _expBar.value = value;
         _expBar.title = $"{value * 100f:F2}%";
         _levelLabel.text = $"Lv. {StartBroker.GetGameData().level}";
+    }
+    public float GetExpPercent()
+    {
+        BigInteger needExp = BattleBroker.GetNeedExp();
+        BigInteger exp = _gameData.exp;
+
+        if (needExp == 0)
+            return 0f; // 0으로 나누는 오류 방지
+
+        return (float)((double)exp / (double)needExp);
     }
     private void OnSetLevel(int level)
     {

@@ -846,6 +846,7 @@ MonoBehaviour:
   _bodyLeftFoot: {fileID: 6068865999750061737}
   _bodyRightFoot: {fileID: 3729745551722439511}
   _defaultAppearanceData: {fileID: 11400000, guid: 461579a71a8b8ea48983c2f4ebbe0b1a, type: 2}
+  _currentAppearanceData: {fileID: 11400000, guid: 461579a71a8b8ea48983c2f4ebbe0b1a, type: 2}
 --- !u!1 &1760892613408879184
 GameObject:
   m_ObjectHideFlags: 0

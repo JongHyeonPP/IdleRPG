@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Golem_Flame
   m_EditorClassIdentifier: 
   prefab: {fileID: 6442854522951440426, guid: 82576b6e241f797438418e9f470c5203, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

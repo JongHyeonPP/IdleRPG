@@ -12,7 +12,7 @@ public class CameraController : MonoBehaviour
     {
         if (mainCamera == null)
         {
-            mainCamera = BattleManager.instance.currentCamera;
+            mainCamera = Camera.main;
         }
         mainCamera.enabled = true;
         storyCamera.enabled = false;
@@ -20,10 +20,6 @@ public class CameraController : MonoBehaviour
     
     public void SwitchToCamera(bool ismaincamera)//true는 메인카메라활성화,false는 스토리카메라활성화
     {
-        if (mainCamera == null)
-        {
-            mainCamera = BattleManager.instance.currentCamera;
-        }
         mainCamera.enabled = ismaincamera;
         storyCamera.enabled = !ismaincamera;
         isStoryCameraActive = !ismaincamera;

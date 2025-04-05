@@ -1,6 +1,8 @@
 using EnumCollection;
 using System;
+using System.Numerics;
 using UnityEngine;
+using Vector3 = UnityEngine.Vector3;
 public static class BattleBroker
 {
     //적이 죽었을 때 아이템 드랍. <적 위치>
@@ -15,8 +17,6 @@ public static class BattleBroker
     public static Func<BattleType> GetBattleType;
     //보스 HP 변경 시 비율 전달
     public static Action<float> OnBossHpChanged;
-    //전투에서 무엇을 얼마나 얻었는지, 왼쪽에 줄줄이 띄우기 위함
-    public static Action<DropType, int> OnCurrencyInBattle;
 
     public static Action OnGoldSet;
     public static Action OnStatPointSet;
@@ -24,6 +24,7 @@ public static class BattleBroker
     public static Action OnDiaSet;
     public static Action OnCloverSet;
     public static Action OnMaxStageSet;
+    public static Action<int> RefreshStageSelectUI;
     public static Func<bool> IsCanAttack;
 
     public static Action<int> SwitchToStory;
@@ -31,10 +32,20 @@ public static class BattleBroker
     public static Action SwitchToBoss;
     public static Action<int, (int,int)> SwitchToCompanionBattle;
     //동료
-    public static Action<object> StartCompanionAttack;
-    public static Action StopCompanionAttack;
+    public static Action<int> ControllCompanionMove;//0 : 멈충, 1 : 움직임, 2 : 공격
     public static Action<int> OnCompanionExpSet;
     //승급
     public static Action<Rank> ChallengeRank;
+
+    public static Func<BigInteger> GetNeedExp;
+    public static Action<int> OnExpByDrop;
+    public static Action<int> OnGoldByDrop;
+
+    public static Func<DropType, int> GetStageRewardValue;
+
+    public static Action SetCameraExpand;
+    public static Action SetCameraShrink;
+
+    public static Action<Vector3, string> ShowDamageText;//Screen Pos
 
 }

@@ -9,7 +9,9 @@
         "Story",
         "NoticeDot",
         "Companion",
-        "Store"
+        "Store",
+        "Utility",
+        "AutoReward"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -1,0 +1,5 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:VisualElement name="InableInBattleUI" style="flex-grow: 0; height: 172px; bottom: 868px; position: absolute; width: 100%; align-items: center; background-color: rgba(84, 84, 84, 0.71); justify-content: center;">
+        <engine:Label text="전투중에는 이용이 불가합니다" style="-unity-font-definition: url(&quot;project://database/Assets/05.Font/Maplestory%20Light.ttf?fileID=12800000&amp;guid=b7853b5ad26567e41a3c4210e64c5419&amp;type=3#Maplestory Light&quot;); font-size: 68px; color: rgb(255, 255, 255);" />
+    </engine:VisualElement>
+</engine:UXML>

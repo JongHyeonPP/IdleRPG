@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef5ab10e5d7b96f44883280afb1d6071, type: 3}
-  m_Name: Companion_2
+  m_Name: CompanionEffect_2-1_0
   m_EditorClassIdentifier: 
   skillName: 
   uid: 
   iconSprite: {fileID: 0}
   simple: 
-  complex: "\uC801\uC5D0\uAC8C \uAC00\uD558\uB294 \uD53C\uD574\uB7C9 +<value*100>%"
+  complex: "\uAD00\uD1B5\uB825 +<value>"
   rarity: 0
   isPlayerSkill: 0
   skillCoolType: 2

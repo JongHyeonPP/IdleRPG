@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Demigrif_Green
   m_EditorClassIdentifier: 
   prefab: {fileID: 956319322883191658, guid: 6df175fc443904e4f91bcdeff28ec42f, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

@@ -5,7 +5,12 @@ using UnityEngine.UIElements;
 public class CompanionTechUI : MonoBehaviour
 {
     public VisualElement root { get; private set; }
+    public VisualElement _bottom;
+    public VisualElement _frame;
     private Label _nameLabel;
+    private Label _diaLabel;
+    private Label _cloverLabel;
+    private Label _companionEffectLabel;
     private GameData _gameData;
     private readonly Color _acquireColor = new Color(1f, 1f, 1f);
     private readonly Color _unacquireColor = new Color(0.8f,0.8f,0.8f);
@@ -21,6 +26,11 @@ public class CompanionTechUI : MonoBehaviour
     {
         root = GetComponent<UIDocument>().rootVisualElement;
         _nameLabel = root.Q<Label>("NameLabel");
+        _diaLabel = root.Q<Label>("DiaLabel");
+        _cloverLabel = root.Q<Label>("CloverLabel");
+        _companionEffectLabel = root.Q<Label>("CompanionEffectLabel");
+        _bottom = root.Q<VisualElement>("Bottom");
+        _frame = root.Q<VisualElement>("Frame");
         _gameData = StartBroker.GetGameData();
         _renderTextureArr[0] = new VisualElement[1];
         _renderTextureArr[1] = new VisualElement[2];
@@ -53,6 +63,7 @@ public class CompanionTechUI : MonoBehaviour
         else
         {
             BattleBroker.SwitchToCompanionBattle(_currentCompanionIndex, _currentTech);
+            UIBroker.OnMenuUIChange(0);
         }
         UIBroker.InactiveCurrentUI();
     }
@@ -68,44 +79,58 @@ public class CompanionTechUI : MonoBehaviour
         _currentCompanionIndex = companionIndex;
         root.style.display = DisplayStyle.Flex;
         UIBroker.ActiveTranslucent(root, true);
-        CompanionStatus companionStatus = CompanionManager.instance.companionArr[companionIndex].companionStatus;
+        _currentTechData = CompanionManager.instance.GetCompanionTechData(companionIndex, techIndex_0, techIndex_1);
+        //Skill
+        SkillData techSkill = _currentTechData.techSkill;
+        int companionLevel = CompanionManager.instance.GetCompanionLevelExp(companionIndex).Item1;
+        Color techSkillValueColor;
         switch (techIndex_0)
         {
             default:
-                _currentTechData = companionStatus.companionTechData_0;
+                techSkillValueColor = PriceManager.instance.rarityColor[6];
                 break;
             case 1:
-                if (techIndex_1 == 0)
-                    _currentTechData = companionStatus.companionTechData_1_0;
-                else
-                    _currentTechData = companionStatus.companionTechData_1_1;
+                techSkillValueColor = PriceManager.instance.rarityColor[0];
                 break;
             case 2:
-                if (techIndex_1 == 0)
-                    _currentTechData = companionStatus.companionTechData_2_0;
-                else
-                    _currentTechData = companionStatus.companionTechData_2_1;
+                techSkillValueColor = PriceManager.instance.rarityColor[2];
                 break;
             case 3:
-                if (techIndex_1 == 0)
-                    _currentTechData = companionStatus.companionTechData_3_0;
-                else
-                    _currentTechData = companionStatus.companionTechData_3_1;
+                techSkillValueColor = PriceManager.instance.rarityColor[4];
                 break;
         }
+        _companionEffectLabel.text = SkillManager.instance.GetParsedComplexExplain(techSkill, companionLevel, techSkillValueColor);
+        //
+        _diaLabel.text = _currentTechData.dia.ToString(
+            );
+        _cloverLabel.text = _currentTechData.clover.ToString("N0");
         int techDataIndex = _gameData.companionPromoteTech[companionIndex][techIndex_1];
         _isAcquired = techDataIndex >= techIndex_0;
-        if (_isAcquired)
+        if (techDataIndex >= techIndex_0)
         {
+            _confirmButton.style.display = DisplayStyle.Flex;
             _nameLabel.text = $"{_currentTechData.techName} (»πµÊ«‘)";
             _nameLabel.style.color = _acquireColor;
             _confirmButton.Q<Label>().text = "¡˜æ˜ ∫Ø∞Ê";
+            _bottom.style.display = DisplayStyle.None;
+            _frame.style.height = Length.Percent(118f);
+        }
+        else if (techDataIndex+1==techIndex_0)
+        {
+            _confirmButton.style.display = DisplayStyle.Flex;
+            _nameLabel.text = $"{_currentTechData.techName} (πÃ»πµÊ)";
+            _nameLabel.style.color = _unacquireColor;
+            _confirmButton.Q<Label>().text = "¿¸≈ı«œ±‚";
+            _bottom.style.display = DisplayStyle.Flex;
+            _frame.style.height = Length.Percent(112f);
         }
         else
         {
+            _confirmButton.style.display = DisplayStyle.None;
+            _nameLabel.style.color = _acquireColor;
             _nameLabel.text = $"{_currentTechData.techName} (πÃ»πµÊ)";
-            _nameLabel.style.color = _unacquireColor;
-            _confirmButton.Q<Label>().text  = "¿¸≈ı«œ±‚";
+            _bottom.style.display = DisplayStyle.Flex;
+            _frame.style.height = Length.Percent(112f);
         }
         if (_currentIndex_0 != -1)
         {

@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Orc
   m_EditorClassIdentifier: 
   prefab: {fileID: 942935304299055291, guid: 17651ba020a077942a52ca676c3f5ec6, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

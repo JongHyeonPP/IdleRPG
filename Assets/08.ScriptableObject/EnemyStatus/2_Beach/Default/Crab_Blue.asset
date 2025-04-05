@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Crab_Blue
   m_EditorClassIdentifier: 
   prefab: {fileID: 2150601214350787568, guid: 53cc41a76057e1041accb20a2fb08d79, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

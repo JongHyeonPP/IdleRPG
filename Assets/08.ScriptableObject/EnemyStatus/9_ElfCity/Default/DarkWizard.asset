@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: DarkWizard
   m_EditorClassIdentifier: 
   prefab: {fileID: 2902517747223926735, guid: 1dd6af82062710f4a80f1e5dadf65a20, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

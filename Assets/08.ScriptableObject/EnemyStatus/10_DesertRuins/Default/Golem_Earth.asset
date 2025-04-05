@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Golem_Earth
   m_EditorClassIdentifier: 
   prefab: {fileID: 213048579874933140, guid: 172a1fee44c955d4189b3f7e4c8405ed, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

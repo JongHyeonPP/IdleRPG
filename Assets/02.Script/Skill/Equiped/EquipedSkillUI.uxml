@@ -1,7 +1,7 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <engine:Template name="SkillInBattleSlot" src="project://database/Assets/02.Script/Skill/Equiped/EquipedSkillSlot.uxml?fileID=9197481963319205126&amp;guid=d25262dc4d178574f928ba3825a7a300&amp;type=3#EquipedSkillSlot" />
     <engine:VisualElement name="EquipedSkillsUI" picking-mode="Ignore" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); justify-content: flex-start; position: relative; flex-shrink: 0; width: 100%; display: flex;">
-        <engine:VisualElement name="UpperPanel" style="flex-grow: 0; flex-direction: row-reverse; height: 86px;">
+        <engine:VisualElement name="UpperPanel" style="flex-grow: 0; flex-direction: row-reverse; height: 86px; position: absolute; top: -86px; right: 0;">
             <engine:Button text="Auto" name="AutoButton" style="font-size: 46px; -unity-font-definition: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Fonts/runescape_uf.ttf?fileID=12800000&amp;guid=cbe30ba2c94f1a54ba035ec94a2c65f9&amp;type=3#runescape_uf&quot;); margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; width: 134px; background-color: rgba(0, 0, 0, 0.7); color: rgb(255, 255, 255);" />
         </engine:VisualElement>
         <engine:ScrollView mode="Horizontal" horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="Hidden" name="ScrollView" style="justify-content: flex-start; background-color: rgba(0, 0, 0, 0.8); flex-grow: 1; padding-top: 15px; height: 216px;">

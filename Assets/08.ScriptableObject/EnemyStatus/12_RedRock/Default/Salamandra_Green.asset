@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Salamandra_Green
   m_EditorClassIdentifier: 
   prefab: {fileID: 4236590299938280908, guid: ba9b04b10843f894ba24d82b6738bd78, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

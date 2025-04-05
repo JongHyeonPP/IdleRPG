@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: BigSkeleton
   m_EditorClassIdentifier: 
   prefab: {fileID: 8246446968035277526, guid: 45efea52aa5b5cf4f9f7e84e4e9011f3, type: 3}
-  isMonster: 0
-  isBoss: 1
+  isMonster: 1
+  enemyType: 1

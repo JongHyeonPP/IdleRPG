@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: BigBush_Purple
   m_EditorClassIdentifier: 
   prefab: {fileID: 5359686593352756035, guid: 3be0ddc78e921754baeb91c686ab03af, type: 3}
-  isMonster: 0
-  isBoss: 1
+  isMonster: 1
+  enemyType: 1

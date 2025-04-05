@@ -35,6 +35,7 @@ public static class PlayerBroker
     public static Action<int, int, (StatusType, Rarity)?> OnCompanionPromoteEffectSet;// CompanionIndex, EffectIndex, Value
     public static Action<int, int, int> OnCompanionPromoteTechSet;//CompanionIndex, TechIndex, Value
     public static Action<int> CompanionTechRenderSet;
+    public static Action<float, (int,int)> CompanionTechRgbSet;//Value, (Row, Column)
 
     public static Action<AppearanceData> OnPlayerAppearanceChange;
     public static Action<int, AppearanceData> OnCompanionAppearanceChange;//int : CompanionIndex

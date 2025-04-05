@@ -9,13 +9,6 @@ public class CompanionManager : MonoBehaviour
     public static int EXPINTERVAL = 5;
     public static int PROMOTE_EFFECT_CHANGE_PRICE = 5;
     public CompanionPromoteData companionPromoteData;
-    //Color
-    public Color commonColor;
-    public Color uncommonColor;
-    public Color rareColor;
-    public Color uniqueColor;
-    public Color legendaryColor;
-    public Color mythicColor;
     private void Awake()
     {
         instance = this;
@@ -111,5 +104,35 @@ public class CompanionManager : MonoBehaviour
                 break;
         }
         return result;
+    }
+    public CompanionTechData GetCompanionTechData(int companionIndex, int techIndex_0, int techIndex_1)
+    {
+        CompanionStatus companionStatus = companionArr[companionIndex].companionStatus;
+        CompanionTechData companionTechData = null;
+        switch (techIndex_0)
+        {
+            default:
+                companionTechData = companionStatus.companionTechData_0;
+                break;
+            case 1:
+                if (techIndex_1 == 0)
+                    companionTechData = companionStatus.companionTechData_1_0;
+                else
+                    companionTechData = companionStatus.companionTechData_1_1;
+                break;
+            case 2:
+                if (techIndex_1 == 0)
+                    companionTechData = companionStatus.companionTechData_2_0;
+                else
+                    companionTechData = companionStatus.companionTechData_2_1;
+                break;
+            case 3:
+                if (techIndex_1 == 0)
+                    companionTechData = companionStatus.companionTechData_3_0;
+                else
+                    companionTechData = companionStatus.companionTechData_3_1;
+                break;
+        }
+        return companionTechData;
     }
 }

@@ -27,7 +27,7 @@ public class PlayerController : Attackable
         SetDefaultAttack();
         SetGoldStatus();
         SetStatPointStatus();
-
+        mainCamera = Camera.main;
     }
 
 
@@ -177,6 +177,7 @@ public class PlayerController : Attackable
 
     protected override void OnDead()
     {
+        Debug.Log("Player Dead");
         anim.ResetTrigger("Attack");
         anim.SetTrigger("Die");
         PlayerBroker.OnPlayerDead();
@@ -221,11 +222,6 @@ public class PlayerController : Attackable
     {
         EquipedSkill currentSkill = new(SkillManager.instance.GetSkillData(skillId));
         equipedSkillArr[index] = currentSkill;
-    }
-    private void InitPlayer()
-    {
-
-        
     }
 
 }

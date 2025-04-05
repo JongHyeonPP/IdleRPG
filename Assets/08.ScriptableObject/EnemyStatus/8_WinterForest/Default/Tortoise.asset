@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Tortoise
   m_EditorClassIdentifier: 
   prefab: {fileID: 5128610095809254111, guid: 9bafcc9650d6ccc46871670fbcca8054, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

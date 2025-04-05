@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Stump_Dark
   m_EditorClassIdentifier: 
   prefab: {fileID: 5001401592973163419, guid: 8361b95bf6e7c594ba2d045342ad9c90, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

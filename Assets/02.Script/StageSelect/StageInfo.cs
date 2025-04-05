@@ -21,7 +21,8 @@ public class StageInfo : ScriptableObject, IListViewItem
     public int enemyNum;
     public EnemyStatusFromStage enemyStatusFromStage;
     public BossStatusFromStage bossStatusFromStage;
-    public CompanionTechIndex companionTechIndex;
+    public ChestStatusFromStage chestStatusFromStage;
+    public CompanionTechInfo companionTechInfo;
     public string GetDropInfo()
     {
         return $"Currently Undefined";
@@ -29,21 +30,29 @@ public class StageInfo : ScriptableObject, IListViewItem
     [Serializable]
     public class EnemyStatusFromStage
     {
+        [Header("Status")]
         //일반몹과 보스몹이 갖는 스탯
         public string maxHp;
         public float resist;
-
-        //보스몹에게만 의미있는 스탯
-        //public string power;
-        //public float critical;
-        //public float criticalDamage;
-        //public float penetration;
-        //public int mana;
-        //public int manaRecover;
+        [Header("Reward")]
+        public int gold;
+        public int exp;
+    }
+    [Serializable]
+    public class ChestStatusFromStage
+    {
+        [Header("Status")]
+        public string maxHp;
+        public float resist;
+        [Header("Reward")]
+        public int gold;
+        public int exp;
     }
     [Serializable]
     public class BossStatusFromStage
     {
+        //Companion은 Boss Status를 적용한다.
+        [Header("Status")]
         //일반몹과 보스몹이 갖는 스탯
         public string maxHp;
         public float resist;
@@ -51,12 +60,17 @@ public class StageInfo : ScriptableObject, IListViewItem
         //보스몹에게만 의미있는 스탯
         public string power;
         public float penetration;
+        [Header("Reward")]
+        public int gold;
+        public int exp;
     }
     [Serializable]
-    public class CompanionTechIndex
+    public class CompanionTechInfo
     {
+        [Header("Info")]
         public int companionNum;
         public int techIndex_0;//행
         public int techIndex_1;//열
+        public int recommendLevel;
     }
 }

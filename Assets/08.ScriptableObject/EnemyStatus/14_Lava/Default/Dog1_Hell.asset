@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Dog1_Hell
   m_EditorClassIdentifier: 
   prefab: {fileID: 5723752131549147648, guid: b1a272de48fad36459a8db24362f7fb4, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

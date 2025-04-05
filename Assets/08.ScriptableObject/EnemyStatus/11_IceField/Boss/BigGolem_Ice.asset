@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: BigGolem_Ice
   m_EditorClassIdentifier: 
   prefab: {fileID: 4968534142900495877, guid: b4ffd38b0770e3148ae7a695b5347d2f, type: 3}
-  isMonster: 0
-  isBoss: 1
+  isMonster: 1
+  enemyType: 1

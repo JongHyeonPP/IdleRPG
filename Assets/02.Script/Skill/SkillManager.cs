@@ -42,53 +42,61 @@ public class SkillManager : MonoBehaviour
     {
         return acquireInfoArr[i];
     }
-    public string GetParsedComplexExplain(SkillData skillData, int skillLevel, string colorHex = "")
+    public string GetParsedComplexExplain(SkillData skillData, int skillLevel, Color color)
     {
+        string colorHex = ColorUtility.ToHtmlStringRGB(color);
         StringBuilder sb = new(skillData.complex);
 
-        // Color를 RichText용 Hex 코드로 변환
+        // 정규식 패턴: <value>, <value*숫자>, 뒤에 %가 붙을 수도 있음
+        string pattern = @"<value(?:\*(\d+))?>(%)?";
 
-        // 정규식 패턴: `<value>` 또는 `<value*숫자>`
-        string pattern = @"<value(?:\*(\d+))?>";
-
-        // 정규식으로 매칭하여 대체
         sb = new StringBuilder(Regex.Replace(sb.ToString(), pattern, match =>
         {
-            float multiplier = 1f; // 기본값 1
-            if (match.Groups[1].Success) // `<value*숫자>` 형식인 경우
+            float multiplier = 1f;
+            if (match.Groups[1].Success)
             {
                 multiplier = float.Parse(match.Groups[1].Value);
             }
 
-            // 변환된 값
             float value = skillData.value[skillLevel] * multiplier;
+            string formattedValue = value.ToString(); // 원하는 형식대로 바꿔도 됨
 
-            // RichText 적용
-            return $"<color=#{colorHex}>{value}</color>";
+            bool hasPercent = match.Groups[2].Success;
+
+            // % 포함 여부에 따라 RichText 반환
+            if (hasPercent)
+            {
+                return $"<color=#{colorHex}>{formattedValue}%</color>";
+            }
+            else
+            {
+                return $"<color=#{colorHex}>{formattedValue}</color>";
+            }
         }));
 
         return sb.ToString();
     }
 
-//#if UNITY_EDITOR
-//    [ContextMenu("SetUidAsObjectName")]
-//    public void SetUidAsObjectName()
-//    {
-//        foreach (var x in playerSkillArr)
-//        {
-//            x.uid = x.name;
-//            x.skillName = x.name;
-//            EditorUtility.SetDirty(x);
-//        }
-//        foreach (var x in companionSkillArr)
-//        {
-//            x.uid = x.name;
-//            x.skillName = x.name;
-//            EditorUtility.SetDirty(x);
-//        }
-        
-//        AssetDatabase.SaveAssets();
-//        AssetDatabase.Refresh();
-//    }
-//#endif
+
+    //#if UNITY_EDITOR
+    //    [ContextMenu("SetUidAsObjectName")]
+    //    public void SetUidAsObjectName()
+    //    {
+    //        foreach (var x in playerSkillArr)
+    //        {
+    //            x.uid = x.name;
+    //            x.skillName = x.name;
+    //            EditorUtility.SetDirty(x);
+    //        }
+    //        foreach (var x in companionSkillArr)
+    //        {
+    //            x.uid = x.name;
+    //            x.skillName = x.name;
+    //            EditorUtility.SetDirty(x);
+    //        }
+
+    //        AssetDatabase.SaveAssets();
+    //        AssetDatabase.Refresh();
+    //    }
+    //#endif
 }

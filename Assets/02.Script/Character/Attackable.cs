@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using UnityEngine;
+using Vector3 = UnityEngine.Vector3;
 
 public abstract class Attackable : MonoBehaviour
 {
@@ -12,11 +13,11 @@ public abstract class Attackable : MonoBehaviour
     protected float attackTerm = 1f;
     public Animator anim;
     public BigInteger hp;
-    
     protected Coroutine attackCoroutine;
     [HideInInspector]public bool isDead;
     protected EquipedSkill[] equipedSkillArr = new EquipedSkill[10];
     private EquipedSkill _defaultAttack;
+    protected Camera mainCamera;
     protected void SetDefaultAttack()
     {
         _defaultAttack = new();
@@ -71,12 +72,12 @@ public abstract class Attackable : MonoBehaviour
                         }
                     }
                 }
-                yield return new WaitForSeconds(skillData.preDelay*(1f/(1f+speedValue)));
+                yield return new WaitForSeconds(skillData.preDelay * (1f / (1f + speedValue)));
                 AnimBehavior(currentSkill, skillData);
                 List<Attackable> targets = GetTargets(skillData.target, skillData.targetNum);
                 ActiveSkillToTarget(targets, currentSkill);//ÇÙ½É
                 VisualEffectToTarget(targets);
-                yield return new WaitForSeconds(skillData.postDelay* (1f / (1f + speedValue)));
+                yield return new WaitForSeconds(skillData.postDelay * (1f / (1f + speedValue)));
             }
             else
             {
@@ -170,6 +171,9 @@ public abstract class Attackable : MonoBehaviour
                 EnemyController enemyController = this as EnemyController;
                 if (enemyController != null && enemyController.IsMonster)
                     anim.SetTrigger("Hit");
+                Vector3 screenPos = mainCamera.WorldToScreenPoint(transform.position);
+                BattleBroker.ShowDamageText(screenPos, calcedValue.ToString("N0"));
+                StartCoroutine(NewMethod(calcedValue, screenPos));
                 break;
             case SkillType.Heal:
                 break;
@@ -180,6 +184,16 @@ public abstract class Attackable : MonoBehaviour
             OnDead();
         }
     }
+
+    private IEnumerator NewMethod(BigInteger calcedValue, Vector3 screenPos)
+    {
+        for (int i = 0; i < 1; i++)
+        {
+            yield return new WaitForSeconds(0.3f);
+            BattleBroker.ShowDamageText(screenPos + new Vector3(100f,0f), calcedValue.ToString("N0"));
+        }
+    }
+
     private void VisualEffectToTarget(List<Attackable> targets)
     {
 
@@ -195,7 +209,6 @@ public abstract class Attackable : MonoBehaviour
         }
         return result;
     }
-
     public abstract ICharacterStatus GetStatus();
     protected abstract void OnDead();
     protected abstract void OnReceiveSkill();

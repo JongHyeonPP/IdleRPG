@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Spearman
   m_EditorClassIdentifier: 
   prefab: {fileID: 1827096306212822899, guid: 62d8ba74770d64a4aa5adaeddc65d44e, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

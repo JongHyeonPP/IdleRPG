@@ -85,7 +85,7 @@ public class BackgroundPiece : MonoBehaviour, IMoveByPlayer
         }
     }
 
-    public void MoveByCharacter(Vector3 translation)
+    public void MoveByPlayer(Vector3 translation)
     {
         transform.Translate(translation);
     }

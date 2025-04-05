@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: BigSalamandra_Green
   m_EditorClassIdentifier: 
   prefab: {fileID: 4236590299938280908, guid: a98a09e349f21d84da26666e2f8b69b9, type: 3}
-  isMonster: 0
-  isBoss: 1
+  isMonster: 1
+  enemyType: 1

@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Slug
   m_EditorClassIdentifier: 
   prefab: {fileID: 18185207901381205, guid: 0bafca34db4d8054f9ba125f72ec40ca, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

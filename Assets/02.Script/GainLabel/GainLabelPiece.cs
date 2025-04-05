@@ -28,7 +28,7 @@ class GainLabelPiece
     {
         _dropType = dropType;
         _value = value;
-        _valueLabel.text = value.ToString("N0");
+        _valueLabel.text = $"+{value:N0}";
         isActive = true;
         root.style.opacity = 1f;
         switch (dropType)

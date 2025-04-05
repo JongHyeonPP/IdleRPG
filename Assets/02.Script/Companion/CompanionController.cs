@@ -18,8 +18,7 @@ public class CompanionController : MonoBehaviour
     }
     void Start()
     {
-        BattleBroker.StartCompanionAttack += StartCompanionMove;
-        BattleBroker.StopCompanionAttack += StopCompanionMove;
+        BattleBroker.ControllCompanionMove += ControllCompanionMove;
         _weaponController = GetComponent<WeaponController>();
         switch (_weaponController.weaponType)
         {
@@ -90,34 +89,34 @@ public class CompanionController : MonoBehaviour
         }
     }
 
-    private void StopCompanionMove()
+    private void ControllCompanionMove(int state)
     {
-        MoveState(true);
+        switch (state)
+        {
+            case 0:
+                anim.SetFloat("RunState", 0f);
+                if (_attackCoroutine != null)
+                {
+                    StopCoroutine(_attackCoroutine);
+                    _attackCoroutine = null;
+                }
+                break;
+            case 1:
+                anim.SetFloat("RunState", 0.5f);
+                if (_attackCoroutine != null)
+                {
+                    StopCoroutine(_attackCoroutine);
+                    _attackCoroutine = null;
+                }
+                break;
+            case 2:
+                anim.SetFloat("RunState", 0f);
+                if (_attackCoroutine == null)
+                    _attackCoroutine = StartCoroutine(AttackCoroutine());
+                break;
+        }
     }
 
-    private void StartCompanionMove(object obj)
-    {
-        MoveState(false);
-    }
-    public void MoveState(bool _isMove)
-    {
-        //0.5°¡ ¿­½ÉÈ÷ ¶Ù´Â °Í, 0ÀÌ ¸ØÃá °Í.
-        anim.SetFloat("RunState", _isMove ? 0.5f : 0f);
-        if (_isMove)
-        {
-
-            if (_attackCoroutine != null)
-            {
-                StopCoroutine(_attackCoroutine);
-                _attackCoroutine = null;
-            }
-        }
-        else
-        {
-            if (_attackCoroutine == null)
-                _attackCoroutine = StartCoroutine(AttackCoroutine());
-        }
-    }
     public IEnumerator AttackCoroutine()
     {
         while (true)

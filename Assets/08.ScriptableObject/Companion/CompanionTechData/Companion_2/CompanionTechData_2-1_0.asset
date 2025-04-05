@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a9e32f675996c74ebd2761ec2983719, type: 3}
   m_Name: CompanionTechData_2-1_0
   m_EditorClassIdentifier: 
-  appearanceData: {fileID: 11400000, guid: 43f3bcbb4ac5e76439b9bea1ca93d8f5, type: 2}
-  techName: "\uACAC\uC2B5\uC0AC\uC81C"
-  techSkill: {fileID: 0}
+  appearanceData: {fileID: 11400000, guid: 06f2383c6a30b5f4096d278685f140b7, type: 2}
+  techName: "\uD751\uB9C8\uBC95 \uC5F0\uC2B5\uC0DD"
+  techSkill: {fileID: 11400000, guid: 20139601f5728814e93bd24a84f34e19, type: 2}
+  dia: 2300
+  clover: 575

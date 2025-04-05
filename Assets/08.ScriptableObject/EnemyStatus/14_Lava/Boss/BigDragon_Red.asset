@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: BigDragon_Red
   m_EditorClassIdentifier: 
   prefab: {fileID: 6431339184081074910, guid: 035968b753579a74fa2bdd070e15b717, type: 3}
-  isMonster: 0
-  isBoss: 1
+  isMonster: 1
+  enemyType: 1

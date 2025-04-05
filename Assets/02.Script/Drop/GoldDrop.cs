@@ -21,7 +21,7 @@ public class GoldDrop : DropBase
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            GameManager.instance.GetGoldByDrop();
+            BattleBroker.OnGoldByDrop(value);
             dropPool.ReturnToPool(this);
         }
         else if (collision.gameObject.CompareTag("Wall"))
@@ -29,40 +29,54 @@ public class GoldDrop : DropBase
             _isMoveForward = false;
         }
     }
-    public override void MoveByCharacter(Vector3 translation)
+    public override void MoveByPlayer(Vector3 translation)
     {
-        // X축 이동 계산 (speed 적용, translation.x 사용)
-        float horizontalMovement = translation.x + _speed * Time.fixedDeltaTime * (_isMoveForward ? 1 : -1);
-        // Y축 이동 계산 (기준 Y좌표를 중심으로 상하 이동)
+        // 플레이어 입력에 따른 가로 이동만 처리
+        transform.Translate(translation);
+    }
+
+    private void FixedUpdate()
+    {
+        Vector3 movement = Vector3.zero;
+
+        // 자동 전진 (X축)
+        movement.x = _speed * Time.fixedDeltaTime * (_isMoveForward ? 1 : -1);
+
+        // 상하 진동 (Y축)
         float currentY = transform.position.y;
         if (_movingUp)
         {
             _verticalSpeed = _frequency * Time.fixedDeltaTime;
-            if (currentY >= _startPosition.y + _amplitude) // 기준 높이 + 진폭
+            if (currentY >= _startPosition.y + _amplitude)
             {
                 _verticalSpeed = 0;
-                _movingUp = false; // 방향 전환
+                _movingUp = false;
             }
         }
         else
         {
             _verticalSpeed = -_frequency * Time.fixedDeltaTime;
-            if (currentY <= _startPosition.y - _amplitude) // 기준 높이 - 진폭
+            if (currentY <= _startPosition.y - _amplitude)
             {
                 _verticalSpeed = 0;
-                _movingUp = true; // 방향 전환
+                _movingUp = true;
             }
         }
-        // 최종 이동 벡터 계산 (X축과 Y축 계산 결합)
-        Vector3 movement = new(horizontalMovement, _verticalSpeed, 0);
+        movement.y = _verticalSpeed;
 
-        // Translate로 한 번에 적용
+        // 자동 이동 + 상하 진동 적용
         transform.Translate(movement);
     }
+
 
     public override void StartDropMove()
     {
         _startPosition = transform.position;
         _isMoveForward = true;
+    }
+
+    public override void SetValue()
+    {
+        value = BattleBroker.GetStageRewardValue(DropType.Gold);
     }
 }

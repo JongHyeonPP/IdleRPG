@@ -101,13 +101,14 @@ public class StageInfoManager : MonoBehaviour
         return result;
     }
 #if UNITY_EDITOR
-    [ContextMenu("SetEnemyStatusInStage")]
-    public void Temp()
+    [ContextMenu("SetDefaultStatus")]
+    public void SetDefaultStatus()
     {
         foreach (StageInfo x in _normalStageInfoArr)
         {
             x.enemyStatusFromStage.maxHp = 10.ToString();
             x.enemyStatusFromStage.resist = 0f;
+            EditorUtility.SetDirty(x);
         }
         foreach (StageInfo x in _normalStageInfoArr)
         {
@@ -115,8 +116,44 @@ public class StageInfoManager : MonoBehaviour
             x.bossStatusFromStage.resist = 0f;
             x.bossStatusFromStage.power = 10.ToString();
             x.bossStatusFromStage.penetration = 0f;
+            EditorUtility.SetDirty(x);
         }
         // 변경된 데이터를 애셋 파일에 저장
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+    }
+    [ContextMenu("SetDefaultReward")]
+    public void SetDefaultReward()
+    {
+        foreach (StageInfo x in _normalStageInfoArr)
+        {
+            x.enemyStatusFromStage.gold = x.stageNum*10;
+            x.enemyStatusFromStage.exp = x.stageNum*10;
+            EditorUtility.SetDirty(x);
+        }
+        foreach (StageInfo x in _normalStageInfoArr)
+        {
+            x.bossStatusFromStage.gold = x.stageNum * 100;
+            x.bossStatusFromStage.exp = x.stageNum * 100;
+            EditorUtility.SetDirty(x);
+        }
+        // 변경된 데이터를 애셋 파일에 저장
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+    }
+    [ContextMenu("SetCompanionTechStatus")]
+    public void SetCompanionTechStatus()
+    {
+
+
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+    }
+    [ContextMenu("SetCompanionTechReward")]
+    public void SetCompanionTechReward()
+    {
+        
+
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
     }

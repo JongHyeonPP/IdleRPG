@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: BigScorpion
   m_EditorClassIdentifier: 
   prefab: {fileID: 6445825857767348604, guid: ee98b5f3e7f14cc47ab21e796939f780, type: 3}
-  isMonster: 0
-  isBoss: 1
+  isMonster: 1
+  enemyType: 1

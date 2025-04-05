@@ -5,7 +5,7 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class WeaponUI : MonoBehaviour, IBattleUI
+public class WeaponUI : MonoBehaviour
 {
     //VIsualElement
     public VisualElement root { get; private set; }
@@ -369,15 +369,4 @@ public class WeaponUI : MonoBehaviour, IBattleUI
         }
     }
 
-
-
-    public void ActivateBattleMode()
-    {
-        
-    }
-
-    public void DeactivateBattleMode()
-    {
-        
-    }
 }

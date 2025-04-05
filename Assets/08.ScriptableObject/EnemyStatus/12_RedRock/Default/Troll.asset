@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Troll
   m_EditorClassIdentifier: 
   prefab: {fileID: 6423368943838986219, guid: 7b593bdcc7850c640bbadfa7a67bce5e, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

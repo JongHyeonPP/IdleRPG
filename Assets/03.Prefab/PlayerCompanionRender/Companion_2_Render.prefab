@@ -4435,6 +4435,7 @@ MonoBehaviour:
   _bodyLeftFoot: {fileID: 8604738026338501694}
   _bodyRightFoot: {fileID: 4913246334155471237}
   _defaultAppearanceData: {fileID: 11400000, guid: 22447ff29069d3e40a4806008a35a31f, type: 2}
+  _currentAppearanceData: {fileID: 11400000, guid: 22447ff29069d3e40a4806008a35a31f, type: 2}
 --- !u!114 &268308671371197290
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: BigWolf_Brown
   m_EditorClassIdentifier: 
   prefab: {fileID: 4705668313439074411, guid: b480718db919a7040a8b6a1bc1b38a44, type: 3}
-  isMonster: 0
-  isBoss: 1
+  isMonster: 1
+  enemyType: 1

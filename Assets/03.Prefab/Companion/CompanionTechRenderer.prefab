@@ -4113,8 +4113,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3827069807936464071}
   - component: {fileID: 619469896352988433}
+  - component: {fileID: 5405043929632639292}
   m_Layer: 11
-  m_Name: CompanionJobRenderer
+  m_Name: CompanionTechRenderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4172,6 +4173,21 @@ MonoBehaviour:
   _bodyRightArm: {fileID: 9038365914980796654}
   _bodyLeftFoot: {fileID: 5142155025282489799}
   _bodyRightFoot: {fileID: 8737617215204174760}
+  _defaultAppearanceData: {fileID: 0}
+  _currentAppearanceData: {fileID: 0}
+--- !u!114 &5405043929632639292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6610468762495694530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db5e4fe176367e140bda7eef15592994, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _footHoldRenderer: {fileID: 5618291946049884354}
 --- !u!1 &6636478969399143394
 GameObject:
   m_ObjectHideFlags: 0

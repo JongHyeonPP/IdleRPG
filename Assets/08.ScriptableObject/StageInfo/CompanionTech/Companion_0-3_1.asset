@@ -23,12 +23,22 @@ MonoBehaviour:
   enemyStatusFromStage:
     maxHp: 
     resist: 0
+    gold: 0
+    exp: 0
   bossStatusFromStage:
     maxHp: 100
     resist: 0
     power: 10
     penetration: 0
-  companionTechIndex:
+    gold: 0
+    exp: 0
+  chestStatusFromStage:
+    maxHp: 
+    resist: 0
+    gold: 0
+    exp: 0
+  companionTechInfo:
     companionNum: 0
     techIndex_0: 3
     techIndex_1: 1
+    recommendLevel: 0

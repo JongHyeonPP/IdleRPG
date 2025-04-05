@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Bat
   m_EditorClassIdentifier: 
   prefab: {fileID: 5197541462379281757, guid: 856d2a0cf024817428debf69b1f810c1, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

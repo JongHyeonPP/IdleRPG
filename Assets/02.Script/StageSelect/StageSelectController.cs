@@ -59,6 +59,7 @@ public class StageSelectController : LVItemController
         {
             Debug.Log("Move To Stage" + index);
             BattleBroker.OnStageChange(index);
+            UIBroker.InactiveCurrentUI?.Invoke();
         }
     }
 }

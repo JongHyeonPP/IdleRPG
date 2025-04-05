@@ -14,4 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   appearanceData: {fileID: 11400000, guid: f4027891c5fae59458a31d36c9b94042, type: 2}
   techName: "\uAD81\uBCD1\uB2E8\uC7A5"
-  techSkill: {fileID: 0}
+  techSkill: {fileID: 11400000, guid: 934788472f25602429ae212f2a750802, type: 2}
+  dia: 2300
+  clover: 575

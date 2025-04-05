@@ -2,5 +2,5 @@ using UnityEngine;
 
 public interface IMoveByPlayer
 {
-    public abstract void MoveByCharacter(Vector3 translation);
+    public abstract void MoveByPlayer(Vector3 translation);
 }

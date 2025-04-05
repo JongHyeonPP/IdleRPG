@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 1282678013306324520, guid: 1774d2cb9f9b9f546a55f0dc1daddc9f, type: 3}
   isMonster: 0
-  isBoss: 1
+  enemyType: 1

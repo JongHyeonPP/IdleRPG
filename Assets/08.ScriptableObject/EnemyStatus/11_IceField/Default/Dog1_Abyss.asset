@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Dog1_Abyss
   m_EditorClassIdentifier: 
   prefab: {fileID: 743801478861104203, guid: 48861d4e9fbd91241832452851d9a053, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

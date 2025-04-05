@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d86c58796157b2c4cb71662e31cd283c, type: 3}
   m_Name: Companion_2-2_1
   m_EditorClassIdentifier: 
-  prefab: {fileID: 1282678013306324520, guid: b0cf95ab13135654c95afa629570efda, type: 3}
+  prefab: {fileID: 1282678013306324520, guid: a3ed3aa03cf9bb143ab9bd6ba702de00, type: 3}
   isMonster: 0
-  isBoss: 1
+  enemyType: 1

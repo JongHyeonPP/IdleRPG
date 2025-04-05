@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Jelly_Bloody
   m_EditorClassIdentifier: 
   prefab: {fileID: 962762296102085024, guid: 511e4805ea8e23a4688e0605b8c02549, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0
