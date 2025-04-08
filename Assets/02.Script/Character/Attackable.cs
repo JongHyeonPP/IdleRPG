@@ -173,7 +173,6 @@ public abstract class Attackable : MonoBehaviour
                     anim.SetTrigger("Hit");
                 Vector3 screenPos = mainCamera.WorldToScreenPoint(transform.position);
                 BattleBroker.ShowDamageText(screenPos, calcedValue.ToString("N0"));
-                StartCoroutine(NewMethod(calcedValue, screenPos));
                 break;
             case SkillType.Heal:
                 break;
@@ -185,14 +184,6 @@ public abstract class Attackable : MonoBehaviour
         }
     }
 
-    private IEnumerator NewMethod(BigInteger calcedValue, Vector3 screenPos)
-    {
-        for (int i = 0; i < 1; i++)
-        {
-            yield return new WaitForSeconds(0.3f);
-            BattleBroker.ShowDamageText(screenPos + new Vector3(100f,0f), calcedValue.ToString("N0"));
-        }
-    }
 
     private void VisualEffectToTarget(List<Attackable> targets)
     {

@@ -1,16 +1,11 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 using EnumCollection;
 using Newtonsoft.Json;
 using System.Collections;
-using UnityEngine.SceneManagement;
 using GooglePlayGames;
 using GooglePlayGames.BasicApi;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
-using Random = UnityEngine.Random;
-using System.Numerics;
 
 public class GameManager : MonoBehaviour
 {
@@ -109,7 +104,8 @@ public class GameManager : MonoBehaviour
     //구글 인증을 진행한다.
     public async void ProcessAuthentication(SignInStatus status)
     {
-        await UnityServices.InitializeAsync();
+        var options = new InitializationOptions().SetOption("environment-name", "develop");
+        await UnityServices.InitializeAsync(options);
         if (status == SignInStatus.Success)
         {
             // Google Play Games 인증 성공 시

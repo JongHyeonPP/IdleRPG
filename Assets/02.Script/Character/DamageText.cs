@@ -37,7 +37,7 @@ public class DamageText : MonoBehaviour
 
         if (coroutine != null)
         {
-            Debug.LogError("살려죠");
+            Debug.LogError("Error");
         }
         coroutine =  StartCoroutine(AnimateTextSequence());
     }
@@ -49,7 +49,6 @@ public class DamageText : MonoBehaviour
                float.IsNaN(_rootChild.resolvedStyle.width) ||
                float.IsNaN(_rootChild.resolvedStyle.height))
         {
-            Debug.Log("아오..");
             yield return null; // 한 프레임 대기
         }
 
