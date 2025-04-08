@@ -34,7 +34,7 @@ public class GameData
     public int maxStageNum = 0;//내가 어디까지 뚫었냐
     public string userName;
     //Array Index : 몇 번째 동료인지, Dictionary Key : 몇 번째 효과인지, Dictionary Value : Tuple.item1 스테이터스와 Tuple.item2 레어리티
-    [JsonConverter(typeof(Struct_StructTuple_DictArrConverter<int, StatusType, Rarity>))]
+    [JsonConverter(typeof(Struct_StructTuple_DictConverter<int, StatusType, Rarity>))]
     public Dictionary<int, (StatusType, Rarity)> playerPromoteEffect = new();
     [JsonConverter(typeof(Struct_StructTuple_DictArrConverter<int, StatusType, Rarity>))]
     public Dictionary<int, (StatusType, Rarity)>[] companionPromoteEffect = new Dictionary<int, (StatusType, Rarity)>[3]
