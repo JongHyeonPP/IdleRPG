@@ -242,6 +242,8 @@ public class BattleManager : MonoBehaviour
                     break;
                 case 21:
                     Debug.Log("두 번째 스토리");
+                    ControlBattle(false);
+                    BattleBroker.SwitchToStory?.Invoke(2);
                     break;
             }
             _gameData.maxStageNum = stageNum;

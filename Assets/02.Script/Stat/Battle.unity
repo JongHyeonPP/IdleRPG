@@ -4570,10 +4570,6 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2556739093503143224, guid: e5439550a63f1134e9837ce477cad658, type: 3}
-      propertyPath: storyPrefabsList.Array.data[0].storyPrefabs.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2556739093503143224, guid: e5439550a63f1134e9837ce477cad658, type: 3}
       propertyPath: storyPrefabsList.Array.data[1].storyPrefabs.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -4581,10 +4577,6 @@ PrefabInstance:
       propertyPath: 'storyPrefabsList.Array.data[0].storyPrefabs.Array.data[0]'
       value: 
       objectReference: {fileID: 4724235853984749486, guid: 8309e3664614e8147be0043492694f98, type: 3}
-    - target: {fileID: 2556739093503143224, guid: e5439550a63f1134e9837ce477cad658, type: 3}
-      propertyPath: 'storyPrefabsList.Array.data[0].storyPrefabs.Array.data[1]'
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 2556739093503143224, guid: e5439550a63f1134e9837ce477cad658, type: 3}
       propertyPath: 'storyPrefabsList.Array.data[1].storyPrefabs.Array.data[0]'
       value: 

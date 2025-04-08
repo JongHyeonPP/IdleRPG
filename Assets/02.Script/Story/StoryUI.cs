@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,24 +9,44 @@ public class StoryUI : MonoBehaviour
    
     private VisualElement _main;
     private Label _label;
-    private Button _skipButton;
     private VisualElement _fadeElement;
     private float _fadeDuration = 3f;
     public VisualElement root { get; private set; }
     public StoryManager storyManager;
     public CameraController cameracontroller;
-    private Button _renderTextureimage;
+    private Button _screenButton;
+    private int _currentIndex = 1;
+    private bool _isWaitingForClick = false;
     private void Awake()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
         _main = root.Q<VisualElement>("Main");
         _label = root.Q<Label>("TextLabel");
-        _skipButton = root.Q<Button>("SkipButton");
+       
         _fadeElement = root.Q<VisualElement>("FadeElement");
-        _renderTextureimage= root.Q<Button>("Image");
-        _skipButton.clickable.clicked += () => Skip();
-    }
+        _screenButton=root.Q<Button>("ScreenButton");
+        _screenButton.clicked += OnScreenButtonClick;
 
+    }
+    private void OnScreenButtonClick()
+    {
+        if (_isWaitingForClick)
+        {
+            int storyIndex = storyManager.GetCurrentStoryIndex();
+            int key = storyIndex * 1000 + _currentIndex++;
+            storyManager.NextStorySegment(key);
+        }
+    }
+    public void ResetStoryUI()
+    {
+        _currentIndex = 1;
+        _isWaitingForClick = false;
+    }
+    public void RegisterNextButtonClick(Action onClick)
+    {
+        _isWaitingForClick = true;  
+    }
+    
     public void UpdateText(string talker, string text, Color color)
     {
         _label.style.color = color;
@@ -88,11 +109,20 @@ public class StoryUI : MonoBehaviour
     }
     public void SetStoryText(string talker, string text, Color color)
     {
-        _label.text = $"{talker}: {text}";
-        _label.style.color = color;
+        StopAllCoroutines(); 
+        StartCoroutine(TypeText(talker, text, color));
     }
-    private void Skip()
+    private IEnumerator TypeText(string talker, string text, Color color)
     {
-        BattleBroker.SwitchToBattle();
+        _label.text = ""; 
+        _label.style.color = color;
+
+        string fullText = $"{talker}: {text}";
+
+        foreach (char letter in fullText)
+        {
+            _label.text += letter;
+            yield return new WaitForSeconds(0.1f);
+        }
     }
 }

@@ -4,9 +4,6 @@ public class CameraController : MonoBehaviour
 {
     private Camera mainCamera;
     public Camera storyCamera;
-   
-    private StoryPlayerController _playercontroller;
-    private Transform _playerTransform;
     private bool isStoryCameraActive = false;
     private void Start()
     {
@@ -36,14 +33,7 @@ public class CameraController : MonoBehaviour
 
     private void PositionStoryCamera()
     {
-        foreach (var playercontroller in FindObjectsOfType<StoryPlayerController>())
-        {
-            if (playercontroller != null)
-            {
-                _playercontroller = playercontroller;
-                _playerTransform = playercontroller.transform;
-            }
-        }
+      
         storyCamera.transform.position = new Vector3(-4.71f, 17f, storyCamera.transform.position.z); 
 
        

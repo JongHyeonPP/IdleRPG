@@ -52,3 +52,68 @@ MonoBehaviour:
     - 0.2
     - 0.09
     - 0.01
+  - AbilityName: "\uACE8\uB4DC \uD68D\uB4DD\uB7C9 "
+    Values:
+    - 1
+    - 2
+    - 4
+    - 7
+    - 10
+    Probabilities:
+    - 0.4
+    - 0.3
+    - 0.2
+    - 0.09
+    - 0.01
+  - AbilityName: "\uCCB4\uB825 \uD68C\uBCF5\uB7C9"
+    Values:
+    - 10
+    - 20
+    - 30
+    - 40
+    - 50
+    Probabilities:
+    - 0.4
+    - 0.3
+    - 0.2
+    - 0.09
+    - 0.01
+  - AbilityName: "\uD06C\uB9AC\uD2F0\uCEEC \uD655\uB960"
+    Values:
+    - 5
+    - 10
+    - 15
+    - 20
+    - 30
+    Probabilities:
+    - 0.4
+    - 0.3
+    - 0.2
+    - 0.09
+    - 0.01
+  - AbilityName: "\uAD00\uD1B5\uB825"
+    Values:
+    - 5
+    - 10
+    - 15
+    - 20
+    - 30
+    Probabilities:
+    - 0.4
+    - 0.3
+    - 0.2
+    - 0.09
+    - 0.01
+  - AbilityName: "\uC800\uD56D\uB825"
+    Values:
+    - 5
+    - 10
+    - 15
+    - 20
+    - 30
+    Probabilities:
+    - 0.4
+    - 0.3
+    - 0.2
+    - 0.09
+    - 0.01
