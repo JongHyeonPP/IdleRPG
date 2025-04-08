@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigJelly_Green
   m_EditorClassIdentifier: 
   prefab: {fileID: 1360477407247875, guid: 0b0ad83d6b63c5949a78f6551ed74f38, type: 3}
-  _skills: []
+  isMonster: 1
+  enemyType: 1

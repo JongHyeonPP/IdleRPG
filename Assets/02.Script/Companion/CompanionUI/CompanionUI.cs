@@ -4,6 +4,7 @@ using UnityEngine.UIElements;
 
 public class CompanionUI : MonoBehaviour
 {
+    private GameData _gameData;
     //UI Element
     public VisualElement root { get; private set;  }
     private VisualElement[] _panelArr;
@@ -18,13 +19,14 @@ public class CompanionUI : MonoBehaviour
     private VisualElement[] _companionClickVeArr;
     //Tech
     private Button[] _techButtonArr;
-    private Material _grayMaterial;
+    private int currentTechCompanionIndex;
     private void Awake()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
     }
     private void Start()
     {
+        _gameData = StartBroker.GetGameData();
         VisualElement panelParent = root.Q<VisualElement>("PanelParent");
         _panelArr = new VisualElement[panelParent.childCount];
         for (int i = 0; i < panelParent.childCount; i++)
@@ -88,8 +90,15 @@ public class CompanionUI : MonoBehaviour
         plankLabelArr[1].text = "1차 전직";
         plankLabelArr[2].text = "2차 전직";
         plankLabelArr[3].text = "3차 전직";
+        currentTechCompanionIndex = 0;
         InitTechButton();
-
+        InitTechClickPanel(0,0);
+        InitTechClickPanel(1,0);
+        InitTechClickPanel(1,1);
+        InitTechClickPanel(2,0);
+        InitTechClickPanel(2,1);
+        InitTechClickPanel(3,0);
+        InitTechClickPanel(3,1);
     }
     private void InitTechButton()
     {
@@ -103,14 +112,14 @@ public class CompanionUI : MonoBehaviour
             _techButtonArr[i] = (Button)techButtonParent.ElementAt(i);
             techButtonParent.ElementAt(i).RegisterCallback<ClickEvent>(evt => OnTechButtonClick(index));
         }
-        OnTechButtonClick(0);
     }
 
-    private void OnTechButtonClick(int newIndex)
+    private void OnTechButtonClick(int techCompanionIndex)
     {
+        currentTechCompanionIndex = techCompanionIndex;
         for (int i = 0; i < _techButtonArr.Length; i++)
         {
-            if (i == newIndex)
+            if (i == techCompanionIndex)
             {
                 _techButtonArr[i].style.unityBackgroundImageTintColor = new Color(activeColor.r, activeColor.g, activeColor.b, 0.1f);
                 _techButtonArr[i].Q<VisualElement>("OutLine").style.unityBackgroundImageTintColor = activeColor;
@@ -123,53 +132,38 @@ public class CompanionUI : MonoBehaviour
                 _techButtonArr[i].Q<Label>().style.color = inactiveColor;
             }
         }
-        PlayerBroker.CompanionTechRenderSet(newIndex);
-        InitTechClickPanel(newIndex, 0,0);
+        PlayerBroker.CompanionTechRenderSet(techCompanionIndex);
+        SetCurrentTechData(0,0);
 
-        InitTechClickPanel(newIndex, 1,0);
-        InitTechClickPanel(newIndex, 1,1);
+        SetCurrentTechData(1,0);
+        SetCurrentTechData(1,1);
         
-        InitTechClickPanel(newIndex, 2,0);
-        InitTechClickPanel(newIndex, 2,1);
+        SetCurrentTechData(2,0);
+        SetCurrentTechData(2,1);
         
-        InitTechClickPanel(newIndex, 3,0);
-        InitTechClickPanel(newIndex, 3,1);
+        SetCurrentTechData(3,0);
+        SetCurrentTechData(3,1);
     }
-    private void InitTechClickPanel(int companionIndex, int techIndex_0, int techIndex_1)
+    private void SetCurrentTechData(int techIndex_0, int techIndex_1)
     {
-        CompanionStatus companionStatus = CompanionManager.instance.companionArr[companionIndex].companionStatus;
-        CompanionTechData companionTechData;
         VisualElement techClickPanel = _panelArr[1].Q<VisualElement>($"TechClickPanel_{techIndex_0}_{techIndex_1}");
-        switch (techIndex_0)
-        {
-            default:
-                companionTechData = companionStatus.companionTechData_0;
-                break;
-            case 1:
-                if (techIndex_1 == 0)
-                    companionTechData = companionStatus.companionTechData_1_0;
-                else
-                    companionTechData = companionStatus.companionTechData_1_1;
-                break;
-            case 2:
-                if (techIndex_1 == 0)
-                    companionTechData = companionStatus.companionTechData_2_0;
-                else
-                    companionTechData = companionStatus.companionTechData_2_1;
-                break;
-            case 3:
-                if (techIndex_1 == 0)
-                    companionTechData = companionStatus.companionTechData_3_0;
-                else
-                    companionTechData = companionStatus.companionTechData_3_1;
-                break;
-        }
+        CompanionTechData companionTechData = CompanionManager.instance.GetCompanionTechData(currentTechCompanionIndex, techIndex_0, techIndex_1);
+        if (_gameData.companionPromoteTech[currentTechCompanionIndex][techIndex_1] >= techIndex_0)
+            PlayerBroker.CompanionTechRgbSet(1f, (techIndex_0, techIndex_1));
+        else if (_gameData.companionPromoteTech[currentTechCompanionIndex][techIndex_1] + 1 == techIndex_0)
+            PlayerBroker.CompanionTechRgbSet(0.5f, (techIndex_0, techIndex_1));
+        else
+            PlayerBroker.CompanionTechRgbSet(0f, (techIndex_0, techIndex_1));
         techClickPanel.Q<Label>("TechNameLabel").text = companionTechData.techName;
-        techClickPanel.Q<Button>("TechButton").RegisterCallback<ClickEvent>(evt=>OnClickTechVe(companionIndex, techIndex_0, techIndex_1));
     }
-    private void OnClickTechVe(int companionIndex, int techIndex_0, int techIndex_1)
+    private void InitTechClickPanel(int techIndex_0, int techIndex_1)
     {
-        _companionTechUI.ActiveUI(companionIndex, techIndex_0, techIndex_1);
+        VisualElement techClickPanel = _panelArr[1].Q<VisualElement>($"TechClickPanel_{techIndex_0}_{techIndex_1}");
+        techClickPanel.Q<Button>("ClickButton").RegisterCallback<ClickEvent>(evt=>OnClickTechVe(techIndex_0, techIndex_1));
+    }
+    private void OnClickTechVe(int techIndex_0, int techIndex_1)
+    {
+        _companionTechUI.ActiveUI(currentTechCompanionIndex, techIndex_0, techIndex_1);
     }
     private void OnClickCompanionVe(int companionIndex)
     {
@@ -221,7 +215,10 @@ public class CompanionUI : MonoBehaviour
     private void HandleUIChange(int uiType)
     {
         if (uiType == 3)
+        {
             root.style.display = DisplayStyle.Flex;
+            OnTechButtonClick(currentTechCompanionIndex);
+        }
         else
             root.style.display = DisplayStyle.None;
     }

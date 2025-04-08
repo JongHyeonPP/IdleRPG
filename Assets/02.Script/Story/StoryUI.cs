@@ -13,10 +13,11 @@ public class StoryUI : MonoBehaviour
     private float _fadeDuration = 3f;
     public VisualElement root { get; private set; }
     public StoryManager storyManager;
-    public CameraController cameracontroller;
+    public CameraController cameraController;
     private Button _screenButton;
     private int _currentIndex = 1;
     private bool _isWaitingForClick = false;
+    private Button _renderTextureimage;
     private void Awake()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
@@ -97,7 +98,7 @@ public class StoryUI : MonoBehaviour
 
             _fadeElement.style.opacity = 0f;
             _main.style.display = DisplayStyle.None;
-            cameracontroller.SwitchToCamera(true);
+            cameraController.SwitchToCamera(true);
             BattleBroker.SwitchToBattle();
         }
     }

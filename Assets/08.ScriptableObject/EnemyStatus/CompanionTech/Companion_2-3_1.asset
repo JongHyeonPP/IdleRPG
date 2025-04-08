@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d86c58796157b2c4cb71662e31cd283c, type: 3}
+  m_Name: Companion_2-3_1
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 1282678013306324520, guid: c772cdc575ec5b84aa2437ea2d01a771, type: 3}
+  isMonster: 0
+  enemyType: 1

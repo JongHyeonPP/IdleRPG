@@ -1,7 +1,9 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/02.Script/BossTimer/BossTimerBar.uss?fileID=7433441132597879392&amp;guid=f7ed8650e8f78144f875ad1b6e814b54&amp;type=3#BossTimerBar" />
     <engine:VisualElement name="BossTimerBar" style="flex-grow: 0; height: 38px; flex-direction: row; align-self: center; align-items: center;">
-        <engine:VisualElement name="IconImage" style="flex-grow: 0; width: 60px; flex-shrink: 0; height: 60px; background-color: rgba(0, 0, 0, 0); background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Icons/32/Timer.png?fileID=2800000&amp;guid=519d23788c2fe46459e41e7e4810e24a&amp;type=3#Timer&quot;);" />
-        <engine:ProgressBar value="0.2" name="ProgressBar" high-value="1" style="width: 500px;" />
+        <engine:VisualElement name="IconBackground" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.67); align-items: center; justify-content: center; width: 65px; height: 65px; border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px;">
+            <engine:VisualElement name="IconImage" style="flex-grow: 0; width: 50px; flex-shrink: 0; height: 50px; background-color: rgba(0, 0, 0, 0); background-image: url(&quot;project://database/Assets/Violet%20Theme%20Ui/White%20Icons/White%20Timer%202.png?fileID=2800000&amp;guid=0dd9750f26cf0434baf1516e7c266401&amp;type=3#White Timer 2&quot;);" />
+        </engine:VisualElement>
+        <engine:ProgressBar value="0.2" name="ProgressBar" high-value="1" style="width: 500px; margin-left: 10px;" />
     </engine:VisualElement>
 </engine:UXML>

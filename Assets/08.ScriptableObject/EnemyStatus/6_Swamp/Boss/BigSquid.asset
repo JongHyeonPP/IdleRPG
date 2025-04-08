@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigSquid
   m_EditorClassIdentifier: 
   prefab: {fileID: 8820491683625527277, guid: efa110d6e5b593c46b61cfc94e1e40e2, type: 3}
-  _skills: []
+  isMonster: 1
+  enemyType: 1

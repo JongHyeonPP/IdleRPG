@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Flower
   m_EditorClassIdentifier: 
   prefab: {fileID: 2304151785043543335, guid: 06856344c245479418a0800bd1fe3ce4, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

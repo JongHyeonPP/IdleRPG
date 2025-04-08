@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigStump_Dark
   m_EditorClassIdentifier: 
   prefab: {fileID: 5001401592973163419, guid: 66d74534e3e1d6a4ba8c69592c5c2501, type: 3}
-  _skills: []
+  isMonster: 1
+  enemyType: 1

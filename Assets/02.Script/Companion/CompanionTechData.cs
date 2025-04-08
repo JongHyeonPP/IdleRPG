@@ -9,4 +9,7 @@ public class CompanionTechData : ScriptableObject
     [Header("Info")]
     public string techName;
     public SkillData techSkill;
+    [Header("Reward")]
+    public int dia;
+    public int clover;
 }

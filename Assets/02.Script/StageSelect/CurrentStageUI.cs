@@ -18,12 +18,11 @@ public class CurrentStageUI : MonoBehaviour
         VisualElement bossEnter = root.Q<VisualElement>("BossEnter");
         bossEnter.RegisterCallback<ClickEvent>(OnClickBossEnter);
         BattleBroker.OnStageChange += OnStageChange;
-        BattleBroker.OnStageEnter += OnStageEnter;
     }
     private void OnClickBossEnter(ClickEvent evt)
     {
         root.style.display = DisplayStyle.None;
-        BattleBroker.OnBossEnter();
+        BattleBroker.SwitchToBoss();
     }
 
     private void OnClickUI(ClickEvent evt)
@@ -33,12 +32,8 @@ public class CurrentStageUI : MonoBehaviour
 
     private void OnStageChange(int stageNum)
     {
-        StageInfo info = StageInfoManager.instance.GetStageInfo(stageNum);
+        StageInfo info = StageInfoManager.instance.GetNormalStageInfo(stageNum);
         _stageNameLabel.text = info.stageName;
         _stageNumLabel.text = $"Stage {info.stageNum}";
-    }
-    private void OnStageEnter()
-    {
-        root.style.display = DisplayStyle.Flex;
     }
 }

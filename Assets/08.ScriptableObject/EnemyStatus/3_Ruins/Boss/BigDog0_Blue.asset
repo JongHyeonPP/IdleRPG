@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigDog0_Blue
   m_EditorClassIdentifier: 
   prefab: {fileID: 8752643455295444258, guid: c0d4b621faac783488d1fc466cbac07f, type: 3}
-  _skills: []
+  isMonster: 1
+  enemyType: 1

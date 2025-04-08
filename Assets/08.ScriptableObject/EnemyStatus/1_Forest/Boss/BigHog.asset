@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigHog
   m_EditorClassIdentifier: 
   prefab: {fileID: 6304922830142190999, guid: 6c3f4e7b5b833334cbabf3fc05634d5d, type: 3}
-  _skills: []
+  isMonster: 1
+  enemyType: 1

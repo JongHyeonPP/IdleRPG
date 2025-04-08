@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigFlower
   m_EditorClassIdentifier: 
   prefab: {fileID: 2304151785043543335, guid: 75e77e183f8bf744994a18a96e46a443, type: 3}
-  _skills: []
+  isMonster: 1
+  enemyType: 1

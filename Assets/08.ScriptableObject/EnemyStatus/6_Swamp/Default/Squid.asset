@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Squid
   m_EditorClassIdentifier: 
   prefab: {fileID: 8820491683625527277, guid: fbfb9ff589a8a0c4f8649d7ff28a8731, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

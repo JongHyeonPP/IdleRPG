@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Bear_Black
   m_EditorClassIdentifier: 
   prefab: {fileID: 6054838867214605945, guid: caf8393722e1f384cb065142cf9939a1, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

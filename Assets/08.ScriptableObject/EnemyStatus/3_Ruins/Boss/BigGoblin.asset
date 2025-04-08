@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigGoblin
   m_EditorClassIdentifier: 
   prefab: {fileID: 6247888603703507345, guid: 0b64dc9a5c6228948b6d1df177034749, type: 3}
-  _skills: []
+  isMonster: 1
+  enemyType: 1

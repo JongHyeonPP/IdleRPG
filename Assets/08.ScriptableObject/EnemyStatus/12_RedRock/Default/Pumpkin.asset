@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Pumpkin
   m_EditorClassIdentifier: 
   prefab: {fileID: 498533827356801013, guid: ce549e1732e8c204bbe862ae318d7d4d, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

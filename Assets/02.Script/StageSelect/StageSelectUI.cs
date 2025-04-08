@@ -29,6 +29,8 @@ public class StageSelectUI : MonoBehaviour
         exitButton.RegisterCallback<ClickEvent>(evt=>OnExitButtonClick());
         leftButton.RegisterCallback<ClickEvent>(evt=>OnLeftButtonClick());
         rightButton.RegisterCallback<ClickEvent>(evt=>OnRightButtonClick());
+        BattleBroker.RefreshStageSelectUI += OnNextStage;
+        BattleBroker.OnMaxStageSet += ()=>_draggableLV.listView.Rebuild();
     }
 
     private void OnExitButtonClick()
@@ -120,7 +122,7 @@ public class StageSelectUI : MonoBehaviour
         _draggableLV.ChangeItems(items);
         Debug.Log("Change Page");
     }
-    public void OnStageChange(int stage)
+    public void OnNextStage(int stage)
     {
         ChangePage(stage / NUMINPAGE);
     }

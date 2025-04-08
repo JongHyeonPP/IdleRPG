@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigWolf_Grey
   m_EditorClassIdentifier: 
   prefab: {fileID: 745644904347929894, guid: 7ff6d15b688ea3949971b1d65b7310b2, type: 3}
-  _skills: []
+  isMonster: 1
+  enemyType: 1

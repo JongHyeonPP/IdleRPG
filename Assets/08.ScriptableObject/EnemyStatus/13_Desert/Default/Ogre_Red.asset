@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Ogre_Red
   m_EditorClassIdentifier: 
   prefab: {fileID: 5162138585682697224, guid: 8fbd62ab979484c4fa64fdbc611981e0, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

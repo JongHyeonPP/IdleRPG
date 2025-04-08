@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Jelly_Green
   m_EditorClassIdentifier: 
   prefab: {fileID: 1360477407247875, guid: 88b8a6ab430bc8d43a5001acaab5fcef, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

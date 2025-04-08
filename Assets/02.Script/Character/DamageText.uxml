@@ -1,0 +1,5 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:VisualElement name="DamageText" style="flex-grow: 0; position: absolute;">
+        <engine:Label text="11,011" name="Text" style="-unity-font-definition: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Fonts/runescape_uf.ttf?fileID=12800000&amp;guid=cbe30ba2c94f1a54ba035ec94a2c65f9&amp;type=3#runescape_uf&quot;); font-size: 100px; color: rgb(255, 255, 255); -unity-font-style: bold; -unity-text-outline-width: 7px; -unity-text-outline-color: rgba(0, 0, 0, 0.5); position: relative; align-self: center; -unity-text-align: middle-center;" />
+    </engine:VisualElement>
+</engine:UXML>

@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigCube
   m_EditorClassIdentifier: 
   prefab: {fileID: 8299322020684957678, guid: 8ff05111a86cca74e8dc29c6d059c20d, type: 3}
-  _skills: []
+  isMonster: 1
+  enemyType: 1

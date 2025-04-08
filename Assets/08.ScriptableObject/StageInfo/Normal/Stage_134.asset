@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a800df23dc72f3f4da31798639b67d50, type: 3}
+  m_Name: Stage_134
+  m_EditorClassIdentifier: 
+  stageNum: 134
+  stageName: Unset Stage
+  background: 6
+  dropProb: 0
+  enemy_0: {fileID: 11400000, guid: e847cc80633d0804cba6717cadcb3a9a, type: 2}
+  enemy_1: {fileID: 0}
+  boss: {fileID: 11400000, guid: ee1c8067c9a7ff64ab4b19b1f93c34a5, type: 2}
+  enemyNum: 4
+  enemyStatusFromStage:
+    maxHp: 100
+    resist: 0
+    gold: 1340
+    exp: 1340
+  bossStatusFromStage:
+    maxHp: 100
+    resist: 0
+    power: 10
+    penetration: 0
+    gold: 13400
+    exp: 13400
+  chestStatusFromStage:
+    maxHp: 
+    resist: 0
+    gold: 0
+    exp: 0
+  companionTechInfo:
+    companionNum: 0
+    techIndex_0: 0
+    techIndex_1: 0
+    recommendLevel: 0

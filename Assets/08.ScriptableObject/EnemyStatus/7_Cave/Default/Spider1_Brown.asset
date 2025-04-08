@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Spider1_Brown
   m_EditorClassIdentifier: 
   prefab: {fileID: 1815585902005041188, guid: 3af9326c84e87484f89259c722f039d9, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

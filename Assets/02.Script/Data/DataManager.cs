@@ -5,17 +5,19 @@ using Unity.Services.CloudSave;
 using Unity.Services.Core;
 using UnityEngine;
 using Newtonsoft.Json;
+using Unity.Services.Authentication;
 public class DataManager : MonoBehaviour
 {
     public static DataManager instance;
-    
+
     private void Awake()
     {
         if (instance == null)
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
-            UnityServices.InitializeAsync();
+
+            
         }
         else
         {
@@ -23,8 +25,10 @@ public class DataManager : MonoBehaviour
         }
     }
 
-    // 클라우드 저장
-    public static async Task SaveToCloudAsync<T>(Dictionary<string, T> dataDict)
+
+
+// 클라우드 저장
+public static async Task SaveToCloudAsync<T>(Dictionary<string, T> dataDict)
     {
         try
         {

@@ -86,6 +86,7 @@ public class DropPool : MonoBehaviour
             result = InstantiateDrop<T>(GetParent<T>());
         }
         MediatorManager<IMoveByPlayer>.RegisterMediator(result);
+        result.SetValue();
         return result;
     }
 

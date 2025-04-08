@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Demon
   m_EditorClassIdentifier: 
   prefab: {fileID: 1524244270776647753, guid: 99265d1ef2c51724e89ef009d9427346, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.UIElements;
-public class TotalLabelUI : MonoBehaviour
+public class TotalGoldUI : MonoBehaviour
 {
     public VisualElement root { get; private set; }
     private Label _goldLabel;
@@ -11,19 +11,9 @@ public class TotalLabelUI : MonoBehaviour
 
         BattleBroker.OnGoldSet += SetGold;
         SetGold();
-        BattleBroker.OnStageEnter += OnStageEnter;
-        BattleBroker.OnBossEnter += OnBossEnter;
     }
 
-    private void OnBossEnter()
-    {
-        root.style.display = DisplayStyle.None; 
-    }
 
-    private void OnStageEnter()
-    {
-        root.style.display = DisplayStyle.Flex;
-    }
 
     private void SetGold()
     {

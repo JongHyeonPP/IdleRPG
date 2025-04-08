@@ -17,10 +17,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b69778e56da2f074fac401c6137f3f53, type: 2}
   - {fileID: 11400000, guid: 0ae86bde92540374a9049dede938b593, type: 2}
   companionTechData_0: {fileID: 11400000, guid: f94c721507e2e7b41ad224f3624d6b87, type: 2}
-  companionTechData_1_0: {fileID: 11400000, guid: 1bf563dd5ece205428ea4a91510e3909, type: 2}
-  companionTechData_1_1: {fileID: 11400000, guid: ff0ef73740e7e1a4a85ac60f48e5d7bd, type: 2}
-  companionTechData_2_0: {fileID: 11400000, guid: baca437e1e16ded4897607061cfec536, type: 2}
-  companionTechData_2_1: {fileID: 11400000, guid: b7a44bfc8d2ba8948ac48ba802eb9866, type: 2}
-  companionTechData_3_0: {fileID: 11400000, guid: 11f51d28e37dba64789454d0a4a4fe97, type: 2}
-  companionTechData_3_1: {fileID: 11400000, guid: e3620d6ab1a0b4e4bb56bfb261ee70b6, type: 2}
+  companionTechData_1_0: {fileID: 11400000, guid: ff0ef73740e7e1a4a85ac60f48e5d7bd, type: 2}
+  companionTechData_1_1: {fileID: 11400000, guid: 1bf563dd5ece205428ea4a91510e3909, type: 2}
+  companionTechData_2_0: {fileID: 11400000, guid: b7a44bfc8d2ba8948ac48ba802eb9866, type: 2}
+  companionTechData_2_1: {fileID: 11400000, guid: baca437e1e16ded4897607061cfec536, type: 2}
+  companionTechData_3_0: {fileID: 11400000, guid: e3620d6ab1a0b4e4bb56bfb261ee70b6, type: 2}
+  companionTechData_3_1: {fileID: 11400000, guid: 11f51d28e37dba64789454d0a4a4fe97, type: 2}
   companionName: "\uBC95\uC0AC\uC694\uBBF8"

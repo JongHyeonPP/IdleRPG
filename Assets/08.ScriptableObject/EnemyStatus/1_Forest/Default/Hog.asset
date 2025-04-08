@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Hog
   m_EditorClassIdentifier: 
   prefab: {fileID: 6304922830142190999, guid: 9d3bf22e2397ccb409a7be7d73c1b679, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

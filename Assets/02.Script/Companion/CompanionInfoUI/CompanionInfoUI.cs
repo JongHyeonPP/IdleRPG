@@ -412,27 +412,7 @@ public class CompanionInfoUI : MonoBehaviour
         float effectValue = CompanionManager.instance.GetCompanionPromoteValue(tuple.Item1, tuple.Item2);
         
         effectLabel.text = CompanionManager.instance.GetCompanionPromoteText(tuple.Item1, effectValue);
-        switch (tuple.Item2)
-        {
-            case Rarity.Common:
-                effectLabel.style.color = CompanionManager.instance.commonColor;
-                break;
-            case Rarity.Uncommon:
-                effectLabel.style.color = CompanionManager.instance.uncommonColor;
-                break;
-            case Rarity.Rare:
-                effectLabel.style.color = CompanionManager.instance.rareColor;
-                break;
-            case Rarity.Unique:
-                effectLabel.style.color = CompanionManager.instance.uniqueColor;
-                break;
-            case Rarity.Legendary:
-                effectLabel.style.color = CompanionManager.instance.legendaryColor;
-                break;
-            case Rarity.Mythic:
-                effectLabel.style.color = CompanionManager.instance.mythicColor;
-                break;
-        }
+        effectLabel.style.color = PriceManager.instance.rarityColor[(int)tuple.Item2];
     }
 
     private void RefreshRenderLayer()

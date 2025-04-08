@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigSpearman
   m_EditorClassIdentifier: 
   prefab: {fileID: 1827096306212822899, guid: e6f8d7d9b8af4fe49af19bd24de39531, type: 3}
-  _skills: []
+  isMonster: 1
+  enemyType: 1

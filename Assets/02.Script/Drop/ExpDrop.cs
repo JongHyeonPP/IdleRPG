@@ -11,7 +11,7 @@ public class ExpDrop : DropBase
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            GameManager.instance.GetExpByDrop();
+            BattleBroker.OnExpByDrop(value);
             dropPool.ReturnToPool(this);
         }
     }
@@ -20,8 +20,13 @@ public class ExpDrop : DropBase
         _rb.AddForce(new Vector2(100f, 300f));
     }
 
-    public override void MoveByCharacter(Vector3 translation)
+    public override void MoveByPlayer(Vector3 translation)
     {
         transform.Translate(translation);
+    }
+
+    public override void SetValue()
+    {
+        value = BattleBroker.GetStageRewardValue(DropType.Exp);
     }
 }

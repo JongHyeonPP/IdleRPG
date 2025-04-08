@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Duck_Green
   m_EditorClassIdentifier: 
   prefab: {fileID: 2812432912870846961, guid: 49f0ca6563fbd044d82bc7598f97ad63, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

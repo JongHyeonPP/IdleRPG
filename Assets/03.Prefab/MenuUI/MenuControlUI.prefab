@@ -48,7 +48,7 @@ MonoBehaviour:
   m_PanelSettings: {fileID: 11400000, guid: f2f0eb129a3062647b27e4d7a574aeaa, type: 2}
   m_ParentUI: {fileID: 0}
   sourceAsset: {fileID: 9197481963319205126, guid: 66378e23e8801664780d3b71e5fb2add, type: 3}
-  m_SortingOrder: 3
+  m_SortingOrder: 2
   m_WorldSpaceSizeMode: 1
   m_WorldSpaceWidth: 1920
   m_WorldSpaceHeight: 1080
@@ -64,11 +64,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d647834eefc6a254bb97172503338d77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  statUI: {fileID: 0}
-  weaponUI: {fileID: 0}
-  skillUI: {fileID: 0}
-  weaponBookUI: {fileID: 0}
-  companionUI: {fileID: 0}
-  storeUI: {fileID: 0}
+  _autoRewardReceive: {fileID: 0}
+  _equipedSkillUI: {fileID: 0}
+  _statUI: {fileID: 0}
+  _weaponUI: {fileID: 0}
+  _skillUI: {fileID: 0}
+  _weaponBookUI: {fileID: 0}
+  _companionUI: {fileID: 0}
+  _storeUI: {fileID: 0}
+  menuHeight:
+  - 1000
+  - 1000
+  - 1000
+  - 1000
+  - 800
+  - 1000
+  _menuHeight:
+  - 1000
+  - 1000
+  - 1000
+  - 1000
+  - 800
+  - 1000
   notice: {fileID: 0}
-  equipedSkillUI: {fileID: 0}

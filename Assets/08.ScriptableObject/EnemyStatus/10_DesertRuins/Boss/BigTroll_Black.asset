@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigTroll_Black
   m_EditorClassIdentifier: 
   prefab: {fileID: 1439994459352874351, guid: c3d819db7920fd547857d492426b9c5d, type: 3}
-  _skills: []
+  isMonster: 1
+  enemyType: 1

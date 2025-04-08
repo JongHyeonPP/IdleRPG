@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Rat_Grey
   m_EditorClassIdentifier: 
   prefab: {fileID: 5137085100473819022, guid: e7c39eef04287c34f8e39bcb4c6cc541, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Scorpion
   m_EditorClassIdentifier: 
   prefab: {fileID: 6445825857767348604, guid: 043c944478bbdfd489e07140b4bfa7be, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

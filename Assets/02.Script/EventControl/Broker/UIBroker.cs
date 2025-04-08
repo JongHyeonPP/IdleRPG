@@ -13,7 +13,9 @@ public static class UIBroker
     //메뉴 UI 변경
     public static Action<int> OnMenuUIChange;
     public static Action<int, bool> OnMenuUINotice;
-    public static Action<Camera> SetBarPosition;
+    public static Action SetPlayerBarPosition;
+
+    public static Action ShowInable;
 
     public static Action<string[]> SwitchRenderTargetLayer { get; set; }
 }

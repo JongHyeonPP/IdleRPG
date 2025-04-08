@@ -105,4 +105,40 @@ public class NetworkManager : MonoBehaviour
             yield return new WaitForSeconds(1f);
         }
     }
+    [ContextMenu("SetTest")]
+    public void SetTest() => SetUserData("TestKey", "TestValue");
+    public void SetUserData(string key, object value)
+    {
+        if (string.IsNullOrEmpty(_userId))
+        {
+            Debug.LogWarning("User ID is null. Make sure authentication is complete.");
+            return;
+        }
+
+        DatabaseReference userRef = _fbRef.Child("Users").Child(_userId);
+
+        Dictionary<string, object> data = new Dictionary<string, object>
+        {
+            { key, value }
+        };
+
+        userRef.UpdateChildrenAsync(data).ContinueWith(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError($"Failed to update {key}: {task.Exception}");
+            }
+            else if (task.IsCompleted)
+            {
+                Debug.Log($"Successfully updated {key} to {value}");
+            }
+        });
+    }
+
+#if UNITY_EDITOR
+    private void OnApplicationQuit()
+    {
+        _fbRef.Child("Users").Child(_userId).Child("isLoggedIn").SetValueAsync(false);
+    }
+#endif
 }

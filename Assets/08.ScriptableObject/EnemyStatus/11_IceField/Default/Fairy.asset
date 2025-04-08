@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Fairy
   m_EditorClassIdentifier: 
   prefab: {fileID: 7764146719985748838, guid: a43f744745818f74cbc71223d01b3cb4, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

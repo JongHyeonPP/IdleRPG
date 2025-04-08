@@ -29,7 +29,8 @@ public class GainLabelUI : MonoBehaviour
                 _expTexture = _expTexture,
             };
         }
-        BattleBroker.OnCurrencyInBattle += OnCurrencyInBattle;
+        BattleBroker.OnGoldByDrop += (value)=> OnCurrencyInBattle(DropType.Gold, value);
+        BattleBroker.OnExpByDrop += (value)=> OnCurrencyInBattle(DropType.Exp, value);
     }
     private IEnumerator GraduallyHideAlpha()
     {

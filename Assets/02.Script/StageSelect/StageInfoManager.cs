@@ -5,7 +5,19 @@ using UnityEngine;
 public class StageInfoManager : MonoBehaviour
 {
     public static StageInfoManager instance;
-    [SerializeField] StageInfo[] _stageInfoArr;
+    [Header("Normal Stage")]
+    [SerializeField] StageInfo[] _normalStageInfoArr;
+    [Header("Companion Tech Stage")]
+    [SerializeField] StageInfo[] _companion_0_1;
+    [SerializeField] StageInfo[] _companion_0_2;
+    [SerializeField] StageInfo[] _companion_0_3;
+    [SerializeField] StageInfo[] _companion_1_1;
+    [SerializeField] StageInfo[] _companion_1_2;
+    [SerializeField] StageInfo[] _companion_1_3;
+    [SerializeField] StageInfo[] _companion_2_1;
+    [SerializeField] StageInfo[] _companion_2_2;
+    [SerializeField] StageInfo[] _companion_2_3;
+
     private void Awake()
     {
         if (!instance)
@@ -23,34 +35,125 @@ public class StageInfoManager : MonoBehaviour
         List<IListViewItem> items = new();
 
         // 유효성 검사
-        if (_stageInfoArr == null || start < 0 || count <= 0 || start >= _stageInfoArr.Length)
+        if (_normalStageInfoArr == null || start < 0 || count <= 0 || start >= _normalStageInfoArr.Length)
         {
             return items;
         }
 
         // 지정된 범위만큼 데이터를 가져옴
-        int end = Mathf.Min(start + count, _stageInfoArr.Length);
+        int end = Mathf.Min(start + count, _normalStageInfoArr.Length);
         for (int i = start; i < end; i++)
         {
-            items.Add(_stageInfoArr[i]);
+            items.Add(_normalStageInfoArr[i]);
         }
 
         return items;
     }
-    public StageInfo GetStageInfo(int stageNum) => _stageInfoArr[stageNum-1];
-#if UNITY_EDITOR
-    [ContextMenu("Temp")]
-    public void Temp()
+    public StageInfo GetNormalStageInfo(int stageNum) => _normalStageInfoArr[stageNum-1];
+    public StageInfo GetCompanionTechStageInfo(int companionIndex, (int, int) companionTech)
     {
-        foreach (var x in _stageInfoArr)
+        StageInfo result = null;
+        switch (companionIndex)
         {
-            x.stageNum++;
-
-            // 변경된 ScriptableObject를 Unity가 감지하도록 설정
+            case 0:
+                switch (companionTech.Item1)
+                {
+                    case 1:
+                        result =  _companion_0_1[companionTech.Item2];
+                        break;
+                    case 2:
+                        result =  _companion_0_2[companionTech.Item2];
+                        break;
+                    case 3:
+                        result =  _companion_0_3[companionTech.Item2];
+                        break;
+                }
+                break;
+            case 1:
+                switch (companionTech.Item1)
+                {
+                    case 1:
+                        result =  _companion_1_1[companionTech.Item2];
+                        break;
+                    case 2:
+                        result =  _companion_1_2[companionTech.Item2];
+                        break;
+                    case 3:
+                        result =  _companion_1_3[companionTech.Item2];
+                        break;
+                }
+                break;
+            case 2:
+                switch (companionTech.Item1)
+                {
+                    case 1:
+                        result =  _companion_2_1[companionTech.Item2];
+                        break;
+                    case 2:
+                        result =  _companion_2_2[companionTech.Item2];
+                        break;
+                    case 3:
+                        result = _companion_2_3[companionTech.Item2];
+                        break;
+                }
+                break;
+        }
+        return result;
+    }
+#if UNITY_EDITOR
+    [ContextMenu("SetDefaultStatus")]
+    public void SetDefaultStatus()
+    {
+        foreach (StageInfo x in _normalStageInfoArr)
+        {
+            x.enemyStatusFromStage.maxHp = 10.ToString();
+            x.enemyStatusFromStage.resist = 0f;
             EditorUtility.SetDirty(x);
         }
-
+        foreach (StageInfo x in _normalStageInfoArr)
+        {
+            x.bossStatusFromStage.maxHp = 100.ToString();
+            x.bossStatusFromStage.resist = 0f;
+            x.bossStatusFromStage.power = 10.ToString();
+            x.bossStatusFromStage.penetration = 0f;
+            EditorUtility.SetDirty(x);
+        }
         // 변경된 데이터를 애셋 파일에 저장
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+    }
+    [ContextMenu("SetDefaultReward")]
+    public void SetDefaultReward()
+    {
+        foreach (StageInfo x in _normalStageInfoArr)
+        {
+            x.enemyStatusFromStage.gold = x.stageNum*10;
+            x.enemyStatusFromStage.exp = x.stageNum*10;
+            EditorUtility.SetDirty(x);
+        }
+        foreach (StageInfo x in _normalStageInfoArr)
+        {
+            x.bossStatusFromStage.gold = x.stageNum * 100;
+            x.bossStatusFromStage.exp = x.stageNum * 100;
+            EditorUtility.SetDirty(x);
+        }
+        // 변경된 데이터를 애셋 파일에 저장
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+    }
+    [ContextMenu("SetCompanionTechStatus")]
+    public void SetCompanionTechStatus()
+    {
+
+
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+    }
+    [ContextMenu("SetCompanionTechReward")]
+    public void SetCompanionTechReward()
+    {
+        
+
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
     }

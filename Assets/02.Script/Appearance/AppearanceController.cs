@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 public class AppearanceController : MonoBehaviour
@@ -27,9 +28,13 @@ public class AppearanceController : MonoBehaviour
     [SerializeField] SpriteRenderer _bodyRightArm;
     [SerializeField] SpriteRenderer _bodyLeftFoot;
     [SerializeField] SpriteRenderer _bodyRightFoot;
+    [Header("AppearanceData")]
+    [SerializeField] AppearanceData _defaultAppearanceData;
+    [SerializeField] AppearanceData _currentAppearanceData;
 
     public void SetAppearance(AppearanceData appearanceData)
     {
+        _currentAppearanceData = appearanceData;
         // Clothes
         _clothBack_0.sprite = appearanceData.clothBack_0Sprite;
         _clothBack_1.sprite = appearanceData.clothBack_1Sprite;
@@ -62,6 +67,47 @@ public class AppearanceController : MonoBehaviour
         _bodyFaceHair.color = appearanceData.hairColor;
         _bodyLeftFrontEye.color = appearanceData.eyeColor;
         _bodyRightFrontEye.color = appearanceData.eyeColor;
-    }
 
+
+    }
+#if UNITY_EDITOR
+    [ContextMenu("SetDefaultAppearance")]
+    public void SetDefaultAppearacne()
+    {
+        SetAppearance(_defaultAppearanceData);
+        EditorUtility.SetDirty(gameObject);
+    }
+#endif
+    public void SetRGB(float targetValue)
+    {
+        SpriteRenderer[] spriteFields = new SpriteRenderer[]
+        {
+        // Clothes
+        _clothBack_0, _clothBack_1, _clothHelmet,
+        _clothLeftArm, _clothRightArm,
+        _clothLeftShoulder, _clothRightShoulder,
+        _clothLeftFoot, _clothRightFoot,
+        _clothBody, _clothBodyArmor,
+
+        // Body
+        _bodyBody, _bodyHead,
+        _bodyLeftBackEye,
+        _bodyRightBackEye,
+        _bodyLeftArm, _bodyRightArm,
+        _bodyLeftFoot, _bodyRightFoot
+        };
+
+        foreach (var sr in spriteFields)
+        {
+            if (sr != null)
+            {
+                sr.color = new Color(targetValue, targetValue, targetValue, 1f);
+            }
+        }
+
+        Color hairColor = _currentAppearanceData.hairColor;
+        _bodyHair.color = _bodyFaceHair.color = new Color(hairColor.r * targetValue, hairColor.g * targetValue, hairColor.b * targetValue, 1f);
+        Color eyeColor = _currentAppearanceData.eyeColor;
+        _bodyLeftFrontEye.color = _bodyRightFrontEye.color = new Color(eyeColor.r * targetValue, eyeColor.g * targetValue, eyeColor.b * targetValue, 1f);
+    }
 }

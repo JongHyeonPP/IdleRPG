@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Deer
   m_EditorClassIdentifier: 
   prefab: {fileID: 175464996610553772, guid: 6e0c22e97cf0549499c14afb9e1f68cd, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

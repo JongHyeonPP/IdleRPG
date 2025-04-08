@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigMegaPumpkin_Yellow
   m_EditorClassIdentifier: 
   prefab: {fileID: 3413796504580646870, guid: e77c9ac7978113a4da5700c5a978fa9a, type: 3}
-  _skills: []
+  isMonster: 1
+  enemyType: 1

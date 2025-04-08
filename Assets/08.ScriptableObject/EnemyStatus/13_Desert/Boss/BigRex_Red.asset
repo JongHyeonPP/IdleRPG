@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigRex_Red
   m_EditorClassIdentifier: 
   prefab: {fileID: 2904861182187615205, guid: 052723c29913dc54e9d06da66f7ee4db, type: 3}
-  _skills: []
+  isMonster: 1
+  enemyType: 1

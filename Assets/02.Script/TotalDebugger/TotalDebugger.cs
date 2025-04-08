@@ -440,7 +440,7 @@ public class TotalDebugger : EditorWindow
             else
                 _gameData.companionPromoteTech[currentCompanionIndex][techIndex] += intValue;
             _gameData.companionPromoteTech[currentCompanionIndex][techIndex] = Math.Clamp(_gameData.companionPromoteTech[currentCompanionIndex][techIndex], 0, 3);
-            PlayerBroker.OnCompanionPromoteTechSet?.Invoke(currentCompanionIndex, techIndex, intValue);
+            PlayerBroker.OnCompanionPromoteTechSet?.Invoke(currentCompanionIndex, _gameData.companionPromoteTech[currentCompanionIndex][techIndex], techIndex );
         }
         void MaterialCase()
         {
@@ -921,10 +921,10 @@ public class TotalDebugger : EditorWindow
             companionScrollViewArr[scrollViewIndex].Add(panel_0Template);
             panel_0Template.Q<Label>("DataLabel").text = $"Tech_{i}";
             SetDataPanel(panel_0Template, $"Tech_{i}", $"Tech_{i}", _gameData.companionPromoteTech[companionIndex][i].ToString(), Categori.Companion, false, 120f, 33f);
-            PlayerBroker.OnCompanionPromoteTechSet += (companionArg, techArg, value) =>
+            PlayerBroker.OnCompanionPromoteTechSet += (companionArg, techIndex_0, techIndex_1) =>
             {
-                if (companionArg == companionIndex && techArg == techIndex)
-                    panel_0Template.Q<Label>("ValueLabel").text = _gameData.companionPromoteTech[companionArg][techArg].ToString();
+                if (companionArg == companionIndex && techIndex_1 == techIndex)
+                    panel_0Template.Q<Label>("ValueLabel").text = _gameData.companionPromoteTech[companionArg][techIndex_1].ToString();
             };
         }
     }

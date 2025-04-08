@@ -1,16 +1,11 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 using EnumCollection;
 using Newtonsoft.Json;
 using System.Collections;
-using UnityEngine.SceneManagement;
 using GooglePlayGames;
 using GooglePlayGames.BasicApi;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
-using Random = UnityEngine.Random;
-using System.Numerics;
 
 public class GameManager : MonoBehaviour
 {
@@ -109,7 +104,8 @@ public class GameManager : MonoBehaviour
     //구글 인증을 진행한다.
     public async void ProcessAuthentication(SignInStatus status)
     {
-        await UnityServices.InitializeAsync();
+        var options = new InitializationOptions().SetOption("environment-name", "develop");
+        await UnityServices.InitializeAsync(options);
         if (status == SignInStatus.Success)
         {
             // Google Play Games 인증 성공 시
@@ -130,50 +126,10 @@ public class GameManager : MonoBehaviour
             StartBroker.OnAuthenticationComplete?.Invoke();
         }
     }
-    public void GetGoldByDrop()
-    {
-        int value = 10 * (_gameData.currentStageNum + 1) + Random.Range(0, 3);
-        _gameData.gold += value;
-        BattleBroker.OnGoldSet();
-        BattleBroker.OnCurrencyInBattle?.Invoke(DropType.Gold, value);
-    }
-    public void GetExpByDrop()
-    {
-        int value = 10 * (_gameData.currentStageNum + 1);
-        //mainStageNum
-        _gameData.exp += value;
 
-        while (true)
-        {
-            BigInteger needExp = GetNeedExp();
-            if (_gameData.exp < needExp)
-                break;
-            if (_gameData.exp >= needExp)
-            {
-                _gameData.exp -= needExp;
-                _gameData.level++;
-                _gameData.statPoint++;
-                BattleBroker.OnStatPointSet();
-            }
-        }
-        BattleBroker.OnLevelExpSet();
-        BattleBroker.OnCurrencyInBattle(DropType.Exp, value);
-    }
-    public float GetExpPercent()
-    {
-        BigInteger needExp = GetNeedExp();
-        BigInteger exp = _gameData.exp;
 
-        if (needExp == 0)
-            return 0f; // 0으로 나누는 오류 방지
 
-        return (float)((double)exp / (double)needExp);
-    }
 
-    private BigInteger GetNeedExp()
-    {
-        return _gameData.level * 100;
-    }
     [ContextMenu("ClearGameData")]
     public void ClearGameData()
     {

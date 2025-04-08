@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigBird
   m_EditorClassIdentifier: 
   prefab: {fileID: 1021983624704293774, guid: 9f77ed8ae3b34c04681e4da1b4fb7140, type: 3}
-  _skills: []
+  isMonster: 1
+  enemyType: 1

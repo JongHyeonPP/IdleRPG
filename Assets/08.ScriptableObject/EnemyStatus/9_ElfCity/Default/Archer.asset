@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Archer
   m_EditorClassIdentifier: 
   prefab: {fileID: 8171716472306706321, guid: d6e041826667d2a4fa2c8888f84efc95, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigBeholder
   m_EditorClassIdentifier: 
   prefab: {fileID: 5909847484698599160, guid: 8e2f2c67da7fdba439b25db0db8a79cc, type: 3}
-  _skills: []
+  isMonster: 1
+  enemyType: 1

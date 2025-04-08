@@ -76,7 +76,7 @@ public class SkillInfoUI : MonoBehaviour
         titleLabel.text = skillData.skillName;
         rarityLabel.text = $"[{skillData.rarity}]";
         simpleLabel.text = skillData.simple;
-        complexLabel.text = SkillManager.instance.GetParsedComplexExplain( skillData, skillLevel, ColorUtility.ToHtmlStringRGB(_valueColor));
+        complexLabel.text = SkillManager.instance.GetParsedComplexExplain( skillData, skillLevel, _valueColor);
         switch (skillData.skillCoolType)
         {
             case SkillCoolType.ByAtt:

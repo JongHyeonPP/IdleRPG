@@ -79,7 +79,7 @@ public class StatUI : MonoBehaviour
         _gameData = StartBroker.GetGameData();
         _categoriPanels = root.Q<VisualElement>("PanelParent").Children().ToArray();
         _categoriButtons = root.Q<VisualElement>("ButtonParent").Children().Select(item => (Button)item).ToArray();
-        _promoteAbilityUI.gameObject.SetActive(true);
+        //_promoteAbilityUI.gameObject.SetActive(true);
         InitButton();
         InitEnhancePanel();
         InitGrowPanel();

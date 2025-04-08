@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Bush_Green
   m_EditorClassIdentifier: 
   prefab: {fileID: 8158483244536726045, guid: 2d17b150c7eb0ec448ad05442ec10907, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

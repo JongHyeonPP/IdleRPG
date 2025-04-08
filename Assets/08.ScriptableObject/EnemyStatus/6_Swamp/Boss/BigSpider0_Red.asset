@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigSpider0_Red
   m_EditorClassIdentifier: 
   prefab: {fileID: 698787475348540436, guid: bb29beb928e121546ac10d4c28adfaec, type: 3}
-  _skills: []
+  isMonster: 1
+  enemyType: 1

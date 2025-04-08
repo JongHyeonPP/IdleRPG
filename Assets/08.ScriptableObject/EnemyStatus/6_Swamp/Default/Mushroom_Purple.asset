@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Mushroom_Purple
   m_EditorClassIdentifier: 
   prefab: {fileID: 6390757924910326976, guid: 318d9aa8c50bd9c469bc4216f2f7a6b3, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

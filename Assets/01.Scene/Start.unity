@@ -383,8 +383,13 @@ MonoBehaviour:
   _gameData:
     level: 0
     dia: 0
-    emerald: 0
-    weaponId: 
+    clover: 0
+    statPoint: 0
+    playerWeaponId: 
+    companionWeaponIdArr:
+    - 
+    - 
+    - 
     equipedSkillArr: []
     currentStageNum: 0
     maxStageNum: 0

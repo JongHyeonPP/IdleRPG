@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigDog1_Hell
   m_EditorClassIdentifier: 
   prefab: {fileID: 5723752131549147648, guid: 84458b15f1910c74b9f49202fff52cdf, type: 3}
-  _skills: []
+  isMonster: 1
+  enemyType: 1

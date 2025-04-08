@@ -2,7 +2,8 @@
     "name": "Appearance",
     "rootNamespace": "",
     "references": [
-        "GUID:c1f3ac597cd61d64e994b094eaa1fa95"
+        "GUID:c1f3ac597cd61d64e994b094eaa1fa95",
+        "GUID:68df9ffa985c063479b41059d67b15a5"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

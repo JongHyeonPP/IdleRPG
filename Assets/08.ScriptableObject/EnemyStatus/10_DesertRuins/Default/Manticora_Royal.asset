@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Manticora_Royal
   m_EditorClassIdentifier: 
   prefab: {fileID: 6274489734825828885, guid: be4538e2889ce8e45a449602f6cd7837, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigPig_Brown
   m_EditorClassIdentifier: 
   prefab: {fileID: 7094386763117559844, guid: f115d746bc0cc8940ad4f535802d361d, type: 3}
-  _skills: []
+  isMonster: 1
+  enemyType: 1

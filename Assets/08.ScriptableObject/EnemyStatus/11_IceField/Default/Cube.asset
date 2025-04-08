@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Cube
   m_EditorClassIdentifier: 
   prefab: {fileID: 8299322020684957678, guid: f2f8a7153958fa64a84de5f1dd62752d, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

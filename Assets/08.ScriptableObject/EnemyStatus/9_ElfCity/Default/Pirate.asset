@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Pirate
   m_EditorClassIdentifier: 
   prefab: {fileID: 4797735938668092041, guid: 47d945b487aebf641ab16aa04e54a181, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

@@ -39,7 +39,7 @@ namespace EnumCollection
         Rare,
         Unique,
         Legendary,
-        Mythic
+        Mythic,
     }
     public enum WeaponType
     {
@@ -50,7 +50,11 @@ namespace EnumCollection
     }
     public enum BattleType
     {
-        Default, Boss, None,Story
+        Default, Boss,CompanionTech, Story, None
+    }
+    public enum EnemyType
+    {
+        Enemy, Boss, Chest
     }
     public enum SkillCoolType
     {

@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigMimic
   m_EditorClassIdentifier: 
   prefab: {fileID: 2814959388217388589, guid: f34b54b93da3a374e9b22d9f5cafadc7, type: 3}
-  _skills: []
+  isMonster: 1
+  enemyType: 1

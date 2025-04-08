@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigFairy
   m_EditorClassIdentifier: 
   prefab: {fileID: 7764146719985748838, guid: 308a95db1390a474e990f8de53be8724, type: 3}
-  _skills: []
+  isMonster: 1
+  enemyType: 1

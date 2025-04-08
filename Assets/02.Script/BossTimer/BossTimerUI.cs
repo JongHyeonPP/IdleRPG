@@ -14,23 +14,30 @@ public class BossTimerUI : MonoBehaviour
     void Awake()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
-        BattleBroker.OnBossEnter += OnBossEnter;
-        BattleBroker.OnStageEnter += OnStageEnter;
+
+        
         BattleBroker.OnBossHpChanged += OnBossAttack;
+
+        BattleBroker.SwitchToCompanionBattle += (arg0, arg1) => StopTimer();
+        BattleBroker.SwitchToBoss += StopTimer;
         BattleBroker.OnBossClear += StopTimer;
         PlayerBroker.OnPlayerDead += StopTimer;
+
+        BattleBroker.SwitchToBoss += OnBossEnter;
+        BattleBroker.SwitchToCompanionBattle += (arg0, arg1) => OnBossEnter();
+
         _timerBar = root.Q<VisualElement>("TimerBar").Q<ProgressBar>("ProgressBar");
         _hpBar = root.Q<VisualElement>("HpBar").Q<ProgressBar>("ProgressBar");
+        root.Q<Button>("RunButton").RegisterCallback<ClickEvent>(evt => 
+        {
+            StopTimer();
+            BattleBroker.SwitchToBattle();
+        });
     }
 
-    private void OnStageEnter()
-    {
-        root.style.display = DisplayStyle.None;
-    }
 
     private void OnBossEnter()
     {
-        root.style.display = DisplayStyle.Flex;
         _currentTime = _entireTime; // 타이머 초기화
         _hpBar.value = 1f;
         // 타이머 시작

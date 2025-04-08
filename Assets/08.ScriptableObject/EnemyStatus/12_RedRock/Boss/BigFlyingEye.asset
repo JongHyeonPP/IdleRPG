@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BigFlyingEye
   m_EditorClassIdentifier: 
   prefab: {fileID: 4184724544410129914, guid: 06e413801175acc4098ffc7b1a60e237, type: 3}
-  _skills: []
+  isMonster: 1
+  enemyType: 1

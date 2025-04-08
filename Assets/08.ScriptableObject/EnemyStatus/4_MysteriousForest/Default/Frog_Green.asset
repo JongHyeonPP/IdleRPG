@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Frog_Green
   m_EditorClassIdentifier: 
   prefab: {fileID: 4380625880312160707, guid: 13a79cfc4ee1a874db9c63ca1f3e1578, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0

@@ -1,59 +1,88 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class PlayerBarUI : MonoBehaviour
 {
     public VisualElement root { get; private set; }
-    private ProgressBar hpBar;
-    private ProgressBar mpBar;
+    private ProgressBar _hpBar;
+    private ProgressBar _delayedBar;
+    private ProgressBar _mpBar;
+    private Coroutine _delayedHpCoroutine;
     void Awake()
     {
         InitElement();
         InitEvent();
-        UIBroker.SetBarPosition += SetBarPosition;
+        UIBroker.SetPlayerBarPosition += SetBarPosition;
+        root.style.display = DisplayStyle.None;
     }
 
     private void InitElement()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
-        hpBar = root.Q<ProgressBar>("HpBar");
-        mpBar = root.Q<ProgressBar>("MpBar");
+        _hpBar = root.Q<ProgressBar>("HpBar");
+        _hpBar.Q<VisualElement>(className: "unity-progress-bar__progress").style.backgroundColor = new Color(1f, 0.22f, 0.22f);
+        _delayedBar = root.Q<ProgressBar>("DelayedBar");
+        _mpBar = root.Q<ProgressBar>("MpBar");
     }
 
-    private void SetBarPosition(Camera currentCamera)
+    private void SetBarPosition()
     {
         VisualElement vertical = GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("Vertical");
         var controller = (MonoBehaviour)PlayerBroker.GetPlayerController();
 
         // 월드 좌표를 스크린 좌표로 변환
-        Vector3 screenPoint = currentCamera.WorldToScreenPoint(controller.transform.position);
+        Vector3 screenPoint = Camera.main.WorldToScreenPoint(controller.transform.position);
 
-        float left = screenPoint.x - 100;
-        float bottom = screenPoint.y - 105;
+        float left = screenPoint.x - 100f;
+        float bottom = screenPoint.y - 105f;
         vertical.style.left = left;
         vertical.style.bottom = bottom;  // Y축 반전 제거
+        root.style.display = DisplayStyle.Flex;
     }
-
 
     private void OnStageEnter()
     {
-        hpBar.value = 1f;
+        _hpBar.value = 1f;
+        _delayedBar.value = 1f;
     }
     private void InitEvent()
     {
         PlayerBroker.OnPlayerHpChanged += OnPlayerHpChanged;
-        BattleBroker.OnStageEnter += OnStageEnter;
+        BattleBroker.SwitchToBattle += OnStageEnter;
         PlayerBroker.OnPlayerMpChanged += OnPlayerMpChanged;
     }
 
     private void OnPlayerMpChanged(float ratio)
     {
-        mpBar.value = ratio;
+        _mpBar.value = ratio;
     }
+
+
 
     private void OnPlayerHpChanged(float ratio)
     {
-        hpBar.value = ratio;
+        _hpBar.value = ratio;
+        _delayedBar.value = ratio;
+        //if (_delayedHpCoroutine != null)
+        //    StopCoroutine(_delayedHpCoroutine);
+
+        //_delayedHpCoroutine = StartCoroutine(AnimateDelayedHpBar(ratio));
     }
+
+    private IEnumerator AnimateDelayedHpBar(float targetRatio)
+    {
+        float current = _delayedBar.value;
+        float speed = 2f; // 초당 1.0 비율만큼 감소 (속도 조절 가능)
+
+        while (_delayedBar.value > targetRatio)
+        {
+            current -= Time.deltaTime * speed;
+            _delayedBar.value = Mathf.Max(current, targetRatio);
+            yield return null;
+        }
+        _delayedBar.value = targetRatio;
+    }
+
 }

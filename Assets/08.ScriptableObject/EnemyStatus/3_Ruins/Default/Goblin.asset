@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Goblin
   m_EditorClassIdentifier: 
   prefab: {fileID: 6247888603703507345, guid: 27f6f1c64f39c6e45bc38f4f4b20c8ae, type: 3}
-  _skills: []
+  isMonster: 1
+  isBoss: 0
