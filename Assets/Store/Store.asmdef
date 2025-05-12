@@ -1,0 +1,21 @@
+{
+    "name": "Store",
+    "rootNamespace": "",
+    "references": [
+        "GUID:74e76e8859ef57e4390b860641e86449",
+        "GUID:61689c4e0b9d39d46afcb27de82ad45a",
+        "GUID:a5f4d33fede007b4bae1f2a9ec9da2ab",
+        "GUID:0271f783a351e5c49901fe2ed3b585af",
+        "GUID:20b20c657697e4f478d6b5b4c5837706",
+        "GUID:c1f3ac597cd61d64e994b094eaa1fa95"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

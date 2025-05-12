@@ -212,4 +212,9 @@ public class GameManager : MonoBehaviour
             Debug.Log($"ID: {kvp.Key}, Type: {kvp.Value.Item1}, Value: {kvp.Value.Item2}");
         }
     }
+    [ContextMenu("Temp")]
+    public void Temp()
+    {
+        _gameData.currentStageNum = _gameData.maxStageNum = 2;
+    }
 }

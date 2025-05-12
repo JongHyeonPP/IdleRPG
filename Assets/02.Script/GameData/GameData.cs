@@ -51,4 +51,8 @@ public class GameData
     };
     [JsonConverter(typeof(TupleArr_Converter<int, int>))]
     public (int, int)[] currentCompanionPromoteTech = new (int, int)[3];
+
+    // Costume 코스튬
+    public List<string> equipedCostumes = new();                                 // 장착한 코스튬들
+    public List<string> ownedCostumes = new();                                   // 가지고 있는 코스튬 갯수 관리 // string: 코스튬 uid
 }

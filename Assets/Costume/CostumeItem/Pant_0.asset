@@ -12,13 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5649e372f42bd3740b2d096fb0b450af, type: 3}
   m_Name: Pant_0
   m_EditorClassIdentifier: 
-  Name: "\uBE68\uAC1C\uC694\uBC14\uC9C0"
-  IconTexture: {fileID: 2800000, guid: 37e94653dd0034cee98125a6d5d6a2bf, type: 3}
+  Uid: 300
+  Name: "\uD551\uD06C\uBC14\uC9C0"
+  Description: "\uB0B4\uBCF5\uC544\uB2D8"
+  IconTexture: {fileID: 2800000, guid: ef4a0a844b23ae3469f9159914bc362a, type: 3}
+  IconXTexture: {fileID: 0}
   IconColor: {r: 1, g: 1, b: 1, a: 1}
+  CostumeType: 4
   Parts:
   - Part: 8
-    CostumeSprite: {fileID: -1315093970748110446, guid: 8ac8f08f2a7884907b931477b1694539, type: 3}
+    CostumeSprite: {fileID: -3140455820982803383, guid: ef4a0a844b23ae3469f9159914bc362a, type: 3}
     CostumeColor: {r: 1, g: 1, b: 1, a: 1}
   - Part: 7
-    CostumeSprite: {fileID: -3579204128877024699, guid: 8ac8f08f2a7884907b931477b1694539, type: 3}
+    CostumeSprite: {fileID: 7313079964742260036, guid: ef4a0a844b23ae3469f9159914bc362a, type: 3}
     CostumeColor: {r: 1, g: 1, b: 1, a: 1}
+  _costumeRarity: 0

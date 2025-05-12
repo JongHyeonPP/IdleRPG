@@ -12,16 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5649e372f42bd3740b2d096fb0b450af, type: 3}
   m_Name: Body_0
   m_EditorClassIdentifier: 
+  Uid: 200
   Name: "\uD480\uC774\uB418\uACE0\uC2F6\uC740\uC637"
+  Description: 
   IconTexture: {fileID: 2800000, guid: 06c8d7c33ccef4cf39e374e33835e970, type: 3}
+  IconXTexture: {fileID: 0}
   IconColor: {r: 1, g: 1, b: 1, a: 1}
+  CostumeType: 3
   Parts:
   - Part: 4
-    CostumeSprite: {fileID: -6899643311455125392, guid: 06c8d7c33ccef4cf39e374e33835e970, type: 3}
+    CostumeSprite: {fileID: -6899643311455125392, guid: aeeb1df1d22305b459116cc02ee1efcc, type: 3}
     CostumeColor: {r: 1, g: 1, b: 1, a: 1}
   - Part: 5
-    CostumeSprite: {fileID: -8662432971830130642, guid: 06c8d7c33ccef4cf39e374e33835e970, type: 3}
+    CostumeSprite: {fileID: -8662432971830130642, guid: aeeb1df1d22305b459116cc02ee1efcc, type: 3}
     CostumeColor: {r: 1, g: 1, b: 1, a: 1}
   - Part: 6
-    CostumeSprite: {fileID: -7096297032323124305, guid: 06c8d7c33ccef4cf39e374e33835e970, type: 3}
+    CostumeSprite: {fileID: -7096297032323124305, guid: aeeb1df1d22305b459116cc02ee1efcc, type: 3}
     CostumeColor: {r: 1, g: 1, b: 1, a: 1}
+  _costumeRarity: 0

@@ -32,6 +32,26 @@ public class AppearanceController : MonoBehaviour
     [SerializeField] AppearanceData _defaultAppearanceData;
     [SerializeField] AppearanceData _currentAppearanceData;
 
+    #region SpriteRenderer에 대한 public 접근자
+    // Body 관련
+    public SpriteRenderer BodyHead => _bodyHead;
+    public SpriteRenderer BodyHair => _bodyHair;
+    public SpriteRenderer BodyFaceHair => _bodyFaceHair;
+    public SpriteRenderer BodyBody => _bodyBody;
+    public SpriteRenderer BodyLeftArm => _bodyLeftArm;
+    public SpriteRenderer BodyRightArm => _bodyRightArm;
+    public SpriteRenderer BodyLeftFoot => _bodyLeftFoot;
+    public SpriteRenderer BodyRightFoot => _bodyRightFoot;
+
+    // Clothes 관련
+    public SpriteRenderer ClothHelmet => _clothHelmet;
+    public SpriteRenderer ClothBody => _clothBody;
+    public SpriteRenderer ClothLeftArm => _clothLeftArm;
+    public SpriteRenderer ClothRightArm => _clothRightArm;
+    public SpriteRenderer ClothLeftFoot => _clothLeftFoot;
+    public SpriteRenderer ClothRightFoot => _clothRightFoot;
+    #endregion
+
     public void SetAppearance(AppearanceData appearanceData)
     {
         _currentAppearanceData = appearanceData;
@@ -109,5 +129,52 @@ public class AppearanceController : MonoBehaviour
         _bodyHair.color = _bodyFaceHair.color = new Color(hairColor.r * targetValue, hairColor.g * targetValue, hairColor.b * targetValue, 1f);
         Color eyeColor = _currentAppearanceData.eyeColor;
         _bodyLeftFrontEye.color = _bodyRightFrontEye.color = new Color(eyeColor.r * targetValue, eyeColor.g * targetValue, eyeColor.b * targetValue, 1f);
+    }
+    public AppearanceData GetCurrentAppearanceData()
+    {
+        // 현재 AppearanceData의 복사본 반환
+        AppearanceData copy = ScriptableObject.CreateInstance<AppearanceData>();
+
+        // Clothes
+        copy.clothBack_0Sprite = _currentAppearanceData.clothBack_0Sprite;
+        copy.clothBack_1Sprite = _currentAppearanceData.clothBack_1Sprite;
+        copy.clothHelmetSprite = _currentAppearanceData.clothHelmetSprite;
+        copy.clothLeftArmSprite = _currentAppearanceData.clothLeftArmSprite;
+        copy.clothRightArmSprite = _currentAppearanceData.clothRightArmSprite;
+        copy.clothLeftShoulderSprite = _currentAppearanceData.clothLeftShoulderSprite;
+        copy.clothRightShoulderSprite = _currentAppearanceData.clothRightShoulderSprite;
+        copy.clothLeftFootSprite = _currentAppearanceData.clothLeftFootSprite;
+        copy.clothRightFootSprite = _currentAppearanceData.clothRightFootSprite;
+        copy.clothBodySprite = _currentAppearanceData.clothBodySprite;
+        copy.clothBodyArmorSprite = _currentAppearanceData.clothBodyArmorSprite;
+
+        // Body
+        copy.bodyBodySprite = _currentAppearanceData.bodyBodySprite;
+        copy.bodyHeadSprite = _currentAppearanceData.bodyHeadSprite;
+        copy.bodyHairSprite = _currentAppearanceData.bodyHairSprite;
+        copy.bodyFaceHairSprite = _currentAppearanceData.bodyFaceHairSprite;
+        copy.bodyBackEyeSprite = _currentAppearanceData.bodyBackEyeSprite;
+        copy.bodyFrontEyeSprite = _currentAppearanceData.bodyFrontEyeSprite;
+        copy.bodyLeftArmSprite = _currentAppearanceData.bodyLeftArmSprite;
+        copy.bodyRightArmSprite = _currentAppearanceData.bodyRightArmSprite;
+        copy.bodyLeftFootSprite = _currentAppearanceData.bodyLeftFootSprite;
+        copy.bodyRightFootSprite = _currentAppearanceData.bodyRightFootSprite;
+
+        // Colors
+        copy.hairColor = _currentAppearanceData.hairColor;
+        copy.eyeColor = _currentAppearanceData.eyeColor;
+
+        return copy;
+    }
+    // 기본 AppearanceData 접근자
+    public AppearanceData GetDefaultAppearanceData()
+    {
+        return _defaultAppearanceData;
+    }
+
+    // 기본 AppearanceData 존재 여부 확인
+    public bool HasDefaultAppearanceData()
+    {
+        return _defaultAppearanceData != null;
     }
 }

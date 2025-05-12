@@ -18,7 +18,7 @@ public class MenuControlUI : MonoBehaviour
     [SerializeField] CompanionUI _companionUI;
 
     //[SerializeField] AdventureUI adventureUI;
-    [SerializeField] StoreUI _storeUI;
+   // [SerializeField] StoreUI _storeUI;
     [SerializeField] float[] _menuHeight;
     //Etc
     public VisualElement root { private set; get; }
@@ -112,13 +112,13 @@ public class MenuControlUI : MonoBehaviour
         menuParent.Add(_skillUI.root);
         menuParent.Add(_weaponBookUI.root);
         menuParent.Add(_companionUI.root);
-        menuParent.Add(_storeUI.root);
+     //   menuParent.Add(_storeUI.root);
         //menuParent.Add(adventureUI.root);
         _statUI.root.ElementAt(0).style.height = Length.Percent(100);
         _skillUI.root.ElementAt(0).style.height = Length.Percent(100);
         _weaponUI.root.ElementAt(0).style.height = Length.Percent(100);
         _companionUI.root.ElementAt(0).style.height = Length.Percent(100);
-        _storeUI.root.ElementAt(0).style.height = Length.Percent(100);
+       // _storeUI.root.ElementAt(0).style.height = Length.Percent(100);
         ChangeUI(0);
     }
 

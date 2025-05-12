@@ -1,0 +1,11 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:VisualElement name="PlayerSpriteArea" style="flex-grow: 0; width: 100%; height: 100%; position: relative; align-self: center; font-size: 39px; color: rgb(255, 255, 255); flex-shrink: 0;">
+        <engine:VisualElement name="Blank" style="flex-grow: 1;" />
+        <engine:VisualElement name="RenderParent" style="flex-grow: 0; width: 542px; height: 448px; align-self: center; overflow: hidden; flex-shrink: 0;">
+            <engine:VisualElement name="RenderTexture" style="flex-grow: 0; width: 530px; align-self: center; justify-content: center; height: 297px; background-image: url(&quot;project://database/Assets/Violet%20Theme%20Ui/Buttons/Misc/Background.png?fileID=2800000&amp;guid=103ed4397ca7479479873ab55626ff41&amp;type=3#Background&quot;); flex-shrink: 0; top: 20px; left: 8px; position: absolute; border-top-left-radius: 29px; border-top-right-radius: 29px; border-bottom-right-radius: 29px; border-bottom-left-radius: 29px; border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0;" />
+            <engine:VisualElement name="RenderParent" style="flex-grow: 0; width: 300px; height: 300px; align-self: center; overflow: hidden; flex-shrink: 0;">
+                <engine:VisualElement name="RenderTexture" style="flex-grow: 0; width: 1000px; align-self: center; justify-content: center; height: 1000px; background-image: url(&quot;project://database/Assets/07.Texture/RenderTexture/PlayerCompanionRenderTexture.renderTexture?fileID=8400000&amp;guid=702b6e7164ab6d7439554990f2b5d509&amp;type=2#PlayerCompanionRenderTexture&quot;); flex-shrink: 0; top: -70px; left: 355px;" />
+            </engine:VisualElement>
+        </engine:VisualElement>
+    </engine:VisualElement>
+</engine:UXML>

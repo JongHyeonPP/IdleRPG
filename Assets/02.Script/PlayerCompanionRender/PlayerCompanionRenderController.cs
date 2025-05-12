@@ -31,21 +31,21 @@ public class PlayerCompanionRenderController : MonoBehaviour
             default:
                 appearanceController = _companion_0_AppearanceController;
                 companionStatus = CompanionManager.instance.companionArr[0].companionStatus;
-                currentTech = _gameData.currentCompanionPromoteTech[0];
+              //  currentTech = _gameData.currentCompanionPromoteTech[0];
                 break;
             case 1:
                 appearanceController = _companion_1_AppearanceController;
                 companionStatus = CompanionManager.instance.companionArr[1].companionStatus;
-                currentTech = _gameData.currentCompanionPromoteTech[1];
+               // currentTech = _gameData.currentCompanionPromoteTech[1];
                 break;
             case 2:
                 appearanceController = _companion_2_AppearanceController;
                 companionStatus = CompanionManager.instance.companionArr[2].companionStatus;
-                currentTech = _gameData.currentCompanionPromoteTech[2];
+              //  currentTech = _gameData.currentCompanionPromoteTech[2];
                 break;
         }
         AppearanceData appearanceData;
-        switch (currentTech.Item1)
+        /*switch (currentTech.Item1)
         {
             default:
                 appearanceData = companionStatus.companionTechData_0.appearanceData;
@@ -84,7 +84,7 @@ public class PlayerCompanionRenderController : MonoBehaviour
                 }
                 break;
         }
-        appearanceController.SetAppearance(appearanceData);
+        appearanceController.SetAppearance(appearanceData);*/
     }
     private void OnCompanionAppearanceChange(int companionIndex, AppearanceData data)
     {
