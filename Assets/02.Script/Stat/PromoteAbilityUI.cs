@@ -88,13 +88,15 @@ public class PromoteAbilityUI : MonoBehaviour
         }
         for (int i = 0; i <= currentRankIndex; i++)
         {
-            var promoteData = _gameData.stat_Promote[i];
-            string abilityName = promoteData.Item1.ToString();
-            float abilityValue = promoteData.Item2;
-            int rankIndex = i;
-            StatusType statusType = promoteData.Item1;
+            if (_gameData.stat_Promote.TryGetValue(i, out var promoteData))
+            {
+                string abilityName = promoteData.Item1.ToString();
+                float abilityValue = promoteData.Item2;
+                int rankIndex = i;
+                StatusType statusType = promoteData.Item1;
 
-            UpdateAbilityLabel((abilityName, abilityValue, rankIndex, statusType));
+                UpdateAbilityLabel((abilityName, abilityValue, rankIndex, statusType));
+            }
         }
         _rerollButton.clicked += Reroll;
         valueButton.clicked += ShowOption;

@@ -51,7 +51,7 @@ public class TotalStatusUI : MonoBehaviour
     {
         root = GetComponent<UIDocument>().rootVisualElement;
         CategoriButtonInit();
-        //StatusPanelInit();
+        StatusPanelInit();
         SetupCostumeInfoPanel(); // 코스튬
 
         Button exitButton = root.Q<Button>("ExitButton");
