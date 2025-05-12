@@ -44,7 +44,7 @@
                         <engine:VisualElement name="Padding" style="flex-grow: 1; height: 10px;" />
                     </engine:ScrollView>
                 </engine:VisualElement>
-                <engine:VisualElement name="PromotePanel" style="flex-grow: 1; width: 100%; height: 100%; position: absolute; display: flex;">
+                <engine:VisualElement name="PromotePanel" style="flex-grow: 1; width: 100%; height: 100%; position: absolute; display: none;">
                     <engine:Button text="승급 추가 능력" name="AbilityButton" style="background-color: rgb(241, 0, 0); width: 271px; margin-right: 0; margin-left: 0; left: 776px; bottom: -8px;" />
                     <engine:VisualElement name="Padding" style="flex-grow: 1; height: 5px;" />
                     <engine:ScrollView name="PromoteScrollView" horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="Hidden" enabled="true" scroll-deceleration-rate="0" touch-scroll-type="Elastic" style="position: relative; background-color: rgba(112, 64, 21, 0); translate: 0 0; scale: 1 1; align-self: center; width: 100%; height: 100%;">
