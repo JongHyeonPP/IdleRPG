@@ -1,0 +1,13 @@
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\GoldVerification\module-compilation\GoldVerification.dll
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\GoldVerification\module-compilation\GoldVerification.deps.json
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\GoldVerification\module-compilation\GoldVerification.pdb
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\GoldVerification\module-compilation\Unity.Services.CloudCode.Apis.dll
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\GoldVerification\module-compilation\Unity.Services.CloudCode.Core.dll
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\GoldVerification\module-compilation\Google.Protobuf.dll
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\GoldVerification\module-compilation\Grpc.Core.Api.dll
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\GoldVerification\module-compilation\Grpc.Net.Client.dll
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\GoldVerification\module-compilation\Grpc.Net.Common.dll
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\GoldVerification\module-compilation\JsonSubTypes.dll
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\GoldVerification\module-compilation\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\GoldVerification\module-compilation\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\GoldVerification\module-compilation\Newtonsoft.Json.dll

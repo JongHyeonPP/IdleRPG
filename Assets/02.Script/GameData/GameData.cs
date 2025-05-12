@@ -30,7 +30,9 @@ public class GameData
     public string playerWeaponId;
     public string[] companionWeaponIdArr = new string[3];
     public string[] equipedSkillArr = new string[5];
+    [JsonProperty("currentStageNum")]
     public int currentStageNum = 1;//내가 어느 스테이지에 위치해있냐
+    [JsonProperty("maxStageNum")]
     public int maxStageNum = 0;//내가 어디까지 뚫었냐
     public string userName;
     //Array Index : 몇 번째 동료인지, Dictionary Key : 몇 번째 효과인지, Dictionary Value : Tuple.item1 스테이터스와 Tuple.item2 레어리티

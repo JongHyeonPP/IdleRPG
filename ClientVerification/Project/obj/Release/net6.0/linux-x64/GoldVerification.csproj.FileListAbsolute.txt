@@ -1,0 +1,13 @@
+C:\Users\JongHyeon\Documents\kiugi\GoldVerification\Project\bin\Release\net6.0\linux-x64\GoldVerification.deps.json
+C:\Users\JongHyeon\Documents\kiugi\GoldVerification\Project\bin\Release\net6.0\linux-x64\GoldVerification.dll
+C:\Users\JongHyeon\Documents\kiugi\GoldVerification\Project\bin\Release\net6.0\linux-x64\GoldVerification.pdb
+C:\Users\JongHyeon\Documents\kiugi\GoldVerification\Project\obj\Release\net6.0\linux-x64\GoldVerification.csproj.AssemblyReference.cache
+C:\Users\JongHyeon\Documents\kiugi\GoldVerification\Project\obj\Release\net6.0\linux-x64\GoldVerification.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\JongHyeon\Documents\kiugi\GoldVerification\Project\obj\Release\net6.0\linux-x64\GoldVerification.AssemblyInfoInputs.cache
+C:\Users\JongHyeon\Documents\kiugi\GoldVerification\Project\obj\Release\net6.0\linux-x64\GoldVerification.AssemblyInfo.cs
+C:\Users\JongHyeon\Documents\kiugi\GoldVerification\Project\obj\Release\net6.0\linux-x64\GoldVerification.csproj.CoreCompileInputs.cache
+C:\Users\JongHyeon\Documents\kiugi\GoldVerification\Project\obj\Release\net6.0\linux-x64\GoldVerification.sourcelink.json
+C:\Users\JongHyeon\Documents\kiugi\GoldVerification\Project\obj\Release\net6.0\linux-x64\GoldVerification.dll
+C:\Users\JongHyeon\Documents\kiugi\GoldVerification\Project\obj\Release\net6.0\linux-x64\refint\GoldVerification.dll
+C:\Users\JongHyeon\Documents\kiugi\GoldVerification\Project\obj\Release\net6.0\linux-x64\GoldVerification.pdb
+C:\Users\JongHyeon\Documents\kiugi\GoldVerification\Project\obj\Release\net6.0\linux-x64\ref\GoldVerification.dll

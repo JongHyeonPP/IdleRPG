@@ -1,0 +1,13 @@
+C:\Users\JongHyeon\Documents\kiugi\CloudCodeTest\Project\bin\Debug\net6.0\CloudCodeTest.deps.json
+C:\Users\JongHyeon\Documents\kiugi\CloudCodeTest\Project\bin\Debug\net6.0\CloudCodeTest.dll
+C:\Users\JongHyeon\Documents\kiugi\CloudCodeTest\Project\bin\Debug\net6.0\CloudCodeTest.pdb
+C:\Users\JongHyeon\Documents\kiugi\CloudCodeTest\Project\obj\Debug\net6.0\CloudCodeTest.csproj.AssemblyReference.cache
+C:\Users\JongHyeon\Documents\kiugi\CloudCodeTest\Project\obj\Debug\net6.0\CloudCodeTest.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\JongHyeon\Documents\kiugi\CloudCodeTest\Project\obj\Debug\net6.0\CloudCodeTest.AssemblyInfoInputs.cache
+C:\Users\JongHyeon\Documents\kiugi\CloudCodeTest\Project\obj\Debug\net6.0\CloudCodeTest.AssemblyInfo.cs
+C:\Users\JongHyeon\Documents\kiugi\CloudCodeTest\Project\obj\Debug\net6.0\CloudCodeTest.csproj.CoreCompileInputs.cache
+C:\Users\JongHyeon\Documents\kiugi\CloudCodeTest\Project\obj\Debug\net6.0\CloudCodeTest.sourcelink.json
+C:\Users\JongHyeon\Documents\kiugi\CloudCodeTest\Project\obj\Debug\net6.0\CloudCodeTest.dll
+C:\Users\JongHyeon\Documents\kiugi\CloudCodeTest\Project\obj\Debug\net6.0\refint\CloudCodeTest.dll
+C:\Users\JongHyeon\Documents\kiugi\CloudCodeTest\Project\obj\Debug\net6.0\CloudCodeTest.pdb
+C:\Users\JongHyeon\Documents\kiugi\CloudCodeTest\Project\obj\Debug\net6.0\ref\CloudCodeTest.dll

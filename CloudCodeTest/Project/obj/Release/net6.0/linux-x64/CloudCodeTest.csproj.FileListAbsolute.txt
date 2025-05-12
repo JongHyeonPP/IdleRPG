@@ -1,0 +1,13 @@
+C:\Users\JongHyeon\Documents\kiugi\CloudCodeTest\Project\bin\Release\net6.0\linux-x64\CloudCodeTest.deps.json
+C:\Users\JongHyeon\Documents\kiugi\CloudCodeTest\Project\bin\Release\net6.0\linux-x64\CloudCodeTest.dll
+C:\Users\JongHyeon\Documents\kiugi\CloudCodeTest\Project\bin\Release\net6.0\linux-x64\CloudCodeTest.pdb
+C:\Users\JongHyeon\Documents\kiugi\CloudCodeTest\Project\obj\Release\net6.0\linux-x64\CloudCodeTest.csproj.AssemblyReference.cache
+C:\Users\JongHyeon\Documents\kiugi\CloudCodeTest\Project\obj\Release\net6.0\linux-x64\CloudCodeTest.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\JongHyeon\Documents\kiugi\CloudCodeTest\Project\obj\Release\net6.0\linux-x64\CloudCodeTest.AssemblyInfoInputs.cache
+C:\Users\JongHyeon\Documents\kiugi\CloudCodeTest\Project\obj\Release\net6.0\linux-x64\CloudCodeTest.AssemblyInfo.cs
+C:\Users\JongHyeon\Documents\kiugi\CloudCodeTest\Project\obj\Release\net6.0\linux-x64\CloudCodeTest.csproj.CoreCompileInputs.cache
+C:\Users\JongHyeon\Documents\kiugi\CloudCodeTest\Project\obj\Release\net6.0\linux-x64\CloudCodeTest.sourcelink.json
+C:\Users\JongHyeon\Documents\kiugi\CloudCodeTest\Project\obj\Release\net6.0\linux-x64\CloudCodeTest.dll
+C:\Users\JongHyeon\Documents\kiugi\CloudCodeTest\Project\obj\Release\net6.0\linux-x64\refint\CloudCodeTest.dll
+C:\Users\JongHyeon\Documents\kiugi\CloudCodeTest\Project\obj\Release\net6.0\linux-x64\CloudCodeTest.pdb
+C:\Users\JongHyeon\Documents\kiugi\CloudCodeTest\Project\obj\Release\net6.0\linux-x64\ref\CloudCodeTest.dll

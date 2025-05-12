@@ -77,6 +77,6 @@ public class GoldDrop : DropBase
 
     public override void SetValue()
     {
-        value = BattleBroker.GetStageRewardValue(DropType.Gold);
+        value = BattleBroker.GetDropValue(DropType.Gold);
     }
 }

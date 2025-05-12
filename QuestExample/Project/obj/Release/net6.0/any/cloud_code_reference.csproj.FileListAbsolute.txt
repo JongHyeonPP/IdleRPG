@@ -1,0 +1,13 @@
+C:\Users\JongHyeon\Documents\kiugi\cloud_code_reference\Project\bin\Release\net6.0\any\cloud_code_reference.deps.json
+C:\Users\JongHyeon\Documents\kiugi\cloud_code_reference\Project\bin\Release\net6.0\any\cloud_code_reference.dll
+C:\Users\JongHyeon\Documents\kiugi\cloud_code_reference\Project\bin\Release\net6.0\any\cloud_code_reference.pdb
+C:\Users\JongHyeon\Documents\kiugi\cloud_code_reference\Project\obj\Release\net6.0\any\cloud_code_reference.csproj.AssemblyReference.cache
+C:\Users\JongHyeon\Documents\kiugi\cloud_code_reference\Project\obj\Release\net6.0\any\cloud_code_reference.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\JongHyeon\Documents\kiugi\cloud_code_reference\Project\obj\Release\net6.0\any\cloud_code_reference.AssemblyInfoInputs.cache
+C:\Users\JongHyeon\Documents\kiugi\cloud_code_reference\Project\obj\Release\net6.0\any\cloud_code_reference.AssemblyInfo.cs
+C:\Users\JongHyeon\Documents\kiugi\cloud_code_reference\Project\obj\Release\net6.0\any\cloud_code_reference.csproj.CoreCompileInputs.cache
+C:\Users\JongHyeon\Documents\kiugi\cloud_code_reference\Project\obj\Release\net6.0\any\cloud_code_reference.sourcelink.json
+C:\Users\JongHyeon\Documents\kiugi\cloud_code_reference\Project\obj\Release\net6.0\any\cloud_code_reference.dll
+C:\Users\JongHyeon\Documents\kiugi\cloud_code_reference\Project\obj\Release\net6.0\any\refint\cloud_code_reference.dll
+C:\Users\JongHyeon\Documents\kiugi\cloud_code_reference\Project\obj\Release\net6.0\any\cloud_code_reference.pdb
+C:\Users\JongHyeon\Documents\kiugi\cloud_code_reference\Project\obj\Release\net6.0\any\ref\cloud_code_reference.dll

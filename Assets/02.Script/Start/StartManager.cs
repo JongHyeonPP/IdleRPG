@@ -28,7 +28,7 @@ public class StartManager : MonoBehaviour
     public void GoogleAuthLoad()
     {
         startMainUI.SetBottomLabelText("구글 로그인 중");
-        GameManager.instance.LoadGoogleAuth();
+        StartBroker.LoadGoogleAuth();
     }
     //Main 씬을 로드하는 코루틴. 비동기여도 Freeze 현상이 있어서 굳이 코루틴으로 해야하나 싶음.
     private IEnumerator LoadMainScene()

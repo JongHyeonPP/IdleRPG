@@ -1,0 +1,13 @@
+C:\Users\JongHyeon\Documents\kiugi\ClientVerification\Project\bin\Release\net6.0\linux-x64\ClientVerification.deps.json
+C:\Users\JongHyeon\Documents\kiugi\ClientVerification\Project\bin\Release\net6.0\linux-x64\ClientVerification.dll
+C:\Users\JongHyeon\Documents\kiugi\ClientVerification\Project\bin\Release\net6.0\linux-x64\ClientVerification.pdb
+C:\Users\JongHyeon\Documents\kiugi\ClientVerification\Project\obj\Release\net6.0\linux-x64\ClientVerification.csproj.AssemblyReference.cache
+C:\Users\JongHyeon\Documents\kiugi\ClientVerification\Project\obj\Release\net6.0\linux-x64\ClientVerification.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\JongHyeon\Documents\kiugi\ClientVerification\Project\obj\Release\net6.0\linux-x64\ClientVerification.AssemblyInfoInputs.cache
+C:\Users\JongHyeon\Documents\kiugi\ClientVerification\Project\obj\Release\net6.0\linux-x64\ClientVerification.AssemblyInfo.cs
+C:\Users\JongHyeon\Documents\kiugi\ClientVerification\Project\obj\Release\net6.0\linux-x64\ClientVerification.csproj.CoreCompileInputs.cache
+C:\Users\JongHyeon\Documents\kiugi\ClientVerification\Project\obj\Release\net6.0\linux-x64\ClientVerification.sourcelink.json
+C:\Users\JongHyeon\Documents\kiugi\ClientVerification\Project\obj\Release\net6.0\linux-x64\ClientVerification.dll
+C:\Users\JongHyeon\Documents\kiugi\ClientVerification\Project\obj\Release\net6.0\linux-x64\refint\ClientVerification.dll
+C:\Users\JongHyeon\Documents\kiugi\ClientVerification\Project\obj\Release\net6.0\linux-x64\ClientVerification.pdb
+C:\Users\JongHyeon\Documents\kiugi\ClientVerification\Project\obj\Release\net6.0\linux-x64\ref\ClientVerification.dll

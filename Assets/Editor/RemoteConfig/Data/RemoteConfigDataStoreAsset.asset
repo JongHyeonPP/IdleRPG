@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 469c24fdb3bd6431b92cc1465bd9166b, type: 3}
+  m_Name: RemoteConfigDataStoreAsset
+  m_EditorClassIdentifier: 
+  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"f86bad14-c55d-4630-8d09-1554b64fd07f\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"QUESTS\",\r\n      \"type\": \"json\",\r\n     
+    \"schemaId\": null,\r\n      \"value\": [\r\n        {\r\n          \"id\": 1,\r\n         
+    \"name\": \"Chop Trees\",\r\n          \"progress_required\": 5,\r\n         
+    \"progress_per_minute\": 1,\r\n          \"reward\": 5\r\n        },\r\n       
+    {\r\n          \"id\": 2,\r\n          \"name\": \"Mine Gold\",\r\n         
+    \"progress_required\": 5,\r\n          \"progress_per_minute\": 1,\r\n         
+    \"reward\": 10\r\n        }\r\n      ]\r\n    }\r\n  },\r\n  {\r\n    \"metadata\":
+    {\r\n      \"entityId\": \"8042c0ed-221f-4ccb-8e74-8f9d31ab562e\"\r\n    },\r\n   
+    \"rs\": {\r\n      \"key\": \"REINFORCE_PRICE_GOLD\",\r\n      \"type\": \"json\",\r\n     
+    \"schemaId\": null,\r\n      \"value\": {\r\n        \"MaxHp\": \"{level}*1\",\r\n       
+    \"Power\": \"{level}*1\",\r\n        \"HpRecover\": \"{level}*1\",\r\n       
+    \"Critical\": \"{level}*1\",\r\n        \"CriticalDamage\": \"{level}*1\"\r\n     
+    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"e8fd34d8-f98b-4aa2-8ce8-3eda2d516cde\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"REINFORCE_VALUE_GOLD\",\r\n      \"type\":
+    \"json\",\r\n      \"schemaId\": null,\r\n      \"value\": {\r\n        \"MaxHp\":
+    \"{level}*1\",\r\n        \"Power\": \"{level}*1\",\r\n        \"HpRecover\":
+    \"{level}*1\",\r\n        \"Critical\": \"{level}*1\",\r\n        \"CriticalDamage\":
+    \"{level}*1\"\r\n      }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
+    \"entityId\": \"eaea49d6-f394-449c-bae8-40b6f01ea87a\"\r\n    },\r\n    \"rs\":
+    {\r\n      \"key\": \"REINFORCE_VALUE_STATUS\",\r\n      \"type\": \"json\",\r\n     
+    \"schemaId\": null,\r\n      \"value\": {\r\n        \"MaxHp\": \"{level}*30\",\r\n       
+    \"Power\": \"{level}*5\",\r\n        \"HpRecover\": \"{level}*5\",\r\n       
+    \"CriticalDamage\": \"{level}*3\",\r\n        \"GoldAscend\": \"{level}*0.5\"\r\n     
+    }\r\n    }\r\n  }\r\n]"
+  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"f86bad14-c55d-4630-8d09-1554b64fd07f\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"QUESTS\",\r\n      \"type\": \"json\",\r\n     
+    \"schemaId\": null,\r\n      \"value\": [\r\n        {\r\n          \"id\": 1,\r\n         
+    \"name\": \"Chop Trees\",\r\n          \"progress_required\": 5,\r\n         
+    \"progress_per_minute\": 1,\r\n          \"reward\": 5\r\n        },\r\n       
+    {\r\n          \"id\": 2,\r\n          \"name\": \"Mine Gold\",\r\n         
+    \"progress_required\": 5,\r\n          \"progress_per_minute\": 1,\r\n         
+    \"reward\": 10\r\n        }\r\n      ]\r\n    }\r\n  },\r\n  {\r\n    \"metadata\":
+    {\r\n      \"entityId\": \"8042c0ed-221f-4ccb-8e74-8f9d31ab562e\"\r\n    },\r\n   
+    \"rs\": {\r\n      \"key\": \"REINFORCE_PRICE_GOLD\",\r\n      \"type\": \"json\",\r\n     
+    \"schemaId\": null,\r\n      \"value\": {\r\n        \"MaxHp\": \"{level}*1\",\r\n       
+    \"Power\": \"{level}*1\",\r\n        \"HpRecover\": \"{level}*1\",\r\n       
+    \"Critical\": \"{level}*1\",\r\n        \"CriticalDamage\": \"{level}*1\"\r\n     
+    }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"e8fd34d8-f98b-4aa2-8ce8-3eda2d516cde\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"REINFORCE_VALUE_GOLD\",\r\n      \"type\":
+    \"json\",\r\n      \"schemaId\": null,\r\n      \"value\": {\r\n        \"MaxHp\":
+    \"{level}*1\",\r\n        \"Power\": \"{level}*1\",\r\n        \"HpRecover\":
+    \"{level}*1\",\r\n        \"Critical\": \"{level}*1\",\r\n        \"CriticalDamage\":
+    \"{level}*1\"\r\n      }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
+    \"entityId\": \"eaea49d6-f394-449c-bae8-40b6f01ea87a\"\r\n    },\r\n    \"rs\":
+    {\r\n      \"key\": \"REINFORCE_VALUE_STATUS\",\r\n      \"type\": \"json\",\r\n     
+    \"schemaId\": null,\r\n      \"value\": {\r\n        \"MaxHp\": \"{level}*30\",\r\n       
+    \"Power\": \"{level}*5\",\r\n        \"HpRecover\": \"{level}*5\",\r\n       
+    \"CriticalDamage\": \"{level}*3\",\r\n        \"GoldAscend\": \"{level}*0.5\"\r\n     
+    }\r\n    }\r\n  }\r\n]"
+  _environments: "[\r\n  {\r\n    \"projectId\": \"2e05c7c9-f944-4980-845d-cbb6062958db\",\r\n   
+    \"name\": \"production\",\r\n    \"id\": \"5af9eb15-2e37-43c0-8e34-36f46f789475\",\r\n   
+    \"isDefault\": true,\r\n    \"createdAt\": \"2024-10-28T16:29:43Z\",\r\n    \"updatedAt\":
+    \"2024-10-28T16:29:43Z\"\r\n  },\r\n  {\r\n    \"projectId\": \"2e05c7c9-f944-4980-845d-cbb6062958db\",\r\n   
+    \"name\": \"develop\",\r\n    \"id\": \"c42a4d80-7e4e-4680-94f2-e10cbdee0f72\",\r\n   
+    \"isDefault\": false,\r\n    \"createdAt\": \"2025-04-08T09:22:43Z\",\r\n   
+    \"updatedAt\": \"2025-04-08T09:22:43Z\"\r\n  }\r\n]"

@@ -2,10 +2,6 @@ using UnityEngine;
 using EnumCollection;
 using Newtonsoft.Json;
 using System.Collections;
-using GooglePlayGames;
-using GooglePlayGames.BasicApi;
-using Unity.Services.Authentication;
-using Unity.Services.Core;
 
 public class GameManager : MonoBehaviour
 {
@@ -36,10 +32,11 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         StartBroker.SaveLocal += SaveLocalData;
+        StartBroker.SetUserId += (userId) => this.userId = userId;
     }
 
     //ProcessAuthentication 과정은 비동기적으로 실행된다.
-    public void LoadGoogleAuth() => PlayGamesPlatform.Instance.Authenticate(ProcessAuthentication);
+    
     //Controller를 찾고 전투에 필요한 정보들을 세팅한다.
 
     //데이터 로드 시간이 너무 짧으면 과정 연출이 애매해져서 최소 시간 할당했음.
@@ -102,30 +99,7 @@ public class GameManager : MonoBehaviour
     }
 
     //구글 인증을 진행한다.
-    public async void ProcessAuthentication(SignInStatus status)
-    {
-        var options = new InitializationOptions().SetOption("environment-name", "develop");
-        await UnityServices.InitializeAsync(options);
-        if (status == SignInStatus.Success)
-        {
-            // Google Play Games 인증 성공 시
-            PlayGamesPlatform.Activate();
-            userId = PlayGamesPlatform.Instance.GetUserId();
-            PlayGamesPlatform.Instance.RequestServerSideAccess(true, async code =>
-            {
-                Debug.Log("Authorization code: " + code);
-                await AuthenticationService.Instance.SignInWithGooglePlayGamesAsync(code);
-                StartBroker.OnAuthenticationComplete?.Invoke();
-            });
-        }
-        else
-        {
-            // Google 인증 실패 시 익명 로그인
-            await AuthenticationService.Instance.SignInAnonymouslyAsync();
-            userId = AuthenticationService.Instance.PlayerId;
-            StartBroker.OnAuthenticationComplete?.Invoke();
-        }
-    }
+
 
 
 

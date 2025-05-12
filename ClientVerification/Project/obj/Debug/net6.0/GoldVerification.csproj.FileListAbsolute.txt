@@ -1,0 +1,13 @@
+C:\Users\JongHyeon\Documents\kiugi\GoldVerification\Project\bin\Debug\net6.0\GoldVerification.deps.json
+C:\Users\JongHyeon\Documents\kiugi\GoldVerification\Project\bin\Debug\net6.0\GoldVerification.dll
+C:\Users\JongHyeon\Documents\kiugi\GoldVerification\Project\bin\Debug\net6.0\GoldVerification.pdb
+C:\Users\JongHyeon\Documents\kiugi\GoldVerification\Project\obj\Debug\net6.0\GoldVerification.csproj.AssemblyReference.cache
+C:\Users\JongHyeon\Documents\kiugi\GoldVerification\Project\obj\Debug\net6.0\GoldVerification.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\JongHyeon\Documents\kiugi\GoldVerification\Project\obj\Debug\net6.0\GoldVerification.AssemblyInfoInputs.cache
+C:\Users\JongHyeon\Documents\kiugi\GoldVerification\Project\obj\Debug\net6.0\GoldVerification.AssemblyInfo.cs
+C:\Users\JongHyeon\Documents\kiugi\GoldVerification\Project\obj\Debug\net6.0\GoldVerification.csproj.CoreCompileInputs.cache
+C:\Users\JongHyeon\Documents\kiugi\GoldVerification\Project\obj\Debug\net6.0\GoldVerification.sourcelink.json
+C:\Users\JongHyeon\Documents\kiugi\GoldVerification\Project\obj\Debug\net6.0\GoldVerification.dll
+C:\Users\JongHyeon\Documents\kiugi\GoldVerification\Project\obj\Debug\net6.0\refint\GoldVerification.dll
+C:\Users\JongHyeon\Documents\kiugi\GoldVerification\Project\obj\Debug\net6.0\GoldVerification.pdb
+C:\Users\JongHyeon\Documents\kiugi\GoldVerification\Project\obj\Debug\net6.0\ref\GoldVerification.dll

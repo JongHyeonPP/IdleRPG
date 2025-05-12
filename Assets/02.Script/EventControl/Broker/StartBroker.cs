@@ -9,4 +9,6 @@ public static class StartBroker
     public static Action OnMoveBattleScene;//Battle씬으로 이동할 때 수행할 델리게이트
     public static Func<GameData> GetGameData;
     public static Action SaveLocal;
+    public static Action LoadGoogleAuth;
+    public static Action<string> SetUserId;
 }

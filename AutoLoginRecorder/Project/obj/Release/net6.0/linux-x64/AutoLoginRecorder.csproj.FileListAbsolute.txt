@@ -1,0 +1,13 @@
+C:\Users\JongHyeon\Documents\kiugi\AutoLoginRecorder\Project\bin\Release\net6.0\linux-x64\AutoLoginRecorder.deps.json
+C:\Users\JongHyeon\Documents\kiugi\AutoLoginRecorder\Project\bin\Release\net6.0\linux-x64\AutoLoginRecorder.dll
+C:\Users\JongHyeon\Documents\kiugi\AutoLoginRecorder\Project\bin\Release\net6.0\linux-x64\AutoLoginRecorder.pdb
+C:\Users\JongHyeon\Documents\kiugi\AutoLoginRecorder\Project\obj\Release\net6.0\linux-x64\AutoLoginRecorder.csproj.AssemblyReference.cache
+C:\Users\JongHyeon\Documents\kiugi\AutoLoginRecorder\Project\obj\Release\net6.0\linux-x64\AutoLoginRecorder.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\JongHyeon\Documents\kiugi\AutoLoginRecorder\Project\obj\Release\net6.0\linux-x64\AutoLoginRecorder.AssemblyInfoInputs.cache
+C:\Users\JongHyeon\Documents\kiugi\AutoLoginRecorder\Project\obj\Release\net6.0\linux-x64\AutoLoginRecorder.AssemblyInfo.cs
+C:\Users\JongHyeon\Documents\kiugi\AutoLoginRecorder\Project\obj\Release\net6.0\linux-x64\AutoLoginRecorder.csproj.CoreCompileInputs.cache
+C:\Users\JongHyeon\Documents\kiugi\AutoLoginRecorder\Project\obj\Release\net6.0\linux-x64\AutoLoginRecorder.sourcelink.json
+C:\Users\JongHyeon\Documents\kiugi\AutoLoginRecorder\Project\obj\Release\net6.0\linux-x64\AutoLoginRecorder.dll
+C:\Users\JongHyeon\Documents\kiugi\AutoLoginRecorder\Project\obj\Release\net6.0\linux-x64\refint\AutoLoginRecorder.dll
+C:\Users\JongHyeon\Documents\kiugi\AutoLoginRecorder\Project\obj\Release\net6.0\linux-x64\AutoLoginRecorder.pdb
+C:\Users\JongHyeon\Documents\kiugi\AutoLoginRecorder\Project\obj\Release\net6.0\linux-x64\ref\AutoLoginRecorder.dll

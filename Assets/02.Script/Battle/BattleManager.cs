@@ -98,11 +98,7 @@ public class BattleManager : MonoBehaviour
         BattleBroker.IsCanAttack += IsCanAttack;
 
         PlayerBroker.OnCompanionPromoteTechSet += OnCompanionPromoteTechSet;
-        BattleBroker.GetNeedExp = GetNeedExp;
-        //Drop
-        BattleBroker.OnExpByDrop += GetExpByDrop;
-        BattleBroker.OnGoldByDrop += GetGoldByDrop;
-        BattleBroker.GetStageRewardValue = GetStageReward;
+
         //EnemyStatus
         EnemyBroker.GetEnemyMaxHp = (enemyType) =>
         {
@@ -536,70 +532,8 @@ public class BattleManager : MonoBehaviour
         ChangeBackground();
         _isBattleActive = true; // 전투 루프 활성화
     }
-    public void GetGoldByDrop(int value)
-    {
-        _gameData.gold += value;
-        BattleBroker.OnGoldSet();
-    }
-    public void GetExpByDrop(int value)
-    {
-        
-        _gameData.exp += value;
 
-        while (true)
-        {
-            BigInteger needExp = BattleBroker.GetNeedExp();
-            if (_gameData.exp < needExp)
-                break;
-            if (_gameData.exp >= needExp)
-            {
-                _gameData.exp -= needExp;
-                _gameData.level++;
-                _gameData.statPoint++;
-                BattleBroker.OnStatPointSet();
-            }
-        }
-        BattleBroker.OnLevelExpSet();
-    }
-    private BigInteger GetNeedExp()
-    {
-        return _gameData.level * 100;
-    }
-    private int GetStageReward(DropType dropType)
-    {
-        int baseValue = 0;
-
-        if (battleType == BattleType.Default)
-        {
-            switch (dropType)
-            {
-                case DropType.Gold:
-                    baseValue = _currentStageInfo.enemyStatusFromStage.gold;
-                    break;
-                case DropType.Exp:
-                    baseValue = _currentStageInfo.enemyStatusFromStage.exp;
-                    break;
-            }
-        }
-        else if (battleType == BattleType.Boss)
-        {
-            switch (dropType)
-            {
-                case DropType.Gold:
-                    baseValue = _currentStageInfo.bossStatusFromStage.gold;
-                    break;
-                case DropType.Exp:
-                    baseValue = _currentStageInfo.bossStatusFromStage.exp;
-                    break;
-            }
-        }
-
-        // ±10% 범위의 랜덤 int 생성
-        int min = Mathf.FloorToInt(baseValue * 0.9f);
-        int max = Mathf.CeilToInt(baseValue * 1.1f) + 1; // Random.Range의 max는 exclusive
-        int result = Random.Range(min, max);
-        return result;
-    }
+    
 
     [ContextMenu("RestartBattle")]
     public void RestartBattle()

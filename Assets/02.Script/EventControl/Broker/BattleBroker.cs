@@ -41,7 +41,7 @@ public static class BattleBroker
     public static Action<int> OnExpByDrop;
     public static Action<int> OnGoldByDrop;
 
-    public static Func<DropType, int> GetStageRewardValue;
+    public static Func<DropType, int> GetDropValue;
 
     public static Action SetCameraExpand;
     public static Action SetCameraShrink;

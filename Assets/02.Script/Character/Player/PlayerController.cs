@@ -69,7 +69,7 @@ public class PlayerController : Attackable
 
     private void OnGoldStatusSet(StatusType type, int level)
     {
-        int value = FormulaManager.GetGoldStatus(level, type);
+        int value = ReinForceManager.instance.GetGoldStatus(level, type);
         switch (type)
         {
             case StatusType.MaxHp:
@@ -94,7 +94,7 @@ public class PlayerController : Attackable
     }
     private void OnStatPointStatusSet(StatusType type, int level)
     {
-        int value = FormulaManager.GetStatPointStatus(level, type);
+        int value = ReinForceManager.instance.GetStatPointStatus(level, type);
         switch (type)
         {
             case StatusType.MaxHp:
@@ -158,21 +158,21 @@ public class PlayerController : Attackable
     public void SetGoldStatus()
     {
         Dictionary<StatusType, int> statLevelDict = _gameData.statLevel_Gold;
-        _status._maxHp_Gold = FormulaManager.GetGoldStatus(GetStatValueOrDefault(statLevelDict, StatusType.MaxHp), StatusType.MaxHp);
-        _status._power_Gold = FormulaManager.GetGoldStatus(GetStatValueOrDefault(statLevelDict, StatusType.Power), StatusType.Power);
-        _status._hpRecover_Gold = FormulaManager.GetGoldStatus(GetStatValueOrDefault(statLevelDict, StatusType.HpRecover), StatusType.HpRecover);
-        _status._critical_Gold = FormulaManager.GetGoldStatus(GetStatValueOrDefault(statLevelDict, StatusType.Critical), StatusType.Critical);
-        _status._criticalDamage_Gold = FormulaManager.GetGoldStatus(GetStatValueOrDefault(statLevelDict, StatusType.CriticalDamage), StatusType.CriticalDamage);
+        _status._maxHp_Gold = ReinForceManager.instance.GetGoldStatus(GetStatValueOrDefault(statLevelDict, StatusType.MaxHp), StatusType.MaxHp);
+        _status._power_Gold = ReinForceManager.instance.GetGoldStatus(GetStatValueOrDefault(statLevelDict, StatusType.Power), StatusType.Power);
+        _status._hpRecover_Gold = ReinForceManager.instance.GetGoldStatus(GetStatValueOrDefault(statLevelDict, StatusType.HpRecover), StatusType.HpRecover);
+        _status._critical_Gold = ReinForceManager.instance.GetGoldStatus(GetStatValueOrDefault(statLevelDict, StatusType.Critical), StatusType.Critical);
+        _status._criticalDamage_Gold = ReinForceManager.instance.GetGoldStatus(GetStatValueOrDefault(statLevelDict, StatusType.CriticalDamage), StatusType.CriticalDamage);
     }
 
     public void SetStatPointStatus()
     {
         Dictionary<StatusType, int> statLevelDict = _gameData.statLevel_StatPoint;
-        _status._criticalDamage_StatPoint = FormulaManager.GetStatPointStatus(GetStatValueOrDefault(statLevelDict, StatusType.CriticalDamage), StatusType.CriticalDamage);
-        _status._goldAscend_StatPoint = FormulaManager.GetStatPointStatus(GetStatValueOrDefault(statLevelDict, StatusType.GoldAscend), StatusType.GoldAscend);
-        _status._hpRecover_StatPoint = FormulaManager.GetStatPointStatus(GetStatValueOrDefault(statLevelDict, StatusType.HpRecover), StatusType.HpRecover);
-        _status._maxHp_StatPoint = FormulaManager.GetStatPointStatus(GetStatValueOrDefault(statLevelDict, StatusType.MaxHp), StatusType.MaxHp);
-        _status._power_StatPoint = FormulaManager.GetStatPointStatus(GetStatValueOrDefault(statLevelDict, StatusType.Power), StatusType.Power);
+        _status._criticalDamage_StatPoint = ReinForceManager.instance.GetStatPointStatus(GetStatValueOrDefault(statLevelDict, StatusType.CriticalDamage), StatusType.CriticalDamage);
+        _status._goldAscend_StatPoint = ReinForceManager.instance.GetStatPointStatus(GetStatValueOrDefault(statLevelDict, StatusType.GoldAscend), StatusType.GoldAscend);
+        _status._hpRecover_StatPoint = ReinForceManager.instance.GetStatPointStatus(GetStatValueOrDefault(statLevelDict, StatusType.HpRecover), StatusType.HpRecover);
+        _status._maxHp_StatPoint = ReinForceManager.instance.GetStatPointStatus(GetStatValueOrDefault(statLevelDict, StatusType.MaxHp), StatusType.MaxHp);
+        _status._power_StatPoint = ReinForceManager.instance.GetStatPointStatus(GetStatValueOrDefault(statLevelDict, StatusType.Power), StatusType.Power);
     }
 
     protected override void OnDead()

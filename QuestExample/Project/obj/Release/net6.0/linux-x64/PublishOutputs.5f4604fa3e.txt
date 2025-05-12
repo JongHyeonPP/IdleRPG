@@ -1,0 +1,13 @@
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\QuestExample\module-compilation\QuestExample.dll
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\QuestExample\module-compilation\QuestExample.deps.json
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\QuestExample\module-compilation\QuestExample.pdb
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\QuestExample\module-compilation\Unity.Services.CloudCode.Apis.dll
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\QuestExample\module-compilation\Unity.Services.CloudCode.Core.dll
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\QuestExample\module-compilation\Google.Protobuf.dll
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\QuestExample\module-compilation\Grpc.Core.Api.dll
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\QuestExample\module-compilation\Grpc.Net.Client.dll
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\QuestExample\module-compilation\Grpc.Net.Common.dll
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\QuestExample\module-compilation\JsonSubTypes.dll
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\QuestExample\module-compilation\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\QuestExample\module-compilation\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\QuestExample\module-compilation\Newtonsoft.Json.dll

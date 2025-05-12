@@ -27,6 +27,6 @@ public class ExpDrop : DropBase
 
     public override void SetValue()
     {
-        value = BattleBroker.GetStageRewardValue(DropType.Exp);
+        value = BattleBroker.GetDropValue(DropType.Exp);
     }
 }

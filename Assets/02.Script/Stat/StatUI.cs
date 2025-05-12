@@ -379,7 +379,7 @@ public class StatUI : MonoBehaviour
 
     private void IncreaseGoldStat(StatusType stat)
     {
-        int requiredGold = FormulaManager.GetGoldRequired(_gameData.statLevel_Gold[stat]);
+        int requiredGold = ReinForceManager.instance.GetReinforcePriceGold(stat, _gameData.statLevel_Gold[stat] + 1);
 
         if (_gameData.gold < requiredGold)
         {
@@ -418,11 +418,11 @@ public class StatUI : MonoBehaviour
 
         levelLabel.text = $"Lv.{level}";
 
-        int currentStat = FormulaManager.GetGoldStatus(level, statType);
-        int nextStat = FormulaManager.GetGoldStatus(level+1, statType);
-        riseLabel.text = FormulaManager.GetGoldStatRiseText(currentStat, nextStat, statType);
+        int currentStat = ReinForceManager.instance.GetGoldStatus(level, statType);
+        int nextStat = ReinForceManager.instance.GetGoldStatus(level+1, statType);
+        riseLabel.text = ReinForceManager.instance.GetGoldStatRiseText(currentStat, nextStat, statType);
 
-        priceLabel.text = $"{FormulaManager.GetGoldRequired(level)}";
+        priceLabel.text = $"{ReinForceManager.instance.GetReinforcePriceGold(statType, level) + 1}";
     }
     private void UpdateStatPointStatText(StatusType statType, int level)
     {
@@ -432,9 +432,9 @@ public class StatUI : MonoBehaviour
 
         levelLabel.text = $"Lv.{level}";
 
-        int currentStat = FormulaManager.GetStatPointStatus(level, statType);
-        int nextStat = FormulaManager.GetStatPointStatus(level+1, statType);
-        riseLabel.text = FormulaManager.GetStatPointStatRiseText(currentStat, nextStat, statType);
+        int currentStat = ReinForceManager.instance.GetStatPointStatus(level, statType);
+        int nextStat = ReinForceManager.instance.GetStatPointStatus(level+1, statType);
+        riseLabel.text = ReinForceManager.instance.GetStatPointStatRiseText(currentStat, nextStat, statType);
     }
     #region UIChange
     private void OnEnable()
