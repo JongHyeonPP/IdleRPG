@@ -76,14 +76,14 @@ public abstract class Attackable : MonoBehaviour
                 AnimBehavior(currentSkill, skillData);
                 List<Attackable> targets = GetTargets(skillData.target, skillData.targetNum);
                 ActiveSkillToTarget(targets, currentSkill);//ÇÙ½É
-                VisualEffectToTarget(targets);
+                VisualEffectToTarget(targets, skillData);
                 yield return new WaitForSeconds(skillData.postDelay * (1f / (1f + speedValue)));
             }
             else
             {
                 List<Attackable> targets = GetTargets(skillData.target, skillData.targetNum);
                 ActiveSkillToTarget(targets, currentSkill);
-                VisualEffectToTarget(targets);
+                VisualEffectToTarget(targets, skillData);
             }
             
         }
@@ -185,9 +185,50 @@ public abstract class Attackable : MonoBehaviour
     }
 
 
-    private void VisualEffectToTarget(List<Attackable> targets)
+    private void VisualEffectToTarget(List<Attackable> targets,SkillData skilldata)
     {
+        if (skilldata == null || skilldata.visualEffectPrefab == null)
+            return;
 
+        switch (skilldata.effectSpawnType)
+        {
+            case SkillEffectSpawnType.OnTarget:
+                foreach (var target in targets)
+                {
+                    SkillEffectPoolManager.Instance.SpawnEffect(skilldata, target.transform.position);
+                }
+                break;
+
+            case SkillEffectSpawnType.InFrontOfCaster:
+                Vector3 forwardPos = transform.position + transform.forward * 1f; 
+                SkillEffectPoolManager.Instance.SpawnEffect(skilldata, forwardPos);
+                break;
+
+            case SkillEffectSpawnType.Projectile:
+                foreach (var target in targets)
+                {
+                    GameObject proj = Instantiate(skilldata.visualEffectPrefab, transform.position, UnityEngine.Quaternion.identity);
+                    StartCoroutine(MoveProjectile(proj, skilldata.projectileSpeed, skilldata.effectLifeTime));
+                }
+                break;
+            case SkillEffectSpawnType.Buff:
+                Vector3 playertransform = transform.position;
+                SkillEffectPoolManager.Instance.SpawnEffect(skilldata, playertransform);
+                break;
+        }
+    }
+    private IEnumerator MoveProjectile(GameObject proj, float speed, float lifeTime)
+    {
+        float elapsed = 0f;
+        while (elapsed < lifeTime && proj != null)
+        {
+            proj.transform.position += Vector3.right * speed * Time.deltaTime;
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        if (proj != null)
+            Destroy(proj);
     }
     private List<Attackable> GetTargets(SkillTarget range, int targetNum)
     {

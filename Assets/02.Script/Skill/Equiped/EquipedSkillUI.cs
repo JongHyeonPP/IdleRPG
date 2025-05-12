@@ -75,6 +75,7 @@ public class EquipedSkillUI : MonoBehaviour
             IconArr[index].style.backgroundImage = new(SkillManager.instance.GetSkillData(currentSkillData.uid).iconSprite);
             _skillUI.ToggleEquipBackground(false);
             _gameData.equipedSkillArr[index] = currentSkillData.uid;
+           
             isEquipActive = false;
         }
     }

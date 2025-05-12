@@ -2,7 +2,13 @@ using EnumCollection;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-
+public enum SkillEffectSpawnType
+{
+    OnTarget,        // 타겟 위치에서 생성
+    InFrontOfCaster, // 시전자 앞에서 생성
+    Projectile    ,   // 투사체
+    Buff//버프
+}
 [CreateAssetMenu(fileName = "Skill", menuName = "ScriptableObjects/Skill")]
 public class SkillData : ScriptableObject
 {
@@ -20,7 +26,10 @@ public class SkillData : ScriptableObject
     public float cooltime = 3f;
     public int coolAttack = 3;
     public int requireMp = 15;
-
+    [Header("Effect Behavior")]
+    public SkillEffectSpawnType effectSpawnType = SkillEffectSpawnType.InFrontOfCaster;
+    public float projectileSpeed = 15f;
+    public float effectLifeTime = 5f;
     [Header("Content")]
     public List<float> value;//레벨 별 밸류
     public SkillType type = SkillType.Damage;

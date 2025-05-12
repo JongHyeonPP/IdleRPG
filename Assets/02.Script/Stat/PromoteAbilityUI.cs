@@ -90,9 +90,20 @@ public class PromoteAbilityUI : MonoBehaviour
                 unopenElement.style.display = DisplayStyle.Flex;
             }
         }
+        for (int i = 0; i <= currentRankIndex; i++)
+        {
+            var promoteData = _gameData.stat_Promote[i];
+            string abilityName = promoteData.Item1.ToString();
+            float abilityValue = promoteData.Item2;
+            int rankIndex = i;
+            StatusType statusType = promoteData.Item1;
+
+            UpdateAbilityLabel((abilityName, abilityValue, rankIndex, statusType));
+        }
         _rerollButton.clicked += Reroll;
         valueButton.clicked += ShowOption;
         exitButton.clicked += HidePromoteInfo;
+        SetCloverLabel();
     }
     private void ShowOption()
     {
@@ -154,12 +165,10 @@ public class PromoteAbilityUI : MonoBehaviour
            
             var randomAbility = RollRandomAbility();
 
-            if (Enum.TryParse(randomAbility.Item1, out StatusType statusType))
-            {
-                int finalValue = Mathf.RoundToInt(randomAbility.Item2);
-                _gameData.stat_Promote[index] = (statusType, finalValue);
-            }
-          
+            StatusType statusType = randomAbility.Item4;
+            int finalValue = Mathf.RoundToInt(randomAbility.Item2);
+            _gameData.stat_Promote[index] = (statusType, finalValue);
+
             UpdateAbilityLabel(randomAbility); 
         }
         _gameData.clover -= price;
@@ -167,8 +176,9 @@ public class PromoteAbilityUI : MonoBehaviour
         StartBroker.SaveLocal();
     }
    
-    private (string, float, int) RollRandomAbility()
+    private (string, float, int, StatusType) RollRandomAbility()
     {
+       
         var selectedAbility = abilityTable.Abilities[UnityEngine.Random.Range(0, abilityTable.Abilities.Count)];
 
         float roll = UnityEngine.Random.value;
@@ -179,37 +189,32 @@ public class PromoteAbilityUI : MonoBehaviour
             cumulativeProbability += selectedAbility.Probabilities[i];
             if (roll <= cumulativeProbability)
             {
-                return (selectedAbility.AbilityName, selectedAbility.Values[i], i);
+                return (selectedAbility.AbilityName, selectedAbility.Values[i], i, selectedAbility.statusType);
             }
         }
 
-        return (selectedAbility.AbilityName, selectedAbility.Values[0], 0);
+        return (selectedAbility.AbilityName, selectedAbility.Values[0], 0, selectedAbility.statusType);
     }
-
-    private void UpdateAbilityLabel((string, float, int) abilityData)
+    private void UpdateAbilityLabel((string, float, int, StatusType) abilityData)
     {
-        var abilityButton = root.Q<Button>("AbilityButton");
-        var abilityLabel = abilityButton.Q<Label>("AbilityLabel");
-
         string abilityName = abilityData.Item1;
         float abilityValue = abilityData.Item2;
         int rankIndex = abilityData.Item3;
+        StatusType statusType = abilityData.Item4;
+        string displayName = GetKoreanAbilityName(abilityName);
 
-        abilityLabel.text = $"{abilityName}: {abilityValue}%";
+        var rankElement = root.Q<VisualElement>(_rank[rankIndex].ToString());
+        var abilityButton = rankElement.Q<Button>("AbilityButton");
+        var abilityLabel = abilityButton.Q<Label>("AbilityLabel");
+
+        abilityLabel.text = $"{displayName}: {abilityValue}%";
         Color selectedColor = labelColors[rankIndex];
         selectedColor.a = 1.0f;
         abilityLabel.style.color = new StyleColor(selectedColor);
-        if (Enum.TryParse<StatusType>(abilityName, out var statusType))
-        {
-            PlayerBroker.OnPromoteStatusSet(statusType, abilityValue);
-        }
-        else
-        {
-            statusType = GetStatusTypeFromAbilityName(abilityName);
-            PlayerBroker.OnPromoteStatusSet(statusType, abilityValue);
-        }
-       
+
+        PlayerBroker.OnPromoteStatusSet(statusType, abilityValue);
     }
+    
     private void SetCloverLabel()
     {
         _cloverLabel.text = _gameData.clover.ToString("N0");
@@ -219,27 +224,6 @@ public class PromoteAbilityUI : MonoBehaviour
         root.style.display = DisplayStyle.None;
     }
    
-    private StatusType GetStatusTypeFromAbilityName(string abilityName)
-    {
-        
-        if (abilityName == "추가 체력")
-            return StatusType.MaxHp;
-        if (abilityName == "추가 공격력")
-            return StatusType.Power;
-        if (abilityName == "크리티컬 데미지")
-            return StatusType.CriticalDamage;
-        if (abilityName == "크리티컬 확률")
-            return StatusType.Critical;
-        if (abilityName == "체력 회복량")
-            return StatusType.HpRecover;
-        if (abilityName == "골드 획득량")
-            return StatusType.GoldAscend;
-        if (abilityName == "저항력")
-            return StatusType.Resist;
-        if (abilityName == "관통력")
-            return StatusType.Penetration;
-        throw new ArgumentException($"Unknown ability name: {abilityName}");
-    }
     private string GetKoreanAbilityName(string abilityName)
     {
         switch (abilityName)

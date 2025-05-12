@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 202326d9cae93074f8dcbc555b05218d, type: 3}
   m_Name: SkillAcquireInfo_15
   m_EditorClassIdentifier: 
-  acquireLevel: 140
+  acquireLevel: 150
   SkillData: {fileID: 11400000, guid: a07df5c59d0f99446998332ac500aa9f, type: 2}
