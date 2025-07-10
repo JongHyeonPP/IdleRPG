@@ -902,6 +902,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1143818681}
     - target: {fileID: 6112157243826151909, guid: dfb4c5e2007083044b904359ad4047ad, type: 3}
+      propertyPath: cameraController
+      value: 
+      objectReference: {fileID: 32257158}
+    - target: {fileID: 6112157243826151909, guid: dfb4c5e2007083044b904359ad4047ad, type: 3}
       propertyPath: cameracontroller
       value: 
       objectReference: {fileID: 32257158}
@@ -2356,6 +2360,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1403535850}
     - target: {fileID: 2556739093503143224, guid: e5439550a63f1134e9837ce477cad658, type: 3}
+      propertyPath: _renderCamera
+      value: 
+      objectReference: {fileID: 764113924060561241}
+    - target: {fileID: 2556739093503143224, guid: e5439550a63f1134e9837ce477cad658, type: 3}
       propertyPath: cameracontroller
       value: 
       objectReference: {fileID: 32257158}
@@ -2374,7 +2382,7 @@ PrefabInstance:
     - target: {fileID: 2556739093503143224, guid: e5439550a63f1134e9837ce477cad658, type: 3}
       propertyPath: 'storyPrefabsList.Array.data[0].storyPrefabs.Array.data[0]'
       value: 
-      objectReference: {fileID: 3561712498806173671, guid: 8309e3664614e8147be0043492694f98, type: 3}
+      objectReference: {fileID: 4724235853984749486, guid: 8309e3664614e8147be0043492694f98, type: 3}
     - target: {fileID: 2556739093503143224, guid: e5439550a63f1134e9837ce477cad658, type: 3}
       propertyPath: 'storyPrefabsList.Array.data[1].storyPrefabs.Array.data[0]'
       value: 

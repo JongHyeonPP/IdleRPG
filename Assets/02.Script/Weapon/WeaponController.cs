@@ -1,6 +1,7 @@
 using UnityEngine;
 using EnumCollection;
 using UnityEngine.VFX;
+using UnityEngine.Playables;
 public class WeaponController : MonoBehaviour
 {
     [HideInInspector]public WeaponData weaponData;
@@ -25,4 +26,11 @@ public class WeaponController : MonoBehaviour
         weaponRenderer.sprite = weaponData.WeaponSprite;
     }
     //»ö±òÀÌÆåÆ® ºÎ¿©
+    [ContextMenu("Test")]
+    public void TestWeapon()
+    {
+        string uid = "Melee_501";
+        WeaponData weapon = WeaponManager.instance.weaponDict[uid];
+        EquipWeapon(weapon, weapon.WeaponType);
+    }
 }

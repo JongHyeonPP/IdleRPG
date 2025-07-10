@@ -71,17 +71,28 @@ public class StoryManager : MonoBehaviour
         
         int startIndex = storyIndex * 1000 + 1;
         _currentStoryIndex = storyIndex;
-        if (storyIndex == 1)
+        //if (storyIndex == 1)
+        //{
+        //    _storyControllers.Add(0, currentStoryController);
+        //    StartCoroutine(FirstStoryStart(startIndex));
+        //}
+        //if (storyIndex == 2)
+        //{
+        //    _storyControllers.Add(0, currentStoryController);
+        //    StartCoroutine(SecondStoryStart(startIndex));
+        //}
+        if (storyIndex == 1 || storyIndex == 2)
         {
-            _storyControllers.Add(0, currentStoryController);
-            StartCoroutine(FirstStoryStart(startIndex));
-        }
-        if (storyIndex == 2)
-        {
-            _storyControllers.Add(0, currentStoryController);
-            StartCoroutine(SecondStoryStart(startIndex));
-        }
+            if (!_storyControllers.ContainsKey(storyIndex))
+                _storyControllers.Add(storyIndex, currentStoryController);
+            else
+                _storyControllers[storyIndex] = currentStoryController; // µ¤¾î¾²±â
 
+            if (storyIndex == 1)
+                StartCoroutine(FirstStoryStart(startIndex));
+            else
+                StartCoroutine(SecondStoryStart(startIndex));
+        }
     }
 
     private IEnumerator FirstStoryStart(int storyIndex)

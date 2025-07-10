@@ -16,7 +16,7 @@ MonoBehaviour:
   uid: Player_000
   iconSprite: {fileID: 21300000, guid: 67aa81512389ea246a5144400a5f94ea, type: 3}
   simple: 
-  complex: "\uC801\uC5D0\uAC8C <value*100>%\uC758 \uD53C\uD574\uB97C \uC785\uD799\uB2C8\uB2E4."
+  complex: "\uC801\uC744 \uAC08\uB77C <value*100>%\uC758 \uD53C\uD574\uB97C \uC785\uD799\uB2C8\uB2E4."
   rarity: 0
   isPlayerSkill: 1
   skillCoolType: 0
@@ -40,7 +40,7 @@ MonoBehaviour:
   - 1
   type: 0
   target: 1
-  targetNum: 1
+  targetNum: 5
   preDelay: 0.2
   postDelay: 1
   isAnim: 1

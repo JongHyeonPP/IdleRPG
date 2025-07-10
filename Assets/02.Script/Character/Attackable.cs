@@ -18,6 +18,7 @@ public abstract class Attackable : MonoBehaviour
     protected EquipedSkill[] equipedSkillArr = new EquipedSkill[10];
     private EquipedSkill _defaultAttack;
     protected Camera mainCamera;
+    private bool _onSpeed = false;
     protected void SetDefaultAttack()
     {
         _defaultAttack = new();
@@ -56,6 +57,12 @@ public abstract class Attackable : MonoBehaviour
             if (skillData.isAnim)
             {
                 float speedValue = 0;
+                if (_onSpeed)
+                {
+                    speedValue += 2f;
+                }
+                
+            
                 for (int i = 0; i < CompanionManager.instance.companionArr.Length; i++)
                 {
                     CompanionController companion = CompanionManager.instance.companionArr[i];
@@ -72,23 +79,35 @@ public abstract class Attackable : MonoBehaviour
                         }
                     }
                 }
+                if (skillData.type == SkillType.SpeedBuff)
+                {
+                    if (gameData.skillLevel.TryGetValue(skillData.uid, out int level))
+                    {
+                        if (level < skillData.value.Count)
+                        {
+                            speedValue += 100f;
+                            _onSpeed = true;
+                         
+                            StartCoroutine(SpeedDelay(6f));
+                        }
+                    }
+                }
+
                 yield return new WaitForSeconds(skillData.preDelay * (1f / (1f + speedValue)));
                 AnimBehavior(currentSkill, skillData);
                 List<Attackable> targets = GetTargets(skillData.target, skillData.targetNum);
                 ActiveSkillToTarget(targets, currentSkill);//ÇÙ½É
                 VisualEffectToTarget(targets, skillData);
                 yield return new WaitForSeconds(skillData.postDelay * (1f / (1f + speedValue)));
-            }
-            else
-            {
-                List<Attackable> targets = GetTargets(skillData.target, skillData.targetNum);
-                ActiveSkillToTarget(targets, currentSkill);
-                VisualEffectToTarget(targets, skillData);
-            }
-            
+
+    }
         }
     }
-
+    private IEnumerator SpeedDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        _onSpeed=false;
+    }
     private void AnimBehavior(EquipedSkill currentSkill, SkillData skillData)
     {
         if (currentSkill == _defaultAttack)
@@ -232,13 +251,27 @@ public abstract class Attackable : MonoBehaviour
     }
     private List<Attackable> GetTargets(SkillTarget range, int targetNum)
     {
+        //List<Attackable> result = new();
+        //switch (range)
+        //{
+        //    default:
+        //        result.Add(target);
+        //        break;
+        //}
+        //return result;
         List<Attackable> result = new();
-        switch (range)
-        {
-            default:
-                result.Add(target);
-                break;
-        }
+
+        Attackable[] allEnemies = FindObjectsOfType<EnemyController>()
+            .Where(e => e != this && !e.isDead)
+            .Cast<Attackable>() 
+            .ToArray();
+
+        var sortedEnemies = allEnemies
+            .OrderBy(a => Vector3.Distance(transform.position, a.transform.position))
+            .Take(targetNum);
+
+        result.AddRange(sortedEnemies);
+
         return result;
     }
     public abstract ICharacterStatus GetStatus();
