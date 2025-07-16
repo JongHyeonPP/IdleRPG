@@ -57,13 +57,13 @@ public class CompanionTechUI : MonoBehaviour
             {
                 PlayerBroker.OnCompanionAppearanceChange(_currentCompanionIndex, _currentTechData.appearanceData);
                 _gameData.currentCompanionPromoteTech[_currentCompanionIndex] = _currentTech;
-                StartBroker.SaveLocal();
+                NetworkBroker.SaveServerData();
             }
         }
         else
         {
             BattleBroker.SwitchToCompanionBattle(_currentCompanionIndex, _currentTech);
-            UIBroker.OnMenuUIChange(0);
+            UIBroker.ChangeMenu(0);
         }
         UIBroker.InactiveCurrentUI();
     }
@@ -101,8 +101,7 @@ public class CompanionTechUI : MonoBehaviour
         }
         _companionEffectLabel.text = SkillManager.instance.GetParsedComplexExplain(techSkill, companionLevel, techSkillValueColor);
         //
-        _diaLabel.text = _currentTechData.dia.ToString(
-            );
+        _diaLabel.text = _currentTechData.dia.ToString("N0");
         _cloverLabel.text = _currentTechData.clover.ToString("N0");
         int techDataIndex = _gameData.companionPromoteTech[companionIndex][techIndex_1];
         _isAcquired = techDataIndex >= techIndex_0;

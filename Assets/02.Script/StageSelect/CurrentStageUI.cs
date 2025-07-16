@@ -8,8 +8,10 @@ public class CurrentStageUI : MonoBehaviour
     private Label _stageNumLabel;
     private Label _stageNameLabel;
     [SerializeField] StageSelectUI stageSelectUI;
+    private GameData _gameData;
     void Awake()
     {
+        _gameData = StartBroker.GetGameData();
         root = GetComponent<UIDocument>().rootVisualElement;
         _stageNumLabel = root.Q<Label>("StageNumLabel");
         _stageNameLabel = root.Q<Label>("StageNameLabel");
@@ -27,12 +29,13 @@ public class CurrentStageUI : MonoBehaviour
 
     private void OnClickUI(ClickEvent evt)
     {
+        Debug.Log("Click CurrentStage Ui");
         stageSelectUI.ToggleUi(true);
     }
 
-    private void OnStageChange(int stageNum)
+    private void OnStageChange()
     {
-        StageInfo info = StageInfoManager.instance.GetNormalStageInfo(stageNum);
+        StageInfo info = StageInfoManager.instance.GetNormalStageInfo(_gameData.currentStageNum);
         _stageNameLabel.text = info.stageName;
         _stageNumLabel.text = $"Stage {info.stageNum}";
     }

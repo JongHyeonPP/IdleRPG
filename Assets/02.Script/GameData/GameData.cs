@@ -11,6 +11,7 @@ public class GameData
     public int level;
     public int dia;//유료 재화 - 뽑기
     public int clover;//유료 재화 - 강화
+    public int scroll;//던전 입장권
     public BigInteger exp;
     public int statPoint;
     public Dictionary<string, int> skillLevel = new();
@@ -53,6 +54,7 @@ public class GameData
     };
     [JsonConverter(typeof(TupleArr_Converter<int, int>))]
     public (int, int)[] currentCompanionPromoteTech = new (int, int)[3];
+    public int invalidCount;
 
     // Costume 코스튬
     public List<string> equipedCostumes = new();                                 // 장착한 코스튬들

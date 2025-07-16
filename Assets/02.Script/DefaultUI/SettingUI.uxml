@@ -1,6 +1,0 @@
-<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/01.Scene/dfdfd.uss?fileID=7433441132597879392&amp;guid=3001c1d0517b4074b95898e7a17702e0&amp;type=3#dfdfd" />
-    <engine:VisualElement name="Root" style="flex-grow: 1;">
-        <engine:Button text="Save To&#10;Cloud" name="SaveButton" style="position: absolute; top: 201px; font-size: 49px; -unity-font-definition: url(&quot;project://database/Assets/05.Font/Maplestory%20Light.ttf?fileID=12800000&amp;guid=b7853b5ad26567e41a3c4210e64c5419&amp;type=3#Maplestory Light&quot;); text-overflow: clip; white-space: nowrap; width: 201px; right: 41px; height: 125px;" />
-    </engine:VisualElement>
-</engine:UXML>

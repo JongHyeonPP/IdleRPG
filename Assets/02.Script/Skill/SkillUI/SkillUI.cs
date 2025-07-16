@@ -6,7 +6,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class SkillUI : MonoBehaviour
+public class SkillUI : MonoBehaviour, IMenuUI
 {
     private GameData _gameData;
     [SerializeField] SkillInfoUI _skillInfoUI;
@@ -220,28 +220,16 @@ public class SkillUI : MonoBehaviour
     {
         skillAcquireUI.ActiveUI();
     }
-    #region UIChange
-    private void OnEnable()
+
+    void IMenuUI.ActiveUI()
     {
-        UIBroker.OnMenuUIChange += HandleUIChange;
+        root.style.display = DisplayStyle.Flex;
+        skillAcquireNotice.root.style.display = DisplayStyle.Flex;
     }
 
-    private void OnDisable()
+    void IMenuUI.InactiveUI()
     {
-        UIBroker.OnMenuUIChange -= HandleUIChange;
+        root.style.display = DisplayStyle.None;
+        skillAcquireNotice.root.style.display = DisplayStyle.None;
     }
-    private void HandleUIChange(int uiType)
-    {
-        if (uiType == 2)
-        {
-            root.style.display = DisplayStyle.Flex;
-            skillAcquireNotice.root.style.display = DisplayStyle.Flex;
-        }
-        else
-        {
-            root.style.display = DisplayStyle.None;
-            skillAcquireNotice.root.style.display = DisplayStyle.None;
-        }
-    }
-    #endregion
 }

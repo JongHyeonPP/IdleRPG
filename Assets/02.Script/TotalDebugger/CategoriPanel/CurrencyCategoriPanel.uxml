@@ -5,6 +5,7 @@
         <engine:Instance template="DataControlItem" name="GoldPanel" />
         <engine:Instance template="DataControlItem" name="DiaPanel" />
         <engine:Instance template="DataControlItem" name="CloverPanel" />
+        <engine:Instance template="DataControlItem" name="ScrollPanel" />
         <engine:Instance template="DataControlItem" name="MaxStagePanel" />
         <engine:Instance template="DataControlItem" name="StatPointPanel" />
     </engine:VisualElement>

@@ -59,7 +59,7 @@ public class WeaponInfoUI : MonoBehaviour
                 _gameData.companionWeaponIdArr[2] = _currentWeapon.UID;
                 break;
         }
-        StartBroker.SaveLocal();
+        NetworkBroker.SaveServerData();
     }
     public void ShowWeaponInfo(WeaponData weaponData)
     {
@@ -127,7 +127,7 @@ public class WeaponInfoUI : MonoBehaviour
             _weaponLevel[weaponID] = weaponLevel;
             PlayerBroker.OnWeaponCountSet(weaponID, weaponCount);
             PlayerBroker.OnWeaponLevelSet(weaponID, weaponLevel);
-            StartBroker.SaveLocal();
+            NetworkBroker.SaveServerData();
         }
 
     }

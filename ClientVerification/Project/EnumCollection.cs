@@ -4,13 +4,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Verification
+namespace ClientVerification
 {
-    public enum FormulaType
+    public enum Rarity
     {
-        //Reinforce
-        REINFORCE_PRICE_GOLD, REINFORCE_VALUE_GOLD, REINFORCE_VALUE_STATUS,
-        //Stage
-        STAGE_DROP_FORMULA, STAGE_EXPECTED_DPS, LEVEL_UP_REQUIRE_EXP
+        Common,
+        Uncommon,
+        Rare,
+        Unique,
+        Legendary,
+        Mythic,
+    }
+    public enum StatusType
+    {
+        //골드, 무기로 찍는 스탯
+        MaxHp, Power, HpRecover, Critical, CriticalDamage,
+        //무기로만 얻는 스탯
+        Resist, Penetration,
+        //코스튬 효과
+        GoldAscend, ExpAscend,
+        //딱히 찍을 일 없음
+        MaxMp, MpRecover
     }
 }

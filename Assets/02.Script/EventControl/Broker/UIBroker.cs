@@ -11,11 +11,13 @@ public static class UIBroker
     //스킬 장착 상태 해제
     public static Action InactiveSkillEquip;
     //메뉴 UI 변경
-    public static Action<int> OnMenuUIChange;
     public static Action<int, bool> OnMenuUINotice;
     public static Action SetPlayerBarPosition;
 
-    public static Action ShowInable;
+    public static Action ShowInableInBattle;
 
-    public static Action<string[]> SwitchRenderTargetLayer { get; set; }
+    public static Action<string[]> SwitchRenderTargetLayer;
+    public static Action<bool, float> ActiveBlurredBackground;
+
+    public static Action<int> ChangeMenu;//Index
 }

@@ -171,7 +171,7 @@ public class PromoteAbilityUI : MonoBehaviour
         }
         _gameData.clover -= price;
         BattleBroker.OnCloverSet();
-        StartBroker.SaveLocal();
+        NetworkBroker.SaveServerData();
     }
    
     private (string, float, int, StatusType) RollRandomAbility()

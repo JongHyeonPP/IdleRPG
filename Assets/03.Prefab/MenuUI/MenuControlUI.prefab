@@ -64,26 +64,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d647834eefc6a254bb97172503338d77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _autoRewardReceive: {fileID: 0}
-  _equipedSkillUI: {fileID: 0}
   _statUI: {fileID: 0}
   _weaponUI: {fileID: 0}
   _skillUI: {fileID: 0}
-  _weaponBookUI: {fileID: 0}
   _companionUI: {fileID: 0}
+  _adventureUI: {fileID: 0}
   _storeUI: {fileID: 0}
-  menuHeight:
-  - 1000
-  - 1000
-  - 1000
-  - 1000
-  - 800
-  - 1000
+  _equipedSkillUI: {fileID: 0}
+  _offlineRewardReceive: {fileID: 0}
+  _weaponBookUI: {fileID: 0}
   _menuHeight:
   - 1000
   - 1000
   - 1000
   - 1000
-  - 800
+  - 1000
   - 1000
   notice: {fileID: 0}

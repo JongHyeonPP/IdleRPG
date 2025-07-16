@@ -2,6 +2,8 @@ using UnityEngine;
 using EnumCollection;
 using Newtonsoft.Json;
 using System.Collections;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 public class GameManager : MonoBehaviour
 {
@@ -17,10 +19,11 @@ public class GameManager : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(this);
             //구글 인증이 완료되면 데이터를 로드한다
-            StartBroker.OnAuthenticationComplete += () =>
+            StartBroker.OnAuthenticationComplete += async () =>
             {
-                LoadGameData();
-                StartCoroutine(WaitAndInvokeOnDataLoadComplete());
+                bool isValid = await LoadGameData();
+                if (isValid)
+                    StartCoroutine(WaitAndInvokeOnDataLoadComplete());
             };
         }
         else
@@ -31,7 +34,6 @@ public class GameManager : MonoBehaviour
     }
     private void Start()
     {
-        StartBroker.SaveLocal += SaveLocalData;
         StartBroker.SetUserId += (userId) => this.userId = userId;
     }
 
@@ -52,63 +54,33 @@ public class GameManager : MonoBehaviour
         }
         StartBroker.OnDataLoadComplete?.Invoke();
     }
-    //_saveInterval 간격으로 저장하는 코루틴을 시작한다.
-    public void AutoSaveStart()
-    {
-        StartCoroutine(AutoSaveCoroutine());
-    }
-    //GameData를 _saveInterval 간격마다 로컬 데이터로 저장한다.
-    private IEnumerator AutoSaveCoroutine()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(_saveInterval);
-            SaveLocalData();
-        }
-    }
-    public void SaveLocalData()
-    {
-        DataManager.SaveToPlayerPrefs("GameData", _gameData);
-    }
 
-
-    //클라우드에 현재 진행 중인 게임의 정보를 모두 저장하는 메서드. 저장하는 데이터들을 기반으로 진행 상황을 온전히 복원할 수 있어야 한다.
-    public async void SaveGameDataToCloud()
+    
+    public async Task<bool> LoadGameData()
     {
-        await DataManager.SaveToCloudAsync("GameData", _gameData);
-    }
-    //로컬 데이터를 불러와서 진행 상황을 적용한다. 유료 재화는 로컬 데이터에 저장하지 않는다.
-    public void LoadGameData()
-    {
-        _gameData = DataManager.LoadFromPlayerPrefs<GameData>("GameData");
-
+        _gameData = await DataManager.LoadFromCloudAsync<GameData>("GameData");
         if (_gameData == null)
         {
             Debug.Log("No saved game data found. Initializing default values.");
             _gameData = new()
             {
-                currentStageNum = 1
+                currentStageNum = 1,
+                maxStageNum = 1,//스토리 복구되면 없애야함.
+                level = 1
             };
+        }
+        if (3 <=_gameData.invalidCount)
+        {
+            StartBroker.OnDetectInvalidAct();
+            return false;
         }
         if (_gameData.level < 1)
         {
-            _gameData.level = 1;
+            
         }
-        string serializedData = JsonConvert.SerializeObject(_gameData, Formatting.Indented);
+        string serializedData = JsonConvert.SerializeObject(_gameData);
         Debug.Log("Game data loaded:\n" + serializedData);
-    }
-
-    //구글 인증을 진행한다.
-
-
-
-
-
-    [ContextMenu("ClearGameData")]
-    public void ClearGameData()
-    {
-        _gameData = null;
-        SaveLocalData();
+        return true;
     }
     // Context Menu를 이용하여 companionPromote에 고정된 값 추가
     [ContextMenu("Fill Companion Promote")]
@@ -136,7 +108,7 @@ public class GameManager : MonoBehaviour
         _gameData.companionPromoteEffect[2][0] = (StatusType.Penetration, Rarity.Mythic);
         _gameData.companionPromoteEffect[2][1] = (StatusType.GoldAscend, Rarity.Uncommon);
 
-        SaveLocalData();
+        NetworkBroker.SaveServerData();
         Debug.Log("Companion Promote 데이터가 채워졌습니다!");
     }
 
@@ -176,7 +148,7 @@ public class GameManager : MonoBehaviour
         _gameData.stat_Promote[10] = (StatusType.MaxMp, 0);
         _gameData.stat_Promote[11] = (StatusType.MpRecover, 0);
 
-        SaveLocalData();
+        NetworkBroker.SaveServerData();
     }
     [ContextMenu("Print Stat Promote")]
     public void PrintStatPromote()

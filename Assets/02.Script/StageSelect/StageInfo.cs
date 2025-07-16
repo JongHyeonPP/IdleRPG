@@ -34,9 +34,6 @@ public class StageInfo : ScriptableObject, IListViewItem
         //일반몹과 보스몹이 갖는 스탯
         public string maxHp;
         public float resist;
-        [Header("Reward")]
-        public int gold;
-        public int exp;
     }
     [Serializable]
     public class ChestStatusFromStage
@@ -44,9 +41,6 @@ public class StageInfo : ScriptableObject, IListViewItem
         [Header("Status")]
         public string maxHp;
         public float resist;
-        [Header("Reward")]
-        public int gold;
-        public int exp;
     }
     [Serializable]
     public class BossStatusFromStage
@@ -60,9 +54,6 @@ public class StageInfo : ScriptableObject, IListViewItem
         //보스몹에게만 의미있는 스탯
         public string power;
         public float penetration;
-        [Header("Reward")]
-        public int gold;
-        public int exp;
     }
     [Serializable]
     public class CompanionTechInfo

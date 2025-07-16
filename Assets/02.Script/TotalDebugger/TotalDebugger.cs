@@ -116,7 +116,7 @@ public class TotalDebugger : EditorWindow
             }
             isPressingVe = false;
             pressedVe = null;
-            StartBroker.SaveLocal();
+            NetworkBroker.SaveServerData();
         }
         if (!isPressingVe)//누르고 있지 않을 때
             return;
@@ -219,7 +219,7 @@ public class TotalDebugger : EditorWindow
             Debug.LogError("Invalid Input");
         }
         textField.value = string.Empty;
-        StartBroker.SaveLocal();
+        NetworkBroker.SaveServerData();
     }
     private void OnChangeButtonDown(string dataName, bool isPlus, Label valueLabel, Categori categori, bool isBigInteger)
     {
@@ -317,6 +317,14 @@ public class TotalDebugger : EditorWindow
                         _gameData.maxStageNum += (int)value;
                     _gameData.maxStageNum = Mathf.Clamp(_gameData.maxStageNum, 0, 299);
                     BattleBroker.OnMaxStageSet();
+                    break;
+                case "Scroll":
+                    if (isSet)
+                        _gameData.scroll = (int)value;
+                    else
+                        _gameData.scroll += (int)value;
+                    _gameData.scroll = Mathf.Max(_gameData.scroll, 0);
+                    BattleBroker.OnScrollSet();
                     break;
                 case "StatPoint":
                     if (isSet)
@@ -501,6 +509,7 @@ public class TotalDebugger : EditorWindow
         VisualElement goldPanel = currencyPanel.Q<VisualElement>("GoldPanel");
         VisualElement diaPanel = currencyPanel.Q<VisualElement>("DiaPanel");
         VisualElement cloverPanel = currencyPanel.Q<VisualElement>("CloverPanel");
+        VisualElement scrollPanel = currencyPanel.Q<VisualElement>("ScrollPanel");
         VisualElement maxStagePanel = currencyPanel.Q<VisualElement>("MaxStagePanel");
         VisualElement statPointPanel = currencyPanel.Q<VisualElement>("StatPointPanel");
         //SetDataPanel
@@ -508,6 +517,7 @@ public class TotalDebugger : EditorWindow
         SetDataPanel(goldPanel, "Gold", "Gold", _gameData.gold.ToString(), Categori.Currency, true, 120f, 33f);
         SetDataPanel(diaPanel, "Dia", "Dia", _gameData.dia.ToString(), Categori.Currency, false, 120f, 33f);
         SetDataPanel(cloverPanel, "Clover", "Clover", _gameData.clover.ToString(), Categori.Currency, false, 120f, 33f);
+        SetDataPanel(scrollPanel, "Scroll", "Scroll", _gameData.scroll.ToString(), Categori.Currency, false, 120f, 33f);
         SetDataPanel(maxStagePanel, "MaxStage", "Max Stage", _gameData.maxStageNum.ToString(), Categori.Currency, false, 120f, 33f);
         SetDataPanel(statPointPanel, "StatPoint", "Stat Point", _gameData.statPoint.ToString(), Categori.Currency, false, 120f, 33f);
         //데이터 변경된 이후 Label Set
@@ -515,6 +525,7 @@ public class TotalDebugger : EditorWindow
         BattleBroker.OnGoldSet += () => { goldPanel.Q<Label>("ValueLabel").text = _gameData.gold.ToString(); };
         BattleBroker.OnDiaSet += () => { diaPanel.Q<Label>("ValueLabel").text = _gameData.dia.ToString(); };
         BattleBroker.OnCloverSet += () => { cloverPanel.Q<Label>("ValueLabel").text = _gameData.clover.ToString(); };
+        BattleBroker.OnScrollSet += () => { scrollPanel.Q<Label>("ValueLabel").text = _gameData.scroll.ToString(); };
         BattleBroker.OnMaxStageSet += () => { maxStagePanel.Q<Label>("ValueLabel").text = _gameData.maxStageNum.ToString(); };
         BattleBroker.OnStatPointSet += () => { statPointPanel.Q<Label>("ValueLabel").text = _gameData.statPoint.ToString(); };
 
@@ -907,7 +918,7 @@ public class TotalDebugger : EditorWindow
             _gameData.companionPromoteEffect[currentCompanionIndex].Remove(effectIndex);
         }
         
-        StartBroker.SaveLocal();
+        NetworkBroker.SaveServerData();
     }
 
     private void InitCompanion_PromoteTech(int companionIndex, int scrollViewIndex)

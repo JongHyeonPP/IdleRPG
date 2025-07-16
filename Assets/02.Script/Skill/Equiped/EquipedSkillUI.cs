@@ -84,27 +84,4 @@ public class EquipedSkillUI : MonoBehaviour
         isEquipActive = true;
         currentSkillData = skillData;
     }
-    private void OnEnable()
-    {
-        UIBroker.OnMenuUIChange += HandleUIChange;
-    }
-
-    private void OnDisable()
-    {
-        UIBroker.OnMenuUIChange -= HandleUIChange;
-    }
-    private void HandleUIChange(int uiType)
-    {
-        switch (uiType)
-        {
-            case 0:
-            case 1:
-            case 2:
-                root.style.display = DisplayStyle.Flex;
-                break;
-            default:
-                root.style.display = DisplayStyle.None;
-                break;
-        }
-    }
 }

@@ -11,7 +11,10 @@
         "Companion",
         "Store",
         "Utility",
-        "AutoReward"
+        "OfflineReward",
+        "Kamgam.UIToolkitBlurredBackground",
+        "StoreUI",
+        "Adventure"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

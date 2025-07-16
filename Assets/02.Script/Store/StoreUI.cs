@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class StoreUI : MonoBehaviour
+public class StoreUI : MonoBehaviour, IMenuUI
 {
     //UI Element
     public VisualElement root { get; private set;  }
@@ -16,22 +16,14 @@ public class StoreUI : MonoBehaviour
     {
         root = GetComponent<UIDocument>().rootVisualElement;
     }
-    #region UIChange
-    private void OnEnable()
+
+    void IMenuUI.ActiveUI()
     {
-        UIBroker.OnMenuUIChange += HandleUIChange;
+        root.style.display = DisplayStyle.Flex;
     }
 
-    private void OnDisable()
+    void IMenuUI.InactiveUI()
     {
-        UIBroker.OnMenuUIChange -= HandleUIChange;
+        root.style.display = DisplayStyle.None;
     }
-    private void HandleUIChange(int uiType)
-    {
-        if (uiType == 5)
-            root.style.display = DisplayStyle.Flex;
-        else
-            root.style.display = DisplayStyle.None;
-    }
-    #endregion
 }

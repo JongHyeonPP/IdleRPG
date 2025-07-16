@@ -8,27 +8,25 @@ public class TupleArr_Converter<T1, T2> : JsonConverter<(T1, T2)[]>
 {
     public override void WriteJson(JsonWriter writer, (T1, T2)[] value, JsonSerializer serializer)
     {
-        var list = new List<string[]>();
+        var list = new List<object[]>();
         foreach (var tuple in value)
         {
-            list.Add(new[] { tuple.Item1.ToString(), tuple.Item2.ToString() });
+            list.Add(new object[] { tuple.Item1, tuple.Item2 }); // string이 아니라 object
         }
         serializer.Serialize(writer, list);
     }
 
+
     public override (T1, T2)[] ReadJson(JsonReader reader, Type objectType, (T1, T2)[] existingValue, bool hasExistingValue, JsonSerializer serializer)
     {
-        var list = serializer.Deserialize<List<string[]>>(reader);
+        var list = serializer.Deserialize<List<object[]>>(reader);
         var result = new (T1, T2)[list.Count];
 
         for (int i = 0; i < list.Count; i++)
         {
-            if (list[i].Length == 2 &&
-                TryParseStruct(list[i][0], out T1 parsedT1) &&
-                TryParseStruct(list[i][1], out T2 parsedT2))
-            {
-                result[i] = (parsedT1, parsedT2);
-            }
+            T1 item1 = (T1)Convert.ChangeType(list[i][0], typeof(T1));
+            T2 item2 = (T2)Convert.ChangeType(list[i][1], typeof(T2));
+            result[i] = (item1, item2);
         }
         return result;
     }

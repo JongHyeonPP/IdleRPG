@@ -2,7 +2,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class CompanionUI : MonoBehaviour
+public class CompanionUI : MonoBehaviour, IMenuUI
 {
     private GameData _gameData;
     //UI Element
@@ -202,25 +202,14 @@ public class CompanionUI : MonoBehaviour
         expProgressBar.title = $"{levelExp.Item2}/{CompanionManager.EXPINTERVAL}";
     }
 
-    #region UIChange
-    private void OnEnable()
+    void IMenuUI.ActiveUI()
     {
-        UIBroker.OnMenuUIChange += HandleUIChange;
+        root.style.display = DisplayStyle.Flex;
+        OnTechButtonClick(currentTechCompanionIndex);
     }
 
-    private void OnDisable()
+    void IMenuUI.InactiveUI()
     {
-        UIBroker.OnMenuUIChange -= HandleUIChange;
+        root.style.display = DisplayStyle.None;
     }
-    private void HandleUIChange(int uiType)
-    {
-        if (uiType == 3)
-        {
-            root.style.display = DisplayStyle.Flex;
-            OnTechButtonClick(currentTechCompanionIndex);
-        }
-        else
-            root.style.display = DisplayStyle.None;
-    }
-    #endregion
 }

@@ -1,0 +1,13 @@
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\OfflineReward\module-compilation\OfflineReward.dll
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\OfflineReward\module-compilation\OfflineReward.deps.json
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\OfflineReward\module-compilation\OfflineReward.pdb
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\OfflineReward\module-compilation\Unity.Services.CloudCode.Apis.dll
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\OfflineReward\module-compilation\Unity.Services.CloudCode.Core.dll
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\OfflineReward\module-compilation\Google.Protobuf.dll
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\OfflineReward\module-compilation\Grpc.Core.Api.dll
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\OfflineReward\module-compilation\Grpc.Net.Client.dll
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\OfflineReward\module-compilation\Grpc.Net.Common.dll
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\OfflineReward\module-compilation\JsonSubTypes.dll
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\OfflineReward\module-compilation\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\OfflineReward\module-compilation\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\OfflineReward\module-compilation\Newtonsoft.Json.dll

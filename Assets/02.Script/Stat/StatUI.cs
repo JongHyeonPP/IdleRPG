@@ -8,7 +8,7 @@ using EnumCollection;
 using System;
 using System.Linq;
 
-public class StatUI : MonoBehaviour
+public class StatUI : MonoBehaviour, IMenuUI
 {
     private GameData _gameData;
     private Coroutine _incrementCoroutine;
@@ -373,7 +373,7 @@ public class StatUI : MonoBehaviour
             }
             StopCoroutine(_incrementCoroutine);
             _incrementCoroutine = null;
-            GameManager.instance.SaveLocalData();
+            NetworkBroker.SaveServerData();
         }
     }
 
@@ -436,32 +436,13 @@ public class StatUI : MonoBehaviour
         int nextStat = ReinForceManager.instance.GetStatPointStatus(level+1, statType);
         riseLabel.text = ReinForceManager.instance.GetStatPointStatRiseText(currentStat, nextStat, statType);
     }
-    #region UIChange
-    private void OnEnable()
-    {
-        UIBroker.OnMenuUIChange += HandleUIChange;
-    }
-
-    private void OnDisable()
-    {
-        UIBroker.OnMenuUIChange -= HandleUIChange;
-    }
-    private void HandleUIChange(int uiType)
-    {
-        if (uiType == 0)
-            ShowStatUI();
-        else
-            HideStatUI();
-    }
-    public void HideStatUI()
-    {
-        root.style.display = DisplayStyle.None;
-
-    }
-    public void ShowStatUI()
+    void IMenuUI.ActiveUI()
     {
         root.style.display = DisplayStyle.Flex;
-
     }
-    #endregion
+
+    void IMenuUI.InactiveUI()
+    {
+        root.style.display = DisplayStyle.None;
+    }
 }
