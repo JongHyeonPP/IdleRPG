@@ -244,6 +244,11 @@ public class BattleManager : MonoBehaviour
         EnemyController target = null;
         while (true)
         {
+            if (_currentTargetIndex >= _enemies.Length)
+            {
+                break;
+            }
+            
             if (_enemies[_currentTargetIndex] != null && !_enemies[_currentTargetIndex].isDead)
             {
                 target = _enemies[_currentTargetIndex];

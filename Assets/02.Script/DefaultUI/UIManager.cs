@@ -47,7 +47,7 @@ public class UIManager : MonoBehaviour
         _totalStatusUI.root.style.display = DisplayStyle.None;
         _skillInfoUI.root.style.display = DisplayStyle.None;
         _bossTimerUI.root.style.display = DisplayStyle.None;
-        _equipedSkillUI.root.style.display = DisplayStyle.None;
+        _equipedSkillUI.root.style.display = DisplayStyle.Flex;
         _weaponInfoUI.root.style.display = DisplayStyle.None;
         _skillAcquireUI.root.style.display = DisplayStyle.None;
         _storyUI.root.style.display = DisplayStyle.None;

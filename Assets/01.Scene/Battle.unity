@@ -2375,7 +2375,7 @@ GameObject:
   - component: {fileID: 999121755}
   - component: {fileID: 999121756}
   m_Layer: 0
-  m_Name: OfflineRewardUi
+  m_Name: OfflineRewardUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
