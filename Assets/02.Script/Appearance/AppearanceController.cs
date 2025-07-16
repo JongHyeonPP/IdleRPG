@@ -90,14 +90,16 @@ public class AppearanceController : MonoBehaviour
 
 
     }
-#if UNITY_EDITOR
+
     [ContextMenu("SetDefaultAppearance")]
     public void SetDefaultAppearacne()
     {
         SetAppearance(_defaultAppearanceData);
+#if UNITY_EDITOR
         EditorUtility.SetDirty(gameObject);
-    }
 #endif
+    }
+
     public void SetRGB(float targetValue)
     {
         SpriteRenderer[] spriteFields = new SpriteRenderer[]

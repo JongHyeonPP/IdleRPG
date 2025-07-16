@@ -3,10 +3,11 @@ using UnityEngine;
 using System;
 public class StageSelectController : LVItemController
 {
+    private GameData _gameData;
     //가져온 아이템의 ui 구조를 설정한다.
     public override void BindItem(VisualElement element, int index)
     {
-        GameData _gameData = StartBroker.GetGameData();
+        _gameData = StartBroker.GetGameData();
         IListViewItem item = draggableLV.items[index];
         StageInfo stageInfo = item as StageInfo;
         int stageNum = stageInfo.stageNum;
@@ -53,12 +54,15 @@ public class StageSelectController : LVItemController
     // 버튼 클릭 이벤트 핸들러
     private void OnMoveButtonClick(ClickEvent evt)
     {
-        // 클릭된 버튼의 userData를 통해 인덱스 가져오기
+        // 클릭된 버튼의 userData를 통해 인덱스 가져오기 
+        
         var button = evt.target as Button;
         if (button?.userData is int index)
         {
+            _gameData.currentStageNum = index;
             Debug.Log("Move To Stage" + index);
-            BattleBroker.OnStageChange(index);
+            BattleBroker.OnStageChange();
+            NetworkBroker.SaveServerData();
             UIBroker.InactiveCurrentUI?.Invoke();
         }
     }

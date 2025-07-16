@@ -1,15 +1,11 @@
 using EnumCollection;
-using System;
-using System.ComponentModel.Design.Serialization;
-using System.Reflection;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.UIElements;
 using Button = UnityEngine.UIElements.Button;
 public class MenuControlUI : MonoBehaviour
 {
     //Controlled Componenet
-    [SerializeField] AutoRewardReceive _autoRewardReceive;
+    [SerializeField] OfflineRewardReceive _offlineRewardReceive;
     [SerializeField] EquipedSkillUI _equipedSkillUI;
     [SerializeField] StatUI _statUI;
     [SerializeField] WeaponUI _weaponUI;
@@ -103,10 +99,11 @@ public class MenuControlUI : MonoBehaviour
     private void Start()
     {
         var rootChild = root.Q<VisualElement>("MenuControlUI");
-        rootChild.Insert(0, _equipedSkillUI.root);
-        rootChild.Insert(0, _autoRewardReceive.root);
+        var upperParent = root.Q<VisualElement>("UpperParent");
+        upperParent.Add(_offlineRewardReceive.root);
+        upperParent.Add(_equipedSkillUI.root);
         _equipedSkillUI.root.style.position = Position.Relative;
-        _autoRewardReceive.root.style.position = Position.Relative;
+        _offlineRewardReceive.root.style.position = Position.Relative;
         menuParent.Add(_statUI.root);
         menuParent.Add(_weaponUI.root);
         menuParent.Add(_skillUI.root);

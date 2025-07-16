@@ -8,5 +8,7 @@ namespace ClientVerification
         public int currentStageNum { get; set; }
         [JsonProperty("maxStageNum")]
         public int maxStageNum { get; set; }
+        [JsonProperty("invalidCount")]
+        public int invalidCount { get; set; }
     }
 }

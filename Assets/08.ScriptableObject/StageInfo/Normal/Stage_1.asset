@@ -21,7 +21,7 @@ MonoBehaviour:
   boss: {fileID: 11400000, guid: 36a0074aa544b9e408e43031d4e36e32, type: 2}
   enemyNum: 4
   enemyStatusFromStage:
-    maxHp: 1000
+    maxHp: 10
     resist: 0
     gold: 10
     exp: 10

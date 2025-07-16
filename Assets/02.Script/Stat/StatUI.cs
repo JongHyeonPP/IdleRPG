@@ -373,7 +373,7 @@ public class StatUI : MonoBehaviour
             }
             StopCoroutine(_incrementCoroutine);
             _incrementCoroutine = null;
-            GameManager.instance.SaveLocalData();
+            NetworkBroker.SaveServerData();
         }
     }
 

@@ -11,7 +11,7 @@
         "Companion",
         "Store",
         "Utility",
-        "AutoReward"
+        "OfflineReward"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

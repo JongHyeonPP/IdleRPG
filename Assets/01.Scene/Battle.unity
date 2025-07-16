@@ -333,6 +333,7 @@ Transform:
   - {fileID: 42309941}
   - {fileID: 1308468329}
   - {fileID: 916945381}
+  - {fileID: 999121754}
   m_Father: {fileID: 197069069}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &86115819
@@ -722,6 +723,50 @@ MonoBehaviour:
   _mode: 0
   _targetDocument: {fileID: 0}
   _scrollViewName: 
+--- !u!1 &414872055
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 414872056}
+  - component: {fileID: 414872057}
+  m_Layer: 0
+  m_Name: ClientReportManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &414872056
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 414872055}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 578890846}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &414872057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 414872055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f24e2cdc3e8fac429649528fc92dc68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &450659255
 GameObject:
   m_ObjectHideFlags: 0
@@ -964,6 +1009,7 @@ Transform:
   - {fileID: 639907228}
   - {fileID: 1029616032}
   - {fileID: 807469625}
+  - {fileID: 414872056}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &597699080
@@ -1078,7 +1124,7 @@ GameObject:
   - component: {fileID: 639850496}
   - component: {fileID: 639850495}
   m_Layer: 0
-  m_Name: AutoRewardReceive
+  m_Name: OfflineRewardReceive
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1111,6 +1157,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4ec83ba629c85340a31976f0f0c9572, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _offlineRewardUi: {fileID: 999121755}
 --- !u!114 &639850496
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1551,6 +1598,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 899cd6c83d8cac84f89eda906e16561e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  expFormula: 
 --- !u!4 &825171815 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6073795207407313238, guid: 80a006cc9b0ab36488762b27edd20916, type: 3}
@@ -2065,6 +2113,10 @@ PrefabInstance:
       propertyPath: _autoRewardReceive
       value: 
       objectReference: {fileID: 639850495}
+    - target: {fileID: 354066532277198908, guid: d2774bfc7f4ff0a4ea6ec5334d13664b, type: 3}
+      propertyPath: _offlineRewardReceive
+      value: 
+      objectReference: {fileID: 639850495}
     - target: {fileID: 4866542062853484607, guid: d2774bfc7f4ff0a4ea6ec5334d13664b, type: 3}
       propertyPath: m_Name
       value: MenuContorlUI
@@ -2264,6 +2316,75 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!1 &999121753
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 999121754}
+  - component: {fileID: 999121755}
+  - component: {fileID: 999121756}
+  m_Layer: 0
+  m_Name: OfflineRewardUi
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &999121754
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 999121753}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.2333645, y: 0.60670376, z: -1.0003897}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 80642810}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &999121755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 999121753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9b18dfad2d99ff43b1a63f615567691, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _slotAsset: {fileID: 9197481963319205126, guid: e3e87c2c82ecdd145b9b21ebfdcad9a7, type: 3}
+  _goldSprite: {fileID: 21300000, guid: a0bf3f215edb8c5438fd95a33ea7aee7, type: 3}
+  _expSprite: {fileID: 21300000, guid: bb2038ace4e9b8f468e2826856ca3b98, type: 3}
+  _diaSprite: {fileID: 21300000, guid: 486112d5a03a3ee41ac790455313a1ab, type: 3}
+  _cloverSprite: {fileID: 21300000, guid: 7e406199c949f1449bc592e1e4db1487, type: 3}
+--- !u!114 &999121756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 999121753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PanelSettings: {fileID: 11400000, guid: f2f0eb129a3062647b27e4d7a574aeaa, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: 2c0dddfb88cf4bb46ad459b5686be87f, type: 3}
+  m_SortingOrder: 6
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
 --- !u!1 &1029616031
 GameObject:
   m_ObjectHideFlags: 0
@@ -2522,6 +2643,7 @@ MonoBehaviour:
     currentStageNum: 0
     maxStageNum: 0
     userName: 
+    invalidCount: 0
     equipedCostumes: []
     ownedCostumes: []
   skillUI: {fileID: 246605442210432971}
@@ -4565,6 +4687,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7712351157666273572, guid: b42a2fa9a37ddce43a6659a3a0a3a135, type: 3}
+      propertyPath: m_SortingOrder
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5283,6 +5409,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 80642810}
     m_Modifications:
+    - target: {fileID: 4161033452630815274, guid: b2af39c8e5bcda149aa2c2acbecc02b9, type: 3}
+      propertyPath: m_SortingOrder
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 4256224592519712418, guid: b2af39c8e5bcda149aa2c2acbecc02b9, type: 3}
       propertyPath: m_Name
       value: TotalGoldUI

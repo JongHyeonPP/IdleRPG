@@ -57,7 +57,7 @@ public class CompanionTechUI : MonoBehaviour
             {
                 PlayerBroker.OnCompanionAppearanceChange(_currentCompanionIndex, _currentTechData.appearanceData);
                 _gameData.currentCompanionPromoteTech[_currentCompanionIndex] = _currentTech;
-                StartBroker.SaveLocal();
+                NetworkBroker.SaveServerData();
             }
         }
         else

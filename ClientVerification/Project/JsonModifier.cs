@@ -15,7 +15,7 @@ public static class JsonModifier
         // 먼저 모든 updates를 적용
         foreach (var pair in updates)
         {
-            string[] keys = pair.Key.ToLowerInvariant().Split('.');
+            string[] keys = pair.Key.Split('.');
             JToken current = root;
 
             for (int i = 0; i < keys.Length - 1; i++)
@@ -52,11 +52,11 @@ public static class JsonModifier
             JObject obj = root;
             int currentLevel = int.Parse(obj["level"].ToString());
             BigInteger currentExp = BigInteger.Parse(obj["exp"].ToString());
-            //logger.LogDebug("currentLevel : " + currentLevel);
-            //logger.LogDebug("currentExp : " + currentExp);
+            
 
 
             DataTable dt = new();
+            //logger.LogDebug($"Before - Level : {currentLevel}, Exp : {currentExp}");
             while (true)
             {
                 string formula = VerificationController.levelUpRequireExp.Replace("{level}", currentLevel.ToString());
@@ -72,7 +72,7 @@ public static class JsonModifier
                     break;
                 }
             }
-
+            //logger.LogDebug($"After - Level : {currentLevel}, Exp : {currentExp}");
             obj["level"] = JToken.FromObject(currentLevel);
             obj["exp"] = JToken.FromObject(currentExp);
         }

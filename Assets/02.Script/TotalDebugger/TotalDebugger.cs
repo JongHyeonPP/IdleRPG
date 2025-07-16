@@ -116,7 +116,7 @@ public class TotalDebugger : EditorWindow
             }
             isPressingVe = false;
             pressedVe = null;
-            StartBroker.SaveLocal();
+            NetworkBroker.SaveServerData();
         }
         if (!isPressingVe)//누르고 있지 않을 때
             return;
@@ -219,7 +219,7 @@ public class TotalDebugger : EditorWindow
             Debug.LogError("Invalid Input");
         }
         textField.value = string.Empty;
-        StartBroker.SaveLocal();
+        NetworkBroker.SaveServerData();
     }
     private void OnChangeButtonDown(string dataName, bool isPlus, Label valueLabel, Categori categori, bool isBigInteger)
     {
@@ -907,7 +907,7 @@ public class TotalDebugger : EditorWindow
             _gameData.companionPromoteEffect[currentCompanionIndex].Remove(effectIndex);
         }
         
-        StartBroker.SaveLocal();
+        NetworkBroker.SaveServerData();
     }
 
     private void InitCompanion_PromoteTech(int companionIndex, int scrollViewIndex)

@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using BigInteger = System.Numerics.BigInteger;
-using Random = UnityEngine.Random;
 public class BattleManager : MonoBehaviour
 {
     public static BattleManager instance;
@@ -49,15 +48,14 @@ public class BattleManager : MonoBehaviour
 
     private void Start()
     {
-
         _controller = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
         _ePool0.poolParent = _ePool1.poolParent = _poolParent;
-        GameManager.instance.AutoSaveStart();
+        
         _isMove = true;
         _controller.MoveState(true);
         _isBattleActive = true;
         SetEvent();
-        BattleBroker.OnStageChange(_gameData.currentStageNum);
+        BattleBroker.OnStageChange();
         BattleBroker.RefreshStageSelectUI(_gameData.currentStageNum);//CurrentStageUI갱신
         SetWeaponSprite(_gameData.playerWeaponId, WeaponType.Melee);
         for (int i = 0; i < 3; i++)
@@ -78,6 +76,7 @@ public class BattleManager : MonoBehaviour
             SetWeaponSprite(_gameData.companionWeaponIdArr[i], weaponType);
         }
     }
+
     private void SetWeaponSprite(string weaponId, WeaponType weaponType)
     {
         if (weaponId != null)
@@ -271,12 +270,11 @@ public class BattleManager : MonoBehaviour
             }
         }
     }
-    private void OnStageChange(int stageNum)
+    private void OnStageChange()
     {
-        _gameData.currentStageNum = stageNum;
-        if (stageNum > _gameData.maxStageNum)
+        if (_gameData.currentStageNum > _gameData.maxStageNum)
         {
-            switch (stageNum)
+            switch (_gameData.currentStageNum)
             {
                 case 1:
                     Debug.Log("최초 접속");
@@ -287,16 +285,15 @@ public class BattleManager : MonoBehaviour
                     BattleBroker.SwitchToStory?.Invoke(2);
                     break;
             }
-            _gameData.maxStageNum = stageNum;
-            if (stageNum == 1 || stageNum == 21)
+            _gameData.maxStageNum = _gameData.currentStageNum;
+            if (_gameData.currentStageNum == 1 || _gameData.currentStageNum == 21)
             {
                 _isBattleActive = false;
                 //전투 멈춤
-                switch (stageNum)
+                switch (_gameData.currentStageNum)
                 {
                     case 1:
                         Debug.Log("최초 접속");
-
                         BattleBroker.SwitchToStory?.Invoke(1);
                         break;
                     case 21:
@@ -313,7 +310,6 @@ public class BattleManager : MonoBehaviour
         {
             BattleBroker.SwitchToBattle();
         }
-        StartBroker.SaveLocal();
     }
 
     private void SwitchToBoss()
@@ -457,11 +453,12 @@ public class BattleManager : MonoBehaviour
         _controller.MoveState(true);
         StartCoroutine(StageEnterAfterWhile());
     }
-
     private IEnumerator StageEnterAfterWhile()
     {
         yield return new WaitForSeconds(1.5f);
-        BattleBroker.OnStageChange(_gameData.currentStageNum);
+        BattleBroker.OnStageChange();
+        NetworkBroker.SaveServerData();
+
         BattleBroker.OnBossClear?.Invoke();
         BattleBroker.RefreshStageSelectUI(_gameData.currentStageNum);
     }

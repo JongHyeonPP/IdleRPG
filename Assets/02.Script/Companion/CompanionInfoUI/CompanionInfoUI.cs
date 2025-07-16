@@ -149,7 +149,7 @@ public class CompanionInfoUI : MonoBehaviour
         }
         _gameData.clover -= price;
         BattleBroker.OnCloverSet();
-        StartBroker.SaveLocal();
+        NetworkBroker.SaveServerData();
     }
 
     private void SetEachPromoteEffect(int effectIndex)
@@ -242,7 +242,7 @@ public class CompanionInfoUI : MonoBehaviour
             fragmentLabel.text = afterPrice.fragment.ToString();
         }
         
-        StartBroker.SaveLocal();
+        NetworkBroker.SaveServerData();
     }
     private void OnPassiveButtonClick(int skillIndex)
     {

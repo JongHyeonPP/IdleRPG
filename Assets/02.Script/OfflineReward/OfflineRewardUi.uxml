@@ -1,0 +1,44 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:VisualElement name="SkillInfoUI" picking-mode="Ignore" style="flex-grow: 1; justify-content: center; align-items: center; -unity-font-definition: url(&quot;project://database/Assets/05.Font/Maplestory%20Light.ttf?fileID=12800000&amp;guid=b7853b5ad26567e41a3c4210e64c5419&amp;type=3#Maplestory Light&quot;); -unity-text-outline-width: 0.5px; -unity-text-outline-color: rgb(0, 0, 0); letter-spacing: 5px;">
+        <engine:VisualElement name="AcquisitionTimePanel" style="flex-grow: 0; height: 111px; width: 904px; background-image: url(&quot;project://database/Assets/Asset/Wooden_UI/Wooden_UI_png/bg_01_01.png?fileID=2800000&amp;guid=4d50a426daedff74ba42d34fe4d6730d&amp;type=3#bg_01_01&quot;); align-items: center; justify-content: center;">
+            <engine:Label text="자동사냥 시간 : 600 분" name="AcquisitionTimeLabel" style="font-size: 54px; color: rgb(233, 181, 25);" />
+        </engine:VisualElement>
+        <engine:VisualElement name="MainPanel" style="flex-grow: 0; height: 687px; width: 1008px; align-items: center; justify-content: center;">
+            <engine:VisualElement name="Vertical" style="flex-grow: 0; background-color: rgb(132, 92, 47); width: 912px; height: 90%; background-image: none; display: flex;">
+                <engine:VisualElement name="Top" style="flex-grow: 0; align-items: flex-start; justify-content: center; flex-direction: row; margin-top: 61px; height: 139px;">
+                    <engine:VisualElement name="Acquisition_Gold" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0.31); height: 80px; border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px; width: 355px; overflow: visible; flex-direction: row; align-items: center;">
+                        <engine:VisualElement name="GoldIcon" style="flex-grow: 0; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Icons/16/CoinYellow.png?fileID=2800000&amp;guid=a0bf3f215edb8c5438fd95a33ea7aee7&amp;type=3#CoinYellow&quot;); flex-shrink: 0; -unity-background-scale-mode: stretch-to-fill; overflow: hidden; width: 90px; height: 90px;" />
+                        <engine:Label text="4373820/m" name="GoldAcquisitionLabel" style="color: rgb(255, 255, 255); font-size: 29px; flex-grow: 1; -unity-text-align: upper-center;" />
+                    </engine:VisualElement>
+                    <engine:VisualElement name="Padding" style="flex-grow: 0; width: 77px;" />
+                    <engine:VisualElement name="Acquisition_Exp" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0.31); height: 80px; border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px; width: 355px; overflow: visible; flex-direction: row; align-items: center;">
+                        <engine:VisualElement name="ExpAcquisitionLabel" style="flex-grow: 0; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Icons/32/Book02.png?fileID=2800000&amp;guid=bb2038ace4e9b8f468e2826856ca3b98&amp;type=3#Book02&quot;); flex-shrink: 0; -unity-background-scale-mode: stretch-to-fill; overflow: hidden; width: 90px; height: 90px;" />
+                        <engine:Label text="4373820/m" name="ComplexLabel" style="color: rgb(255, 255, 255); font-size: 29px; flex-grow: 1; -unity-text-align: upper-center;" />
+                    </engine:VisualElement>
+                </engine:VisualElement>
+                <engine:VisualElement name="Middle" style="flex-grow: 0; height: 107px; align-items: center;">
+                    <engine:VisualElement name="VisualElement" style="flex-grow: 1; width: 797px;">
+                        <engine:VisualElement name="RewardTextPanel" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); width: 100%; height: 100%; position: absolute; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel3.png?fileID=21300000&amp;guid=77a6dcc512971ab419243a3716436257&amp;type=3#UniversalPanel3&quot;); -unity-background-image-tint-color: rgb(82, 63, 44);" />
+                        <engine:VisualElement name="Detail_T" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0); background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel3TBevel.png?fileID=21300000&amp;guid=4fd1298263d8b1248802bb6b7d0e559c&amp;type=3#UniversalPanel3TBevel&quot;); -unity-background-image-tint-color: rgb(67, 58, 49); display: flex;" />
+                        <engine:VisualElement name="Detail_B" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0); background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel3BBevel.png?fileID=21300000&amp;guid=5d2da8262ca5ec742b0c111d6548a1d3&amp;type=3#UniversalPanel3BBevel&quot;); -unity-background-image-tint-color: rgb(51, 46, 42);" />
+                        <engine:Label text="자동 사냥 보상" style="width: 100%; height: 100%; -unity-text-align: middle-center; font-size: 55px; color: rgb(255, 255, 255);" />
+                    </engine:VisualElement>
+                </engine:VisualElement>
+                <engine:VisualElement name="SlotParent" style="flex-grow: 1; flex-direction: row; align-items: center; justify-content: center;" />
+            </engine:VisualElement>
+            <engine:VisualElement name="Frame" picking-mode="Ignore" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/WindowStroke.png?fileID=21300000&amp;guid=8a7a753f989769c4ebd7f236420af813&amp;type=3#WindowStroke&quot;);" />
+        </engine:VisualElement>
+        <engine:VisualElement name="ExplainPanel" style="flex-grow: 0; width: 100%; flex-shrink: 0;">
+            <engine:Label text="*자동 사냥 보상은 최고 도달 스테이지에 의해 결정됩니다." style="-unity-text-align: middle-center; color: rgb(255, 255, 255); font-size: 35px;" />
+        </engine:VisualElement>
+        <engine:VisualElement name="AcquisitionButtonPanel" style="flex-grow: 0; width: 100%; align-items: center;">
+            <engine:Button name="AcquisitionButton" focusable="false" style="position: relative; width: 300px; height: 104px; display: flex; margin-top: 23px; margin-right: 0; margin-bottom: 0; margin-left: 0; border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-background-image-tint-color: rgb(224, 156, 43); background-color: rgba(188, 188, 188, 0); background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel3.png?fileID=21300000&amp;guid=77a6dcc512971ab419243a3716436257&amp;type=3#UniversalPanel3&quot;); color: rgb(255, 255, 255); align-items: center; font-size: 30px; justify-content: center; flex-direction: row;">
+                <engine:VisualElement name="Detail" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; display: flex;">
+                    <engine:VisualElement picking-mode="Ignore" name="DetailTop" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel3TBevel.png?fileID=21300000&amp;guid=4fd1298263d8b1248802bb6b7d0e559c&amp;type=3#UniversalPanel3TBevel&quot;); -unity-background-image-tint-color: rgb(236, 178, 81);" />
+                    <engine:VisualElement picking-mode="Ignore" name="DetailBottom" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel3BBevel.png?fileID=21300000&amp;guid=5d2da8262ca5ec742b0c111d6548a1d3&amp;type=3#UniversalPanel3BBevel&quot;); -unity-background-image-tint-color: rgb(190, 135, 44);" />
+                </engine:VisualElement>
+                <engine:Label text="획득하기" name="UpgradeLabel" style="margin-top: 0; margin-right: 9px; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-size: 38px; width: 93px;" />
+            </engine:Button>
+        </engine:VisualElement>
+    </engine:VisualElement>
+</engine:UXML>

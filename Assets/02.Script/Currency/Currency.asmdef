@@ -1,0 +1,20 @@
+{
+    "name": "Currency",
+    "rootNamespace": "",
+    "references": [
+        "Unity.Services.RemoteConfig",
+        "EventControl",
+        "Utility",
+        "GameData",
+        "StageSelect"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

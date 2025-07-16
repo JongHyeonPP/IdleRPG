@@ -293,7 +293,7 @@ public class TotalStatusUI : MonoBehaviour
         CostumeManager costumeManager = CostumeManager.Instance;
         if (costumeManager == null)
         {
-            Debug.LogError("CostumeManager 인스턴스를 찾을 수 없습니다.");
+            //Debug.LogError("CostumeManager 인스턴스를 찾을 수 없습니다.");
             return;
         }
 
@@ -301,7 +301,7 @@ public class TotalStatusUI : MonoBehaviour
         ScrollView costumeScrollView = root.Q<ScrollView>("CostumeScrollView");
         if (costumeScrollView == null)
         {
-            Debug.LogError("CostumeScrollView를 찾을 수 없습니다.");
+            //Debug.LogError("CostumeScrollView를 찾을 수 없습니다.");
             return;
         }
 
@@ -403,13 +403,25 @@ public class TotalStatusUI : MonoBehaviour
             bool isEquipped = costumeManager.IsEquipped(costume.Uid);
             VisualElement background = costumeSlot.Q<VisualElement>("IconFrame");
 
+
             if (background != null)
             {
-                // 프레임 스프라이트 로드 (에디터 모드에서만 작동)
-                Sprite frameSpriteOn = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Costume/frame_violet.png");
-                Sprite frameSpriteOff = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Costume/frame_black.png");
-                Sprite frameEquipped = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Costume/frame_red.png"); // 착용 중인 프레임
+                Sprite frameSpriteOn;
+                Sprite frameSpriteOff;
+                Sprite frameEquipped;
 
+#if UNITY_EDITOR
+                // 프레임 스프라이트 로드 (에디터 모드에서만 작동)
+                frameSpriteOn = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Costume/frame_violet.png");
+                frameSpriteOff = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Costume/frame_black.png");
+                frameEquipped = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Costume/frame_red.png"); // 착용 중인 프레임
+#endif
+#if UNITY_ANDROID
+                // 프레임 스프라이트 로드 (런타임/빌드 모두 작동)
+                frameSpriteOn = Resources.Load<Sprite>("Costume/frame_violet");
+                frameSpriteOff = Resources.Load<Sprite>("Costume/frame_black");
+                frameEquipped = Resources.Load<Sprite>("Costume/frame_red"); // 착용 중인 프레임
+#endif
                 // 착용 중이면 다른 프레임 적용
                 if (isOwned && isEquipped)
                 {

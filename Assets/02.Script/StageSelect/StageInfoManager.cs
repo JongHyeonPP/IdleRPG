@@ -17,7 +17,6 @@ public class StageInfoManager : MonoBehaviour
     [SerializeField] StageInfo[] _companion_2_1;
     [SerializeField] StageInfo[] _companion_2_2;
     [SerializeField] StageInfo[] _companion_2_3;
-
     private void Awake()
     {
         if (!instance)
@@ -29,7 +28,6 @@ public class StageInfoManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
     public List<IListViewItem> GetStageInfosAsItem(int start, int count)
     {
         List<IListViewItem> items = new();
@@ -125,18 +123,6 @@ public class StageInfoManager : MonoBehaviour
     [ContextMenu("SetDefaultReward")]
     public void SetDefaultReward()
     {
-        foreach (StageInfo x in _normalStageInfoArr)
-        {
-            x.enemyStatusFromStage.gold = x.stageNum*10;
-            x.enemyStatusFromStage.exp = x.stageNum*10;
-            EditorUtility.SetDirty(x);
-        }
-        foreach (StageInfo x in _normalStageInfoArr)
-        {
-            x.bossStatusFromStage.gold = x.stageNum * 100;
-            x.bossStatusFromStage.exp = x.stageNum * 100;
-            EditorUtility.SetDirty(x);
-        }
         // 변경된 데이터를 애셋 파일에 저장
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();

@@ -7,16 +7,36 @@ using System.Numerics;
 using Unity.Services.RemoteConfig;
 using UnityEngine;
 
+
 public class CurrencyManager : MonoBehaviour
 {
     private GameData _gameData;
-    private Dictionary<Resource, string> _stageDropFormular;
     private string _levelUpRequireExp;
+    private string goldFormula;
+    public string expFormula;
+
+    private int currentGoldValue;
+    private int currentExpValue;
+
+    private float goldRange;
+    private float expRange;
 
     private readonly DataTable _dataTable = new();
+    public static CurrencyManager instance;
+    private void Awake()
+    {
+        instance = this;
+        _gameData = StartBroker.GetGameData();
+        string formulaJson = RemoteConfigService.Instance.appConfig.GetJson("STAGE_DROP_FORMULA", "None");
+        Dictionary<string, string> dict = UtilityManager.GetParsedFormularDict<string>(formulaJson);
+        goldFormula = dict["GoldStandard"];
+        expFormula = dict["ExpStandard"];
+        goldRange = float.Parse(dict["GoldRange"]);
+        expRange = float.Parse(dict["ExpRange"]);
+        BattleBroker.OnStageChange += OnStageChange;
+    }
     private void Start()
     {
-        _gameData = StartBroker.GetGameData();
         BattleBroker.GetNeedExp = GetNeedExp;
         //Drop
         BattleBroker.OnExpByDrop += GetExpByDrop;
@@ -24,16 +44,14 @@ public class CurrencyManager : MonoBehaviour
         BattleBroker.GetDropValue = GetDropValue;
 
         string stageDropFormularStr =  RemoteConfigService.Instance.appConfig.GetJson("STAGE_DROP_FORMULA", "None");
-        _stageDropFormular = UtilityManager.GetParsedFormularDict<Resource>(stageDropFormularStr);
-        string rawJson = RemoteConfigService.Instance.appConfig.GetJson("LEVEL_UP_REQUIRE_EXP", "None");
-        Dictionary<string, string> dict = UtilityManager.GetParsedFormularDict<string>(rawJson);
-        _levelUpRequireExp = dict["requireExp"];
-
+        Dictionary<Resource, string> _stageDropFormular = UtilityManager.GetParsedFormularDict<Resource>(stageDropFormularStr);
+        _levelUpRequireExp = RemoteConfigService.Instance.appConfig.GetString("LEVEL_UP_REQUIRE_EXP");
     }
     public void GetGoldByDrop(int value)
     {
         _gameData.gold += value;
         BattleBroker.OnGoldSet();
+        NetworkBroker.SetResourceReport(value, Resource.Gold, Source.Battle);
     }
     public void GetExpByDrop(int value)
     {
@@ -53,6 +71,7 @@ public class CurrencyManager : MonoBehaviour
             }
         }
         BattleBroker.OnLevelExpSet();
+        NetworkBroker.SetResourceReport(value, Resource.Exp, Source.Battle);
     }
     private BigInteger GetNeedExp()
     {
@@ -62,37 +81,33 @@ public class CurrencyManager : MonoBehaviour
     private int GetDropValue(DropType dropType)
     {
         int baseValue = 0;
+        float range = 0;
         var battleType = BattleBroker.GetBattleType();
-        var _currentStageInfo = StageInfoManager.instance.GetNormalStageInfo(_gameData.currentStageNum);
         if (battleType == BattleType.Default)
         {
             switch (dropType)
             {
                 case DropType.Gold:
-                    baseValue = _currentStageInfo.enemyStatusFromStage.gold;
+                    baseValue = currentGoldValue;
+                    range = goldRange;
                     break;
                 case DropType.Exp:
-                    baseValue = _currentStageInfo.enemyStatusFromStage.exp;
+                    baseValue = currentExpValue;
+                    range = expRange;
                     break;
             }
         }
-        else if (battleType == BattleType.Boss)
-        {
-            switch (dropType)
-            {
-                case DropType.Gold:
-                    baseValue = _currentStageInfo.bossStatusFromStage.gold;
-                    break;
-                case DropType.Exp:
-                    baseValue = _currentStageInfo.bossStatusFromStage.exp;
-                    break;
-            }
-        }
-
         // ±10% 범위의 랜덤 int 생성
-        int min = Mathf.FloorToInt(baseValue * 0.9f);
-        int max = Mathf.CeilToInt(baseValue * 1.1f) + 1; // Random.Range의 max는 exclusive
+        int min = Mathf.Max(1, Mathf.FloorToInt(baseValue * (1 - range)));
+        int max = Mathf.CeilToInt(baseValue * 1+range) + 1; // Random.Range의 max는 exclusive
         int result = UnityEngine.Random.Range(min, max);
         return result;
+    }
+    private void OnStageChange()
+    {
+        string stageGoldFormula = goldFormula;
+        string stageExpFormula = expFormula;
+        currentGoldValue = Convert.ToInt32(_dataTable.Compute(stageGoldFormula.Replace("{stageNum}", _gameData.currentStageNum.ToString()), ""));
+        currentExpValue = Convert.ToInt32(_dataTable.Compute(stageExpFormula.Replace("{stageNum}", _gameData.currentStageNum.ToString()), ""));
     }
 }

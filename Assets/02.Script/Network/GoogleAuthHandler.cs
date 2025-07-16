@@ -1,18 +1,22 @@
 using GooglePlayGames;
 using GooglePlayGames.BasicApi;
+using System.Collections.Generic;
 using Unity.Services.Authentication;
+using Unity.Services.CloudCode;
 using Unity.Services.Core;
 using Unity.Services.Core.Environments;
-using Unity.Services.RemoteConfig;
 using UnityEngine;
-using static RemoteConfigManager;
+using UnityEngine.UIElements;
 
 public class GoogleAuthHandler : MonoBehaviour
 {
+    private RewardResult _rewardResult;
+
     private void Awake()
     {
         StartBroker.OnAuthenticationComplete += OnAuthenticationComplete;
         StartBroker.LoadGoogleAuth += LoadGoogleAuth;
+        StartBroker.GetOfflineReward += ()=>_rewardResult;
     }
     private void OnAuthenticationComplete()
     {
@@ -38,6 +42,7 @@ public class GoogleAuthHandler : MonoBehaviour
                 await AuthenticationService.Instance.SignInWithGooglePlayGamesAsync(code);
                 StartBroker.OnAuthenticationComplete?.Invoke();
             });
+            
         }
         else
         {
@@ -46,7 +51,7 @@ public class GoogleAuthHandler : MonoBehaviour
             StartBroker.SetUserId(AuthenticationService.Instance.PlayerId);
             StartBroker.OnAuthenticationComplete?.Invoke();
         }
-        
+        CheckOfflineReward();
     }
 
 
@@ -54,5 +59,17 @@ public class GoogleAuthHandler : MonoBehaviour
     {
         StartBroker.LoadGoogleAuth -= LoadGoogleAuth;
         StartBroker.OnAuthenticationComplete -= OnAuthenticationComplete;
+    }
+    private async void CheckOfflineReward()
+    {
+        Dictionary<string, object> args = new()
+        {
+            { "playerId", AuthenticationService.Instance.PlayerId }
+        };
+        _rewardResult = await CloudCodeService.Instance.CallModuleEndpointAsync<RewardResult>(
+            "OfflineReward",
+            "CheckOfflineReward",
+            args
+        );
     }
 }

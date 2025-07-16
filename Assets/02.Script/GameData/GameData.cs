@@ -53,6 +53,7 @@ public class GameData
     };
     [JsonConverter(typeof(TupleArr_Converter<int, int>))]
     public (int, int)[] currentCompanionPromoteTech = new (int, int)[3];
+    public int invalidCount;
 
     // Costume ÄÚ½ºÆ¬
     public List<string> equipedCostumes = new();                                 // ÀåÂøÇÑ ÄÚ½ºÆ¬µé

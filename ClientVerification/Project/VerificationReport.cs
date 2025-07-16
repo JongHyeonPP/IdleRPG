@@ -18,7 +18,5 @@ namespace Verification
         public string Source { get; set; }
         [JsonProperty("value")]
         public int Value { get; set; }
-        [JsonProperty("elapsed-seconds")]
-        public int ElapsedSeconds { get; set; }
     }
 }

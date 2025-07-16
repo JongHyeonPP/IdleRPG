@@ -9,6 +9,7 @@ using Unity.Services.Core;
 using Unity.Services.Authentication;
 public class CloudCodeManager : MonoBehaviour
 {
+    //¾ø¾îÁ®µµ µÊ
     public static CloudCodeManager Instance { get; private set; }
 
     private void Awake()

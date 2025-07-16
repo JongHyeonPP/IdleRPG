@@ -8,7 +8,7 @@ public static class BattleBroker
     //적이 죽었을 때 아이템 드랍. <적 위치>
     public static Action<Vector3> OnEnemyDead;
     //스테이지 변경
-    public static Action<int> OnStageChange;
+    public static Action OnStageChange;
     //보스 스테이지 시간 초과 시
     public static Action OnBossTimeLimit;
     //보스 스테이지 클리어 시
@@ -47,5 +47,4 @@ public static class BattleBroker
     public static Action SetCameraShrink;
 
     public static Action<Vector3, string> ShowDamageText;//Screen Pos
-
 }

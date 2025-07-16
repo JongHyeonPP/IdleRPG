@@ -10,10 +10,8 @@ namespace Verification
 {
     public interface IRemoteConfigService
     {
-        Dictionary<string, string> GetFormulas(IExecutionContext context, IGameApiClient gameApiClient, FormulaType formulaType);
-        Dictionary<string, int> GetStageInfo(int stageNum);
+        T GetRemoteConfig<T>(IExecutionContext context, IGameApiClient gameApiClient, string key);
     }
-
     public class RemoteConfigService : IRemoteConfigService
     {
         
@@ -25,42 +23,44 @@ namespace Verification
             _logger = logger;
         }
 
-        public Dictionary<string, string> GetFormulas(IExecutionContext context, IGameApiClient gameApiClient, FormulaType formulaType)
+        public T GetRemoteConfig<T>(IExecutionContext context, IGameApiClient gameApiClient, string key)
         {
-            string FormulaKey = formulaType.ToString();
             try
             {
-                // Remote Config에서 REINFORCE_FORMULAS 키 가져오기
                 var result = gameApiClient.RemoteConfigSettings.AssignSettingsGetAsync(
                     context,
                     context.AccessToken,
                     context.ProjectId,
                     context.EnvironmentId,
                     null,
-                    new List<string> { FormulaKey }
+                    new List<string> { key }
                 );
 
                 var settings = result.Result.Data.Configs.Settings;
 
-                if (!settings.ContainsKey(FormulaKey))
+                if (!settings.ContainsKey(key))
                 {
-                    _logger.LogError($"Remote Config에 '{FormulaKey}' 키가 없습니다.");
-                    throw new Exception($"Remote Config에 '{FormulaKey}' 키가 없습니다.");
+                    _logger.LogError($"Remote Config에 '{key}' 키가 없습니다.");
+                    throw new Exception($"Remote Config에 '{key}' 키가 없습니다.");
                 }
 
-                var json = settings[FormulaKey].ToString();
-                return JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+                var rawValue = settings[key].ToString();
+
+                // 타입에 따라 처리 분기 (string이면 그대로 반환, 아니면 JSON 변환 시도)
+                if (typeof(T) == typeof(string))
+                {
+                    return (T)(object)rawValue;
+                }
+                else
+                {
+                    return JsonConvert.DeserializeObject<T>(rawValue);
+                }
             }
             catch (ApiException e)
             {
-                _logger.LogError($"강화 공식 로딩 실패: {e.Message}");
-                throw new Exception($"강화 공식 로딩 실패: {e.Message}");
+                _logger.LogError($"Remote Config 값 로딩 실패: {e.Message}");
+                throw new Exception($"Remote Config 값 로딩 실패: {e.Message}");
             }
-        }
-
-        public Dictionary<string, int> GetStageInfo(int stageNum)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -23,6 +23,6 @@ public class SettingUI : MonoBehaviour
     // SaveButton 클릭 시 호출될 메서드
     void OnSaveButtonClick()
     {
-        GameManager.instance.SaveGameDataToCloud();
+        NetworkBroker.SaveServerData();
     }
 }

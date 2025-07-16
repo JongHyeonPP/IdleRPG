@@ -52,7 +52,7 @@ public class CostumeManager : MonoBehaviour
         GameData gameData = StartBroker.GetGameData();
         gameData.ownedCostumes = new(){"0", "1", "2"};
         gameData.equipedCostumes = new(){"0", "1", "2"};
-        StartBroker.SaveLocal();
+        NetworkBroker.SaveServerData();
     }
 
     public bool IsEquipped(string uid)
@@ -343,7 +343,7 @@ public class CostumeManager : MonoBehaviour
         GameData gameData = StartBroker.GetGameData();
         gameData.equipedCostumes = costumeUids;
 
-        StartBroker.SaveLocal();
+        NetworkBroker.SaveServerData();
         Debug.Log("[CostumeManager: Costume 아이템 저장됨]");
     }
 
