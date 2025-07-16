@@ -13,8 +13,9 @@ public class ClientReportManager : MonoBehaviour
     private readonly float _verificationInterval = 5f;
     private float _verificationElapsed;
 
-    private List<ClientGoldReport> _clientGoldReportList = new();
+    private List<ClientVerificationReport> _clientGoldReportList = new();
     private List<ClientReinforceReport> _clientReinforceReportList = new();
+    public bool isAcquireOfflineReward = false;
     private GameData _gameData;
    
 
@@ -27,6 +28,7 @@ public class ClientReportManager : MonoBehaviour
     {
         NetworkBroker.SetResourceReport += SetResourceReport;
         NetworkBroker.SetReinforceReport += SetReinforceReport;
+        NetworkBroker.OnOfflineReward += () => isAcquireOfflineReward = true;
         NetworkBroker.StageClearVerification += StageClearVerificationAsync;
         NetworkBroker.SaveServerData += ForceVerificationNow;
 
@@ -43,9 +45,9 @@ public class ClientReportManager : MonoBehaviour
         );
     }
 
-    private void SetResourceReport(int value, Resource resource, Source source)
+    private void SetResourceReport(int value, Resource resource)
     {
-        var newGoldReport = new ClientGoldReport(value, resource, source);
+        var newGoldReport = new ClientVerificationReport(value, resource);
         _clientGoldReportList.Add(newGoldReport);
     }
 
@@ -66,9 +68,10 @@ public class ClientReportManager : MonoBehaviour
         {
             { "serializedGoldReport", serializedGoldReport },
             { "serializedReinforceReport", serializedReinforceReport },
+            { "isAcquireOfflineReward", isAcquireOfflineReward},
             { "playerId", AuthenticationService.Instance.PlayerId }
         };
-
+        isAcquireOfflineReward = false;
         _clientGoldReportList.Clear();
         _clientReinforceReportList.Clear();
 
@@ -81,6 +84,7 @@ public class ClientReportManager : MonoBehaviour
         {
             StartBroker.OnDetectInvalidAct();
         }
+        Debug.Log("서버에 저장됐음.");
         //switch (result)
         //{
         //    case 0:

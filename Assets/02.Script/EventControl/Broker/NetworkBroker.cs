@@ -6,10 +6,17 @@ using UnityEngine.UIElements;
 public static class NetworkBroker
 {
     //단위 시간동안 Report를 쌓기 위한 Action
-    public static Action<int, Resource, Source> SetResourceReport;//얻은 골드 검증, 해당 스테이지에서 단위 시간동안 얻을 수 있는 골드의 양과 비교하게 된다.
-    public static Action<int,StatusType, bool> SetReinforceReport;//강화를 몇 번 했는지 Report, 강화 위변조 막기 위함, bool = gold?statPoint
+    public static Action<int, Resource> SetResourceReport;//얻은 골드 검증, 해당 스테이지에서 단위 시간동안 얻을 수 있는 골드의 양과 비교하게 된다.
+    public static Action<int, StatusType, bool> SetReinforceReport;//강화를 몇 번 했는지 Report, 강화 위변조 막기 위함, bool = gold?statPoint
     //스테이지 Clear 즉시 발동시킬 Report
     public static Action StageClearVerification;//일정 스테이지 이상에서만 해도 됨.
 
     public static Action SaveServerData;
+
+    public static Action OnOfflineReward;
+
+    public static Action LoadAd;
+
+    public static Action<string> PurchaseItem;
+    public static Action<string> OnPurchaseSuccess;
 }

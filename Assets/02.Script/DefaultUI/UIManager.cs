@@ -35,7 +35,7 @@ public class UIManager : MonoBehaviour
     }
     void Start()
     {
-        UIBroker.OnMenuUIChange?.Invoke(0);
+        UIBroker.ChangeMenu?.Invoke(0);
     }
 
     private void ActiveBattleUI()

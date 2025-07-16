@@ -1,0 +1,7 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:VisualElement name="PurchaseAdTestUI" picking-mode="Ignore" style="flex-grow: 0; flex-shrink: 0; height: 150px; justify-content: center; align-items: center; flex-direction: row; font-size: 36px; -unity-font-definition: url(&quot;project://database/Assets/05.Font/Maplestory%20Light.ttf?fileID=12800000&amp;guid=b7853b5ad26567e41a3c4210e64c5419&amp;type=3#Maplestory Light&quot;); margin-top: 26px;">
+        <engine:Button text="Purchase Test" name="PurchaseButton" style="position: relative; width: 300px; height: 120px; background-color: rgba(188, 188, 188, 0.6);" />
+        <engine:VisualElement name="Padding" style="flex-grow: 0; flex-shrink: 0; width: 92px;" />
+        <engine:Button text="Ad Test" name="AdButton" double-click-selects-word="false" style="position: relative; width: 300px; height: 120px; background-color: rgba(188, 188, 188, 0.6);" />
+    </engine:VisualElement>
+</engine:UXML>

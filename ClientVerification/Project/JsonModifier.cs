@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System;
 using System.Numerics;
 using System.Data;
-using Verification;
 using Microsoft.Extensions.Logging;
+using System.Linq;
+using ClientVerification.Verification;
 
 public static class JsonModifier
 {
-    public static string AddToFieldValues(string json, Dictionary<string, object> updates, ILogger<VerificationController> logger)
+    public static string AddToFieldValues(string json, Dictionary<string, int> updates, ILogger<VerificationController> logger)
     {
         JObject root = JObject.Parse(json);
 
@@ -35,7 +36,7 @@ public static class JsonModifier
                     ? BigInteger.Parse(existingValueToken.ToString())
                     : BigInteger.Zero;
 
-                BigInteger addValue = ToBigInteger(pair.Value);
+                BigInteger addValue = new(pair.Value);
                 BigInteger resultValue = existingValue + addValue;
 
                 obj[finalKey] = JToken.FromObject(resultValue);
@@ -45,9 +46,10 @@ public static class JsonModifier
                 throw new InvalidOperationException($"Parent of '{finalKey}' is not a JObject.");
             }
         }
+        //logger.LogDebug($"Updates: {string.Join(", ", updates.Select(kv => $"{kv.Key} += {kv.Value}"))}");
 
         // exp 키가 있었으면, 레벨업 계산은 여기서 별도로 수행
-        if (updates.ContainsKey("Exp"))
+        if (updates.ContainsKey("exp"))
         {
             JObject obj = root;
             int currentLevel = int.Parse(obj["level"].ToString());
@@ -75,6 +77,7 @@ public static class JsonModifier
             //logger.LogDebug($"After - Level : {currentLevel}, Exp : {currentExp}");
             obj["level"] = JToken.FromObject(currentLevel);
             obj["exp"] = JToken.FromObject(currentExp);
+            logger.LogDebug($"Level : {obj["level"]}, Exp : {obj["exp"]}");
         }
 
         return root.ToString();

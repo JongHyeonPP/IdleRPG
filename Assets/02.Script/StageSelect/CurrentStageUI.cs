@@ -29,6 +29,7 @@ public class CurrentStageUI : MonoBehaviour
 
     private void OnClickUI(ClickEvent evt)
     {
+        Debug.Log("Click CurrentStage Ui");
         stageSelectUI.ToggleUi(true);
     }
 

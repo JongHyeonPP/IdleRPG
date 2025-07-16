@@ -1,0 +1,13 @@
+C:\Users\JongHyeon\Documents\kiugi\PurchaseProcessor\Project\bin\Debug\net6.0\PurchaseProcessor.deps.json
+C:\Users\JongHyeon\Documents\kiugi\PurchaseProcessor\Project\bin\Debug\net6.0\PurchaseProcessor.dll
+C:\Users\JongHyeon\Documents\kiugi\PurchaseProcessor\Project\bin\Debug\net6.0\PurchaseProcessor.pdb
+C:\Users\JongHyeon\Documents\kiugi\PurchaseProcessor\Project\obj\Debug\net6.0\PurchaseProcessor.csproj.AssemblyReference.cache
+C:\Users\JongHyeon\Documents\kiugi\PurchaseProcessor\Project\obj\Debug\net6.0\PurchaseProcessor.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\JongHyeon\Documents\kiugi\PurchaseProcessor\Project\obj\Debug\net6.0\PurchaseProcessor.AssemblyInfoInputs.cache
+C:\Users\JongHyeon\Documents\kiugi\PurchaseProcessor\Project\obj\Debug\net6.0\PurchaseProcessor.AssemblyInfo.cs
+C:\Users\JongHyeon\Documents\kiugi\PurchaseProcessor\Project\obj\Debug\net6.0\PurchaseProcessor.csproj.CoreCompileInputs.cache
+C:\Users\JongHyeon\Documents\kiugi\PurchaseProcessor\Project\obj\Debug\net6.0\PurchaseProcessor.sourcelink.json
+C:\Users\JongHyeon\Documents\kiugi\PurchaseProcessor\Project\obj\Debug\net6.0\PurchaseProcessor.dll
+C:\Users\JongHyeon\Documents\kiugi\PurchaseProcessor\Project\obj\Debug\net6.0\refint\PurchaseProcessor.dll
+C:\Users\JongHyeon\Documents\kiugi\PurchaseProcessor\Project\obj\Debug\net6.0\PurchaseProcessor.pdb
+C:\Users\JongHyeon\Documents\kiugi\PurchaseProcessor\Project\obj\Debug\net6.0\ref\PurchaseProcessor.dll

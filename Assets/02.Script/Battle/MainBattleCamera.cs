@@ -9,7 +9,7 @@ public class MainBattleCamera : MonoBehaviour
     private void Awake()
     {
         mainCamera = GetComponent<Camera>();
-        UIBroker.OnMenuUIChange += OnMenuUIChange;
+        UIBroker.ChangeMenu += OnMenuUIChange;
     }
     private void SetSize(CameraInfo cameraInfo)
     {

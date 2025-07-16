@@ -1,5 +1,4 @@
 using EnumCollection;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -40,6 +39,7 @@ public class CurrencyManager : MonoBehaviour
         BattleBroker.GetNeedExp = GetNeedExp;
         //Drop
         BattleBroker.OnExpByDrop += GetExpByDrop;
+        BattleBroker.OnLevelExpSet += OnLevelExpSet;
         BattleBroker.OnGoldByDrop += GetGoldByDrop;
         BattleBroker.GetDropValue = GetDropValue;
 
@@ -47,16 +47,15 @@ public class CurrencyManager : MonoBehaviour
         Dictionary<Resource, string> _stageDropFormular = UtilityManager.GetParsedFormularDict<Resource>(stageDropFormularStr);
         _levelUpRequireExp = RemoteConfigService.Instance.appConfig.GetString("LEVEL_UP_REQUIRE_EXP");
     }
-    public void GetGoldByDrop(int value)
-    {
-        _gameData.gold += value;
-        BattleBroker.OnGoldSet();
-        NetworkBroker.SetResourceReport(value, Resource.Gold, Source.Battle);
-    }
-    public void GetExpByDrop(int value)
+
+    private void GetExpByDrop(int value)
     {
         _gameData.exp += value;
-
+        BattleBroker.OnLevelExpSet();
+        NetworkBroker.SetResourceReport(value, Resource.Exp);
+    }
+    public void OnLevelExpSet()
+    {
         while (true)
         {
             BigInteger needExp = BattleBroker.GetNeedExp();
@@ -70,9 +69,16 @@ public class CurrencyManager : MonoBehaviour
                 BattleBroker.OnStatPointSet();
             }
         }
-        BattleBroker.OnLevelExpSet();
-        NetworkBroker.SetResourceReport(value, Resource.Exp, Source.Battle);
+        
     }
+    public void GetGoldByDrop(int value)
+    {
+        _gameData.gold += value;
+        BattleBroker.OnGoldSet();
+        NetworkBroker.SetResourceReport(value, Resource.Gold);
+    }
+
+
     private BigInteger GetNeedExp()
     {
         object resultObj = _dataTable.Compute(_levelUpRequireExp.Replace("{level}", _gameData.level.ToString()), null);

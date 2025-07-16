@@ -17,13 +17,13 @@ public class InableInBattleUI : MonoBehaviour
         _rootChlid = root.Q<VisualElement>("InableInBattleUI");
         _label = root.Q<Label>();
 
-        UIBroker.ShowInable += StartShowInable;
+        UIBroker.ShowInableInBattle += StartShowInableInBattle;
 
         _rootChlid.style.display = DisplayStyle.None;
         _label.style.display = DisplayStyle.None;
     }
 
-    private void StartShowInable()
+    private void StartShowInableInBattle()
     {
         if (showCoroutine != null)
         {

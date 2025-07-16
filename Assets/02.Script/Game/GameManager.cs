@@ -59,23 +59,24 @@ public class GameManager : MonoBehaviour
     public async Task<bool> LoadGameData()
     {
         _gameData = await DataManager.LoadFromCloudAsync<GameData>("GameData");
-
-        if (3 <=_gameData.invalidCount)
-        {
-            StartBroker.OnDetectInvalidAct();
-            return false;
-        }
         if (_gameData == null)
         {
             Debug.Log("No saved game data found. Initializing default values.");
             _gameData = new()
             {
-                currentStageNum = 1
+                currentStageNum = 1,
+                maxStageNum = 1,//스토리 복구되면 없애야함.
+                level = 1
             };
+        }
+        if (3 <=_gameData.invalidCount)
+        {
+            StartBroker.OnDetectInvalidAct();
+            return false;
         }
         if (_gameData.level < 1)
         {
-            _gameData.level = 1;
+            
         }
         string serializedData = JsonConvert.SerializeObject(_gameData);
         Debug.Log("Game data loaded:\n" + serializedData);

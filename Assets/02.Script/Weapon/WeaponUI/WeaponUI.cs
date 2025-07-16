@@ -5,7 +5,7 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class WeaponUI : MonoBehaviour
+public class WeaponUI : MonoBehaviour, IMenuUI
 {
     //VIsualElement
     public VisualElement root { get; private set; }
@@ -292,33 +292,6 @@ public class WeaponUI : MonoBehaviour
         _weaponInfoUI.ShowWeaponInfo(weaponData);
     }
 
-    #region UIChange
-    private void OnEnable()
-    {
-        UIBroker.OnMenuUIChange += HandleUIChange;
-    }
-
-    private void OnDisable()
-    {
-        UIBroker.OnMenuUIChange -= HandleUIChange;
-    }
-    private void HandleUIChange(int uiType)
-    {
-        if (uiType == 1)
-            ShowWeaponUI();
-        else
-            HideWeaponUI();
-    }
-    public void HideWeaponUI()
-    {
-        root.style.display = DisplayStyle.None;
-    }
-    public void ShowWeaponUI()
-    {
-        root.style.display = DisplayStyle.Flex;
-        //킬때마다 무기개수 초기화
-    }
-    #endregion
     #endregion
     private void OnWeaponLevelSet(string weaponId, int level)
     {
@@ -369,4 +342,13 @@ public class WeaponUI : MonoBehaviour
         }
     }
 
+    void IMenuUI.ActiveUI()
+    {
+        root.style.display = DisplayStyle.Flex;
+    }
+
+    void IMenuUI.InactiveUI()
+    {
+        root.style.display = DisplayStyle.None;
+    }
 }

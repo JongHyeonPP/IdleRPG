@@ -22,7 +22,8 @@ public static class BattleBroker
     public static Action OnStatPointSet;
     public static Action OnLevelExpSet;
     public static Action OnDiaSet;
-    public static Action OnCloverSet;
+    public static Action OnCloverSet; 
+    public static Action OnScrollSet;
     public static Action OnMaxStageSet;
     public static Action<int> RefreshStageSelectUI;
     public static Func<bool> IsCanAttack;
