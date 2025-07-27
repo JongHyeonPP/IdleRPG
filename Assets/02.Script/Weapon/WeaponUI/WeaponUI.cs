@@ -226,43 +226,37 @@ public class WeaponUI : MonoBehaviour, IMenuUI
         TemplateContainer weaponSlot = weaponSlotAsset.CloneTree();//슬롯 생성
         _slotDict.Add(weaponId, weaponSlot);//Dictionary에 저장 - 개수와 레벨 변경에 대응하기 위함
         VisualElement weaponIcon = weaponSlot.Q<VisualElement>("WeaponIcon");
-        VisualElement weaponBackground = weaponSlot.Q<VisualElement>("WeaponBackground");
+        VisualElement weaponBackground = weaponSlot.Q<VisualElement>("BackgroundPanel");
         int level = _weaponLevel.ContainsKey(weaponId) ? _weaponLevel[weaponId] : 0;
         SlotSet(weaponData, level, count);
         //Icon
         weaponIcon.style.backgroundImage = new StyleBackground(weaponData.WeaponSprite.texture);
         WeaponManager.instance.SetIconScale(weaponData, weaponIcon);
-        if (count > 0)
+        switch (weaponData.WeaponRarity)
         {
-            switch (weaponData.WeaponRarity)
-            {
-                case Rarity.Common:
-                    weaponBackground.style.backgroundColor = new StyleColor(Color.gray);
-                    break;
-                case Rarity.Uncommon:
-                    weaponBackground.style.backgroundColor = new StyleColor(new Color(0.5f, 0.75f, 1f));
-                    break;
-                case Rarity.Rare:
-                    weaponBackground.style.backgroundColor = new StyleColor(Color.magenta);
-                    break;
-                case Rarity.Unique:
-                    weaponBackground.style.backgroundColor = new StyleColor(Color.green);
-                    break;
-                case Rarity.Legendary:
-                    weaponBackground.style.backgroundColor = new StyleColor(Color.yellow);
-                    break;
-                case Rarity.Mythic:
-                    weaponBackground.style.backgroundColor = new StyleColor(new Color(0f, 0f, 0.5f));
-                    break;
-                default:
-                    weaponBackground.style.backgroundColor = new StyleColor(Color.white);
-                    break;
-            }
+            case Rarity.Common:
+                weaponBackground.style.unityBackgroundImageTintColor = new StyleColor(Color.gray);
+                break;
+            case Rarity.Uncommon:
+                weaponBackground.style.unityBackgroundImageTintColor = new StyleColor(new Color(0.5f, 0.75f, 1f));
+                break;
+            case Rarity.Rare:
+                weaponBackground.style.unityBackgroundImageTintColor = new StyleColor(Color.magenta);
+                break;
+            case Rarity.Unique:
+                weaponBackground.style.unityBackgroundImageTintColor = new StyleColor(Color.green);
+                break;
+            case Rarity.Legendary:
+                weaponBackground.style.unityBackgroundImageTintColor = new StyleColor(Color.yellow);
+                break;
+            case Rarity.Mythic:
+                weaponBackground.style.unityBackgroundImageTintColor = new StyleColor(new Color(0f, 0f, 0.5f));
+                break;
+            default:
+                weaponBackground.style.unityBackgroundImageTintColor = new StyleColor(Color.white);
+                break;
         }
-        else
-        {
-            //weaponIcon.style.unityBackgroundImageTintColor = new StyleColor(Color.gray);
-        }
+        
 
         weaponSlot.RegisterCallback<ClickEvent>(evt => OnClickSlot(weaponData));
 

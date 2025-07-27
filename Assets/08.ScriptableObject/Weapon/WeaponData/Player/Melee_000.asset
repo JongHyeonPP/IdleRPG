@@ -15,10 +15,16 @@ MonoBehaviour:
   _weaponType: 0
   _weaponRarity: 0
   _power: 1
+  _maxHp: 0
   _criticalDamage: 1
   _critical: 1
+  _resist: 0
+  _penetration: 0
   _weaponSprite: {fileID: 21300000, guid: f17058e2bd3c44745bd37eb71c41adf1, type: 3}
   _textureSize: {x: 13, y: 21}
   _textureScale: 1
   _uID: Melee_000
   _weaponName: "\uCD08\uBCF4\uC790\uC6A9 \uB3C4\uB07C"
+  _powerPerUpgrade: 5
+  _critDmgPerUpgrade: 5
+  _critPerUpgrade: 5

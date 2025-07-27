@@ -23,6 +23,9 @@ public class WeaponData : ScriptableObject, IGachaItems
     [SerializeField] private float _textureScale;
     [SerializeField] string _uID;
     [SerializeField] private string _weaponName;
+    [SerializeField] private int _powerPerUpgrade;
+    [SerializeField] private int _critDmgPerUpgrade;
+    [SerializeField] private int _critPerUpgrade;
     public WeaponType WeaponType => _weaponType;
     public Rarity WeaponRarity => _weaponRarity;
     public int Power => _power;
@@ -34,7 +37,9 @@ public class WeaponData : ScriptableObject, IGachaItems
     public Vector2 TextureSize =>  _textureSize;
     public float TextureScale =>  _textureScale;
     public string UID => _uID;
-
+    public int PowerPerUpgrade => _powerPerUpgrade;
+    public int CritDmgPerUpgrade => _critDmgPerUpgrade;
+    public int CritPerUpgrade => _critPerUpgrade;
     public string WeaponName => _weaponName;
     public void SetReinforcedStats(float powerIncrease, float critDamageIncrease, float critIncrease)
     {
@@ -42,6 +47,12 @@ public class WeaponData : ScriptableObject, IGachaItems
         _criticalDamage += (int)critDamageIncrease;
         _critical += (int)critIncrease;
     }
-
+    public (int power, int critDamage, int crit) GetStats(int level)
+    {
+        int power = _power + (PowerPerUpgrade * level);
+        int critDamage = _criticalDamage + (CritDmgPerUpgrade * level);
+        int crit = _critical + (CritPerUpgrade * level);
+        return (power, critDamage, crit);
+    }
     public Rarity ItemRarity => WeaponRarity;
 }

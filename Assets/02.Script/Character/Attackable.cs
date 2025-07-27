@@ -234,6 +234,18 @@ public abstract class Attackable : MonoBehaviour
                 Vector3 playertransform = transform.position;
                 SkillEffectPoolManager.Instance.SpawnEffect(skilldata, playertransform);
                 break;
+            case SkillEffectSpawnType.EnemyTarget:
+                int count = 0;
+                foreach (var target in targets)
+                {
+                    if (count >= skilldata.targetNum)
+                        break;
+
+                    GameObject effect = SkillEffectPoolManager.Instance.SpawnEffect(skilldata, target.transform.position);
+
+                    count++;
+                }
+                break;
         }
     }
     private IEnumerator MoveProjectile(GameObject proj, float speed, float lifeTime)

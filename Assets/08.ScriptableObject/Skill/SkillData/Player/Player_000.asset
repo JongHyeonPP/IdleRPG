@@ -14,16 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillName: Cut
   uid: Player_000
-  iconSprite: {fileID: 21300000, guid: 67aa81512389ea246a5144400a5f94ea, type: 3}
+  iconSprite: {fileID: 4176362632249098406, guid: 95df45cfb06b7d941949e4c5c99ae254, type: 3}
   simple: 
   complex: "\uC801\uC744 \uAC08\uB77C <value*100>%\uC758 \uD53C\uD574\uB97C \uC785\uD799\uB2C8\uB2E4."
   rarity: 0
   isPlayerSkill: 1
   skillCoolType: 0
   cooltime: 0
-  coolAttack: 3
+  coolAttack: 2
   requireMp: 15
-  effectSpawnType: 1
+  effectSpawnType: 4
   projectileSpeed: 5
   effectLifeTime: 1
   value:

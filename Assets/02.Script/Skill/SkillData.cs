@@ -7,7 +7,8 @@ public enum SkillEffectSpawnType
     OnTarget,        // 타겟 위치에서 생성
     InFrontOfCaster, // 시전자 앞에서 생성
     Projectile    ,   // 투사체
-    Buff//버프
+    Buff,//버프
+    EnemyTarget//적한테
 }
 [CreateAssetMenu(fileName = "Skill", menuName = "ScriptableObjects/Skill")]
 public class SkillData : ScriptableObject

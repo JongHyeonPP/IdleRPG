@@ -43,8 +43,7 @@ public class WeaponManager : MonoBehaviour
                          .OrderBy(item => item.WeaponType)
                          .ToList();
     }
-
-
+    
     public void SetIconScale(WeaponData weaponData, VisualElement weaponIcon)
     {
         float xScale = 1f, yScale = 1f;
