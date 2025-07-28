@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class BossTimerUI : MonoBehaviour
+public class BossTimerUI : MonoBehaviour, IGeneralUI
 {
     public VisualElement root { get; private set; }
     private ProgressBar _timerBar;
@@ -18,13 +18,9 @@ public class BossTimerUI : MonoBehaviour
         
         BattleBroker.OnBossHpChanged += OnBossAttack;
 
-        BattleBroker.SwitchToCompanionBattle += (arg0, arg1) => StopTimer();
-        BattleBroker.SwitchToBoss += StopTimer;
         BattleBroker.OnBossClear += StopTimer;
         PlayerBroker.OnPlayerDead += StopTimer;
 
-        BattleBroker.SwitchToBoss += OnBossEnter;
-        BattleBroker.SwitchToCompanionBattle += (arg0, arg1) => OnBossEnter();
 
         _timerBar = root.Q<VisualElement>("TimerBar").Q<ProgressBar>("ProgressBar");
         _hpBar = root.Q<VisualElement>("HpBar").Q<ProgressBar>("ProgressBar");
@@ -35,14 +31,6 @@ public class BossTimerUI : MonoBehaviour
         });
     }
 
-
-    private void OnBossEnter()
-    {
-        _currentTime = _entireTime; // 타이머 초기화
-        _hpBar.value = 1f;
-        // 타이머 시작
-        _timerCoroutine =  StartCoroutine(TimerLoop());
-    }
 
     private IEnumerator TimerLoop()
     {
@@ -71,5 +59,26 @@ public class BossTimerUI : MonoBehaviour
     private void OnBossAttack(float ratio)
     {
         _hpBar.value = ratio;
+    }
+    public void OnBattle()
+    {
+        root.style.display = DisplayStyle.None;
+    }
+
+    public void OnStory()
+    {
+        root.style.display = DisplayStyle.None;
+    }
+
+    public void OnBoss()
+    {
+        StopTimer();
+        root.style.display = DisplayStyle.Flex;
+
+        _currentTime = _entireTime; // 타이머 초기화
+        _hpBar.value = 1f;
+        // 타이머 시작
+        _timerCoroutine = StartCoroutine(TimerLoop());
+
     }
 }

@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c58129efd4c58046b6efd173d41131e, type: 3}
+  m_Name: AdventureSlot_5
+  m_EditorClassIdentifier: 
+  slotIcon: {fileID: 21300000, guid: feb6ac39f38cc6040b8bbd17b10a4e6f, type: 3}
+  stageRegion: {fileID: 11400000, guid: 8c8dd73f024a2864f83ce84350a3bede, type: 2}

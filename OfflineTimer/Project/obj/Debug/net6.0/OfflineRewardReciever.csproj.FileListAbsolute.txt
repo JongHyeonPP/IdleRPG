@@ -1,0 +1,13 @@
+C:\Users\JongHyeon\Documents\kiugi\OfflineRewardReciever\Project\obj\Debug\net6.0\OfflineRewardReciever.csproj.AssemblyReference.cache
+C:\Users\JongHyeon\Documents\kiugi\OfflineRewardReciever\Project\obj\Debug\net6.0\OfflineRewardReciever.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\JongHyeon\Documents\kiugi\OfflineRewardReciever\Project\obj\Debug\net6.0\OfflineRewardReciever.AssemblyInfoInputs.cache
+C:\Users\JongHyeon\Documents\kiugi\OfflineRewardReciever\Project\obj\Debug\net6.0\OfflineRewardReciever.AssemblyInfo.cs
+C:\Users\JongHyeon\Documents\kiugi\OfflineRewardReciever\Project\obj\Debug\net6.0\OfflineRewardReciever.csproj.CoreCompileInputs.cache
+C:\Users\JongHyeon\Documents\kiugi\OfflineRewardReciever\Project\obj\Debug\net6.0\OfflineRewardReciever.sourcelink.json
+C:\Users\JongHyeon\Documents\kiugi\OfflineRewardReciever\Project\bin\Debug\net6.0\OfflineRewardReciever.deps.json
+C:\Users\JongHyeon\Documents\kiugi\OfflineRewardReciever\Project\bin\Debug\net6.0\OfflineRewardReciever.dll
+C:\Users\JongHyeon\Documents\kiugi\OfflineRewardReciever\Project\bin\Debug\net6.0\OfflineRewardReciever.pdb
+C:\Users\JongHyeon\Documents\kiugi\OfflineRewardReciever\Project\obj\Debug\net6.0\OfflineRewardReciever.dll
+C:\Users\JongHyeon\Documents\kiugi\OfflineRewardReciever\Project\obj\Debug\net6.0\refint\OfflineRewardReciever.dll
+C:\Users\JongHyeon\Documents\kiugi\OfflineRewardReciever\Project\obj\Debug\net6.0\OfflineRewardReciever.pdb
+C:\Users\JongHyeon\Documents\kiugi\OfflineRewardReciever\Project\obj\Debug\net6.0\ref\OfflineRewardReciever.dll

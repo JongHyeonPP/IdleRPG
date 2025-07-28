@@ -19,7 +19,7 @@ public class PurchaseController
     IExecutionContext context,
     IGameApiClient gameApiClient)
     {
-        _logger.LogDebug($"Receipt : {receipt}\nProductId : {productId}");
+        //_logger.LogDebug($"Receipt : {receipt}\nProductId : {productId}");
         return "";
     }
 }

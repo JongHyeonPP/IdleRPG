@@ -34,6 +34,8 @@ public class AdventureUI : MonoBehaviour, IMenuUI
     [SerializeField] AdventureSlot[] _dungeonSlotArr;
     private VisualElement _adventurePanel_Dungeon;
 
+    //Ref
+    [SerializeField] AdventureInfoUI _adventureInfoUI;
     private void Awake()
     {
         _gameData = StartBroker.GetGameData();
@@ -59,13 +61,20 @@ public class AdventureUI : MonoBehaviour, IMenuUI
         List<VisualElement> childrenList = slotParent.Children().ToList();
         for (int i = 0; i < childrenList.Count; i++)
         {
+            int index = i;
             VisualElement slotElement = childrenList[i];
             AdventureSlot adventureSlot = _adventureSlotArr[i];
             adventureSlot.InitAtStart(slotElement, new(slotElement, this));
+            adventureSlot.progressBar.value = _gameData.adventureProgess[index] / 10f;
             adventureSlot.noticeDot.StartNotice();
-            slotElement.Q<Label>("NameLabel").text = adventureSlot.slotName;
+            slotElement.Q<Label>("NameLabel").text = adventureSlot.stageRegion.regionName;
             slotElement.Q<VisualElement>("SlotIcon").style.backgroundImage = new(adventureSlot.slotIcon);
+            slotElement.Q<VisualElement>("AdventureSlot").RegisterCallback<ClickEvent>((evt)=>OnAdventureSlotClicked(index));
         }
+    }
+    private void OnAdventureSlotClicked(int index)
+    {
+        _adventureInfoUI.ActiveUI(_adventureSlotArr[index], index);
     }
     private void InitDungeonPanel()
     {

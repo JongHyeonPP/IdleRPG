@@ -1,0 +1,11 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:VisualElement name="AdventureInfoSlot" style="flex-grow: 0; width: 170px; height: 190px; align-items: center;">
+        <engine:VisualElement name="ScrollImage" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/07.Texture/UI/Scroll_0.png?fileID=2800000&amp;guid=7a81c03dce9750f4f8bc85d14cf51f7c&amp;type=3#Scroll_0&quot;); flex-shrink: 0; justify-content: center; align-items: center; width: 90%; height: 100%;">
+            <engine:VisualElement style="flex-grow: 1; padding-top: 21px; width: 100%; height: 100%; align-items: center; justify-content: flex-start; position: absolute;">
+                <engine:Label text="Ⅰ" name="NumLabel" style="-unity-font-definition: url(&quot;project://database/Assets/Store/font/Galmuri11_MainFont.ttf?fileID=12800000&amp;guid=db08679a010d4084c84f83c57830d6d4&amp;type=3#Galmuri11_MainFont&quot;); -unity-font-style: bold; font-size: 25px; color: rgb(73, 59, 40); -unity-text-align: middle-center;" />
+                <engine:VisualElement name="TextImage" style="flex-grow: 0; background-image: url(&quot;project://database/Assets/07.Texture/UI/ScrollTextImage.png?fileID=2800000&amp;guid=97296095db420304089cdd7aa745c768&amp;type=3#ScrollTextImage&quot;); -unity-background-image-tint-color: rgba(255, 255, 255, 0.73); width: 71%; height: 44%;" />
+            </engine:VisualElement>
+            <engine:VisualElement name="Border" style="flex-grow: 0; position: relative; width: 103%; height: 101%; border-top-width: 8px; border-right-width: 8px; border-bottom-width: 8px; border-left-width: 8px; border-left-color: rgb(173, 94, 0); border-right-color: rgb(173, 94, 0); border-top-color: rgb(173, 94, 0); border-bottom-color: rgb(173, 94, 0); align-self: center; display: flex; flex-shrink: 0;" />
+        </engine:VisualElement>
+    </engine:VisualElement>
+</engine:UXML>

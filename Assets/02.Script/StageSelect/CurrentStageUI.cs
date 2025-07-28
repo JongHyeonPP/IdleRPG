@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class CurrentStageUI : MonoBehaviour
+public class CurrentStageUI : MonoBehaviour, IGeneralUI
 {
     public VisualElement root { get; private set; }
     private Label _stageNumLabel;
@@ -38,5 +38,19 @@ public class CurrentStageUI : MonoBehaviour
         StageInfo info = StageInfoManager.instance.GetNormalStageInfo(_gameData.currentStageNum);
         _stageNameLabel.text = info.stageName;
         _stageNumLabel.text = $"Stage {info.stageNum}";
+    }
+    public void OnBattle()
+    {
+        root.style.display = DisplayStyle.Flex;
+    }
+
+    public void OnStory()
+    {
+        root.style.display = DisplayStyle.None;
+    }
+
+    public void OnBoss()
+    {
+        root.style.display = DisplayStyle.None;
     }
 }

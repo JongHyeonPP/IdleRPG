@@ -1,4 +1,7 @@
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using Unity.Services.RemoteConfig;
 using UnityEditor;
 using UnityEngine;
 
@@ -17,6 +20,30 @@ public class StageInfoManager : MonoBehaviour
     [SerializeField] StageInfo[] _companion_2_1;
     [SerializeField] StageInfo[] _companion_2_2;
     [SerializeField] StageInfo[] _companion_2_3;
+    [Header("Adventure Stage")]
+    [SerializeField] StageInfo[] _adventure_0;
+    [SerializeField] StageInfo[] _adventure_1;
+    [SerializeField] StageInfo[] _adventure_2;
+    [SerializeField] StageInfo[] _adventure_3;
+    [SerializeField] StageInfo[] _adventure_4;
+    [SerializeField] StageInfo[] _adventure_5;
+    [SerializeField] StageInfo[] _adventure_6;
+    [SerializeField] StageInfo[] _adventure_7;
+    [SerializeField] StageInfo[] _adventure_8;
+
+    [Header("Region")]
+    [SerializeField] StageRegion[] _stageRegionArr;
+    [Header("AdventureReward")]
+    public int diaIncrease;
+    public int cloverIncrease;
+    public List<(int, int)> adventureReward = new();
+    public int adventureEntranceFee;
+
+
+    public StageRegion GetRegionInfo(int index) => _stageRegionArr[index];
+
+
+
     private void Awake()
     {
         if (!instance)
@@ -27,7 +54,25 @@ public class StageInfoManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        SetAdventureReward();
     }
+
+    private void SetAdventureReward()
+    {
+        string rewardJson = RemoteConfigService.Instance.appConfig.GetJson("ADVENTURE_REWARD", "None");
+        Dictionary<string, object> rewardDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(rewardJson);
+        diaIncrease = Convert.ToInt32(rewardDict["DiaIncrease"]);
+        cloverIncrease = Convert.ToInt32(rewardDict["CloverIncrease"]);
+        for (int i = 0; i < 9; i++)
+        {
+            Dictionary<string, string> adventureRewardDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(Convert.ToString( rewardDict[$"Adventure_{i}"]));
+            int dia = int.Parse(adventureRewardDict["Dia"]);
+            int clover = int.Parse(adventureRewardDict["Clover"]);
+            adventureReward.Add(new(dia, clover));
+        }
+        adventureEntranceFee = Convert.ToInt32(rewardDict["EntranceFee"]);
+    }
+
     public List<IListViewItem> GetStageInfosAsItem(int start, int count)
     {
         List<IListViewItem> items = new();
@@ -127,21 +172,32 @@ public class StageInfoManager : MonoBehaviour
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
     }
-    [ContextMenu("SetCompanionTechStatus")]
-    public void SetCompanionTechStatus()
+
+    public StageInfo[] GetAdventureStageInfo(int currentSlotIndex)
     {
-
-
-        AssetDatabase.SaveAssets();
-        AssetDatabase.Refresh();
-    }
-    [ContextMenu("SetCompanionTechReward")]
-    public void SetCompanionTechReward()
-    {
-        
-
-        AssetDatabase.SaveAssets();
-        AssetDatabase.Refresh();
+        switch (currentSlotIndex)
+        {
+            case 0:
+                return _adventure_0;
+            case 1:
+                return _adventure_1;
+            case 2:
+                return _adventure_2;
+            case 3:
+                return _adventure_3;
+            case 4:
+                return _adventure_4;
+            case 5:
+                return _adventure_5;
+            case 6:
+                return _adventure_6;
+            case 7:
+                return _adventure_7;
+            case 8:
+                return _adventure_8;
+            default:
+                return null;
+        }
     }
 #endif
 }

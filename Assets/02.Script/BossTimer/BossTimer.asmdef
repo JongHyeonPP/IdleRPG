@@ -2,7 +2,8 @@
     "name": "BossTimer",
     "rootNamespace": "",
     "references": [
-        "EventControl"
+        "EventControl",
+        "UIInterface"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

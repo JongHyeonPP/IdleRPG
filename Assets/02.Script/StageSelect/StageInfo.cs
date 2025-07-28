@@ -10,10 +10,6 @@ public class StageInfo : ScriptableObject, IListViewItem
     public int stageNum;
     public string stageName;
     public Background background;
-    //[Header("Drop Info")]
-    //public EquipGrade equipGrade;
-    //public EquipType equipType;
-    public float dropProb;
     [Header("Enemy Info")]
     public EnemyStatus enemy_0;
     public EnemyStatus enemy_1;

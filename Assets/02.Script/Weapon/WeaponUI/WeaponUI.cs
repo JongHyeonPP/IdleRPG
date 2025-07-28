@@ -256,8 +256,6 @@ public class WeaponUI : MonoBehaviour, IMenuUI
                 weaponBackground.style.unityBackgroundImageTintColor = new StyleColor(Color.white);
                 break;
         }
-        
-
         weaponSlot.RegisterCallback<ClickEvent>(evt => OnClickSlot(weaponData));
 
         return weaponSlot;

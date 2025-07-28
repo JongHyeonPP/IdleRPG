@@ -71,7 +71,7 @@ public class AuthHandler : MonoBehaviour
             { "playerId", AuthenticationService.Instance.PlayerId }
         };
         _rewardResult = await CloudCodeService.Instance.CallModuleEndpointAsync<RewardResult>(
-            "ClientVerification",
+            "OfflineTimer",
             "CheckOfflineReward",
             args
         );

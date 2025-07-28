@@ -3,21 +3,7 @@
     "rootNamespace": "",
     "references": [
         "EventControl",
-        "Game",
-        "StatUI",
-        "StageSelect",
-        "BossTimer",
-        "GainLabel",
-        "DuplicateLogin",
-        "TotalStatus",
-        "Skill",
-        "Weapon",
-        "Story",
-        "CurrencyBarUI",
-        "Battle",
-        "PlayerUI",
-        "Companion",
-        "MenuChangeUI"
+        "UIInterface"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

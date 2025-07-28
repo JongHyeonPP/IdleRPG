@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class SkillAcquireUI : MonoBehaviour
+public class SkillAcquireUI : MonoBehaviour, IGeneralUI
 {
     private GameData _gameData;
     public VisualElement root { get; private set; }
@@ -159,5 +159,19 @@ public class SkillAcquireUI : MonoBehaviour
     public void InactiveUI()
     {
         UIBroker.InactiveCurrentUI();
+    }
+
+    public void OnBattle()
+    {
+        root.style.display = DisplayStyle.None;
+    }
+
+    public void OnStory()
+    {
+        root.style.display = DisplayStyle.None;
+    }
+
+    public void OnBoss()
+    {
     }
 }

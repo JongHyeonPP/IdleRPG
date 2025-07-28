@@ -1,0 +1,13 @@
+C:\Users\JongHyeon\Documents\kiugi\OfflineTimer\Project\bin\Debug\net6.0\OfflineTimer.deps.json
+C:\Users\JongHyeon\Documents\kiugi\OfflineTimer\Project\bin\Debug\net6.0\OfflineTimer.dll
+C:\Users\JongHyeon\Documents\kiugi\OfflineTimer\Project\bin\Debug\net6.0\OfflineTimer.pdb
+C:\Users\JongHyeon\Documents\kiugi\OfflineTimer\Project\obj\Debug\net6.0\OfflineTimer.csproj.AssemblyReference.cache
+C:\Users\JongHyeon\Documents\kiugi\OfflineTimer\Project\obj\Debug\net6.0\OfflineTimer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\JongHyeon\Documents\kiugi\OfflineTimer\Project\obj\Debug\net6.0\OfflineTimer.AssemblyInfoInputs.cache
+C:\Users\JongHyeon\Documents\kiugi\OfflineTimer\Project\obj\Debug\net6.0\OfflineTimer.AssemblyInfo.cs
+C:\Users\JongHyeon\Documents\kiugi\OfflineTimer\Project\obj\Debug\net6.0\OfflineTimer.csproj.CoreCompileInputs.cache
+C:\Users\JongHyeon\Documents\kiugi\OfflineTimer\Project\obj\Debug\net6.0\OfflineTimer.sourcelink.json
+C:\Users\JongHyeon\Documents\kiugi\OfflineTimer\Project\obj\Debug\net6.0\OfflineTimer.dll
+C:\Users\JongHyeon\Documents\kiugi\OfflineTimer\Project\obj\Debug\net6.0\refint\OfflineTimer.dll
+C:\Users\JongHyeon\Documents\kiugi\OfflineTimer\Project\obj\Debug\net6.0\OfflineTimer.pdb
+C:\Users\JongHyeon\Documents\kiugi\OfflineTimer\Project\obj\Debug\net6.0\ref\OfflineTimer.dll

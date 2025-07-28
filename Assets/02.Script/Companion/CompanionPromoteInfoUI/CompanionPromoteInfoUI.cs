@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class CompanionPromoteInfoUI : MonoBehaviour
+public class CompanionPromoteInfoUI : MonoBehaviour, IGeneralUI
 {
     public VisualElement root {get;private set;}
     private Button exitButton;
@@ -97,5 +97,19 @@ public class CompanionPromoteInfoUI : MonoBehaviour
     private void OnExitButtonClick()
     {
         root.style.display = DisplayStyle.None;
+    }
+
+    public void OnBattle()
+    {
+        root.style.display = DisplayStyle.None;
+    }
+
+    public void OnStory()
+    {
+        root.style.display = DisplayStyle.None;
+    }
+
+    public void OnBoss()
+    {
     }
 }

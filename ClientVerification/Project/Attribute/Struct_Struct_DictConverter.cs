@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-
+namespace ClientVerification.Attribute;
 public class Struct_Struct_DictConverter<T, U> : JsonConverter<Dictionary<T, U>> where T : struct where U : struct
 {
     public override void WriteJson(JsonWriter writer, Dictionary<T, U> value, JsonSerializer serializer)

@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class PlayerBarUI : MonoBehaviour
+public class PlayerBarUI : MonoBehaviour, IGeneralUI
 {
     public VisualElement root { get; private set; }
     private ProgressBar _hpBar;
@@ -84,5 +84,17 @@ public class PlayerBarUI : MonoBehaviour
         }
         _delayedBar.value = targetRatio;
     }
+    public void OnBattle()
+    {
+        root.style.display = DisplayStyle.None;
+    }
 
+    public void OnStory()
+    {
+        root.style.display = DisplayStyle.None;
+    }
+
+    public void OnBoss()
+    {
+    }
 }

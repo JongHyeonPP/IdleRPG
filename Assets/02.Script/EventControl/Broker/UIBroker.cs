@@ -14,7 +14,7 @@ public static class UIBroker
     public static Action<int, bool> OnMenuUINotice;
     public static Action SetPlayerBarPosition;
 
-    public static Action ShowInableInBattle;
+    public static Action<string> ShowPopUpInBattle;
 
     public static Action<string[]> SwitchRenderTargetLayer;
     public static Action<bool, float> ActiveBlurredBackground;

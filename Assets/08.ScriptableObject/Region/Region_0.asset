@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df265413262a1254b87b292a73204961, type: 3}
+  m_Name: Region_0
+  m_EditorClassIdentifier: 
+  regionSprite: {fileID: -4370285881310300550, guid: 95d0d9b4c1f97c84f8ee246bcbc95ea8, type: 3}
+  regionName: "\uD3C9\uC6D0"

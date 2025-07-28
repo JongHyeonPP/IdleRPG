@@ -14,7 +14,8 @@
         "OfflineReward",
         "Kamgam.UIToolkitBlurredBackground",
         "StoreUI",
-        "Adventure"
+        "Adventure",
+        "UIInterface"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

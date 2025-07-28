@@ -3,15 +3,15 @@
     <engine:VisualElement name="AdventurePanel" style="flex-grow: 1; align-items: center; overflow: hidden;">
         <engine:VisualElement name="BackgroundPanel" style="flex-grow: 0; height: 1600px; flex-shrink: 0; background-image: url(&quot;project://database/Assets/Asset/Fantasy_Map_Creator/1_Background/bg_3_dirtpaper.png?fileID=2800000&amp;guid=81fcab3b7f871dc4c9b7c314075ce5df&amp;type=3#bg_3_dirtpaper&quot;); width: 2300px; position: absolute; -unity-background-image-tint-color: rgb(255, 255, 255);" />
         <engine:VisualElement name="SlotParent" style="flex-grow: 1; position: absolute; height: 1600px; width: 100%;">
-            <engine:Instance template="AdventureSlot" name="Slot_0" style="position: absolute; left: 394px; top: 1244px;" />
-            <engine:Instance template="AdventureSlot" name="Slot_1" style="top: 1044px; left: 587px; position: absolute;" />
-            <engine:Instance template="AdventureSlot" name="Slot_2" style="top: 969px; left: 63px; position: absolute;" />
-            <engine:Instance template="AdventureSlot" name="Slot_3" style="top: 819px; left: 709px; position: absolute;" />
-            <engine:Instance template="AdventureSlot" name="Slot_4" style="top: 681px; left: 308px; position: absolute;" />
-            <engine:Instance template="AdventureSlot" name="Slot_5" style="top: 492px; left: 707px; position: absolute;" />
-            <engine:Instance template="AdventureSlot" name="Slot_6" style="left: 76px; top: 336px; position: absolute;" />
-            <engine:Instance template="AdventureSlot" name="Slot_7" style="top: 134px; left: 292px; position: absolute;" />
-            <engine:Instance template="AdventureSlot" name="Slot_8" style="top: 24px; left: 698px; position: absolute;" />
+            <engine:Instance template="AdventureSlot" name="Slot_0" style="position: absolute; left: 331px; top: 1244px;" />
+            <engine:Instance template="AdventureSlot" name="Slot_1" style="top: 1044px; left: 764px; position: absolute;" />
+            <engine:Instance template="AdventureSlot" name="Slot_2" style="top: 969px; left: 1px; position: absolute;" />
+            <engine:Instance template="AdventureSlot" name="Slot_3" style="top: 729px; left: 676px; position: absolute;" />
+            <engine:Instance template="AdventureSlot" name="Slot_4" style="top: 681px; left: 209px; position: absolute;" />
+            <engine:Instance template="AdventureSlot" name="Slot_5" style="top: 380px; left: 697px; position: absolute;" />
+            <engine:Instance template="AdventureSlot" name="Slot_6" style="left: 7px; top: 336px; position: absolute;" />
+            <engine:Instance template="AdventureSlot" name="Slot_7" style="top: 83px; left: 207px; position: absolute;" />
+            <engine:Instance template="AdventureSlot" name="Slot_8" style="top: 24px; left: 605px; position: absolute;" />
         </engine:VisualElement>
     </engine:VisualElement>
 </engine:UXML>

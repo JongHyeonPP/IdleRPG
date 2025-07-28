@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class SkillInfoUI : MonoBehaviour
+public class SkillInfoUI : MonoBehaviour,IGeneralUI
 {
     [SerializeField]GameData _gameData;
     [SerializeField]SkillUI skillUI;
@@ -155,5 +155,18 @@ public class SkillInfoUI : MonoBehaviour
     {
         skillAcquireUI.ActiveUI();
         root.style.display = DisplayStyle.None;
+    }
+    public void OnBattle()
+    {
+        root.style.display = DisplayStyle.None;
+    }
+
+    public void OnStory()
+    {
+        root.style.display = DisplayStyle.None;
+    }
+
+    public void OnBoss()
+    {
     }
 }

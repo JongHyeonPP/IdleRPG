@@ -13,8 +13,7 @@ public class ClientReportManager : MonoBehaviour
     private readonly float _verificationInterval = 5f;
     private float _verificationElapsed;
 
-    private List<ClientVerificationReport> _clientGoldReportList = new();
-    private List<ClientReinforceReport> _clientReinforceReportList = new();
+    private List<ClientVerificationReport> _clientVerificationReportList = new();
     public bool isAcquireOfflineReward = false;
     private GameData _gameData;
    
@@ -27,7 +26,6 @@ public class ClientReportManager : MonoBehaviour
     private void Start()
     {
         NetworkBroker.SetResourceReport += SetResourceReport;
-        NetworkBroker.SetReinforceReport += SetReinforceReport;
         NetworkBroker.OnOfflineReward += () => isAcquireOfflineReward = true;
         NetworkBroker.StageClearVerification += StageClearVerificationAsync;
         NetworkBroker.SaveServerData += ForceVerificationNow;
@@ -45,35 +43,28 @@ public class ClientReportManager : MonoBehaviour
         );
     }
 
-    private void SetResourceReport(int value, Resource resource)
+    private void SetResourceReport(int value, Resource resource, Source source)
     {
-        var newGoldReport = new ClientVerificationReport(value, resource);
-        _clientGoldReportList.Add(newGoldReport);
+        var newGoldReport = new ClientVerificationReport(value, resource, source);
+        _clientVerificationReportList.Add(newGoldReport);
     }
 
-    private void SetReinforceReport(int value, StatusType type, bool isByGold)
-    {
-        var newReinforceReport = new ClientReinforceReport(value, type, isByGold);
-        _clientReinforceReportList.Add(newReinforceReport);
-    }
 
     [ContextMenu("VerificationReport")]
     private async void VerificationReport()
     {
-        string serializedGoldReport = JsonConvert.SerializeObject(_clientGoldReportList);
-        string serializedReinforceReport = JsonConvert.SerializeObject(_clientReinforceReportList);
+        string serializedVerificationReport = JsonConvert.SerializeObject(_clientVerificationReportList);
         string serializedGameData = JsonConvert.SerializeObject(_gameData);
 
         Dictionary<string, object> args = new()
         {
-            { "serializedGoldReport", serializedGoldReport },
-            { "serializedReinforceReport", serializedReinforceReport },
+            { "serializedGoldReport", serializedVerificationReport },
+            { "serializedGameData", serializedGameData },
             { "isAcquireOfflineReward", isAcquireOfflineReward},
             { "playerId", AuthenticationService.Instance.PlayerId }
         };
         isAcquireOfflineReward = false;
-        _clientGoldReportList.Clear();
-        _clientReinforceReportList.Clear();
+        _clientVerificationReportList.Clear();
 
         ReportResult result = await CloudCodeService.Instance.CallModuleEndpointAsync<ReportResult>(
             "ClientVerification",
@@ -84,19 +75,15 @@ public class ClientReportManager : MonoBehaviour
         {
             StartBroker.OnDetectInvalidAct();
         }
-        Debug.Log("서버에 저장됐음.");
-        //switch (result)
-        //{
-        //    case 0:
-        //        Debug.LogError("Verification Fail!");
-        //        break;
-        //    case -1:
-        //        Debug.LogError("Verification Fail!");
-        //        break;
-        //    case 1:
-        //        Debug.Log("Verification Success!");
-        //        break;
-        //}
+        switch (result.isVerificationSuccess)
+        {
+            case false:
+                Debug.Log("서버에 저장 실패.");
+                break;
+            case true:
+                Debug.Log("서버에 저장됐음.");
+                break;
+        }
     }
 
     private async Task VerificationLoopAsync()

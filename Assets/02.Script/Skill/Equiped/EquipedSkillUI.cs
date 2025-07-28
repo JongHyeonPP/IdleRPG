@@ -2,7 +2,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class EquipedSkillUI : MonoBehaviour
+public class EquipedSkillUI : MonoBehaviour, IGeneralUI
 {
     //스크롤과 기본 요소
     public VisualElement root { get; private set; }
@@ -83,5 +83,18 @@ public class EquipedSkillUI : MonoBehaviour
     {
         isEquipActive = true;
         currentSkillData = skillData;
+    }
+    public void OnBattle()
+    {
+        root.style.display = DisplayStyle.Flex;
+    }
+
+    public void OnStory()
+    {
+        root.style.display = DisplayStyle.None;
+    }
+
+    public void OnBoss()
+    {
     }
 }

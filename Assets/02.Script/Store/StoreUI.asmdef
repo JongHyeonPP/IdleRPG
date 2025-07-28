@@ -2,7 +2,8 @@
     "name": "StoreUI",
     "rootNamespace": "",
     "references": [
-        "GUID:c1f3ac597cd61d64e994b094eaa1fa95"
+        "GUID:c1f3ac597cd61d64e994b094eaa1fa95",
+        "GUID:c540aad5c5158cd439bc0b19ee85eea2"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

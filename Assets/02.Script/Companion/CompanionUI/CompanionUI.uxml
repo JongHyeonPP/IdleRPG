@@ -14,6 +14,7 @@
                     <engine:Label text="전직" name="Label" style="position: absolute; width: 100%; height: 100%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
                 </engine:Button>
             </engine:VisualElement>
+            <engine:VisualElement name="Separator" style="flex-grow: 0; width: 100%; align-self: center; height: 20px; background-color: rgba(180, 130, 83, 0); margin-top: 0; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/Separator.png?fileID=2800000&amp;guid=6905ee83a67947e4cb1e8e775a2e9794&amp;type=3#Separator&quot;);" />
             <engine:VisualElement name="PanelParent" style="flex-grow: 1; position: relative; width: 100%; height: 100%;">
                 <engine:VisualElement name="CompanionPanel" style="flex-grow: 1; align-items: center; justify-content: center; display: none;">
                     <engine:Label text="동료는 플레이어의 능력을 올려줍니다." name="InfoLabel" style="position: absolute; align-self: center; top: 25px; font-size: 45px;" />

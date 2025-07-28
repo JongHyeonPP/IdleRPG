@@ -1,250 +1,190 @@
-﻿using ClientVerification;
+﻿using ClientVerification.Etc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Numerics;
 using System.Threading.Tasks;
 using Unity.Services.CloudCode.Apis;
 using Unity.Services.CloudCode.Core;
-using Unity.Services.CloudCode.Shared;
-using Unity.Services.CloudSave.Model;
 
-namespace Verification;
-
-public class VerificationController
+namespace ClientVerification.Verification
 {
-    public static Dictionary<string, string> stageDropFormula { get; private set; }
-    public static string levelUpRequireExp { get; private set; }
-    private int _verifiCationInterval;
-    private int _verifiCationAllowedAttempt;
-    private ILogger<VerificationController> _logger;
-    private GameData gameData;
-
-    public VerificationController(ILogger<VerificationController> logger)
+    public class VerificaitonController
     {
-        _logger = logger;
-    }
+        private readonly ILogger<VerificaitonController> _logger;
+        private GameData _serverData;
+        private Dictionary<string, string> _offlineRewardDict;
+        private Dictionary<string, string> _stageDropFormula;
+        private string _levelUpRequireExp;
 
-    [CloudCodeFunction("VerificationReport")]
-    public async Task<ReportResult> ClientVerificationToSave(
-    string serializedGoldReport,
-    string serializedReinforceReport,
-    bool isAcquireOfflineReward,
-    string playerId,
-    IExecutionContext context,
-    IGameApiClient gameApiClient,
-    IRemoteConfigService RemoteConfigService)
-    {
-        ReportResult result = new()
+        public VerificaitonController(ILogger<VerificaitonController> logger)
         {
-            isVerificationSuccess = false,
-            failureFactor = "Unknown",
-            invalidCount = 0
-        };
+            _logger = logger;
+        }
+        [CloudCodeFunction("VerificationReport")]
+        public async Task<ReportResult> VerifyClientData(string serializedGoldReport, string serializedGameData, bool isAcquireOfflineReward, IExecutionContext context, IGameApiClient gameApiClient, IVerificationSystem verificationSystem)
+        {
+            ReportResult result = new() { isVerificationSuccess = false, failureFactor = "Unknown" };
 
-        ApiResponse<GetItemsResponse> gameDataResponse = await gameApiClient.CloudSaveData.GetItemsAsync(
-            context, context.ServiceToken, context.ProjectId, playerId, new() { "GameData" });
-        string serializedGameData;
-        if (gameDataResponse.Data.Results.Count == 0)
-        {
-            gameData = new()
+            _serverData = await LoadGameData(context, gameApiClient);
+            var clientData = JsonConvert.DeserializeObject<GameData>(serializedGameData);
+
+            ApplyUsualFieldsOnly(_serverData, clientData);
+            _offlineRewardDict = await LoadOfflineRewardData(context, gameApiClient);
+            result.invalidCount = _serverData.invalidCount;
+
+            if (_serverData.invalidCount >= 3)
+                return Fail(result, "ExceededInvalidCount");
+
+            var info = verificationSystem.GetRemoteConfig<Dictionary<string, string>>(context, gameApiClient, "VERIFICATION_INFO");
+            int allowedAttempt = int.Parse(info["AllowedAttempt"]);
+
+            List<VerificationReport> reports = JsonConvert.DeserializeObject<List<VerificationReport>>(serializedGoldReport);
+            if (reports.Count > allowedAttempt)
+                return Fail(result, $"ExceededVerificationAttempt...{{reports.Count}}");
+
+            _stageDropFormula = verificationSystem.GetRemoteConfig<Dictionary<string, string>>(context, gameApiClient, "STAGE_DROP_FORMULA");
+            _levelUpRequireExp = verificationSystem.GetRemoteConfig<string>(context, gameApiClient, "LEVEL_UP_REQUIRE_EXP");
+
+            var verifiers = new List<IDataVerifier>
             {
-                currentStageNum = 1,
-                maxStageNum = 1,
-                level = 1
+                new StatPointVerifier(),
+                new ResourceVerifier(reports, _serverData, _logger, _stageDropFormula)
             };
-            //serializedGameData = JsonConvert
-        }
-        else
-        {
-            serializedGameData = gameDataResponse.Data.Results[0].Value.ToString();
-            gameData = JsonConvert.DeserializeObject<GameData>(serializedGameData);
-        }
 
 
-        Dictionary<string, string> verificationInfoConfig = RemoteConfigService.GetRemoteConfig<Dictionary<string, string>>(context, gameApiClient, "VERIFICATION_INFO");
-        _verifiCationInterval = int.Parse(verificationInfoConfig["Interval"]);
-        _verifiCationAllowedAttempt = int.Parse(verificationInfoConfig["AllowedAttempt"]);
-
-        ApiResponse<GetItemsResponse> offlineRewardResponse = await gameApiClient.CloudSaveData.GetItemsAsync(
-            context, context.ServiceToken, context.ProjectId, playerId, new() { "OfflineRewardInfo" });
-
-        string offlineRewardJson = offlineRewardResponse.Data.Results.Count > 0
-            ? offlineRewardResponse.Data.Results[0].Value.ToString()
-            : "{}";
-
-        Dictionary<string, string> offlineRewardDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(offlineRewardJson)
-            ?? new Dictionary<string, string>();
-
-        result.invalidCount = gameData.invalidCount;
-
-        // early return: 이미 invalidCount가 3 이상이면 저장 없이 반환
-        if (gameData.invalidCount >= 3)
-        {
-            _logger.LogError("Invalid user attempted to save data.");
-            result.failureFactor = "ExceededInvalidCount";
-            return result;
-        }
-        List<VerificationReport> verificationReportList = JsonConvert.DeserializeObject<List<VerificationReport>>(serializedGoldReport);
-
-        if (verificationReportList.Count > _verifiCationAllowedAttempt)
-        {
-            gameData.invalidCount++;
-            _logger.LogError("Invalid Report Count : " + JsonConvert.SerializeObject(new
+            foreach (var verifier in verifiers)
             {
-                limitCount = _verifiCationAllowedAttempt,
-                reportedCount = verificationReportList.Count,
-                invalidCount = gameData.invalidCount + 1
-            }));
-
-            result.failureFactor = "ExceededVerificationAttempt";
-            result.invalidCount = gameData.invalidCount + 1;
-        }
-        else
-        {
-            List<ReinforceReport> reinforceReportList = JsonConvert.DeserializeObject<List<ReinforceReport>>(serializedReinforceReport);
-
-            stageDropFormula = RemoteConfigService.GetRemoteConfig<Dictionary<string, string>>(context, gameApiClient, "STAGE_DROP_FORMULA");
-            levelUpRequireExp = RemoteConfigService.GetRemoteConfig<string>(context, gameApiClient, "LEVEL_UP_REQUIRE_EXP");
-
-            bool isResourcePassed = ResourceVerification(verificationReportList, RemoteConfigService, context, gameApiClient, playerId, gameData.currentStageNum);
-            bool isReinforcePassed = ReinforceVerification(reinforceReportList);
-
-            if (isResourcePassed && isReinforcePassed)
-            {
-                result.isVerificationSuccess = true;
-                result.failureFactor = "";
+                if (!verifier.Verify(clientData, out string reason))
+                    return Fail(result, reason);
             }
-            else
-            {
-                gameData.invalidCount++;
-                result.failureFactor = "VerificationFailed";
-                result.invalidCount = gameData.invalidCount + 1;
-            }
+
+            ProcessLevelUp();
+
             if (isAcquireOfflineReward)
             {
-                OfflineRewardCase(RemoteConfigService, context, gameApiClient, playerId, gameData.maxStageNum, offlineRewardDict);
+                ApplyOfflineReward(context, gameApiClient, verificationSystem);
+                _offlineRewardDict["AccumulatedTime"] = "0";
             }
+
+            await SaveData(context, gameApiClient);
+            result.isVerificationSuccess = true;
+            result.failureFactor = "";
+            return result;
         }
 
-        // 공통 저장 지점
-        string modifiedGameData = JsonConvert.SerializeObject(gameData);
-        await gameApiClient.CloudSaveData.SetItemAsync(
-            context, context.ServiceToken, context.ProjectId, playerId,
-            new SetItemBody("GameData", modifiedGameData)
-        );
-        if (isAcquireOfflineReward)
+        private ReportResult Fail(ReportResult result, string reason)
         {
-            offlineRewardDict["AccumulatedTime"] = "0";
-            var newOfflineRewardJson = JsonConvert.SerializeObject(offlineRewardDict);
+            result.failureFactor = reason;
+            result.invalidCount = ++_serverData.invalidCount;
+            _logger.LogError(reason);
+            return result;
+        }
+
+        private async Task<GameData> LoadGameData(IExecutionContext context, IGameApiClient gameApiClient)
+        {
+            var res = await gameApiClient.CloudSaveData.GetItemsAsync(
+                context, context.ServiceToken, context.ProjectId, context.PlayerId, new() { "GameData" });
+
+            if (res.Data.Results.Count == 0)
+                return new GameData { level = 1, maxStageNum = 1, currentStageNum = 1 };
+
+            return JsonConvert.DeserializeObject<GameData>(res.Data.Results[0].Value.ToString());
+        }
+
+        private async Task<Dictionary<string, string>> LoadOfflineRewardData(IExecutionContext context, IGameApiClient gameApiClient)
+        {
+            var res = await gameApiClient.CloudSaveData.GetItemsAsync(
+                context, context.ServiceToken, context.ProjectId, context.PlayerId, new() { "OfflineRewardInfo" });
+
+            return res.Data.Results.Count > 0
+                ? JsonConvert.DeserializeObject<Dictionary<string, string>>(res.Data.Results[0].Value.ToString())
+                : new();
+        }
+
+        private async Task SaveData(IExecutionContext context, IGameApiClient gameApiClient)
+        {
+            _logger.LogDebug(JsonConvert.SerializeObject(_serverData));
             await gameApiClient.CloudSaveData.SetItemAsync(
-                context, context.ServiceToken, context.ProjectId, playerId,
-                new SetItemBody("GameData", modifiedGameData)
-            );
+                context, context.ServiceToken, context.ProjectId, context.PlayerId,
+                new("GameData", JsonConvert.SerializeObject(_serverData)));
+
+            _offlineRewardDict["lastChecked"] = DateTime.UtcNow.ToString("o");
+            await gameApiClient.CloudSaveData.SetItemAsync(
+                context, context.ServiceToken, context.ProjectId, context.PlayerId,
+                new("OfflineRewardInfo", JsonConvert.SerializeObject(_offlineRewardDict)));
         }
 
-        offlineRewardDict["lastChecked"] = DateTime.UtcNow.ToString("o");
-        string modifiedRewardJson = JsonConvert.SerializeObject(offlineRewardDict);
-
-        await gameApiClient.CloudSaveData.SetItemAsync(
-            context, context.ServiceToken, context.ProjectId, playerId,
-            new SetItemBody("OfflineRewardInfo", modifiedRewardJson));
-
-
-        return result;
-    }
-
-
-    private bool ResourceVerification(List<VerificationReport> verificationReportList, IRemoteConfigService formulaService,
-        IExecutionContext context, IGameApiClient gameApiClient, string playerId, int currentStageNum)
-    {
-        foreach (VerificationReport report in verificationReportList)
+        private void ApplyUsualFieldsOnly(GameData server, GameData client)
         {
-            int caseValue = BattleCase(report, formulaService, context, gameApiClient, playerId, currentStageNum);
-            if (caseValue <= 0)
-                return false;
-
-            string resource = report.Resource.ToLowerInvariant();
-            switch (resource)
+            server.level = client.level;
+            server.statPoint = client.statPoint;
+            server.statLevel_Gold = new(client.statLevel_Gold);
+            server.statLevel_StatPoint = new(client.statLevel_StatPoint);
+            server.stat_Promote = new(client.stat_Promote);
+            server.skillLevel = new(client.skillLevel);
+            server.skillFragment = new(client.skillFragment);
+            server.equipedSkillArr = (string[])client.equipedSkillArr.Clone();
+            server.weaponCount = new(client.weaponCount);
+            server.weaponLevel = new(client.weaponLevel);
+            server.playerWeaponId = client.playerWeaponId;
+            server.companionWeaponIdArr = (string[])client.companionWeaponIdArr.Clone();
+            server.currentStageNum = client.currentStageNum;
+            server.maxStageNum = client.maxStageNum;
+            server.userName = client.userName;
+            server.playerPromoteEffect = new(client.playerPromoteEffect);
+            server.companionPromoteEffect = new Dictionary<int, (StatusType, Rarity)>[3];
+            for (int i = 0; i < 3; i++)
+                server.companionPromoteEffect[i] = new(client.companionPromoteEffect[i]);
+            server.companionPromoteTech = new int[3][];
+            for (int i = 0; i < 3; i++)
             {
-                case "gold":
-                    gameData.gold += report.Value;
-                    break;
-                case "exp":
-                    gameData.exp += report.Value;
-                    break;
+                server.companionPromoteTech[i] = new int[2];
+                Array.Copy(client.companionPromoteTech[i], server.companionPromoteTech[i], 2);
             }
+            server.currentCompanionPromoteTech = (ValueTuple<int, int>[])client.currentCompanionPromoteTech.Clone();
+            server.equipedCostumes = new(client.equipedCostumes);
+            server.ownedCostumes = new(client.ownedCostumes);
         }
 
-        return true;
-    }
-
-    private int BattleCase(VerificationReport report, IRemoteConfigService formulaService, IExecutionContext context, IGameApiClient gameApiClient, string playerId, int currentStageNum)
-    {
-        DataTable dataTable = new();
-
-        string standardValueStr = stageDropFormula[$"{report.Resource}Standard"].Replace("{stageNum}", currentStageNum.ToString());
-        float valueRange = float.Parse(stageDropFormula[$"{report.Resource}Range"]);
-        int standardValue = Convert.ToInt32(dataTable.Compute(standardValueStr, ""));
-        int max = (int)Math.Ceiling(standardValue * (1 + valueRange)) + 1;
-
-        if (report.Value >= max)
+        private void ProcessLevelUp()
         {
-            Dictionary<string, object> anomaly = new()
+            if (string.IsNullOrEmpty(_levelUpRequireExp)) return;
+
+            var dt = new DataTable();
+            BigInteger exp = _serverData.exp;
+            int level = _serverData.level;
+
+            while (true)
             {
-                { "type", $"{report.Resource}Gain" },
-                { "expectedMax", max - 1 },
-                { $"reported{report.Resource}", report.Value },
-                { "invalidCount", gameData.invalidCount + 1 }
-            };
-            _logger.LogError($"Unexpected {report.Resource}: " + JsonConvert.SerializeObject(anomaly));
-            return -1;
+                BigInteger required = BigInteger.Parse(dt.Compute(
+                    _levelUpRequireExp.Replace("{level}", level.ToString()), null).ToString());
+
+                if (exp < required) break;
+                exp -= required;
+                level++;
+            }
+
+            _serverData.exp = exp;
+            _serverData.level = level;
         }
 
-        Dictionary<string, object> appropriate = new()
+        private void ApplyOfflineReward(IExecutionContext context, IGameApiClient gameApiClient, IVerificationSystem verificationSystem)
         {
-            { "type", $"{report.Resource}Gain" },
-            { "expectedMax", max - 1 },
-            { $"reported{report.Resource}", report.Value }
-        };
-        //_logger.LogDebug($"Appropriate {report.Resource}: " + JsonConvert.SerializeObject(appropriate));
+            var config = verificationSystem.GetRemoteConfig<Dictionary<string, string>>(context, gameApiClient, "OFFLINE_REWARD_INFO");
+            double sec = double.Parse(_offlineRewardDict["AccumulatedTime"]);
+            var dt = new DataTable();
 
-        return report.Value;
-    }
-    private void OfflineRewardCase(IRemoteConfigService remoteConfigService, IExecutionContext context, IGameApiClient gameApiClient,
-        string playerId, int maxStageNum, Dictionary<string, string> offlineRewardDict)
-    {
+            int Calc(string key) => Convert.ToInt32(dt.Compute(config[key]
+                .Replace("{second}", sec.ToString())
+                .Replace("{maxStageNum}", _serverData.maxStageNum.ToString()), null)) / 60;
 
-        Dictionary<string, string> offlineRewardInfoConfig = remoteConfigService.GetRemoteConfig<Dictionary<string, string>>(context, gameApiClient, "OFFLINE_REWARD_INFO");
-
-        double accumulatedTime;
-        accumulatedTime = double.Parse(offlineRewardDict["AccumulatedTime"]);
-        DataTable dataTable = new();
-        string goldFormula = offlineRewardInfoConfig["Gold"];
-        int goldValue = Convert.ToInt32(dataTable.Compute(goldFormula.Replace("{second}", accumulatedTime.ToString()).Replace("{maxStageNum}", maxStageNum.ToString()), null)) / 60;
-        string expFormula = offlineRewardInfoConfig["Exp"];
-        int expValue = Convert.ToInt32(dataTable.Compute(expFormula.Replace("{second}", accumulatedTime.ToString()).Replace("{maxStageNum}", maxStageNum.ToString()), null)) / 60;
-        string diaFormula = offlineRewardInfoConfig["Dia"];
-        int diaValue = Convert.ToInt32(dataTable.Compute(diaFormula.Replace("{second}", accumulatedTime.ToString()).Replace("{maxStageNum}", maxStageNum.ToString()), null)) / 60;
-        string cloverFormula = offlineRewardInfoConfig["Clover"];
-        int cloverValue = Convert.ToInt32(dataTable.Compute(cloverFormula.Replace("{second}", accumulatedTime.ToString()).Replace("{maxStageNum}", maxStageNum.ToString()), null)) / 60;
-
-        gameData.gold += goldValue;
-        gameData.exp += expValue;
-        gameData.dia += diaValue;
-        gameData.clover += cloverValue;
-
-    }
-    private bool ReinforceVerification(List<ReinforceReport> reinforceReportList)
-    {
-        // 강화 검증 로직 필요 시 구현
-        return true;
-    }
-
-    [CloudCodeFunction("StageClearVerification")]
-    public bool StageClearVerification()
-    {
-        return true;
+            _serverData.gold += Calc("Gold");
+            _serverData.exp += Calc("Exp");
+            _serverData.dia += Calc("Dia");
+            _serverData.clover += Calc("Clover");
+        }
     }
 }

@@ -73,4 +73,9 @@ namespace EnumCollection
         //재화 종류
         Gold, Exp, Dia, Clover
     }
+    public enum Source
+    {
+        //재화 획득처
+        Battle, Adventure
+    }
 }

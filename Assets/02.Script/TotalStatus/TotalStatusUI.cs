@@ -8,7 +8,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class TotalStatusUI : MonoBehaviour
+public class TotalStatusUI : MonoBehaviour, IGeneralUI
 {
     public VisualElement root { private set; get; }
     //Status
@@ -820,4 +820,17 @@ public class TotalStatusUI : MonoBehaviour
     }
     #endregion
     #endregion
+    public void OnBattle()
+    {
+        root.style.display = DisplayStyle.None;
+    }
+
+    public void OnStory()
+    {
+        root.style.display = DisplayStyle.None;
+    }
+
+    public void OnBoss()
+    {
+    }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -7,83 +8,41 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
 
-    [SerializeField] CurrencyBarUI _currencyBar;
-    [SerializeField] TotalGoldUI _totalGoldUI;
-    [SerializeField] StageSelectUI _stageSelectUI;
-    [SerializeField] BossTimerUI _bossTimerUI;
-    [SerializeField] DuplicateLoginUI _duplicateLoginUI;
-    [SerializeField] TotalStatusUI _totalStatusUI;
-    [SerializeField] SkillInfoUI _skillInfoUI;
-    [SerializeField] EquipedSkillUI _equipedSkillUI;
-    [SerializeField] WeaponInfoUI _weaponInfoUI;
-    [SerializeField] SkillAcquireUI _skillAcquireUI;
-    [SerializeField] PlayerBarUI _playerBarUI;
-    [SerializeField] CompanionInfoUI _companionInfoUI;
-    [SerializeField] StoryUI _storyUI;
-    [SerializeField] MenuControlUI _menuControlUI;
-    [SerializeField] CurrentStageUI _currentStageUI;
-    [SerializeField] CompanionPromoteInfoUI _companionPromoteInfoUI;
-    [SerializeField] CompanionTechUI _companionTechUI;
+    private IGeneralUI[] _uiArr;
 
     void Awake()
     {
         instance = this;
-        BattleBroker.SwitchToStory += ActiveStoryUI;
-        BattleBroker.SwitchToBattle += ActiveBattleUI;
-        BattleBroker.SwitchToBoss += ActiveBossUI;
-        BattleBroker.SwitchToCompanionBattle += (arg0, arg1) => ActiveBossUI();
+
+        _uiArr = FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None)
+        .OfType<IGeneralUI>()
+        .ToArray();
+
+        BattleBroker.SwitchToStory += OnStory;
+        BattleBroker.SwitchToBattle += OnBattle;
+        BattleBroker.SwitchToBoss += OnBoss;
+        BattleBroker.SwitchToCompanionBattle += (arg0, arg1) => OnBoss();
+        BattleBroker.SwitchToAdventure += (arg0, arg1) => OnBoss();
     }
     void Start()
     {
         UIBroker.ChangeMenu?.Invoke(0);
     }
 
-    private void ActiveBattleUI()
+    private void OnBattle()
     {
-        _currencyBar.root.style.display = DisplayStyle.Flex;
-        _totalGoldUI.root.style.display = DisplayStyle.Flex;
-        _stageSelectUI.root.style.visibility = Visibility.Hidden;
-        _duplicateLoginUI.root.style.display = DisplayStyle.None;
-        _totalStatusUI.root.style.display = DisplayStyle.None;
-        _skillInfoUI.root.style.display = DisplayStyle.None;
-        _bossTimerUI.root.style.display = DisplayStyle.None;
-        _equipedSkillUI.root.style.display = DisplayStyle.Flex;
-        _weaponInfoUI.root.style.display = DisplayStyle.None;
-        _skillAcquireUI.root.style.display = DisplayStyle.None;
-        _storyUI.root.style.display = DisplayStyle.None;
-        _companionInfoUI.root.style.display = DisplayStyle.None;
-        _menuControlUI.root.style.display = DisplayStyle.Flex;
-        _playerBarUI.root.style.display = DisplayStyle.Flex;
-        _currentStageUI.root.style.display = DisplayStyle.Flex;
-        _companionPromoteInfoUI.root.style.display = DisplayStyle.None;
-        _companionTechUI.root.style.display = DisplayStyle.None;
+        foreach(var x in _uiArr)
+            x.OnBattle();
     }
 
-    private void ActiveStoryUI(int storyNum)
+    private void OnStory(int storyNum)
     {
-        StartCoroutine(_storyUI.FadeEffect(true, 1));
-        _currencyBar.root.style.display = DisplayStyle.None;
-        _totalGoldUI.root.style.display = DisplayStyle.None;
-        _stageSelectUI.root.style.visibility = Visibility.Hidden;
-        _duplicateLoginUI.root.style.display = DisplayStyle.None;
-        _totalStatusUI.root.style.display = DisplayStyle.None;
-        _skillInfoUI.root.style.display = DisplayStyle.None;
-        _bossTimerUI.root.style.display = DisplayStyle.None;
-        _equipedSkillUI.root.style.display = DisplayStyle.None;
-        _weaponInfoUI.root.style.display = DisplayStyle.None;
-        _skillAcquireUI.root.style.display = DisplayStyle.None;
-        _storyUI.root.style.display = DisplayStyle.Flex;
-        _companionInfoUI.root.style.display = DisplayStyle.None;
-        _menuControlUI.root.style.display = DisplayStyle.None;
-        _playerBarUI.root.style.display = DisplayStyle.None;
-        _currentStageUI.root.style.display = DisplayStyle.None;
-        _companionPromoteInfoUI.root.style.display = DisplayStyle.None;
-        _companionTechUI.root.style.display = DisplayStyle.None;
+        foreach (var x in _uiArr)
+            x.OnStory();
     }
-    private void ActiveBossUI()
+    private void OnBoss()
     {
-        _bossTimerUI.root.style.display = DisplayStyle.Flex;
-        _totalGoldUI.root.style.display = DisplayStyle.None;
-        _currentStageUI.root.style.display = DisplayStyle.None;
+        foreach (var x in _uiArr)
+            x.OnBoss();
     }
 }

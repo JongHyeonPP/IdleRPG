@@ -1,0 +1,18 @@
+{
+    "name": "DuplicateLogin",
+    "rootNamespace": "",
+    "references": [
+        "GUID:c1f3ac597cd61d64e994b094eaa1fa95",
+        "GUID:c540aad5c5158cd439bc0b19ee85eea2",
+        "GUID:20b20c657697e4f478d6b5b4c5837706"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

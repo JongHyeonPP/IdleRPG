@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using static UnityEngine.GraphicsBuffer;
 
-public class WeaponInfoUI : MonoBehaviour
+public class WeaponInfoUI : MonoBehaviour, IGeneralUI
 {
     private GameData _gameData;
     private VisualElement _weaponImage;
@@ -186,5 +186,18 @@ public class WeaponInfoUI : MonoBehaviour
             _weaponCount[weaponID] = 1;
         }
     }
-   
+
+    public void OnBattle()
+    {
+        root.style.display = DisplayStyle.None;
+    }
+
+    public void OnStory()
+    {
+        root.style.display = DisplayStyle.None;
+    }
+
+    public void OnBoss()
+    {
+    }
 }

@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class CompanionTechUI : MonoBehaviour
+public class CompanionTechUI : MonoBehaviour, IGeneralUI
 {
     public VisualElement root { get; private set; }
     public VisualElement _bottom;
@@ -138,5 +138,18 @@ public class CompanionTechUI : MonoBehaviour
         _renderTextureArr[techIndex_0][techIndex_1].style.display = DisplayStyle.Flex;
         _currentIndex_0 = techIndex_0;
         _currentIndex_1 = techIndex_1;
+    }
+    public void OnBattle()
+    {
+        root.style.display = DisplayStyle.None;
+    }
+
+    public void OnStory()
+    {
+        root.style.display = DisplayStyle.None;
+    }
+
+    public void OnBoss()
+    {
     }
 }

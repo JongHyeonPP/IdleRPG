@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-
+namespace ClientVerification.Attribute;
 public class TupleArr_Converter<T1, T2> : JsonConverter<(T1, T2)[]>
     where T1 : struct
     where T2 : struct

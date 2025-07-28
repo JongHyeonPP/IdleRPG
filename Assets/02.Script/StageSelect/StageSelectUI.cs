@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections;
 
-public class StageSelectUI : MonoBehaviour
+public class StageSelectUI : MonoBehaviour, IGeneralUI
 {
     private const int NUMINPAGE = 20;
     [SerializeField] FlexibleListView _draggableLV;
@@ -13,9 +13,10 @@ public class StageSelectUI : MonoBehaviour
     public VisualElement rootChild;
     private Background[] backgrounds;
     private int _currentIndex; // 현재 Background의 인덱스
+    private Label regionLabel;
     private VisualElement backgroundImage;
 
-    [SerializeField] private Sprite[] backgroundSprites;
+    //[SerializeField] private Sprite[] backgroundSprites;
     private void Awake()
     {
         // Background 배열 초기화
@@ -25,6 +26,7 @@ public class StageSelectUI : MonoBehaviour
         Button exitButton = root.Q<Button>("ExitButton");
         Button leftButton = root.Q<Button>("LeftButton");
         Button rightButton = root.Q<Button>("RightButton");
+        regionLabel = root.Q<Label>("RegionLabel");
         backgroundImage = root.Q<VisualElement>("BackgroundImage");
         exitButton.RegisterCallback<ClickEvent>(evt=>OnExitButtonClick());
         leftButton.RegisterCallback<ClickEvent>(evt=>OnLeftButtonClick());
@@ -114,16 +116,30 @@ public class StageSelectUI : MonoBehaviour
     {
         _currentIndex = index;
 
-        Sprite sprite = backgroundSprites[index];
-        backgroundImage.style.backgroundImage = new StyleBackground(sprite.texture);
+        StageRegion stageRegion = StageInfoManager.instance.GetRegionInfo(index);
+        backgroundImage.style.backgroundImage = new StyleBackground(stageRegion.regionSprite);
+        regionLabel.text = stageRegion.regionName;
         int start = index * NUMINPAGE;
-        List<IListViewItem> items = StageInfoManager.instance.GetStageInfosAsItem(start,NUMINPAGE);
+        List<IListViewItem> items = StageInfoManager.instance.GetStageInfosAsItem(start, NUMINPAGE);
 
         _draggableLV.ChangeItems(items);
-        Debug.Log("Change Page");
     }
     public void OnNextStage(int stage)
     {
         ChangePage(stage / NUMINPAGE);
+    }
+    public void OnBattle()
+    {
+        root.style.visibility = Visibility.Hidden;
+    }
+
+    public void OnStory()
+    {
+        root.style.visibility = Visibility.Hidden;
+    }
+
+    public void OnBoss()
+    {
+
     }
 }

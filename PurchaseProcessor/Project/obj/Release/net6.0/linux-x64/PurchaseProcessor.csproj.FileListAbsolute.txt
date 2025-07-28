@@ -1,0 +1,13 @@
+C:\Users\JongHyeon\Documents\kiugi\PurchaseProcessor\Project\bin\Release\net6.0\linux-x64\PurchaseProcessor.deps.json
+C:\Users\JongHyeon\Documents\kiugi\PurchaseProcessor\Project\bin\Release\net6.0\linux-x64\PurchaseProcessor.dll
+C:\Users\JongHyeon\Documents\kiugi\PurchaseProcessor\Project\bin\Release\net6.0\linux-x64\PurchaseProcessor.pdb
+C:\Users\JongHyeon\Documents\kiugi\PurchaseProcessor\Project\obj\Release\net6.0\linux-x64\PurchaseProcessor.csproj.AssemblyReference.cache
+C:\Users\JongHyeon\Documents\kiugi\PurchaseProcessor\Project\obj\Release\net6.0\linux-x64\PurchaseProcessor.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\JongHyeon\Documents\kiugi\PurchaseProcessor\Project\obj\Release\net6.0\linux-x64\PurchaseProcessor.AssemblyInfoInputs.cache
+C:\Users\JongHyeon\Documents\kiugi\PurchaseProcessor\Project\obj\Release\net6.0\linux-x64\PurchaseProcessor.AssemblyInfo.cs
+C:\Users\JongHyeon\Documents\kiugi\PurchaseProcessor\Project\obj\Release\net6.0\linux-x64\PurchaseProcessor.csproj.CoreCompileInputs.cache
+C:\Users\JongHyeon\Documents\kiugi\PurchaseProcessor\Project\obj\Release\net6.0\linux-x64\PurchaseProcessor.sourcelink.json
+C:\Users\JongHyeon\Documents\kiugi\PurchaseProcessor\Project\obj\Release\net6.0\linux-x64\PurchaseProcessor.dll
+C:\Users\JongHyeon\Documents\kiugi\PurchaseProcessor\Project\obj\Release\net6.0\linux-x64\refint\PurchaseProcessor.dll
+C:\Users\JongHyeon\Documents\kiugi\PurchaseProcessor\Project\obj\Release\net6.0\linux-x64\PurchaseProcessor.pdb
+C:\Users\JongHyeon\Documents\kiugi\PurchaseProcessor\Project\obj\Release\net6.0\linux-x64\ref\PurchaseProcessor.dll

@@ -31,6 +31,7 @@ public static class BattleBroker
     public static Action<int> SwitchToStory;
     public static Action SwitchToBattle;
     public static Action SwitchToBoss;
+    public static Action<int, int> SwitchToAdventure;
     public static Action<int, (int,int)> SwitchToCompanionBattle;
     //동료
     public static Action<int> ControllCompanionMove;//0 : 멈충, 1 : 움직임, 2 : 공격
@@ -48,4 +49,6 @@ public static class BattleBroker
     public static Action SetCameraShrink;
 
     public static Action<Vector3, string> ShowDamageText;//Screen Pos
+
+
 }

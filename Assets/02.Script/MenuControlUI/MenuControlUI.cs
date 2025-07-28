@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Button = UnityEngine.UIElements.Button;
-public class MenuControlUI : MonoBehaviour
+public class MenuControlUI : MonoBehaviour, IGeneralUI
 {
     //Menu UI
     [SerializeField] StatUI _statUI;
@@ -114,7 +114,6 @@ public class MenuControlUI : MonoBehaviour
     }
     private void OnChangeMenu(int index)
     {
-        Debug.Log("MenuChange");
         if (BattleBroker.GetBattleType != null)
         {
             switch (BattleBroker.GetBattleType())
@@ -123,7 +122,7 @@ public class MenuControlUI : MonoBehaviour
                 case BattleType.CompanionTech:
                     if (index == 3 || index == 4)
                     {
-                        UIBroker.ShowInableInBattle();
+                        UIBroker.ShowPopUpInBattle("전투중에는 이용이 불가합니다");
                         return;
                     }
                     break;
@@ -178,4 +177,18 @@ public class MenuControlUI : MonoBehaviour
         }
         blurredBackground.BlurTint = new Color(baseColor.r, baseColor.g, baseColor.b, endAlpha);
     }
+    public void OnBattle()
+    {
+        root.style.display = DisplayStyle.Flex;
+    }
+
+    public void OnStory()
+    {
+        root.style.display = DisplayStyle.None;
+    }
+
+    public void OnBoss()
+    {
+    }
+
 }

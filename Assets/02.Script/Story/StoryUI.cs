@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class StoryUI : MonoBehaviour
+public class StoryUI : MonoBehaviour, IGeneralUI
 {
    
     private VisualElement _main;
@@ -125,5 +125,19 @@ public class StoryUI : MonoBehaviour
             _label.text += letter;
             yield return new WaitForSeconds(0.1f);
         }
+    }
+
+    public void OnBattle()
+    {
+        root.style.display = DisplayStyle.None;
+    }
+
+    public void OnStory()
+    {
+        StartCoroutine(FadeEffect(true, 1));
+    }
+
+    public void OnBoss()
+    {
     }
 }

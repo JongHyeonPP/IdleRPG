@@ -4,7 +4,6 @@ using UnityEngine.Purchasing;
 using System;
 using System.Collections.Generic;
 using Unity.Services.Authentication;
-using Unity.Services.CloudCode.GeneratedBindings.OfflineReward;
 using Unity.Services.CloudCode;
 
 public class PurchaseManager : MonoBehaviour, IStoreListener
@@ -27,6 +26,7 @@ public class PurchaseManager : MonoBehaviour, IStoreListener
     {
         ConfigurationBuilder builder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
         builder.AddProduct(ProductIds.DIA_0, ProductType.Consumable);
+        builder.AddProduct(ProductIds.DIA_1, ProductType.Consumable);
         UnityPurchasing.Initialize(this, builder);
     }
 
@@ -67,7 +67,7 @@ public class PurchaseManager : MonoBehaviour, IStoreListener
 
         // 서버 검증 성공 시
         //NetworkBroker.OnPurchaseSuccess?.Invoke(purchaseArgs.purchasedProduct.definition.id);
-        //Debug.Log(purchaseArgs.purchasedProduct.receipt);
+        Debug.Log("구매 완료 : " + purchaseArgs.purchasedProduct.receipt);
         // 구매 확정 처리
         _controller.ConfirmPendingPurchase(purchaseArgs.purchasedProduct);
     }

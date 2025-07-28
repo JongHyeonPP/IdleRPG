@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
-public class CompanionInfoUI : MonoBehaviour
+public class CompanionInfoUI : MonoBehaviour, IGeneralUI
 {
     private CompanionManager _companionManager;
     private GameData _gameData;
@@ -440,5 +440,19 @@ public class CompanionInfoUI : MonoBehaviour
         _promoteButton.Q<VisualElement>("SelectedPanel").style.display = isStatus ? DisplayStyle.None : DisplayStyle.Flex;
         _mainPanelArr[0].style.display = isStatus ? DisplayStyle.Flex : DisplayStyle.None;
         _mainPanelArr[1].style.display = isStatus ? DisplayStyle.None : DisplayStyle.Flex;
+    }
+
+    public void OnBattle()
+    {
+        root.style.display = DisplayStyle.None;
+    }
+
+    public void OnStory()
+    {
+        root.style.display = DisplayStyle.None;
+    }
+
+    public void OnBoss()
+    {
     }
 }

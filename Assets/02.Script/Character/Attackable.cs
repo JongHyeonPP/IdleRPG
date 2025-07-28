@@ -19,6 +19,11 @@ public abstract class Attackable : MonoBehaviour
     private EquipedSkill _defaultAttack;
     protected Camera mainCamera;
     private bool _onSpeed = false;
+    private GameData _gameData;
+    private void Start()
+    {
+        _gameData = StartBroker.GetGameData();
+    }
     protected void SetDefaultAttack()
     {
         _defaultAttack = new();
@@ -30,7 +35,8 @@ public abstract class Attackable : MonoBehaviour
     //AttackTerm 간격마다 우선 순위에 있는 스킬 사용
     private IEnumerator AttackRoop()
     {
-        GameData gameData = StartBroker.GetGameData();
+        if (target == null)
+            yield break;
         while (true)
         {
 
@@ -73,15 +79,15 @@ public abstract class Attackable : MonoBehaviour
                     IEnumerable<SkillData> speedBuff = companion.companionStatus.companionSkillArr.Where(item => item.type == SkillType.SpeedBuff);
                     foreach (SkillData speedSkill in speedBuff)
                     {
-                        if (!gameData.skillLevel.ContainsKey(speedSkill.uid) || gameData.skillLevel[speedSkill.uid] == 0)
+                        if (!_gameData.skillLevel.ContainsKey(speedSkill.uid) || _gameData.skillLevel[speedSkill.uid] == 0)
                         {
-                            speedValue += speedSkill.value[gameData.skillLevel[speedSkill.uid]];
+                            speedValue += speedSkill.value[_gameData.skillLevel[speedSkill.uid]];
                         }
                     }
                 }
                 if (skillData.type == SkillType.SpeedBuff)
                 {
-                    if (gameData.skillLevel.TryGetValue(skillData.uid, out int level))
+                    if (_gameData.skillLevel.TryGetValue(skillData.uid, out int level))
                     {
                         if (level < skillData.value.Count)
                         {

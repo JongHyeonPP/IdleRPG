@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-
+namespace ClientVerification.Attribute;
 public class Struct_StructTuple_DictArrConverter<K, T1, T2> : JsonConverter
     where K : struct
     where T1 : struct

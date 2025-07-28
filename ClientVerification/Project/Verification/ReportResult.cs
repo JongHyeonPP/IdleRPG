@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-namespace Verification;
+namespace ClientVerification.Verification;
 public class ReportResult
 {
     [JsonProperty("isVerificationSuccess")]

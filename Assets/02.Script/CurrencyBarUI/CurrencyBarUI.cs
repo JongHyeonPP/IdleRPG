@@ -3,16 +3,17 @@ using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.UIElements;
 
-public class CurrencyBarUI : MonoBehaviour
+public class CurrencyBarUI : MonoBehaviour, IGeneralUI
 {
     private GameData _gameData;
-    public VisualElement root { get; private set; }
     ProgressBar _expBar;
     Label _levelLabel;
     Label _nameLabel;
     Label _emeraldLabel;
     Label _diaLabel;
     [SerializeField] TotalStatusUI _totalStatusUI;
+    public VisualElement root { get;private set; }
+
     private void Awake()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
@@ -73,5 +74,19 @@ public class CurrencyBarUI : MonoBehaviour
     private void SetDia()
     {
         _diaLabel.text = _gameData.dia.ToString();
+    }
+
+    public void OnBattle()
+    {
+        root.style.display = DisplayStyle.Flex;
+    }
+
+    public void OnStory()
+    {
+        root.style.display = DisplayStyle.None;
+    }
+
+    public void OnBoss()
+    {
     }
 }

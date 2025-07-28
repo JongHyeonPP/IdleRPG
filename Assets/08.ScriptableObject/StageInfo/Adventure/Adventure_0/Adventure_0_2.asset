@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a800df23dc72f3f4da31798639b67d50, type: 3}
+  m_Name: Adventure_0_2
+  m_EditorClassIdentifier: 
+  stageNum: 0
+  stageName: Unset Stage
+  background: 0
+  enemy_0: {fileID: 0}
+  enemy_1: {fileID: 0}
+  boss: {fileID: 11400000, guid: db9dfcadd6a5acb478fc10155c85544b, type: 2}
+  enemyNum: 0
+  enemyStatusFromStage:
+    maxHp: 10
+    resist: 0
+  bossStatusFromStage:
+    maxHp: 100
+    resist: 0
+    power: 10
+    penetration: 0
+  chestStatusFromStage:
+    maxHp: 
+    resist: 0
+  companionTechInfo:
+    companionNum: 0
+    techIndex_0: 0
+    techIndex_1: 0
+    recommendLevel: 0
