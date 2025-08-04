@@ -52,7 +52,7 @@ public class CurrencyManager : MonoBehaviour
     {
         _gameData.exp += value;
         BattleBroker.OnLevelExpSet();
-        NetworkBroker.SetResourceReport(value, Resource.Exp, Source.Battle);
+        NetworkBroker.QueueResourceReport(value, Resource.Exp, Source.Battle);
     }
     public void OnLevelExpSet()
     {
@@ -75,7 +75,7 @@ public class CurrencyManager : MonoBehaviour
     {
         _gameData.gold += value;
         BattleBroker.OnGoldSet();
-        NetworkBroker.SetResourceReport(value, Resource.Gold, Source.Battle);
+        NetworkBroker.QueueResourceReport(value, Resource.Gold, Source.Battle);
     }
 
 

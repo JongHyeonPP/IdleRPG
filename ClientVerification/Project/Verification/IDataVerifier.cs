@@ -4,6 +4,6 @@ namespace ClientVerification.Verification
 {
     public interface IDataVerifier
     {
-        bool Verify(GameData clientData, out string failReason);
+        bool Verify(out string failReason);
     }
 }

@@ -1,257 +1,111 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.UIElements;
 using Button = UnityEngine.UIElements.Button;
 using EnumCollection;
-using System;
 using System.Linq;
 
 public class StatUI : MonoBehaviour, IMenuUI
 {
     private GameData _gameData;
     private Coroutine _incrementCoroutine;
-    private readonly StatusType[] _statsByGold =
-    {
-        StatusType.Power,
-        StatusType.MaxHp,
-        StatusType.HpRecover,
-        StatusType.Critical,
-        StatusType.CriticalDamage
-    };
-    private readonly StatusType[] _statsByStatPoint =
-    {
-        StatusType.Power,
-        StatusType.MaxHp,
-        StatusType.HpRecover,
-        StatusType.CriticalDamage,
-        StatusType.GoldAscend
-    };
-    private readonly Rank[] _rank =
-    {
-        Rank.Stone,
-        Rank.Bronze,
-        Rank.Iron,
-        Rank.Silver,
-        Rank.Gold
-    };
-    private readonly Dictionary<StatusType, VisualElement> _goldStatDict = new();
-    private readonly Dictionary<StatusType, VisualElement> _statPointStatDict = new();
-    public VisualElement root { get; private set; }
-    [SerializeField] DraggableScrollView _enhanceScrollView;
-    [SerializeField] DraggableScrollView _growScrollView;
-    [SerializeField] DraggableScrollView _rankScrollView;
-    [SerializeField] PromoteAbilityUI _promoteAbilityUI;
     private DraggableScrollView lockedScrollView;
+    private StatusType _currentStatusType;
+    private int _currentValue;
+
+    public VisualElement root { get; private set; }
+
+    [SerializeField] private DraggableScrollView _enhanceScrollView;
+    [SerializeField] private DraggableScrollView _growScrollView;
+    [SerializeField] private DraggableScrollView _rankScrollView;
+    [SerializeField] private PromoteAbilityUI _promoteAbilityUI;
+
+    [SerializeField] private Sprite powerSprite, maxHpSprite, hpRecoverSprite;
+    [SerializeField] private Sprite criticalSprite, criticalDamageSprite, goldAscendSprite;
+    [SerializeField] private Sprite stoneSprite, bronzeSprite, ironSprite, silverSprite, goldSprite;
+
+    private readonly Color inactiveColor = new(0.7f, 0.7f, 0.7f);
+    private readonly Color activeColor = new(1f, 1f, 1f);
+
     private Button[] _categoriButtons;
     private VisualElement[] _categoriPanels;
     private Label _statPointLabel;
-    //ButtonColor
-    private readonly Color inactiveColor = new(0.7f, 0.7f, 0.7f);
-    private readonly Color activeColor = new(1f, 1f, 1f);
-    [Header("Sprite")]
-    [SerializeField] private Sprite powerSprite;
-    [SerializeField] private Sprite maxHpSprite;
-    [SerializeField] private Sprite hpRecoverSprite;
-    [SerializeField] private Sprite criticalSprite;
-    [SerializeField] private Sprite criticalDamageSprite;
-    [SerializeField] private Sprite goldAscendSprite;
-    [SerializeField] private Sprite stoneSprite;
-    [SerializeField] private Sprite bronzeSprite;
-    [SerializeField] private Sprite ironSprite;
-    [SerializeField] private Sprite silverSprite;
-    [SerializeField] private Sprite goldSprite;
+
+    private readonly Dictionary<StatusType, (string name, Sprite icon)> _statInfoDict = new();
+    private readonly Dictionary<StatusType, VisualElement> _goldStatDict = new();
+    private readonly Dictionary<StatusType, VisualElement> _statPointStatDict = new();
+
+    private readonly StatusType[] _statsByGold = {
+        StatusType.Power, StatusType.MaxHp, StatusType.HpRecover,
+        StatusType.Critical, StatusType.CriticalDamage
+    };
+    private readonly StatusType[] _statsByStatPoint = {
+        StatusType.Power, StatusType.MaxHp, StatusType.HpRecover,
+        StatusType.CriticalDamage, StatusType.GoldAscend
+    };
+    private readonly Rank[] _rank = {
+        Rank.Stone, Rank.Bronze, Rank.Iron, Rank.Silver, Rank.Gold
+    };
+
     private void Awake()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
+        InitStatInfo();
         PlayerBroker.OnGoldStatusLevelSet += UpdateGoldStatText;
         PlayerBroker.OnStatPointStatusLevelSet += UpdateStatPointStatText;
         BattleBroker.OnStatPointSet += StatPointSet;
-    }
-    private void StatPointSet()
-    {
-        _statPointLabel.text = $"STAT POINT : {_gameData.statPoint}"; 
     }
 
     private void Start()
     {
         _gameData = StartBroker.GetGameData();
         _categoriPanels = root.Q<VisualElement>("PanelParent").Children().ToArray();
-        _categoriButtons = root.Q<VisualElement>("ButtonParent").Children().Select(item => (Button)item).ToArray();
-        //_promoteAbilityUI.gameObject.SetActive(true);
+        _categoriButtons = root.Q<VisualElement>("ButtonParent").Children().Select(x => (Button)x).ToArray();
+
         InitButton();
         InitEnhancePanel();
         InitGrowPanel();
         InitPromotePanel();
+
         OnCategoriButtonClick(0);
     }
-    private void InitPromotePanel()
+
+    private void InitStatInfo()
     {
-        var abilitybutton = _categoriPanels[2].Q<Button>("AbilityButton");
-        foreach (var rank in _rank)
-        {
-            InitPromteElement(rank);
-        }
-        abilitybutton.RegisterCallback<ClickEvent>(evt => OnShowInfoPromotionAbility());
+        _statInfoDict[StatusType.Power] = ("STR", powerSprite);
+        _statInfoDict[StatusType.MaxHp] = ("HP", maxHpSprite);
+        _statInfoDict[StatusType.HpRecover] = ("VIT", hpRecoverSprite);
+        _statInfoDict[StatusType.Critical] = ("치명타", criticalSprite);
+        _statInfoDict[StatusType.CriticalDamage] = ("CRI", criticalDamageSprite);
+        _statInfoDict[StatusType.GoldAscend] = ("LUK", goldAscendSprite);
     }
-   
-    private void InitGrowPanel()
-    {
-        _statPointLabel = _categoriPanels[1].Q<Label>("StatPointLabel");
-        StatPointSet();
-        foreach (var stat in _statsByStatPoint)
-        {
-            InitGrowElement(stat);
-        }
-    }
-    private void InitPromteElement(Rank rank)
-    {
-        VisualElement elementRoot = _categoriPanels[2].Q<VisualElement>($"{rank}Element");
-        Label rankNameLabel = elementRoot.Q<Label>("RankName");
-        Label rankAbilityLabel = elementRoot.Q<Label>("RankAbility");
-        Label recommandLevelLabel = elementRoot.Q<Label>("RecommandLabel");
-        Label completeLabel = elementRoot.Q<Label>("CompleteLabel");
-        VisualElement Icon = elementRoot.Q<VisualElement>("Icon");
-        var button = elementRoot.Q<Button>("ChallengeButton");
-
-        Sprite iconSprite = null;
-        int currentRankIndex = PlayerBroker.GetPlayerRankIndex?.Invoke() ?? 0;
-        int thisRankIndex = (int)rank;
-        switch (rank)
-        {
-            case Rank.Stone:
-                rankNameLabel.text = "스톤";
-                rankAbilityLabel.text = "공격력x1 체력x1".Trim(); ;
-                recommandLevelLabel.text = "권장 레벨 1";
-                iconSprite = stoneSprite;
-                break;
-            case Rank.Bronze:
-                rankNameLabel.text = "브론즈";
-                rankAbilityLabel.text = "공격력x2 체력x2".Trim(); ;
-                recommandLevelLabel.text = "권장 레벨 50";
-                iconSprite = bronzeSprite;
-                break;
-            case Rank.Iron:
-                rankNameLabel.text = "아이언";
-                rankAbilityLabel.text = "공격력x5 체력x5".Trim(); ;
-                recommandLevelLabel.text = "권장 레벨 90";
-                iconSprite = ironSprite;
-                break;
-
-            case Rank.Silver:
-                rankNameLabel.text = "실버";
-                rankAbilityLabel.text = "공격력x18 체력x18".Trim(); ;
-                recommandLevelLabel.text = "권장 레벨 180";
-                iconSprite = silverSprite;
-                break;
-            case Rank.Gold:
-                rankNameLabel.text = "골드";
-                rankAbilityLabel.text = "공격력x25 체력x25".Trim(); ;
-                recommandLevelLabel.text = "권장 레벨 300";
-                iconSprite = goldSprite;
-                break;
-        }
-        Icon.style.backgroundImage = new(iconSprite);
-        if (thisRankIndex <= currentRankIndex)
-        {
-            completeLabel.style.display = DisplayStyle.Flex;
-            button.style.display = DisplayStyle.None;
-            recommandLevelLabel.style.display = DisplayStyle.None;
-        }
-        else
-        {
-            completeLabel.style.display = DisplayStyle.None;
-            button.style.display = DisplayStyle.Flex;
-            recommandLevelLabel.style.display = DisplayStyle.Flex;
-            button.clicked += () => BattleBroker.ChallengeRank?.Invoke(rank);
-        }
-    }
-    
-    private void OnShowInfoPromotionAbility()
-    {
-        _promoteAbilityUI.ShowPromoteInfo();
-    }
-    private void InitGrowElement(StatusType stat)
-    {
-        VisualElement elementRoot = _categoriPanels[1].Q<VisualElement>($"{stat}Element");
-        _statPointStatDict[stat] = elementRoot;
-        VisualElement button = elementRoot.Q<VisualElement>("EventVe");
-        Label levelLabel = elementRoot.Q<Label>("StatLevel");
-        Label riseLabel = elementRoot.Q<Label>("StatRise");
-        VisualElement statIcon = elementRoot.Q<VisualElement>("StatIcon");
-        Label statName = elementRoot.Q<Label>("StatName");
-        
-        Sprite iconSprite = null;
-        switch (stat)
-        {
-            case StatusType.Power:
-                statName.text = "STR";
-                iconSprite = powerSprite;
-                break;
-            case StatusType.MaxHp:
-                statName.text = "HP";
-                iconSprite = maxHpSprite;
-                break;
-            case StatusType.HpRecover:
-                statName.text = "VIT";
-                iconSprite = hpRecoverSprite;
-                break;
-
-            case StatusType.CriticalDamage:
-                statName.text = "CRI";
-                iconSprite = criticalDamageSprite;
-                break;
-            case StatusType.GoldAscend:
-                statName.text = "LUK";
-                iconSprite = goldAscendSprite;
-                break;
-        }
-        statIcon.style.backgroundImage = new(iconSprite);
-        button.RegisterCallback<PointerDownEvent>(evt => { OnPointerDown(stat, false); });
-        button.RegisterCallback<PointerUpEvent>(evt => { OnPointerUp(); });
-        if (!_gameData.statLevel_StatPoint.ContainsKey(stat))
-        {
-            _gameData.statLevel_StatPoint[stat] = 0;
-        }
-        int currentLevel = _gameData.statLevel_StatPoint[stat];
-        UpdateStatPointStatText(stat, currentLevel);
-    }
-
-    void Update()
-    {
-#if UNITY_ANDROID
-        if (Input.touchCount > 0)
-        {
-            Touch touch = Input.GetTouch(0);
-
-            if (touch.phase == TouchPhase.Ended)
-            {
-                OnPointerUp();
-            }
-        }
-#endif
-
-#if UNITY_EDITOR || UNITY_STANDALONE
-        if (Input.GetMouseButtonUp(0)) // 마우스 왼쪽 버튼을 떼는 순간
-        {
-            OnPointerUp();
-        }
-#endif
-    }
-
 
     private void InitButton()
     {
-        VisualElement buttonParent = root.Q<VisualElement>("ButtonParent");
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < _categoriButtons.Length; i++)
         {
-            Button categoriButton = _categoriButtons[i];
-            int index = i;//로컬 변수화
-            categoriButton.RegisterCallback<ClickEvent>(evt =>
-            {
-                OnCategoriButtonClick(index);
-            });
+            int index = i;
+            _categoriButtons[i].RegisterCallback<ClickEvent>(_ => OnCategoriButtonClick(index));
+        }
+    }
+
+    private void OnCategoriButtonClick(int index)
+    {
+        for (int i = 0; i < _categoriPanels.Length; i++)
+        {
+            bool isActive = (i == index);
+            _categoriPanels[i].style.display = isActive ? DisplayStyle.Flex : DisplayStyle.None;
+
+            var btn = _categoriButtons[i];
+            btn.style.unityBackgroundImageTintColor = new Color(
+                isActive ? activeColor.r : inactiveColor.r,
+                isActive ? activeColor.g : inactiveColor.g,
+                isActive ? activeColor.b : inactiveColor.b,
+                isActive ? 0.1f : 0f);
+
+            btn.Q<VisualElement>("OutLine").style.unityBackgroundImageTintColor = isActive ? activeColor : inactiveColor;
+            btn.Q<Label>().style.color = isActive ? activeColor : inactiveColor;
         }
     }
 
@@ -261,188 +115,218 @@ public class StatUI : MonoBehaviour, IMenuUI
         {
             InitEnhanceElement(stat);
         }
-        
     }
-    void InitEnhanceElement(StatusType stat)
+
+    private void InitEnhanceElement(StatusType stat)
     {
-        VisualElement elementRoot = _categoriPanels[0].Q<VisualElement>($"{stat}Element");
-        _goldStatDict[stat] = elementRoot;
-        VisualElement button = elementRoot.Q<VisualElement>("EventVe");
+        var element = _categoriPanels[0].Q<VisualElement>($"{stat}Element");
+        _goldStatDict[stat] = element;
 
-        VisualElement statIcon = elementRoot.Q<VisualElement>("StatIcon");
-        Label statName = elementRoot.Q<Label>("StatName");
+        var (name, icon) = _statInfoDict[stat];
+        element.Q<Label>("StatName").text = name;
+        element.Q<VisualElement>("StatIcon").style.backgroundImage = new(icon);
+        element.Q<VisualElement>("EventVe").RegisterCallback<PointerDownEvent>(_ => OnPointerDown(stat, true));
 
-        Sprite iconSprite = null;
-        switch (stat)
-        {
-            case StatusType.Power:
-                statName.text = "공격력";
-                iconSprite = powerSprite;
-                break;
-            case StatusType.MaxHp:
-                statName.text = "체력";
-                iconSprite = maxHpSprite;
-                break;
-            case StatusType.HpRecover:
-                statName.text = "체력 회복";
-                iconSprite = hpRecoverSprite;
-                break;
-            case StatusType.Critical:
-                statName.text = "치명타";
-                iconSprite = criticalSprite;
-                break;
-            case StatusType.CriticalDamage:
-                statName.text = "치명타 공격력";
-                iconSprite = criticalDamageSprite;
-                break;
-        }
-        statIcon.style.backgroundImage = new(iconSprite);
-        button.RegisterCallback<PointerDownEvent>(evt => { OnPointerDown(stat, true); });
-        button.RegisterCallback<PointerUpEvent>(evt => { OnPointerUp(); });
         if (!_gameData.statLevel_Gold.ContainsKey(stat))
-        {
-            _gameData.statLevel_Gold.Add(stat, 0);
-        }
-        int currentLevel = _gameData.statLevel_Gold[stat];
-        UpdateGoldStatText(stat, currentLevel);
+            _gameData.statLevel_Gold[stat] = 0;
+
+        UpdateGoldStatText(stat, _gameData.statLevel_Gold[stat]);
     }
-    private void OnCategoriButtonClick(int index)
+
+    private void InitGrowPanel()
     {
-        for (int i = 0; i < 3; i++)
+        _statPointLabel = _categoriPanels[1].Q<Label>("StatPointLabel");
+        StatPointSet();
+
+        foreach (var stat in _statsByStatPoint)
         {
-            if (index == i)
-            {
-                _categoriPanels[i].style.display = DisplayStyle.Flex;
-                _categoriButtons[i].style.unityBackgroundImageTintColor = new Color(activeColor.r,activeColor.g,activeColor.b, 0.1f);
-                _categoriButtons[i].Q<VisualElement>("OutLine").style.unityBackgroundImageTintColor = activeColor;    
-                _categoriButtons[i].Q<Label>().style.color = activeColor;    
-            }
-            else
-            {
-                _categoriPanels[i].style.display = DisplayStyle.None;
-                _categoriButtons[i].style.unityBackgroundImageTintColor = new Color(inactiveColor.r, inactiveColor.g, inactiveColor.b, 0f);
-                _categoriButtons[i].Q<VisualElement>("OutLine").style.unityBackgroundImageTintColor = inactiveColor;
-                _categoriButtons[i].Q<Label>().style.color = inactiveColor;
-            }
+            InitGrowElement(stat);
         }
     }
 
-    private void OnPointerDown(StatusType stat, bool isByGold)//스텟버튼누르기
+    private void InitGrowElement(StatusType stat)
     {
-        if (_incrementCoroutine == null)
-        {
-            lockedScrollView = isByGold ? _enhanceScrollView : _growScrollView;
-            lockedScrollView.LockScrollPosition();
-            _incrementCoroutine = StartCoroutine(PointerDownCoroutine(stat, isByGold));
-        }
+        var element = _categoriPanels[1].Q<VisualElement>($"{stat}Element");
+        _statPointStatDict[stat] = element;
+
+        var (name, icon) = _statInfoDict[stat];
+        element.Q<Label>("StatName").text = name;
+        element.Q<VisualElement>("StatIcon").style.backgroundImage = new(icon);
+        element.Q<VisualElement>("EventVe").RegisterCallback<PointerDownEvent>(_ => OnPointerDown(stat, false));
+
+        if (!_gameData.statLevel_StatPoint.ContainsKey(stat))
+            _gameData.statLevel_StatPoint[stat] = 0;
+
+        UpdateStatPointStatText(stat, _gameData.statLevel_StatPoint[stat]);
     }
 
-    private IEnumerator PointerDownCoroutine(StatusType stat, bool isByGold)
+    private void InitPromotePanel()
     {
-        if (isByGold)
+        var abilityButton = _categoriPanels[2].Q<Button>("AbilityButton");
+        foreach (var rank in _rank)
         {
-            IncreaseGoldStat(stat);
+            InitPromoteElement(rank);
         }
-        else
+        abilityButton.RegisterCallback<ClickEvent>(_ => _promoteAbilityUI.ShowPromoteInfo());
+    }
+
+    private void InitPromoteElement(Rank rank)
+    {
+        var element = _categoriPanels[2].Q<VisualElement>($"{rank}Element");
+        var nameLabel = element.Q<Label>("RankName");
+        var abilityLabel = element.Q<Label>("RankAbility");
+        var recommandLabel = element.Q<Label>("RecommandLabel");
+        var completeLabel = element.Q<Label>("CompleteLabel");
+        var icon = element.Q<VisualElement>("Icon");
+        var button = element.Q<Button>("ChallengeButton");
+
+        int currentRankIndex = PlayerBroker.GetPlayerRankIndex?.Invoke() ?? 0;
+        int thisRankIndex = (int)rank;
+
+        string name = "", ability = "", recommand = "";
+        Sprite sprite = null;
+
+        switch (rank)
         {
-            IncreaseStatPointStat(stat);
+            case Rank.Stone:
+                name = "스톤"; ability = "공격력x1 체력x1"; recommand = "권장 레벨 1"; sprite = stoneSprite; break;
+            case Rank.Bronze:
+                name = "브론즈"; ability = "공격력x2 체력x2"; recommand = "권장 레벨 50"; sprite = bronzeSprite; break;
+            case Rank.Iron:
+                name = "아이언"; ability = "공격력x5 체력x5"; recommand = "권장 레벨 90"; sprite = ironSprite; break;
+            case Rank.Silver:
+                name = "실버"; ability = "공격력x18 체력x18"; recommand = "권장 레벨 180"; sprite = silverSprite; break;
+            case Rank.Gold:
+                name = "골드"; ability = "공격력x25 체력x25"; recommand = "권장 레벨 300"; sprite = goldSprite; break;
         }
+
+        nameLabel.text = name;
+        abilityLabel.text = ability;
+        recommandLabel.text = recommand;
+        icon.style.backgroundImage = new(sprite);
+
+        bool cleared = thisRankIndex <= currentRankIndex;
+        completeLabel.style.display = cleared ? DisplayStyle.Flex : DisplayStyle.None;
+        button.style.display = cleared ? DisplayStyle.None : DisplayStyle.Flex;
+        recommandLabel.style.display = cleared ? DisplayStyle.None : DisplayStyle.Flex;
+
+        if (!cleared)
+            button.clicked += () => BattleBroker.ChallengeRank?.Invoke(rank);
+    }
+
+    private void Update()
+    {
+#if UNITY_EDITOR || UNITY_STANDALONE
+        if (Input.GetMouseButtonUp(0)) OnPointerUp();
+#endif
+#if UNITY_ANDROID
+        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended)
+            OnPointerUp();
+#endif
+    }
+
+    private void OnPointerDown(StatusType stat, bool isGold)
+    {
+        if (_incrementCoroutine != null) return;
+
+        _currentStatusType = stat;
+        _currentValue = 0;
+        lockedScrollView = isGold ? _enhanceScrollView : _growScrollView;
+        lockedScrollView.LockScrollPosition();
+        _incrementCoroutine = StartCoroutine(PointerDownCoroutine(stat, isGold));
+    }
+
+    private IEnumerator PointerDownCoroutine(StatusType stat, bool isGold)
+    {
+        yield return null;
+        if (isGold) IncreaseGoldStat(stat); else IncreaseStatPointStat(stat);
         yield return new WaitForSeconds(0.3f);
+
         while (true)
         {
-            if (isByGold)
-            {
-                IncreaseGoldStat(stat);
-            }
-            else
-            {
-                IncreaseStatPointStat(stat);
-            }
+            if (isGold) IncreaseGoldStat(stat); else IncreaseStatPointStat(stat);
             yield return new WaitForSeconds(0.08f);
         }
     }
 
-    private void OnPointerUp()//버튼떼서 데이터저장
+    private void OnPointerUp()
     {
-        if (_incrementCoroutine != null)
+        if (_incrementCoroutine == null) return;
+
+        StopCoroutine(_incrementCoroutine);
+        _incrementCoroutine = null;
+        lockedScrollView?.UnlockScrollPosition();
+        lockedScrollView = null;
+
+        if (_currentValue > 0)
         {
-            if (lockedScrollView)
-            {
-                lockedScrollView.UnlockScrollPosition();
-                lockedScrollView = null;
-            }
-            StopCoroutine(_incrementCoroutine);
-            _incrementCoroutine = null;
-            NetworkBroker.SaveServerData();
+            NetworkBroker.QueueSpendReport(SpendType.Status, _currentStatusType.ToString(), _currentValue);
+            _currentValue = 0;
         }
+        NetworkBroker.SaveServerData();
     }
 
     private void IncreaseGoldStat(StatusType stat)
     {
-        int requiredGold = ReinForceManager.instance.GetReinforcePriceGold(stat, _gameData.statLevel_Gold[stat] + 1);
+        int level = _gameData.statLevel_Gold[stat] + 1;
+        int cost = ReinForceManager.instance.GetReinforcePriceGold(stat, level);
 
-        if (_gameData.gold < requiredGold)
+        if (_gameData.gold < cost)
         {
-            Debug.Log("골드가 없습니다.");
+            Debug.Log("골드 부족");
             return;
         }
-        _gameData.gold -= requiredGold;
+
+        _gameData.gold -= cost;
         _gameData.statLevel_Gold[stat]++;
-        
+        _currentValue++;
+
         PlayerBroker.OnGoldStatusLevelSet(stat, _gameData.statLevel_Gold[stat]);
         BattleBroker.OnGoldSet?.Invoke();
     }
+
     private void IncreaseStatPointStat(StatusType stat)
     {
-        int currentLevel = _gameData.statLevel_StatPoint[stat];
-
-        if (_gameData.statPoint==0)
+        if (_gameData.statPoint <= 0)
         {
-            Debug.Log("스탯 포인트가 없습니다.");
+            Debug.Log("스탯 포인트 부족");
             return;
         }
+
         _gameData.statPoint--;
         _gameData.statLevel_StatPoint[stat]++;
         PlayerBroker.OnStatPointStatusLevelSet(stat, _gameData.statLevel_StatPoint[stat]);
         BattleBroker.OnStatPointSet?.Invoke();
-
     }
 
-
-    private void UpdateGoldStatText(StatusType statType, int level)
+    private void UpdateGoldStatText(StatusType stat, int level)
     {
-        VisualElement elementRoot = _goldStatDict[statType];
-        Label levelLabel = elementRoot.Q<Label>("StatLevel");
-        Label riseLabel = elementRoot.Q<Label>("StatRise");
-        Label priceLabel = elementRoot.Q<Label>("PriceLabel");
+        var element = _goldStatDict[stat];
+        element.Q<Label>("StatLevel").text = $"Lv.{level}";
 
-        levelLabel.text = $"Lv.{level}";
+        int current = ReinForceManager.instance.GetGoldStatus(level, stat);
+        int next = ReinForceManager.instance.GetGoldStatus(level + 1, stat);
+        element.Q<Label>("StatRise").text = ReinForceManager.instance.GetGoldStatRiseText(current, next, stat);
 
-        int currentStat = ReinForceManager.instance.GetGoldStatus(level, statType);
-        int nextStat = ReinForceManager.instance.GetGoldStatus(level+1, statType);
-        riseLabel.text = ReinForceManager.instance.GetGoldStatRiseText(currentStat, nextStat, statType);
-
-        priceLabel.text = $"{ReinForceManager.instance.GetReinforcePriceGold(statType, level) + 1}";
+        int price = ReinForceManager.instance.GetReinforcePriceGold(stat, level) + 1;
+        element.Q<Label>("PriceLabel").text = $"{price}";
     }
-    private void UpdateStatPointStatText(StatusType statType, int level)
+
+    private void UpdateStatPointStatText(StatusType stat, int level)
     {
-        VisualElement elementRoot = _statPointStatDict[statType];
-        Label levelLabel = elementRoot.Q<Label>("StatLevel");
-        Label riseLabel = elementRoot.Q<Label>("StatRise");
+        var element = _statPointStatDict[stat];
+        element.Q<Label>("StatLevel").text = $"Lv.{level}";
 
-        levelLabel.text = $"Lv.{level}";
-
-        int currentStat = ReinForceManager.instance.GetStatPointStatus(level, statType);
-        int nextStat = ReinForceManager.instance.GetStatPointStatus(level+1, statType);
-        riseLabel.text = ReinForceManager.instance.GetStatPointStatRiseText(currentStat, nextStat, statType);
+        int current = ReinForceManager.instance.GetStatPointStatus(level, stat);
+        int next = ReinForceManager.instance.GetStatPointStatus(level + 1, stat);
+        element.Q<Label>("StatRise").text = ReinForceManager.instance.GetStatPointStatRiseText(current, next, stat);
     }
-    void IMenuUI.ActiveUI()
+
+    private void StatPointSet()
     {
-        root.style.display = DisplayStyle.Flex;
+        _statPointLabel.text = $"STAT POINT : {_gameData.statPoint}";
     }
 
-    void IMenuUI.InactiveUI()
-    {
-        root.style.display = DisplayStyle.None;
-    }
+    void IMenuUI.ActiveUI() => root.style.display = DisplayStyle.Flex;
+    void IMenuUI.InactiveUI() => root.style.display = DisplayStyle.None;
 }

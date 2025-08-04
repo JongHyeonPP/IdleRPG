@@ -121,7 +121,7 @@ public class BattleManager : MonoBehaviour
             _enemies = battleType switch
             {
                 BattleType.Default => MakeDefaultEnemies(),
-                BattleType.Boss or BattleType.CompanionTech => MakeBoss(),
+                BattleType.Boss or BattleType.CompanionTech or BattleType.Adventure => MakeBoss(),
                 _ => _enemies
             };
             _currentTargetIndex = 0;
@@ -227,7 +227,7 @@ public class BattleManager : MonoBehaviour
     private void SwitchToAdventure(int index_0, int index_1)
     {
         _currentStageInfo = StageInfoManager.instance.GetAdventureStageInfo(index_0)[index_1];
-        battleType = BattleType.CompanionTech;
+        battleType = BattleType.Adventure;
         StartBattle(_currentStageInfo, true);
     }
 
@@ -315,27 +315,44 @@ public class BattleManager : MonoBehaviour
         {
             case BattleType.Boss:
                 _gameData.currentStageNum++;
-                EndBossOrTechBattle();
+                DelayOnEnd();
                 break;
             case BattleType.CompanionTech:
-                var techInfo = _currentStageInfo.companionTechInfo;
-                SetPromoteTech(techInfo.companionNum, techInfo.techIndex_0, techInfo.techIndex_1);
-                var techData = CompanionManager.instance.GetCompanionTechData(techInfo.companionNum, techInfo.techIndex_0, techInfo.techIndex_1);
-                _gameData.dia += techData.dia;
-                _gameData.clover += techData.clover;
+                StageInfo.CompanionTechInfo techInfo = _currentStageInfo.companionTechInfo;
+                _gameData.companionPromoteTech[techInfo.companionNum][techInfo.techIndex_1] = techInfo.techIndex_0;
+                (int, int) companionReward = BattleBroker.GetCompanionReward(techInfo.techIndex_0, techInfo.techIndex_1);
+                _gameData.dia += companionReward.Item1;
+                _gameData.clover += companionReward.Item2;
                 BattleBroker.OnDiaSet();
                 BattleBroker.OnCloverSet();
-                EndBossOrTechBattle();
+                NetworkBroker.QueueResourceReport(companionReward.Item1, Resource.Dia, Source.Companion);
+                NetworkBroker.QueueResourceReport(companionReward.Item2, Resource.Clover, Source.Companion);
+                NetworkBroker.SaveServerData();
+                DelayOnEnd();
+                break;
+            case BattleType.Adventure:
+                StageInfo.AdventureInfo adventureInfo = _currentStageInfo.adventrueInfo;
+                _gameData.adventureProgess[adventureInfo.adventureIndex_0]++;
+                (int, int) adventureReward = BattleBroker.GetAdventureReward(adventureInfo.adventureIndex_0, adventureInfo.adventureIndex_1);
+                _gameData.dia += adventureReward.Item1;
+                _gameData.clover += adventureReward.Item2;
+                _gameData.scroll -= StageInfoManager.instance.adventureEntranceFee;
+                BattleBroker.OnDiaSet();
+                BattleBroker.OnCloverSet();
+                BattleBroker.OnScrollSet();
+                NetworkBroker.QueueResourceReport(adventureInfo.adventureIndex_0, Resource.None, Source.Adventure);
+                NetworkBroker.SaveServerData();
+                DelayOnEnd();
                 break;
         }
     }
 
     private void SetPromoteTech(int compNum, int t0, int t1)
     {
-        _gameData.companionPromoteTech[compNum][t1] = t0;
+        
     }
 
-    private void EndBossOrTechBattle()
+    private void DelayOnEnd()
     {
         battleType = BattleType.None;
         _isMove = true;

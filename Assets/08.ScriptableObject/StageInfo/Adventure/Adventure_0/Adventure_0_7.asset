@@ -35,3 +35,6 @@ MonoBehaviour:
     techIndex_0: 0
     techIndex_1: 0
     recommendLevel: 0
+  adventrueInfo:
+    adventureIndex_0: 0
+    adventureIndex_1: 7

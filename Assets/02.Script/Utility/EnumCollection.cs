@@ -50,7 +50,8 @@ namespace EnumCollection
     }
     public enum BattleType
     {
-        Default, Boss,CompanionTech, Story, None
+        Default, Boss,CompanionTech, Story, None,
+        Adventure
     }
     public enum EnemyType
     {
@@ -71,11 +72,17 @@ namespace EnumCollection
     public enum Resource
     {
         //재화 종류
-        Gold, Exp, Dia, Clover
+        Gold, Exp, Dia, Clover, Scroll,
+        None
     }
     public enum Source
     {
         //재화 획득처
-        Battle, Adventure
+        Battle, Adventure, Companion
+    }
+    public enum SpendType
+    {
+        //재화 사용처
+        Status
     }
 }

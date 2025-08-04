@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static UnityEngine.GraphicsBuffer;
 
 public class WeaponInfoUI : MonoBehaviour, IGeneralUI
 {
@@ -152,9 +151,7 @@ public class WeaponInfoUI : MonoBehaviour, IGeneralUI
             PlayerBroker.OnWeaponLevelSet(weaponID, weaponLevel);
             NetworkBroker.SaveServerData();
         }
-
         ShowWeaponInfo(_currentWeapon);
-       
     }
     private IEnumerator HideInsufficientPanel(float delaySeconds)
     {

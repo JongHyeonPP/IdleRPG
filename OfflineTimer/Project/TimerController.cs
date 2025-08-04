@@ -90,7 +90,7 @@ namespace OfflineTimer
                 ? response.Data.Results[0].Value.ToString()
                 : "{}";
 
-            _logger.LogDebug($"Loaded OfflineRewardInfo: {json}");
+            //_logger.LogDebug($"Loaded OfflineRewardInfo: {json}");
 
             return JsonConvert.DeserializeObject<Dictionary<string, string>>(json) ?? new();
         }
@@ -99,7 +99,7 @@ namespace OfflineTimer
             IExecutionContext ctx, IGameApiClient api, string pid, Dictionary<string, string> data)
         {
             string json = JsonConvert.SerializeObject(data);
-            _logger.LogDebug($"Saving OfflineRewardInfo: {json}");
+            //_logger.LogDebug($"Saving OfflineRewardInfo: {json}");
 
             await api.CloudSaveData.SetItemAsync(
                 ctx, ctx.ServiceToken, ctx.ProjectId, pid, new SetItemBody("OfflineRewardInfo", json));

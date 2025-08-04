@@ -22,7 +22,6 @@ public class DuplicateLoginUI : MonoBehaviour, IGeneralUI
 
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
         root = GetComponent<UIDocument>().rootVisualElement;
         StartBroker.OnDetectDuplicateLogin += OnDetectDuplicateLogin;
     }

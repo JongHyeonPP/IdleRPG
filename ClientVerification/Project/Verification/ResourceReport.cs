@@ -1,13 +1,14 @@
+using ClientVerification.Etc;
 using Newtonsoft.Json;
 
 namespace ClientVerification.Verification
 {
-    public class VerificationReport
+    public class ResourceReport
     {
         [JsonProperty("resource")]
-        public string Resource { get; set; }
+        public Resource Resource { get; set; }
         [JsonProperty("source")]
-        public string Source { get; set; }
+        public Source Source { get; set; }
         [JsonProperty("value")]
         public int Value { get; set; }
     }

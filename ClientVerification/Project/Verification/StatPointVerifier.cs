@@ -4,12 +4,17 @@ namespace ClientVerification.Verification
 {
     public class StatPointVerifier : IDataVerifier
     {
-        public bool Verify(GameData clientData, out string failReason)
+        private GameData _clientData;
+        public StatPointVerifier(GameData clientData)
         {
-            int used = clientData.statLevel_StatPoint.Values.Sum();
-            if (clientData.statPoint + used != clientData.level-1)
+            _clientData = clientData;
+        }
+        public bool Verify(out string failReason)
+        {
+            int used = _clientData.statLevel_StatPoint.Values.Sum();
+            if (used > _clientData.level-1)
             {
-                failReason = $"StatPointMismatch...have : {clientData.statPoint + used}, expected : {clientData.level - 1}";
+                failReason = $"StatPointMismatch...used : { used}, level : {_clientData.level}";
                 return false;
             }
 

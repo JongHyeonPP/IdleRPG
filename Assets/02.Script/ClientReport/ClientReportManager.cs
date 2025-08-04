@@ -1,6 +1,8 @@
 using EnumCollection;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Unity.Services.Authentication;
 using Unity.Services.CloudCode;
@@ -13,10 +15,12 @@ public class ClientReportManager : MonoBehaviour
     private readonly float _verificationInterval = 5f;
     private float _verificationElapsed;
 
-    private List<ClientVerificationReport> _clientVerificationReportList = new();
+    private List<ClientResourceReport> _clientResourceReportList = new();
+    private Dictionary<string, int> _clientSpendReportDict = new();
     public bool isAcquireOfflineReward = false;
     private GameData _gameData;
-   
+
+    private CancellationTokenSource _cts;
 
     private void Awake()
     {
@@ -25,14 +29,21 @@ public class ClientReportManager : MonoBehaviour
 
     private void Start()
     {
-        NetworkBroker.SetResourceReport += SetResourceReport;
+        NetworkBroker.QueueResourceReport += QueueResourceReport;
+        NetworkBroker.QueueSpendReport += SetSpendReport;
         NetworkBroker.OnOfflineReward += () => isAcquireOfflineReward = true;
         NetworkBroker.StageClearVerification += StageClearVerificationAsync;
         NetworkBroker.SaveServerData += ForceVerificationNow;
 
         _gameData = StartBroker.GetGameData();
 
-        _ = VerificationLoopAsync(); // 코루틴 없이 실행
+        _cts = new CancellationTokenSource();
+        _ = VerificationLoopAsync(_cts.Token);
+    }
+
+    private void OnDestroy()
+    {
+        _cts?.Cancel();
     }
 
     private async void StageClearVerificationAsync()
@@ -43,61 +54,74 @@ public class ClientReportManager : MonoBehaviour
         );
     }
 
-    private void SetResourceReport(int value, Resource resource, Source source)
+    private void QueueResourceReport(int value, Resource resource, Source source)
     {
-        var newGoldReport = new ClientVerificationReport(value, resource, source);
-        _clientVerificationReportList.Add(newGoldReport);
+        var newResourceReport = new ClientResourceReport(value, resource, source);
+        _clientResourceReportList.Add(newResourceReport);
     }
 
-
-    [ContextMenu("VerificationReport")]
-    private async void VerificationReport()
+    private void SetSpendReport(SpendType type, string additional, int amount)
     {
-        string serializedVerificationReport = JsonConvert.SerializeObject(_clientVerificationReportList);
+        string key = $"{type}_{additional}";
+        if (_clientSpendReportDict.ContainsKey(key))
+        {
+            _clientSpendReportDict[key] += amount;
+        }
+        else
+        {
+            _clientSpendReportDict.Add(key, amount);
+        }
+    }
+
+    [ContextMenu("SendTotalReport")]
+    private async void SendTotalReport()
+    {
+        string serializedResourceReport = JsonConvert.SerializeObject(_clientResourceReportList);
+        string serializedSpendReport = JsonConvert.SerializeObject(_clientSpendReportDict);
         string serializedGameData = JsonConvert.SerializeObject(_gameData);
 
         Dictionary<string, object> args = new()
         {
-            { "serializedGoldReport", serializedVerificationReport },
+            { "serializedResourceReport", serializedResourceReport },
+            { "serializedSpendReport", serializedSpendReport },
             { "serializedGameData", serializedGameData },
-            { "isAcquireOfflineReward", isAcquireOfflineReward},
+            { "isAcquireOfflineReward", isAcquireOfflineReward },
             { "playerId", AuthenticationService.Instance.PlayerId }
         };
+
         isAcquireOfflineReward = false;
-        _clientVerificationReportList.Clear();
+        _clientResourceReportList.Clear();
+        _clientSpendReportDict.Clear();
+        
 
         ReportResult result = await CloudCodeService.Instance.CallModuleEndpointAsync<ReportResult>(
             "ClientVerification",
             "VerificationReport",
             args
         );
+
         if (result.invalidCount >= 3)
         {
             StartBroker.OnDetectInvalidAct();
         }
-        switch (result.isVerificationSuccess)
-        {
-            case false:
-                Debug.Log("서버에 저장 실패.");
-                break;
-            case true:
-                Debug.Log("서버에 저장됐음.");
-                break;
-        }
+
+        if (result.isVerificationSuccess)
+            Debug.Log("서버에 저장됐음.");
+        else
+            Debug.Log($"서버에 저장 실패.. {result.failureFactor}");
     }
 
-    private async Task VerificationLoopAsync()
+    private async Task VerificationLoopAsync(CancellationToken token)
     {
-        while (true)
+        while (!token.IsCancellationRequested)
         {
-            await Task.Delay(1000); // 1초 대기 (Time.timeScale에 영향 받지 않음)
+            await Task.Delay(1000, token);
             _verificationElapsed += 1f;
 
             if (_verificationElapsed >= _verificationInterval)
             {
                 _verificationElapsed = 0f;
-
-                VerificationReport();
+                SendTotalReport();
             }
         }
     }
@@ -106,10 +130,10 @@ public class ClientReportManager : MonoBehaviour
     {
         _verificationElapsed = 0f;
     }
+
     public async void ForceVerificationNow()
     {
         _verificationElapsed = 0f;
-
-        VerificationReport();
+        SendTotalReport();
     }
 }

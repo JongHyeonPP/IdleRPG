@@ -17,7 +17,6 @@ public class GameData
     #endregion
 
     #region 능력치 및 스탯
-    public int statPoint;
 
     [JsonConverter(typeof(Struct_Struct_DictConverter<StatusType, int>))]
     public Dictionary<StatusType, int> statLevel_Gold = new();
