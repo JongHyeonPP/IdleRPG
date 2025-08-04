@@ -101,8 +101,9 @@ public class CompanionTechUI : MonoBehaviour, IGeneralUI
         }
         _companionEffectLabel.text = SkillManager.instance.GetParsedComplexExplain(techSkill, companionLevel, techSkillValueColor);
         //
-        _diaLabel.text = _currentTechData.dia.ToString("N0");
-        _cloverLabel.text = _currentTechData.clover.ToString("N0");
+        (int, int) currentReward = BattleBroker.GetCompanionReward(companionIndex, techIndex_0 - 1);
+        _diaLabel.text = currentReward.Item1.ToString("N0");
+        _cloverLabel.text = currentReward.Item2.ToString("N0");
         int techDataIndex = _gameData.companionPromoteTech[companionIndex][techIndex_1];
         _isAcquired = techDataIndex >= techIndex_0;
         if (techDataIndex >= techIndex_0)

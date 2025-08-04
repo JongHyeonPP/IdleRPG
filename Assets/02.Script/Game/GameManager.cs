@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
@@ -74,93 +75,11 @@ public class GameManager : MonoBehaviour
             StartBroker.OnDetectInvalidAct();
             return false;
         }
-        if (_gameData.level < 1)
-        {
-            
-        }
+
+        _gameData.statPoint = _gameData.level - 1 - _gameData.statLevel_StatPoint.Values.Sum();
+
         string serializedData = JsonConvert.SerializeObject(_gameData);
         Debug.Log("Game data loaded:\n" + serializedData);
         return true;
-    }
-    // Context Menu를 이용하여 companionPromote에 고정된 값 추가
-    [ContextMenu("Fill Companion Promote")]
-    public void FillCompanionPromote()
-    {
-        if (_gameData == null)
-        {
-            Debug.LogError("_gameData가 설정되지 않았습니다.");
-            return;
-        }
-
-        _gameData.companionPromoteEffect[0].Clear();
-        _gameData.companionPromoteEffect[1].Clear();
-        _gameData.companionPromoteEffect[2].Clear();
-
-        // 1번 동료
-        _gameData.companionPromoteEffect[0][0] = (StatusType.MaxHp, Rarity.Common);
-        _gameData.companionPromoteEffect[0][1] = (StatusType.CriticalDamage, Rarity.Rare);
-
-        // 2번 동료
-        _gameData.companionPromoteEffect[1][0] = (StatusType.HpRecover, Rarity.Legendary);
-        _gameData.companionPromoteEffect[1][1] = (StatusType.ExpAscend, Rarity.Unique);
-
-        // 3번 동료
-        _gameData.companionPromoteEffect[2][0] = (StatusType.Penetration, Rarity.Mythic);
-        _gameData.companionPromoteEffect[2][1] = (StatusType.GoldAscend, Rarity.Uncommon);
-
-        NetworkBroker.SaveServerData();
-        Debug.Log("Companion Promote 데이터가 채워졌습니다!");
-    }
-
-    // Context Menu를 이용하여 companionPromote 값 출력
-    [ContextMenu("Print Companion Promote")]
-    public void PrintCompanionPromote()
-    {
-        if (_gameData == null)
-        {
-            Debug.LogError("GameData가 설정되지 않았습니다.");
-            return;
-        }
-
-        for (int i = 0; i < _gameData.companionPromoteEffect.Length; i++)
-        {
-            Debug.Log($"ㅇ 동료 {i + 1}:");
-            foreach (var kvp in _gameData.companionPromoteEffect[i])
-            {
-                Debug.Log($"   - Key {kvp.Key}: {kvp.Value.Item1} ({kvp.Value.Item2})");
-            }
-        }
-    }
-    [ContextMenu("Fill Stat Promote")]
-    public void FillStatPromote()
-    {
-        _gameData.stat_Promote.Clear();
-
-        _gameData.stat_Promote[1] = (StatusType.MaxHp, 5);
-        _gameData.stat_Promote[2] = (StatusType.Power, 10);
-        _gameData.stat_Promote[3] = (StatusType.HpRecover, 7);
-        _gameData.stat_Promote[4] = (StatusType.Critical, 3);
-        _gameData.stat_Promote[5] = (StatusType.CriticalDamage, 8);
-        _gameData.stat_Promote[6] = (StatusType.Resist, 4);
-        _gameData.stat_Promote[7] = (StatusType.Penetration, 6);
-        _gameData.stat_Promote[8] = (StatusType.GoldAscend, 2);
-        _gameData.stat_Promote[9] = (StatusType.ExpAscend, 1);
-        _gameData.stat_Promote[10] = (StatusType.MaxMp, 0);
-        _gameData.stat_Promote[11] = (StatusType.MpRecover, 0);
-
-        NetworkBroker.SaveServerData();
-    }
-    [ContextMenu("Print Stat Promote")]
-    public void PrintStatPromote()
-    {
-        foreach (var kvp in _gameData.stat_Promote)
-        {
-            Debug.Log($"ID: {kvp.Key}, Type: {kvp.Value.Item1}, Value: {kvp.Value.Item2}");
-        }
-    }
-    [ContextMenu("Temp")]
-    public void Temp()
-    {
-        _gameData.currentStageNum = _gameData.maxStageNum = 2;
     }
 }

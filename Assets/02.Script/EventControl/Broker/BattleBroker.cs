@@ -34,7 +34,7 @@ public static class BattleBroker
     public static Action<int, int> SwitchToAdventure;
     public static Action<int, (int,int)> SwitchToCompanionBattle;
     //동료
-    public static Action<int> ControllCompanionMove;//0 : 멈충, 1 : 움직임, 2 : 공격
+    public static Action<int> ControllCompanionMove;//0 : 멈춤, 1 : 움직임, 2 : 공격
     public static Action<int> OnCompanionExpSet;
     //승급
     public static Action<Rank> ChallengeRank;
@@ -50,5 +50,6 @@ public static class BattleBroker
 
     public static Action<Vector3, string> ShowDamageText;//Screen Pos
 
-
+    public static Func<int, int, (int, int)> GetCompanionReward;//index_0, index_1, (dia, clover)
+    public static Func<int, int, (int, int)> GetAdventureReward;//index_0, index_1, (dia, clover)
 }

@@ -105,7 +105,8 @@ public class EnemyController : Attackable, IMoveByPlayer
         // 차이를 계산
         double logDifference = logValue1 - logValue2;
         float ratio = (float)Math.Exp(logDifference);
-        if (BattleBroker.GetBattleType()==BattleType.Boss||BattleBroker.GetBattleType()==BattleType.CompanionTech)
+        var battleType =  BattleBroker.GetBattleType();
+        if (battleType == BattleType.Boss || battleType == BattleType.CompanionTech || battleType == BattleType.Adventure)
         {
             BattleBroker.OnBossHpChanged(ratio);
         }

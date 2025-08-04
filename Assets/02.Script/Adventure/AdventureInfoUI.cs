@@ -106,13 +106,11 @@ public class AdventureInfoUI : MonoBehaviour, IGeneralUI
     }
     private void OnInfoSlotSelect(int index)
     {
-        (int, int) reward = StageInfoManager.instance.adventureReward[_currentSlotIndex];
-        int dia = reward.Item1 + StageInfoManager.instance.diaIncrease * index;
-        int clover = reward.Item2 + StageInfoManager.instance.cloverIncrease * index;
+        (int, int) reward = BattleBroker.GetAdventureReward(_currentSlotIndex, index);
         _currentStage = _currentStageInfoArr[index];
         _bossImage.style.backgroundImage = new(_currentStage.boss.prefab.GetComponentInChildren<SpriteRenderer>().sprite);
-        _diaLable.text = dia.ToString("N0");
-        _cloverLable.text = clover.ToString("N0");
+        _diaLable.text = reward.Item1.ToString("N0");
+        _cloverLable.text = reward.Item2.ToString("N0");
         _titleLabel.text = _currentStage.stageName;
         
         int currentProgress = _gameData.adventureProgess[_currentSlotIndex];

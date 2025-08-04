@@ -34,11 +34,12 @@ public class StageInfoManager : MonoBehaviour
     [Header("Region")]
     [SerializeField] StageRegion[] _stageRegionArr;
     [Header("AdventureReward")]
-    public int diaIncrease;
-    public int cloverIncrease;
-    public List<(int, int)> adventureReward = new();
+    public int adventureDiaIncrease;
+    public int adventureCloverIncrease;
+    public List<(int, int)> adventureRewardList = new();//dia, clover
     public int adventureEntranceFee;
-
+    [Header("CompanionReward")]
+    public List<(int, int, int, int)> companionRewardList = new();//dia, clover, diaIncrease, cloverIncrease
 
     public StageRegion GetRegionInfo(int index) => _stageRegionArr[index];
 
@@ -55,20 +56,49 @@ public class StageInfoManager : MonoBehaviour
             Destroy(gameObject);
         }
         SetAdventureReward();
+        SetCompanionReward();
+        BattleBroker.GetCompanionReward += GetCompanionReward;
+        BattleBroker.GetAdventureReward += GetAdventureReward;
+    }
+
+    private (int, int) GetCompanionReward(int index_0, int index_1)
+    {
+        (int, int, int, int) reward = companionRewardList[index_0];
+        return new(reward.Item1 + reward.Item3 * index_1, reward.Item2 + reward.Item4 * index_1);
+    }
+    private (int, int) GetAdventureReward(int index_0, int index_1)
+    {
+        (int, int) reward = adventureRewardList[index_0];
+        return new(reward.Item1 + adventureDiaIncrease*index_1, reward.Item2 + adventureCloverIncrease * index_1);
+    }
+
+    private void SetCompanionReward()
+    {
+        string rewardJson = RemoteConfigService.Instance.appConfig.GetJson("COMPANION_REWARD", "None");
+        Dictionary<string, object> rewardDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(rewardJson);
+        for (int i = 0; i < 3; i++)
+        {
+            Dictionary<string, string> adventureRewardDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(Convert.ToString(rewardDict[$"Companion_{i}"]));
+            int dia = int.Parse(adventureRewardDict["Dia"]);
+            int clover = int.Parse(adventureRewardDict["Clover"]);
+            int diaIncrease = int.Parse(adventureRewardDict["DiaIncrease"]);
+            int cloverIncrease = int.Parse(adventureRewardDict["CloverIncrease"]);
+            companionRewardList.Add(new(dia, clover, diaIncrease, cloverIncrease));
+        }
     }
 
     private void SetAdventureReward()
     {
         string rewardJson = RemoteConfigService.Instance.appConfig.GetJson("ADVENTURE_REWARD", "None");
         Dictionary<string, object> rewardDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(rewardJson);
-        diaIncrease = Convert.ToInt32(rewardDict["DiaIncrease"]);
-        cloverIncrease = Convert.ToInt32(rewardDict["CloverIncrease"]);
+        adventureDiaIncrease = Convert.ToInt32(rewardDict["DiaIncrease"]);
+        adventureCloverIncrease = Convert.ToInt32(rewardDict["CloverIncrease"]);
         for (int i = 0; i < 9; i++)
         {
             Dictionary<string, string> adventureRewardDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(Convert.ToString( rewardDict[$"Adventure_{i}"]));
             int dia = int.Parse(adventureRewardDict["Dia"]);
             int clover = int.Parse(adventureRewardDict["Clover"]);
-            adventureReward.Add(new(dia, clover));
+            adventureRewardList.Add(new(dia, clover));
         }
         adventureEntranceFee = Convert.ToInt32(rewardDict["EntranceFee"]);
     }

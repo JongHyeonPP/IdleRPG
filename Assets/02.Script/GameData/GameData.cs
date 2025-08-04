@@ -19,7 +19,7 @@ public class GameData
     #endregion
 
     #region 능력치 및 스탯
-    public int statPoint;
+
 
     [JsonConverter(typeof(Struct_Struct_DictConverter<StatusType, int>))]
     public Dictionary<StatusType, int> statLevel_Gold = new();
@@ -85,4 +85,8 @@ public class GameData
     #endregion
 
     public int[] adventureProgess = new int[9];//모험 진행도
+
+    #region 서버에 없음
+    public int statPoint;
+    #endregion
 }
