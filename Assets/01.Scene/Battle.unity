@@ -2774,6 +2774,7 @@ MonoBehaviour:
     invalidCount: 0
     equipedCostumes: []
     ownedCostumes: []
+    adventureProgess: 000000000000000000000000000000000000000000000000000000000000000000000000
   skillUI: {fileID: 246605442210432971}
   equipedSkillUI: {fileID: 8205451347979957151}
   skillAcquireUI: {fileID: 374194269}
@@ -4500,9 +4501,53 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6946626494167832514, guid: 877fdfd8e9dfd9447b1731f13fce6dfc, type: 3}
+      propertyPath: goldSprite
+      value: 
+      objectReference: {fileID: 7032392076802342376, guid: aae3667f536b48e4fa72580190fb83a3, type: 3}
+    - target: {fileID: 6946626494167832514, guid: 877fdfd8e9dfd9447b1731f13fce6dfc, type: 3}
+      propertyPath: ironSprite
+      value: 
+      objectReference: {fileID: -3626065680056454039, guid: a72837a08f0938a489006927a4906528, type: 3}
+    - target: {fileID: 6946626494167832514, guid: 877fdfd8e9dfd9447b1731f13fce6dfc, type: 3}
+      propertyPath: maxHpSprite
+      value: 
+      objectReference: {fileID: -2273970444957069246, guid: e66acbc54218aa74ba865372dc8042c0, type: 3}
+    - target: {fileID: 6946626494167832514, guid: 877fdfd8e9dfd9447b1731f13fce6dfc, type: 3}
+      propertyPath: powerSprite
+      value: 
+      objectReference: {fileID: 5152710313159076202, guid: 6734205fa62dfbf4fad2affa94474318, type: 3}
+    - target: {fileID: 6946626494167832514, guid: 877fdfd8e9dfd9447b1731f13fce6dfc, type: 3}
+      propertyPath: stoneSprite
+      value: 
+      objectReference: {fileID: 3792587517066259605, guid: 37866e6dd5c8d394abc84f3074038852, type: 3}
+    - target: {fileID: 6946626494167832514, guid: 877fdfd8e9dfd9447b1731f13fce6dfc, type: 3}
+      propertyPath: bronzeSprite
+      value: 
+      objectReference: {fileID: -8017709539377521358, guid: 2b299d7c24f754b4280590637635a9c3, type: 3}
+    - target: {fileID: 6946626494167832514, guid: 877fdfd8e9dfd9447b1731f13fce6dfc, type: 3}
+      propertyPath: silverSprite
+      value: 
+      objectReference: {fileID: -3501460741966461771, guid: 810a4d1a2bb17914f89a0a257ff8271a, type: 3}
+    - target: {fileID: 6946626494167832514, guid: 877fdfd8e9dfd9447b1731f13fce6dfc, type: 3}
+      propertyPath: criticalSprite
+      value: 
+      objectReference: {fileID: 4581514859258324829, guid: bdecdbc7180952c4d9fb909b83be9999, type: 3}
+    - target: {fileID: 6946626494167832514, guid: 877fdfd8e9dfd9447b1731f13fce6dfc, type: 3}
+      propertyPath: hpRecoverSprite
+      value: 
+      objectReference: {fileID: -3789215705636242090, guid: 844717dadbdbe65429d7f91e8c3d68f4, type: 3}
+    - target: {fileID: 6946626494167832514, guid: 877fdfd8e9dfd9447b1731f13fce6dfc, type: 3}
+      propertyPath: goldAscendSprite
+      value: 
+      objectReference: {fileID: -3895466941613944415, guid: ec67d028aac6c4742aaedce891c540e1, type: 3}
+    - target: {fileID: 6946626494167832514, guid: 877fdfd8e9dfd9447b1731f13fce6dfc, type: 3}
       propertyPath: _promoteAbilityUI
       value: 
       objectReference: {fileID: 1308468328}
+    - target: {fileID: 6946626494167832514, guid: 877fdfd8e9dfd9447b1731f13fce6dfc, type: 3}
+      propertyPath: criticalDamageSprite
+      value: 
+      objectReference: {fileID: -3290114246607120259, guid: 0dcd6bc4828e74e42b8fdfd940af38a3, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -59,6 +59,12 @@ public class WeaponInfoUI : MonoBehaviour, IGeneralUI
     }
     private void OnEquipClick()
     {
+        if (!HasEnoughWeapon(_currentWeapon.UID))
+        {
+            ShowInsufficientPanel();
+            return;
+        }
+
         UIBroker.InactiveCurrentUI();
         PlayerBroker.OnEquipWeapon?.Invoke(_currentWeapon, _currentWeapon.WeaponType);
         switch (_currentWeapon.WeaponType)
@@ -130,28 +136,23 @@ public class WeaponInfoUI : MonoBehaviour, IGeneralUI
     }
     private void Reinforce(string weaponID)
     {
-
-        int weaponCount = GetWeaponCount(weaponID);
         int weaponLevel = GetWeaponLevel(weaponID);
-        if (weaponCount <= 0 || weaponCount < weaponLevel + 1)
+        int requiredCount = weaponLevel + 1;
+
+        if (!HasEnoughWeapon(weaponID, requiredCount))
         {
-            _insufficientPanel.style.display = DisplayStyle.Flex;
-            StartCoroutine(HideInsufficientPanel(1f));
+            ShowInsufficientPanel();
             return;
         }
-        else
-        {
-            CreateSuccessEffect();
-            weaponCount -= weaponLevel + 1;
+        
+        CreateSuccessEffect();
 
-            weaponLevel = ++weaponLevel;
+        _weaponCount[weaponID] -= requiredCount;
+        _weaponLevel[weaponID] = ++weaponLevel;
 
-            _weaponCount[weaponID] = weaponCount;
-            _weaponLevel[weaponID] = weaponLevel;
-            PlayerBroker.OnWeaponCountSet(weaponID, weaponCount);
-            PlayerBroker.OnWeaponLevelSet(weaponID, weaponLevel);
-            NetworkBroker.SaveServerData();
-        }
+        PlayerBroker.OnWeaponCountSet(weaponID, _weaponCount[weaponID]);
+        PlayerBroker.OnWeaponLevelSet(weaponID, weaponLevel);
+        NetworkBroker.SaveServerData();
 
         ShowWeaponInfo(_currentWeapon);
        
@@ -160,6 +161,17 @@ public class WeaponInfoUI : MonoBehaviour, IGeneralUI
     {
         yield return new WaitForSeconds(delaySeconds);
         _insufficientPanel.style.display = DisplayStyle.None;
+    }
+    private bool HasEnoughWeapon(string weaponID, int requiredCount = 1)
+    {
+        int count = GetWeaponCount(weaponID);
+        return count >= requiredCount;
+    }
+
+    private void ShowInsufficientPanel(float hideDelay = 1f)
+    {
+        _insufficientPanel.style.display = DisplayStyle.Flex;
+        StartCoroutine(HideInsufficientPanel(hideDelay));
     }
     private void CreateSuccessEffect()
     {
