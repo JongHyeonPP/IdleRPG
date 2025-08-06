@@ -12,41 +12,145 @@ public class AdventureUI : MonoBehaviour, IMenuUI
     private VisualElement _rootChild;
     private Label _scrollLabel;
 
-    private float _duration = 0.2f;          // 커지는 시간
-    private float _shrinkDuration = 0.8f;    // 줄어드는 시간
-    private float _targetHeight = 1900f;     // 최종 높이
-    private float _overshootFactor = 1.01f;   // 오버슈트 비율
+    private float _duration = 0.2f;
+    private float _shrinkDuration = 0.8f;
+    private float _targetHeight = 1900f;
+    private float _overshootFactor = 1.01f;
     private Coroutine _animCoroutine;
 
-    //Button
-    Button _adventureButton;
-    Button _dungeonButton;
+    private Button _adventureButton;
+    private Button _dungeonButton;
 
-    //ButtonColor
     private readonly Color inactiveColor = new(0.7f, 0.7f, 0.7f);
     private readonly Color activeColor = new(1f, 1f, 1f);
 
     [Header("Adventure Panel")]
     [SerializeField] AdventureSlot[] _adventureSlotArr;
-    private VisualElement _adventurePanel_Adventure;
-    
+    private VisualElement _adventurePanel;
+
     [Header("Dungeon Panel")]
     [SerializeField] AdventureSlot[] _dungeonSlotArr;
-    private VisualElement _adventurePanel_Dungeon;
+    private VisualElement _dungeonPanel;
 
-    //Ref
     [SerializeField] AdventureInfoUI _adventureInfoUI;
+    [SerializeField] DungeonInfoUI _dungeonInfoUI;
+
     private void Awake()
     {
         _gameData = StartBroker.GetGameData();
         root = GetComponent<UIDocument>().rootVisualElement;
         _rootChild = root.Q<VisualElement>("AdventureUI");
-        InitAdventurePanel();
-        InitDungeonPanel();
+
+        _adventurePanel = root.Q<VisualElement>("AdventurePanel");
+        _dungeonPanel = root.Q<VisualElement>("DungeonPanel");
+
+        InitSlotPanel(_adventurePanel, _adventureSlotArr, OnAdventureSlotClicked);
+        InitSlotPanel(_dungeonPanel, _dungeonSlotArr, OnDungeonSlotClicked);
+
         InitCategoriButton();
+
         _scrollLabel = root.Q<Label>("ScrollLabel");
         BattleBroker.OnScrollSet += OnScrollSet;
         BattleBroker.OnScrollSet();
+    }
+
+    private void InitSlotPanel(VisualElement panel, AdventureSlot[] slotArr, Action<int> clickAction)
+    {
+        var slotParent = panel.Q<VisualElement>("SlotParent");
+        var childrenList = slotParent.Children().ToList();
+
+        for (int i = 0; i < childrenList.Count; i++)
+        {
+            var index = i;
+            var slotElement = childrenList[i];
+            var slot = slotArr[i];
+
+            slot.InitAtStart(slotElement, new(slotElement, this));
+            slotElement.Q<Label>("NameLabel").text = slot.stageRegion.regionName;
+            slotElement.Q<VisualElement>("SlotIcon").style.backgroundImage = new(slot.slotIcon);
+
+            // 핵심: 클릭 이벤트 안에서 해금 여부 체크
+            slotElement.RegisterCallback<ClickEvent>((evt) =>
+            {
+                int unlockedSlotCount = Mathf.CeilToInt(_gameData.maxStageNum / 20f);
+                if (index < unlockedSlotCount)
+                    clickAction(index);
+            });
+        }
+    }
+
+    private void UpdateAdventureSlotProgress()
+    {
+        int unlockedSlotCount = Mathf.CeilToInt(_gameData.maxStageNum / 20f);
+
+        for (int i = 0; i < _adventureSlotArr.Length; i++)
+        {
+            AdventureSlot slot = _adventureSlotArr[i];
+            slot.noticeDot.StopNotice();
+
+            if (i < unlockedSlotCount)
+            {
+                slot.progressBar.style.display = DisplayStyle.Flex;
+                slot.progressBar.value = _gameData.adventureProgess[i] / 10f;
+                slot.noticeDot.StartNotice();
+                slot.namePanel.style.opacity = new(1f);
+                slot.nameLabel.style.display = DisplayStyle.Flex;
+            }
+            else
+            {
+                slot.progressBar.style.display = DisplayStyle.None;
+                slot.namePanel.style.opacity = new(0.2f);
+                slot.nameLabel.style.display = DisplayStyle.None;
+            }
+        }
+    }
+
+    private void OnAdventureSlotClicked(int index)
+    {
+        _adventureInfoUI.ActiveUI(_adventureSlotArr[index], index);
+    }
+
+    private void OnDungeonSlotClicked(int index)
+    {
+        _dungeonInfoUI.ActiveUI(_dungeonSlotArr[index], index);
+    }
+
+    private void InitCategoriButton()
+    {
+        _adventureButton = root.Q<Button>("AdventureButton");
+        _dungeonButton = root.Q<Button>("DungeonButton");
+
+        _adventureButton.RegisterCallback<ClickEvent>(_ => OnAdventureButtonClicked());
+        _dungeonButton.RegisterCallback<ClickEvent>(_ => OnDungeonButtonClicked());
+
+        OnAdventureButtonClicked();
+    }
+
+    private void SetButtonStyle(Button button, Color bgColor, Color outlineColor, Color textColor, float bgAlpha)
+    {
+        button.style.unityBackgroundImageTintColor = new Color(bgColor.r, bgColor.g, bgColor.b, bgAlpha);
+        button.Q<VisualElement>("OutLine").style.unityBackgroundImageTintColor = outlineColor;
+        button.Q<Label>().style.color = textColor;
+    }
+
+    private void SwitchPanel(VisualElement show, VisualElement hide, Button activeBtn, Button inactiveBtn)
+    {
+        show.style.display = DisplayStyle.Flex;
+        hide.style.display = DisplayStyle.None;
+
+        SetButtonStyle(activeBtn, activeColor, activeColor, activeColor, 0.1f);
+        SetButtonStyle(inactiveBtn, inactiveColor, inactiveColor, inactiveColor, 0f);
+    }
+
+    private void OnAdventureButtonClicked()
+    {
+        SwitchPanel(_adventurePanel, _dungeonPanel, _adventureButton, _dungeonButton);
+        UpdateAdventureSlotProgress();
+    }
+
+    private void OnDungeonButtonClicked()
+    {
+        SwitchPanel(_dungeonPanel, _adventurePanel, _dungeonButton, _adventureButton);
     }
 
     private void OnScrollSet()
@@ -54,70 +158,13 @@ public class AdventureUI : MonoBehaviour, IMenuUI
         _scrollLabel.text = _gameData.scroll.ToString("N0");
     }
 
-    private void InitAdventurePanel()
-    {
-        _adventurePanel_Adventure = root.Q<VisualElement>("AdventurePanel_Adventure");
-        VisualElement slotParent = _adventurePanel_Adventure.Q<VisualElement>("SlotParent");
-        List<VisualElement> childrenList = slotParent.Children().ToList();
-        for (int i = 0; i < childrenList.Count; i++)
-        {
-            int index = i;
-            VisualElement slotElement = childrenList[i];
-            AdventureSlot adventureSlot = _adventureSlotArr[i];
-            adventureSlot.InitAtStart(slotElement, new(slotElement, this));
-            adventureSlot.progressBar.value = _gameData.adventureProgess[index] / 10f;
-            adventureSlot.noticeDot.StartNotice();
-            slotElement.Q<Label>("NameLabel").text = adventureSlot.stageRegion.regionName;
-            slotElement.Q<VisualElement>("SlotIcon").style.backgroundImage = new(adventureSlot.slotIcon);
-            slotElement.Q<VisualElement>("AdventureSlot").RegisterCallback<ClickEvent>((evt)=>OnAdventureSlotClicked(index));
-        }
-    }
-    private void OnAdventureSlotClicked(int index)
-    {
-        _adventureInfoUI.ActiveUI(_adventureSlotArr[index], index);
-    }
-    private void InitDungeonPanel()
-    {
-
-    }
-    private void InitCategoriButton()
-    {
-        _adventureButton = root.Q<Button>("AdventureButton");
-        _dungeonButton = root.Q<Button>("DungeonButton");
-        _adventureButton.RegisterCallback<ClickEvent>(evt => OnAdventureButtonClicked());
-        _dungeonButton.RegisterCallback<ClickEvent>(evt => OnDungeonButtonClicked());
-        OnAdventureButtonClicked();
-    }
-    private void OnAdventureButtonClicked()
-    {
-        _adventurePanel_Adventure.style.display = DisplayStyle.Flex;
-        //_adventurePanel_Dungeon.style.display = DisplayStyle.None;
-
-        _adventureButton.style.unityBackgroundImageTintColor = new Color(activeColor.r, activeColor.g, activeColor.b, 0.1f);
-        _adventureButton.Q<VisualElement>("OutLine").style.unityBackgroundImageTintColor = activeColor;
-        _adventureButton.Q<Label>().style.color = activeColor;
-        _dungeonButton.style.unityBackgroundImageTintColor = new Color(inactiveColor.r, inactiveColor.g, inactiveColor.b, 0f);
-        _dungeonButton.Q<VisualElement>("OutLine").style.unityBackgroundImageTintColor = inactiveColor;
-        _dungeonButton.Q<Label>().style.color = inactiveColor;
-    }
-    private void OnDungeonButtonClicked()
-    {
-        _adventurePanel_Adventure.style.display = DisplayStyle.None;
-        //_adventurePanel_Dungeon.style.display = DisplayStyle.Flex;
-
-        _dungeonButton.style.unityBackgroundImageTintColor = new Color(activeColor.r, activeColor.g, activeColor.b, 0.1f);
-        _dungeonButton.Q<VisualElement>("OutLine").style.unityBackgroundImageTintColor = activeColor;
-        _dungeonButton.Q<Label>().style.color = activeColor;
-        _adventureButton.style.unityBackgroundImageTintColor = new Color(inactiveColor.r, inactiveColor.g, inactiveColor.b, 0f);
-        _adventureButton.Q<VisualElement>("OutLine").style.unityBackgroundImageTintColor = inactiveColor;
-        _adventureButton.Q<Label>().style.color = inactiveColor;
-    }
-
     void IMenuUI.ActiveUI()
     {
         root.style.display = DisplayStyle.Flex;
+
         if (_animCoroutine != null)
             StopCoroutine(_animCoroutine);
+
         _animCoroutine = StartCoroutine(AnimateUI());
     }
 
@@ -129,26 +176,19 @@ public class AdventureUI : MonoBehaviour, IMenuUI
     private IEnumerator AnimateUI()
     {
         float elapsed = 0f;
-
-        // 초기 높이를 0으로 설정
         _rootChild.style.height = 0;
-
         float overshootHeight = _targetHeight * _overshootFactor;
 
-        // 1단계: 0 -> Overshoot까지 커짐
         while (elapsed < _duration)
         {
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / _duration);
-            float currentHeight = Mathf.Lerp(0, overshootHeight, t);
-            _rootChild.style.height = currentHeight;
+            _rootChild.style.height = Mathf.Lerp(0, overshootHeight, t);
             yield return null;
         }
 
-        // 최종값 보정
         _rootChild.style.height = overshootHeight;
 
-        // 2단계: Overshoot -> 목표 높이로 점점 느리게 줄어듦
         elapsed = 0f;
         float startHeight = overshootHeight;
 
@@ -156,17 +196,11 @@ public class AdventureUI : MonoBehaviour, IMenuUI
         {
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / _shrinkDuration);
-
-            // EaseOutCubic: 처음엔 빠르게, 끝에 느리게
             float easedT = 1 - Mathf.Pow(1 - t, 3);
-
-            float currentHeight = Mathf.Lerp(startHeight, _targetHeight, easedT);
-            _rootChild.style.height = currentHeight;
+            _rootChild.style.height = Mathf.Lerp(startHeight, _targetHeight, easedT);
             yield return null;
         }
 
-        // 최종값 보정
         _rootChild.style.height = _targetHeight;
     }
-
 }

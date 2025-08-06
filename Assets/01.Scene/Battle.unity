@@ -324,6 +324,7 @@ Transform:
   - {fileID: 898443718}
   - {fileID: 1166806953}
   - {fileID: 207283624}
+  - {fileID: 457819535}
   - {fileID: 1639121474}
   - {fileID: 374194268}
   - {fileID: 637427959}
@@ -335,6 +336,7 @@ Transform:
   - {fileID: 916945381}
   - {fileID: 999121754}
   - {fileID: 832954543}
+  - {fileID: 1775166712}
   m_Father: {fileID: 197069069}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &86115819
@@ -850,6 +852,80 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fe1831c1413107469f74145f16132b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1001 &457819534
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 80642810}
+    m_Modifications:
+    - target: {fileID: 56395029958875419, guid: 6a0f47ec1ec6b9749a09ffb701be80a4, type: 3}
+      propertyPath: m_Name
+      value: FadeInOutPanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 56395029958875419, guid: 6a0f47ec1ec6b9749a09ffb701be80a4, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 222223493868969357, guid: 6a0f47ec1ec6b9749a09ffb701be80a4, type: 3}
+      propertyPath: stageSelectUI
+      value: 
+      objectReference: {fileID: 2547666926395390982}
+    - target: {fileID: 1694770201015621150, guid: 6a0f47ec1ec6b9749a09ffb701be80a4, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1694770201015621150, guid: 6a0f47ec1ec6b9749a09ffb701be80a4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1694770201015621150, guid: 6a0f47ec1ec6b9749a09ffb701be80a4, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1694770201015621150, guid: 6a0f47ec1ec6b9749a09ffb701be80a4, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1694770201015621150, guid: 6a0f47ec1ec6b9749a09ffb701be80a4, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1694770201015621150, guid: 6a0f47ec1ec6b9749a09ffb701be80a4, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1694770201015621150, guid: 6a0f47ec1ec6b9749a09ffb701be80a4, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1694770201015621150, guid: 6a0f47ec1ec6b9749a09ffb701be80a4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1694770201015621150, guid: 6a0f47ec1ec6b9749a09ffb701be80a4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1694770201015621150, guid: 6a0f47ec1ec6b9749a09ffb701be80a4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9054940639051616550, guid: 6a0f47ec1ec6b9749a09ffb701be80a4, type: 3}
+      propertyPath: m_SortingOrder
+      value: 5
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6a0f47ec1ec6b9749a09ffb701be80a4, type: 3}
+--- !u!4 &457819535 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1694770201015621150, guid: 6a0f47ec1ec6b9749a09ffb701be80a4, type: 3}
+  m_PrefabInstance: {fileID: 457819534}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &460513173
 GameObject:
   m_ObjectHideFlags: 0
@@ -2764,7 +2840,6 @@ MonoBehaviour:
     dia: 0
     clover: 0
     scroll: 0
-    statPoint: 0
     equipedSkillArr: []
     playerWeaponId: 
     companionWeaponIdArr: []
@@ -2775,6 +2850,7 @@ MonoBehaviour:
     equipedCostumes: []
     ownedCostumes: []
     adventureProgess: 000000000000000000000000000000000000000000000000000000000000000000000000
+    statPoint: 0
   skillUI: {fileID: 246605442210432971}
   equipedSkillUI: {fileID: 8205451347979957151}
   skillAcquireUI: {fileID: 374194269}
@@ -3743,6 +3819,70 @@ MonoBehaviour:
   m_ParentUI: {fileID: 0}
   sourceAsset: {fileID: 9197481963319205126, guid: b3aacd2933423ce43994c54fd22b7739, type: 3}
   m_SortingOrder: 2.1
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+--- !u!1 &1775166711
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1775166712}
+  - component: {fileID: 1775166714}
+  - component: {fileID: 1775166713}
+  m_Layer: 0
+  m_Name: DungeonInfoUI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1775166712
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1775166711}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 80642810}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1775166713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1775166711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73a3a827c0d8f8e45b22c19fff7844a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1775166714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1775166711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PanelSettings: {fileID: 11400000, guid: f2f0eb129a3062647b27e4d7a574aeaa, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 0}
+  m_SortingOrder: 10
   m_WorldSpaceSizeMode: 1
   m_WorldSpaceWidth: 1920
   m_WorldSpaceHeight: 1080
@@ -5494,6 +5634,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 190045333}
     m_Modifications:
+    - target: {fileID: 3550021057900636361, guid: 1c6f5ccdf96f3c14b87c402678d11b38, type: 3}
+      propertyPath: _dungeonInfoUI
+      value: 
+      objectReference: {fileID: 1775166713}
     - target: {fileID: 3550021057900636361, guid: 1c6f5ccdf96f3c14b87c402678d11b38, type: 3}
       propertyPath: _adventureInfoUI
       value: 

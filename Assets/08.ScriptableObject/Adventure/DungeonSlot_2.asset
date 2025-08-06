@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c58129efd4c58046b6efd173d41131e, type: 3}
   m_Name: DungeonSlot_2
   m_EditorClassIdentifier: 
-  slotName: "\uC2DC\uC791\uC758 \uB9C8\uC744"
-  slotIcon: {fileID: 21300000, guid: f55cc3b6fca8b474fb094e39954d90c1, type: 3}
+  slotIcon: {fileID: 21300000, guid: feb6ac39f38cc6040b8bbd17b10a4e6f, type: 3}
+  stageRegion: {fileID: 11400000, guid: 462552a0295d69e4aaa474b6c1186a5c, type: 2}

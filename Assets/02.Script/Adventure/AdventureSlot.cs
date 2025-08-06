@@ -10,7 +10,10 @@ public class AdventureSlot:ScriptableObject
     //Run Time
     public VisualElement slotElement { get; set; }
     public NoticeDot noticeDot { get; set; }
-    public ProgressBar progressBar; 
+    public ProgressBar progressBar;
+    public VisualElement namePanel;
+    public Label nameLabel;
+
     public void InitAtStart(VisualElement slotElement, NoticeDot noticeDot)
     {
         this.slotElement = slotElement;
@@ -19,5 +22,7 @@ public class AdventureSlot:ScriptableObject
         slotElement.Q<VisualElement>("Notice_MainPanel").style.backgroundColor = new Color(156f / 255f, 115f / 255f, 85f / 255f);
 
         progressBar = slotElement.Q<ProgressBar>("ProgressBar");
+        namePanel = slotElement.Q<VisualElement>("NamePanel");
+        nameLabel = slotElement.Q<Label>("NameLabel");
     }
 }

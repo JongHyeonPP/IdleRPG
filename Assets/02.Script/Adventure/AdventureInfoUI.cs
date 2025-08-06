@@ -106,6 +106,7 @@ public class AdventureInfoUI : MonoBehaviour, IGeneralUI
     }
     private void OnInfoSlotSelect(int index)
     {
+        index = Mathf.Min(index, _currentStageInfoArr.Length-1);
         (int, int) reward = BattleBroker.GetAdventureReward(_currentSlotIndex, index);
         _currentStage = _currentStageInfoArr[index];
         _bossImage.style.backgroundImage = new(_currentStage.boss.prefab.GetComponentInChildren<SpriteRenderer>().sprite);
