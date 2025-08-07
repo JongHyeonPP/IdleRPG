@@ -8,7 +8,7 @@ public static class UIBroker
     public static Action InactiveCurrentUI;
     //반투명한 검은 배경 활성화, (ActiveUI, bool?Display:Visibility)
     public static Action<VisualElement, bool> ActiveTranslucent;
-    public static Action<int,int> FadeInOut;
+    public static Action<float, float, float> FadeInOut;//in, stay, out
     //스킬 장착 상태 해제
     public static Action InactiveSkillEquip;
     //메뉴 UI 변경

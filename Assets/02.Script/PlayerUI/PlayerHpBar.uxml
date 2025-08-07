@@ -1,8 +1,8 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/02.Script/PlayerUI/PlayerHpBar.uss?fileID=7433441132597879392&amp;guid=3f8e595841db70b45b4ace9d0d8cf1f8&amp;type=3#PlayerHpBar" />
     <engine:VisualElement name="PlayerHpBar" style="flex-shrink: 0; justify-content: center; align-items: center; flex-grow: 0; width: 200px;">
-        <engine:VisualElement name="Background" style="flex-grow: 0; height: 40px; width: 100%; background-image: url(&quot;project://database/Assets/Violet%20Theme%20Ui/Progress%20Bars/Progress%20Bar%20Background.png?fileID=2800000&amp;guid=3884787ef484b9641b8d705dfa15ea9d&amp;type=3#Progress Bar Background&quot;); display: flex; visibility: visible;" />
+        <engine:VisualElement name="Background" style="flex-grow: 0; height: 40px; width: 100%; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel1Outline.png?fileID=21300000&amp;guid=9411c12f93fbda143a9a1d7c02c9e378&amp;type=3#UniversalPanel1Outline&quot;); -unity-background-image-tint-color: rgb(108, 75, 42);" />
         <engine:ProgressBar value="0.5" name="DelayedBar" high-value="1" picking-mode="Ignore" style="align-self: center; width: 100%; position: absolute; display: flex; justify-content: center;" />
-        <engine:ProgressBar value="0.5" name="HpBar" high-value="1" picking-mode="Ignore" style="align-self: center; width: 100%; position: absolute; display: flex; justify-content: center;" />
+        <engine:ProgressBar value="0.5" name="HpBar" high-value="1" picking-mode="Ignore" style="align-self: center; width: 100%; position: absolute; display: none; justify-content: center;" />
     </engine:VisualElement>
 </engine:UXML>

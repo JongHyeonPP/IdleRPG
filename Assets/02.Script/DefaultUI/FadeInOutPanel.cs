@@ -12,46 +12,51 @@ public class FadeInOutPanel : MonoBehaviour
     {
         UIBroker.FadeInOut += FadeInOut;
         _background = GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("Background");
-        _background.style.opacity = 0; // 초기값
+        _background.pickingMode = PickingMode.Ignore;
+        // 초기값: 완전 투명한 검정
+        _background.style.backgroundColor = new StyleColor(new Color(0, 0, 0, 0));
+        _background.style.display = DisplayStyle.None;
     }
 
-    private void FadeInOut(int fadeInDuration, int fadeOutDuration)
+    private void FadeInOut(float fadeInDuration, float stayDuration, float fadeOutDuration)
     {
         if (_fadeCoroutine != null)
             StopCoroutine(_fadeCoroutine);
 
-        _fadeCoroutine = StartCoroutine(FadeRoutine(fadeInDuration, fadeOutDuration));
+        _fadeCoroutine = StartCoroutine(FadeRoutine(fadeInDuration, stayDuration, fadeOutDuration));
     }
 
-    private IEnumerator FadeRoutine(int fadeInDuration, int fadeOutDuration)
+    private IEnumerator FadeRoutine(float fadeInDuration, float stayDuration, float fadeOutDuration)
     {
-        // Fade In
         float elapsed = 0f;
-        float fadeInSeconds = fadeInDuration;
-        while (elapsed < fadeInSeconds)
+        _background.style.display = DisplayStyle.Flex;
+
+        // Fade In
+        while (elapsed < fadeInDuration)
         {
             elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / fadeInSeconds);
-            _background.style.opacity = t;
+            float t = Mathf.Clamp01(elapsed / fadeInDuration);
+            _background.style.backgroundColor = new StyleColor(new Color(0, 0, 0, t));
             yield return null;
         }
 
-        _background.style.opacity = 1f;
+        _background.style.backgroundColor = new StyleColor(new Color(0, 0, 0, 1f));
 
-        // Optional: 잠시 멈추고 싶으면 yield return new WaitForSeconds(holdTime);
+        // Stay
+        yield return new WaitForSeconds(stayDuration);
 
         // Fade Out
         elapsed = 0f;
-        float fadeOutSeconds = fadeOutDuration;
-        while (elapsed < fadeOutSeconds)
+        while (elapsed < fadeOutDuration)
         {
             elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / fadeOutSeconds);
-            _background.style.opacity = 1f - t;
+            float t = Mathf.Clamp01(elapsed / fadeOutDuration);
+            _background.style.backgroundColor = new StyleColor(new Color(0, 0, 0, 1f - t));
             yield return null;
         }
 
-        _background.style.opacity = 0f;
+        _background.style.backgroundColor = new StyleColor(new Color(0, 0, 0, 0));
+        _background.style.display = DisplayStyle.None;
         _fadeCoroutine = null;
     }
 }

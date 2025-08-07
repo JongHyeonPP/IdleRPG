@@ -69,6 +69,7 @@ public class AdventureInfoUI : MonoBehaviour, IGeneralUI
             return;
         }
         UIBroker.ChangeMenu(0);
+        UIBroker.FadeInOut(0f, 0.5f, 2f);
         BattleBroker.SwitchToAdventure(_currentSlotIndex, _gameData.adventureProgess[_currentSlotIndex]);
     }
 

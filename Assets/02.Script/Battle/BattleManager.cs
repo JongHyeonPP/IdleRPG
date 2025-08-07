@@ -1,11 +1,11 @@
 using EnumCollection;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
-using System;
 using UnityEngine;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
-using System.Collections;
 
 public class BattleManager : MonoBehaviour
 {
@@ -72,19 +72,21 @@ public class BattleManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_isBattleActive) MoveByPlayer();
+        if (_isBattleActive)
+            MoveByPlayer();
     }
 
     private void Update()
     {
-        if (_isBattleActive) BattleLoop();
+        if (_isBattleActive)
+            BattleLoop();
     }
 
     private void BattleLoop()
     {
         if (battleType == BattleType.None) return;
 
-        if (_controller.target)
+        if (_controller.target != null)
             HandleTargetCase();
         else
             HandleNoTargetCase();
@@ -93,7 +95,8 @@ public class BattleManager : MonoBehaviour
     private void HandleTargetCase()
     {
         float dist = _controller.target.transform.position.x - _controller.transform.position.x;
-        bool withinRange = dist < ((battleType == BattleType.Default) ? _enemyPlayerDistance : _bossPlayerDistance);
+        float range = (battleType == BattleType.Default) ? _enemyPlayerDistance : _bossPlayerDistance;
+        bool withinRange = dist < range;
 
         if (withinRange && _isMove)
         {
@@ -130,7 +133,7 @@ public class BattleManager : MonoBehaviour
         while (_currentTargetIndex < _enemies.Length)
         {
             var target = _enemies[_currentTargetIndex];
-            if (target && !target.isDead)
+            if (target != null && !target.isDead)
             {
                 _controller.target = target;
                 break;
@@ -156,7 +159,7 @@ public class BattleManager : MonoBehaviour
         PlayerBroker.OnPlayerDead += () => _isBattleActive = false;
 
         BattleBroker.GetBattleType += () => battleType;
-        BattleBroker.IsCanAttack += () => !_isMove && _controller.target;
+        BattleBroker.IsCanAttack += () => !_isMove && _controller.target != null;
 
         PlayerBroker.OnCompanionPromoteTechSet += SetPromoteTech;
 
@@ -215,6 +218,7 @@ public class BattleManager : MonoBehaviour
     private void SwitchToBoss()
     {
         battleType = BattleType.Boss;
+        UIBroker.FadeInOut(0f, 0.5f, 2f);
         StartBattle(_currentStageInfo, true);
     }
 
@@ -224,6 +228,7 @@ public class BattleManager : MonoBehaviour
         battleType = BattleType.CompanionTech;
         StartBattle(_currentStageInfo, true);
     }
+
     private void SwitchToAdventure(int index_0, int index_1)
     {
         _currentStageInfo = StageInfoManager.instance.GetAdventureStageInfo(index_0)[index_1];
@@ -243,7 +248,8 @@ public class BattleManager : MonoBehaviour
 
     private void ChangeBackground(Background bg)
     {
-        foreach (var piece in _pieces) piece.ChangeBackground(bg);
+        foreach (var piece in _pieces)
+            piece.ChangeBackground(bg);
     }
 
     private void InitDefaultPools(StageInfo info)
@@ -262,7 +268,7 @@ public class BattleManager : MonoBehaviour
 
     private EnemyController[] MakeDefaultEnemies()
     {
-        var result = new EnemyController[_enemyBundleNum];
+        EnemyController[] result = new EnemyController[_enemyBundleNum];
         int count = 0, index = 0;
 
         while (count < _currentStageInfo.enemyNum)
@@ -296,8 +302,8 @@ public class BattleManager : MonoBehaviour
 
     private EnemyController GetEnemyFromPool()
     {
-        return _ePool1.pool == null ? _ePool0.GetFromPool() :
-               UtilityManager.CalculateProbability(0.5f) ? _ePool0.GetFromPool() : _ePool1.GetFromPool();
+        if (_ePool1.pool == null) return _ePool0.GetFromPool();
+        return UtilityManager.CalculateProbability(0.5f) ? _ePool0.GetFromPool() : _ePool1.GetFromPool();
     }
 
     private void PositionEnemy(EnemyController enemy, int index)
@@ -311,16 +317,18 @@ public class BattleManager : MonoBehaviour
     private void OnEnemyDead(Vector3 pos)
     {
         DropItem(pos);
+
         switch (battleType)
         {
             case BattleType.Boss:
                 _gameData.currentStageNum++;
                 DelayOnEnd();
                 break;
+
             case BattleType.CompanionTech:
-                StageInfo.CompanionTechInfo techInfo = _currentStageInfo.companionTechInfo;
+                var techInfo = _currentStageInfo.companionTechInfo;
                 _gameData.companionPromoteTech[techInfo.companionNum][techInfo.techIndex_1] = techInfo.techIndex_0;
-                (int, int) companionReward = BattleBroker.GetCompanionReward(techInfo.techIndex_0, techInfo.techIndex_1);
+                var companionReward = BattleBroker.GetCompanionReward(techInfo.techIndex_0, techInfo.techIndex_1);
                 _gameData.dia += companionReward.Item1;
                 _gameData.clover += companionReward.Item2;
                 BattleBroker.OnDiaSet();
@@ -330,10 +338,11 @@ public class BattleManager : MonoBehaviour
                 NetworkBroker.SaveServerData();
                 DelayOnEnd();
                 break;
+
             case BattleType.Adventure:
-                StageInfo.AdventureInfo adventureInfo = _currentStageInfo.adventrueInfo;
+                var adventureInfo = _currentStageInfo.adventrueInfo;
                 _gameData.adventureProgess[adventureInfo.adventureIndex_0]++;
-                (int, int) adventureReward = BattleBroker.GetAdventureReward(adventureInfo.adventureIndex_0, adventureInfo.adventureIndex_1);
+                var adventureReward = BattleBroker.GetAdventureReward(adventureInfo.adventureIndex_0, adventureInfo.adventureIndex_1);
                 _gameData.dia += adventureReward.Item1;
                 _gameData.clover += adventureReward.Item2;
                 _gameData.scroll -= StageInfoManager.instance.adventureEntranceFee;
@@ -347,13 +356,32 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    private void SetPromoteTech(int compNum, int t0, int t1)
+    private void DropItem(Vector3 pos)
     {
-        
+        DropBase drop;
+        if (UtilityManager.CalculateProbability(0.5f))
+        {
+            var dropGold = _dPool.GetFromPool<GoldDrop>();
+            activeGold.Add(dropGold);
+            drop = dropGold;
+            drop.transform.position = pos + Vector3.up * 0.5f;
+        }
+        else
+        {
+            var dropExp = _dPool.GetFromPool<ExpDrop>();
+            activeExp.Add(dropExp);
+            drop = dropExp;
+            drop.transform.position = pos + Vector3.up * 0.2f;
+        }
+
+        drop.StartDropMove();
     }
+
+    private void SetPromoteTech(int compNum, int t0, int t1) { }
 
     private void DelayOnEnd()
     {
+        UIBroker.FadeInOut(2f,0.5f, 1f);
         battleType = BattleType.None;
         _isMove = true;
         _controller.MoveState(true);
@@ -363,47 +391,28 @@ public class BattleManager : MonoBehaviour
 
     private IEnumerator StageEnterAfterDelay()
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(2f);
         BattleBroker.OnStageChange();
         NetworkBroker.SaveServerData();
         BattleBroker.OnBossClear?.Invoke();
         BattleBroker.RefreshStageSelectUI(_gameData.currentStageNum);
     }
 
-private void DropItem(Vector3 pos)
-{
-    DropBase drop;
-
-    if (UtilityManager.CalculateProbability(0.5f))
-    {
-        var dropGold = _dPool.GetFromPool<GoldDrop>();
-        activeGold.Add(dropGold);
-        drop = dropGold;
-        drop.transform.position = pos + Vector3.up * 0.5f;
-    }
-    else
-    {
-        var dropExp = _dPool.GetFromPool<ExpDrop>();
-        activeExp.Add(dropExp);
-        drop = dropExp;
-        drop.transform.position = pos + Vector3.up * 0.2f;
-    }
-
-    drop.StartDropMove();
-}
-
-
     private void ClearEnemies()
     {
         if (_enemies == null) return;
+
         foreach (var enemy in _enemies)
         {
             if (enemy == null) continue;
+
             MediatorManager<IMoveByPlayer>.UnregisterMediator(enemy);
             enemy.StopAllCoroutines();
-            if (enemy.enemyHpBar) enemy.enemyHpBar.pool.ReturnToPool(enemy.enemyHpBar);
+            if (enemy.enemyHpBar != null)
+                enemy.enemyHpBar.pool.ReturnToPool(enemy.enemyHpBar);
             Destroy(enemy.gameObject);
         }
+
         _enemies = null;
     }
 
