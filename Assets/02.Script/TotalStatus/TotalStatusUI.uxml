@@ -25,7 +25,7 @@
                 </engine:Button>
             </engine:VisualElement>
             <engine:VisualElement name="CategoriPanelParent" style="flex-grow: 1;">
-                <engine:VisualElement name="StatusPanel" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; display: flex;">
+                <engine:VisualElement name="StatusPanel" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; display: none;">
                     <engine:VisualElement name="EquipPanel" style="flex-grow: 0; height: 644px; padding-bottom: 29px;">
                         <engine:VisualElement name="RenderParent" style="flex-grow: 0; justify-content: center; align-items: flex-start; flex-direction: row; height: 326px;">
                             <engine:Instance template="PlayerSpriteArea" name="TemplateContainer" style="top: 20px;" />
@@ -57,10 +57,10 @@
                         </engine:VisualElement>
                     </engine:VisualElement>
                 </engine:VisualElement>
-                <engine:VisualElement name="AppearancePanel" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; display: none;">
-                    <engine:VisualElement name="RenderParent" style="flex-grow: 0; justify-content: center; align-items: flex-start; flex-direction: row; height: 326px; margin-top: 25px; padding-left: 0; padding-bottom: 0;">
+                <engine:VisualElement name="AppearancePanel" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; display: flex;">
+                    <engine:VisualElement name="RenderParent" style="flex-grow: 0; justify-content: center; align-items: flex-start; flex-direction: row; height: 326px; margin-top: 25px; padding-left: 0; padding-bottom: 0; display: flex;">
                         <engine:Instance template="PlayerSpriteArea_V2" name="TemplateContainer" enabled="true" style="display: flex; position: absolute;" />
-                        <engine:Instance template="PlayerSpriteArea" name="TemplateContainer" style="top: 20px;" />
+                        <engine:Instance template="PlayerSpriteArea" name="TemplateContainer" style="top: 20px; display: none;" />
                     </engine:VisualElement>
                     <engine:VisualElement name="CategoryPanel" style="flex-grow: 0; height: 124px; padding-bottom: 20px; flex-direction: row; padding-left: 20px; padding-right: 20px; padding-top: 10px;">
                         <engine:Button text="전체&#10;" name="AllButton" style="width: 150px; height: 100px; background-image: url(&quot;project://database/Assets/Violet%20Theme%20Ui/Buttons/Misc/80x80%20Background.png?fileID=2800000&amp;guid=a64f98d7a00501442ae40845562f1c20&amp;type=3#80x80 Background&quot;); background-color: rgba(0, 0, 0, 0); -unity-background-image-tint-color: rgb(181, 133, 37); margin-left: 15px; -unity-font-definition: url(&quot;project://database/Assets/Store/font/Galmuri11_MainFont.ttf?fileID=12800000&amp;guid=db08679a010d4084c84f83c57830d6d4&amp;type=3#Galmuri11_MainFont&quot;);" />

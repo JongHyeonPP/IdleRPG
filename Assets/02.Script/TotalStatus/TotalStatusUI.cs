@@ -55,9 +55,9 @@ public class TotalStatusUI : MonoBehaviour
         SetupCostumeInfoPanel(); // 코스튬
 
         Button exitButton = root.Q<Button>("ExitButton");
-        exitButton.RegisterCallback<ClickEvent>(click => 
-        { 
-            UIBroker.InactiveCurrentUI?.Invoke(); 
+        exitButton.RegisterCallback<ClickEvent>(click =>
+        {
+            UIBroker.InactiveCurrentUI?.Invoke();
             CostumeManager.Instance.UpdateGameAppearanceData();
 
             NetworkBroker.SaveServerData(); // 필요없을시 삭제 // 삐용
@@ -537,7 +537,7 @@ public class TotalStatusUI : MonoBehaviour
         iconFrame.style.borderRightWidth = isSelected ? 6 : 0;
         iconFrame.style.borderBottomWidth = isSelected ? 6 : 0;
         iconFrame.style.borderLeftWidth = isSelected ? 6 : 0;
-        
+
     }
 
     // 코스튬 정보 패널 업데이트 메서드
@@ -593,9 +593,9 @@ public class TotalStatusUI : MonoBehaviour
             _costumeInfoEquipButton.style.unityBackgroundImageTintColor = isEquipped ? _costumeBtnEquip : _costumeBtnOn;
             _costumeInfoEquipButton.text = isEquipped ? "해제하기" : "착용하기";
         }
-        else 
+        else
         {
-            _costumeInfoEquipButton.style.unityBackgroundImageTintColor =  _costumeBtnOff;
+            _costumeInfoEquipButton.style.unityBackgroundImageTintColor = _costumeBtnOff;
             _costumeInfoEquipButton.text = "갖고싶다너";
         }
 
