@@ -37,6 +37,9 @@ public class CurrencyBarUI : MonoBehaviour, IGeneralUI
         SetDia();
         SetEmerald();
         VisualElement playerImage = root.Q<VisualElement>("PlayerImage");
+
+        _totalStatusUI.root.style.display = DisplayStyle.None;
+
         playerImage.RegisterCallback<ClickEvent>(evt =>
         {
             _totalStatusUI.ActiveTotalStatusUI();

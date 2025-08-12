@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5649e372f42bd3740b2d096fb0b450af, type: 3}
   m_Name: Hair_8
   m_EditorClassIdentifier: 
-  Uid: 101
+  Uid: 108
   Name: "\uBA38\uC2EF\uB294\uBA38\uB9AC"
   Description: "\uBA38\uC2EF\uC790\uB098\uC194\uC9C1\uD788"
   IconTexture: {fileID: 2800000, guid: 71712cc167bc51947b1b03a6dfdf8d4f, type: 3}

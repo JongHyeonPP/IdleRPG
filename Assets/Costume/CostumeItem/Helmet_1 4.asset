@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5649e372f42bd3740b2d096fb0b450af, type: 3}
   m_Name: Helmet_1 4
   m_EditorClassIdentifier: 
-  Uid: 1
+  Uid: 4
   Name: "\uBFD4\uB09C\uB2E4\uD5EC\uBA67"
   Description: "\uBFD4\uB09C\uBA70\uB290\uB9AC"
   IconTexture: {fileID: 2800000, guid: 3318514ba2b9b0348b9e08c426c68a11, type: 3}

@@ -91,6 +91,7 @@ public class CostumeCharacterRenderer : MonoBehaviour
 
     public void AppItem(BodyPart part, Sprite sprite, Color color)
     {
+        Debug.Log("AddIemÃß°¡! ->"+part+sprite+color);
 
         if (_partRenderers.Count == 0)
             UpdateRendererDictionary();
@@ -193,6 +194,7 @@ public class CostumeCharacterRenderer : MonoBehaviour
 
     public void UnequipHelmet()
     {
+        Debug.Log("UnequipHelmet -");
         if (_helmetRenderer != null)
             _helmetRenderer.sprite = null;
 
@@ -221,6 +223,7 @@ public class CostumeCharacterRenderer : MonoBehaviour
 
     public void ResetPartItem(BodyPart part)
     {
+        Debug.Log("ResetPartItem -"+ part);
         if (_partRenderers.TryGetValue(part, out var renderer) && renderer != null)
         {
             renderer.sprite = null;
@@ -264,6 +267,7 @@ public class CostumeCharacterRenderer : MonoBehaviour
 
     public void ResetAllItems()
     {
+        Debug.Log("ResetAllItems -" );
         foreach (var renderer in _partRenderers.Values)
         {
             if (renderer != null)
@@ -286,6 +290,7 @@ public class CostumeCharacterRenderer : MonoBehaviour
 
     public void SetDefaultAppearance()
     {
+        Debug.Log("SetDefaultAppearance -");
         AppearanceData defaultData = ScriptableObject.CreateInstance<AppearanceData>();
 
         if (_curAppearanceData != null)

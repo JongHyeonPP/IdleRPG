@@ -29,14 +29,21 @@ public class CostumeManager : MonoBehaviour
     private void Start()
     {
 
+        //저장 로드만 여기서 해보면 될듯 ..?
+
+
         // 저장된 코스튬 정보 가져오기
         GameData gameData = StartBroker.GetGameData();
-        gameData.ownedCostumes = new(){"0", "1", "2","100","200","300"};
-        gameData.equipedCostumes = new(){"100"};
-
-        //NetworkBroker.SaveServerData();
-
         OwnedCostumes = gameData.ownedCostumes;
+
+        //Test Code       
+        //OwnedCostumes = new() { "0", "1", "2", "100", "200", "300", "101", "105" };
+        //gameData.ownedCostumes = OwnedCostumes;
+        // gameData.equipedCostumes = EquipedCostumes;
+
+        //  gameData.ownedCostumes = OwnedCostumes;
+        /*        gameData.ownedCostumes = new(){"0", "1", "2","100","200","300"};
+                gameData.equipedCostumes = new(){"100"};*/
 
         _characterRenderer.Init();
         if (EquipedCostumes.Count <= 0)
@@ -47,6 +54,13 @@ public class CostumeManager : MonoBehaviour
         }
     }
 
+    public void UpdateCostumeData() 
+    {
+        GameData gameData = StartBroker.GetGameData();
+        gameData.equipedCostumes = EquipedCostumes;
+        gameData.ownedCostumes = OwnedCostumes;
+    }
+
     public bool IsEquipped(string uid)
     {
         //  return _temporaryCostumes.Any(item => item.Uid == uid);
@@ -55,15 +69,15 @@ public class CostumeManager : MonoBehaviour
     }
     public bool IsOwned(string uid)
     {
-        GameData gameData = StartBroker.GetGameData();
-        return gameData.ownedCostumes.Contains(uid);
-        //return OwnedCostumes.Contains(uid);
+/*        GameData gameData = StartBroker.GetGameData();
+        return gameData.ownedCostumes.Contains(uid);*/
+        return OwnedCostumes.Contains(uid);
     }
 
     public List<string> GetOwnedCostumes()
     {
         GameData gameData = StartBroker.GetGameData();
-        return gameData.ownedCostumes ?? new List<string>();
+        return gameData.ownedCostumes;
 
     }
 
@@ -128,7 +142,6 @@ public class CostumeManager : MonoBehaviour
                     costume.CostumeType != CostumePart.Hair &&
                     costume.CostumeType != CostumePart.Face &&
                     costume.CostumeType != CostumePart.Helmet).ToList();
-
             default:
                 return allCostumes;
         }
@@ -238,7 +251,11 @@ public class CostumeManager : MonoBehaviour
             AllCostumeDatas.Any(item => item.Uid == uid && item.CostumeType == costumeType));
         EquipedCostumes.Add(costumeUid);
 
+        //로컬업데이트
         UpdateGameAppearanceData();
+
+        //서버 데이터 업데이트 
+        UpdateCostumeData();
 
         return true;
     }
@@ -266,6 +283,7 @@ public class CostumeManager : MonoBehaviour
         // 임시 장착 목록 업데이트
         EquipedCostumes.Remove(costumeUid);
 
+        // 이부분이 이상한듯?
         // 기본 아이템 적용
         CostumeItem defaultItem = _defaultItems.FirstOrDefault(item => item.CostumeType == costume.CostumeType);
         if (defaultItem != null)
@@ -298,6 +316,9 @@ public class CostumeManager : MonoBehaviour
                 ApplyDefaultItem(defaultItem);
             }
         }
+
+        //서버 데이터 업데이트 
+        UpdateCostumeData();
 
         return true;
     }
