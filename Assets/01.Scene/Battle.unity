@@ -911,6 +911,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a2809e476aecfe143874d512cbc45f35, type: 2}
   - {fileID: 11400000, guid: b433574f9da4575468416b284c72f388, type: 2}
   - {fileID: 11400000, guid: 8505d11a35ed51a4b8c780a6c4273a52, type: 2}
+  _adventureInfoUI: {fileID: 0}
 --- !u!114 &443794093
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1277,6 +1278,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3afab028fb401d4196844501d8f37d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _sucessEffect: {fileID: 0}
+  _spot: {fileID: 0}
+  _renderCamera: {fileID: 0}
 --- !u!1 &639850493
 GameObject:
   m_ObjectHideFlags: 0
@@ -1980,7 +1984,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef5720df23eff264f942869ae30d325f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _costumeSprite: {fileID: 0}
 --- !u!1001 &931570587
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2808,16 +2811,17 @@ MonoBehaviour:
     dia: 0
     clover: 0
     scroll: 0
-    statPoint: 0
+    equipedSkillArr: []
     playerWeaponId: 
     companionWeaponIdArr: []
-    equipedSkillArr: []
     currentStageNum: 0
     maxStageNum: 0
     userName: 
     invalidCount: 0
     equipedCostumes: []
     ownedCostumes: []
+    adventureProgess: 000000000000000000000000000000000000000000000000000000000000000000000000
+    statPoint: 0
   skillUI: {fileID: 246605442210432971}
   equipedSkillUI: {fileID: 8205451347979957151}
   skillAcquireUI: {fileID: 374194269}
@@ -2967,6 +2971,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 5789880885598845787}
     - target: {fileID: 2856617868540618826, guid: ea683723e3d3e3a46ba8995231fb371f, type: 3}
+      propertyPath: _gameAppearanceController
+      value: 
+      objectReference: {fileID: 957502926}
+    - target: {fileID: 3707077260900053697, guid: ea683723e3d3e3a46ba8995231fb371f, type: 3}
+      propertyPath: _uiAppearanceController
+      value: 
+      objectReference: {fileID: 5789880885598845787}
+    - target: {fileID: 3707077260900053697, guid: ea683723e3d3e3a46ba8995231fb371f, type: 3}
       propertyPath: _gameAppearanceController
       value: 
       objectReference: {fileID: 957502926}

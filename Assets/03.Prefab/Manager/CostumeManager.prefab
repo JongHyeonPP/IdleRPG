@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5484156828096860202}
   - component: {fileID: 5423699969620862291}
+  - component: {fileID: 3707077260900053697}
   m_Layer: 0
   m_Name: CostumeManager
   m_TagString: Untagged
@@ -44,11 +45,74 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b279a23e346eb794d92bb855630a3198, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _costumeSlotPrefab: {fileID: 0}
-  _costumeGridParent: {fileID: 0}
-  _characterRenderer: {fileID: 0}
-  _availableCostumes: []
-  _temporaryCostumes: []
-  _savedCostumes: []
-  AllCostumeDatas: []
+  _characterRenderer: {fileID: 3707077260900053697}
+  AllCostumeDatas:
+  - {fileID: 11400000, guid: 5e9026defdb17d849a749bf473ada82f, type: 2}
+  - {fileID: 11400000, guid: b525e2ec7fcae0143bd5b55d13132694, type: 2}
+  - {fileID: 11400000, guid: 7de22b40a1c16a44dabf219f0a33f848, type: 2}
+  - {fileID: 11400000, guid: 9b8eb877f984a9e4aaeb6282fc843dab, type: 2}
+  - {fileID: 11400000, guid: d37e8c7ec8a8b6c4aadce4cef8b04ade, type: 2}
+  - {fileID: 11400000, guid: 8425ac11887c5c64d8e248faa6e0b192, type: 2}
+  - {fileID: 11400000, guid: e6893b50a2f1c52489e84a1d8311134f, type: 2}
+  - {fileID: 11400000, guid: 601d2f1b9861c9e4f8dbce2295bb7c8d, type: 2}
+  - {fileID: 11400000, guid: 02d03d5dfd5c8334193c6b21875ab983, type: 2}
+  - {fileID: 11400000, guid: 510218ad2e07c7148877ac076a7a4cd6, type: 2}
+  - {fileID: 11400000, guid: 1557eebef75a7d54ebb2a214b77a1b52, type: 2}
+  - {fileID: 11400000, guid: a9adbe80fc303a4479f63566955763c8, type: 2}
+  - {fileID: 11400000, guid: 045e65f647523724b9e1455c5b9ad7b6, type: 2}
+  - {fileID: 11400000, guid: 1b6f11594c6f40741b88957fdb8ba3d6, type: 2}
+  - {fileID: 11400000, guid: 71f91478238b4294fb892c5a46cb8a5b, type: 2}
+  - {fileID: 11400000, guid: 7ad5172d93910d94bafc601a5bde9222, type: 2}
+  - {fileID: 11400000, guid: c865df9432953f145a68f33cbe06797b, type: 2}
+  - {fileID: 11400000, guid: 28012aa11623fd749b8e4b9b578104ef, type: 2}
+  - {fileID: 11400000, guid: 7f9cd2d82c0ecf04499f60be258a42a5, type: 2}
+  - {fileID: 11400000, guid: df2c07b5f72cb7b41938cef6afead11b, type: 2}
+  - {fileID: 11400000, guid: f1c5194d2389cc94f91497b951bfdce3, type: 2}
+  - {fileID: 11400000, guid: 7d46031abbf89a948be404fda4d70dc5, type: 2}
+  - {fileID: 11400000, guid: 628f9c3ae7cbff147848f6cd8683fd9a, type: 2}
+  - {fileID: 11400000, guid: b7288717b2d023346b46e559597130b0, type: 2}
+  - {fileID: 11400000, guid: 85f53b4f8b6b33b47a313d82fd8c5384, type: 2}
+  - {fileID: 11400000, guid: 146f784aeb0d6694f9c95f7025ace429, type: 2}
+  - {fileID: 11400000, guid: 50702b22518ae6c4887c003d53ec5523, type: 2}
+  - {fileID: 11400000, guid: d8d6a035ab7daf845bb3a26a555a499f, type: 2}
+  - {fileID: 11400000, guid: ee819bcfba378db4eadb8fbc2a457caa, type: 2}
+  - {fileID: 11400000, guid: 681b170f59acb4d4a9cb267505f1bc7c, type: 2}
+  - {fileID: 11400000, guid: cdb5e0463dcb3a744a53688e9a5c56d4, type: 2}
+  - {fileID: 11400000, guid: 1ef273f1b69245048b05dc0d135741fa, type: 2}
+  - {fileID: 11400000, guid: 8714e9e794e64ac48a15c7b029a3ab1a, type: 2}
+  - {fileID: 11400000, guid: 23f28087063586240b4c7f98b6dc0343, type: 2}
+  - {fileID: 11400000, guid: cd829547f03532f4eaad7177e055d0ed, type: 2}
+  - {fileID: 11400000, guid: 0af74b30c1a0d284dba1a0447c5c0e2e, type: 2}
+  - {fileID: 11400000, guid: 4e87b81181bc6de4ca319be1b6da7650, type: 2}
+  - {fileID: 11400000, guid: 329dec814eaa0254c973b7fbfafda05d, type: 2}
+  - {fileID: 11400000, guid: 4313c8405714a1d4fb6b4b796668016c, type: 2}
+  - {fileID: 11400000, guid: 124cde8063c9ec944a866468150e5c55, type: 2}
+  - {fileID: 11400000, guid: 3f954e512e97a174a823b37337a4810d, type: 2}
+  - {fileID: 11400000, guid: 9ce1154c7972bce41a0891d276b29fce, type: 2}
+  - {fileID: 11400000, guid: f5d93324f94e8e04abf041c9185675bb, type: 2}
+  - {fileID: 11400000, guid: 0dd4039e677173e469a2f6fcd1fb30eb, type: 2}
+  - {fileID: 11400000, guid: 419cb08201e36074d8eac1536dbaacb2, type: 2}
+  - {fileID: 11400000, guid: 880badd52bb0fa64f982b982f7566cc9, type: 2}
+  - {fileID: 11400000, guid: 1e1da3d1120334245821c1945c6a8f51, type: 2}
+  - {fileID: 11400000, guid: 0fda040f2ba1a884d8d0c57210f4fee3, type: 2}
+  - {fileID: 11400000, guid: 647cb2397b0853e44a7e8a01af49a36c, type: 2}
+  - {fileID: 11400000, guid: 3f9bc15a3fe1cb54e895028e26a9eac6, type: 2}
+  - {fileID: 11400000, guid: d5976fd4d4f57444cae732d1d7113fe5, type: 2}
+  - {fileID: 11400000, guid: 4eff22c902b711349805aa57b4d3c0b1, type: 2}
   _defaultItems: []
+  EquipedCostumes: []
+  OwnedCostumes: []
+--- !u!114 &3707077260900053697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2438885013367481365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 132fa86a0ba04644c81788ca433860ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _uiAppearanceController: {fileID: 0}
+  _gameAppearanceController: {fileID: 0}
