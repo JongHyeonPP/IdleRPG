@@ -30,7 +30,6 @@ public class CurrentStageUI : MonoBehaviour, IGeneralUI
 
     private void OnClickUI(ClickEvent evt)
     {
-        Debug.Log("Click CurrentStage Ui");
         stageSelectUI.ToggleUi(true);
     }
 

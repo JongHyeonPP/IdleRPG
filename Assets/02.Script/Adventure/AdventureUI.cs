@@ -145,7 +145,7 @@ public class AdventureUI : MonoBehaviour, IMenuUI
     private void OnAdventureButtonClicked()
     {
         SwitchPanel(_adventurePanel, _dungeonPanel, _adventureButton, _dungeonButton);
-        UpdateAdventureSlotProgress();
+        
     }
 
     private void OnDungeonButtonClicked()
@@ -160,6 +160,7 @@ public class AdventureUI : MonoBehaviour, IMenuUI
 
     void IMenuUI.ActiveUI()
     {
+        UpdateAdventureSlotProgress();
         root.style.display = DisplayStyle.Flex;
 
         if (_animCoroutine != null)

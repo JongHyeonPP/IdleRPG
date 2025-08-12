@@ -31,7 +31,9 @@ public class BattleManager : MonoBehaviour
     private int _currentTargetIndex;
     private bool _isMove = true;
     private bool _isBattleActive = true;
+    private bool _isBattleRunning = true;
     private BattleType battleType;
+    private BattleType _nextBattleType = BattleType.Default;
 
     private readonly float _speed = 2.5f;
     private readonly float _enemySpace = 1f;
@@ -52,6 +54,7 @@ public class BattleManager : MonoBehaviour
 
         SetEvent();
         _controller.MoveState(true);
+        _currentStageInfo = StageInfoManager.instance.GetNormalStageInfo(_gameData.currentStageNum);
         BattleBroker.OnStageChange();
         BattleBroker.RefreshStageSelectUI(_gameData.currentStageNum);
         InitWeaponSprites();
@@ -78,14 +81,12 @@ public class BattleManager : MonoBehaviour
 
     private void Update()
     {
-        if (_isBattleActive)
+        if (_isBattleActive && _isBattleRunning)
             BattleLoop();
     }
 
     private void BattleLoop()
     {
-        if (battleType == BattleType.None) return;
-
         if (_controller.target != null)
             HandleTargetCase();
         else
@@ -205,7 +206,23 @@ public class BattleManager : MonoBehaviour
             }
         }
 
-        BattleBroker.SwitchToBattle();
+        switch (_nextBattleType)
+        {
+            case BattleType.Adventure:
+                var adventureInfo = _currentStageInfo.adventrueInfo;
+                BattleBroker.SwitchToAdventure?.Invoke(adventureInfo.adventureIndex_0, adventureInfo.adventureIndex_1);
+                break;
+            case BattleType.CompanionTech:
+                var techInfo = _currentStageInfo.companionTechInfo;
+                BattleBroker.SwitchToCompanionBattle?.Invoke(techInfo.companionNum, (techInfo.techIndex_0, techInfo.techIndex_1));
+                break;
+            case BattleType.Boss:
+                BattleBroker.SwitchToBoss?.Invoke();
+                break;
+            default:
+                BattleBroker.SwitchToBattle?.Invoke();
+                break;
+        }
     }
 
     private void SwitchToBattle()
@@ -244,6 +261,7 @@ public class BattleManager : MonoBehaviour
 
         ChangeBackground(info.background);
         _isBattleActive = true;
+        _isBattleRunning = true;
     }
 
     private void ChangeBackground(Background bg)
@@ -322,6 +340,9 @@ public class BattleManager : MonoBehaviour
         {
             case BattleType.Boss:
                 _gameData.currentStageNum++;
+                BattleBroker.RefreshStageSelectUI(_gameData.currentStageNum);
+                _currentStageInfo = StageInfoManager.instance.GetNormalStageInfo(_gameData.currentStageNum);
+                _nextBattleType = BattleType.Default;
                 DelayOnEnd();
                 break;
 
@@ -335,25 +356,40 @@ public class BattleManager : MonoBehaviour
                 BattleBroker.OnCloverSet();
                 NetworkBroker.QueueResourceReport(companionReward.Item1, Resource.Dia, Source.Companion);
                 NetworkBroker.QueueResourceReport(companionReward.Item2, Resource.Clover, Source.Companion);
-                NetworkBroker.SaveServerData();
+                _currentStageInfo = StageInfoManager.instance.GetNormalStageInfo(_gameData.currentStageNum);
+                _nextBattleType = BattleType.Default;
                 DelayOnEnd();
                 break;
 
             case BattleType.Adventure:
                 var adventureInfo = _currentStageInfo.adventrueInfo;
                 _gameData.adventureProgess[adventureInfo.adventureIndex_0]++;
-                var adventureReward = BattleBroker.GetAdventureReward(adventureInfo.adventureIndex_0, adventureInfo.adventureIndex_1);
-                _gameData.dia += adventureReward.Item1;
-                _gameData.clover += adventureReward.Item2;
+                var reward = BattleBroker.GetAdventureReward(adventureInfo.adventureIndex_0, adventureInfo.adventureIndex_1);
+                _gameData.dia += reward.Item1;
+                _gameData.clover += reward.Item2;
                 _gameData.scroll -= StageInfoManager.instance.adventureEntranceFee;
                 BattleBroker.OnDiaSet();
                 BattleBroker.OnCloverSet();
                 BattleBroker.OnScrollSet();
                 NetworkBroker.QueueResourceReport(adventureInfo.adventureIndex_0, Resource.None, Source.Adventure);
-                NetworkBroker.SaveServerData();
+
+                var stageInfoArr = StageInfoManager.instance.GetAdventureStageInfo(adventureInfo.adventureIndex_0);
+                if (BattleBroker.GetAdventureRetry() && stageInfoArr != null && stageInfoArr.Length - 1 > adventureInfo.adventureIndex_1)
+                {
+                    _currentStageInfo = stageInfoArr[adventureInfo.adventureIndex_1 + 1];
+                    _nextBattleType = BattleType.Adventure;
+                }
+                else
+                {
+                    _currentStageInfo = StageInfoManager.instance.GetNormalStageInfo(_gameData.currentStageNum);
+                    _nextBattleType = BattleType.Default;
+                }
+
                 DelayOnEnd();
                 break;
         }
+
+        NetworkBroker.SaveServerData();
     }
 
     private void DropItem(Vector3 pos)
@@ -381,21 +417,21 @@ public class BattleManager : MonoBehaviour
 
     private void DelayOnEnd()
     {
-        UIBroker.FadeInOut(2f,0.5f, 1f);
-        battleType = BattleType.None;
+        BattleBroker.OnBossClear?.Invoke();
+        _isBattleRunning = false;
         _isMove = true;
         _controller.MoveState(true);
-        BattleBroker.ControllCompanionMove(0);
+        BattleBroker.ControllCompanionMove(1);
         StartCoroutine(StageEnterAfterDelay());
     }
 
     private IEnumerator StageEnterAfterDelay()
     {
+        UIBroker.PopUpStageClear();
+        yield return new WaitForSeconds(2f);
+        UIBroker.FadeInOut(2f, 0.5f, 1f);
         yield return new WaitForSeconds(2f);
         BattleBroker.OnStageChange();
-        NetworkBroker.SaveServerData();
-        BattleBroker.OnBossClear?.Invoke();
-        BattleBroker.RefreshStageSelectUI(_gameData.currentStageNum);
     }
 
     private void ClearEnemies()

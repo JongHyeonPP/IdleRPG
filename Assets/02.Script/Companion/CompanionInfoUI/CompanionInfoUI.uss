@@ -22,3 +22,9 @@
     border-bottom-width: 0;
     border-left-width: 0;
 }
+
+.unity-toggle__checkmark {
+    width: 55px;
+    height: 55px;
+    margin-left: 23px;
+}

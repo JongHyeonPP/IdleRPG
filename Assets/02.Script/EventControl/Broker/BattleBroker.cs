@@ -52,4 +52,8 @@ public static class BattleBroker
 
     public static Func<int, int, (int, int)> GetCompanionReward;//index_0, index_1, (dia, clover)
     public static Func<int, int, (int, int)> GetAdventureReward;//index_0, index_1, (dia, clover)
+
+    public static Func<bool> GetAdventureRetry;
+
+    public static Action<int> ActiveStageInfoUI;
 }

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ClientVerification")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8642b5a98d0aac0b89f2acd8e18f9a9163f44295")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0a90c01a0d78ff34bf9ab1e57dea4c552d7ad4dd")]
 [assembly: System.Reflection.AssemblyProductAttribute("ClientVerification")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ClientVerification")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

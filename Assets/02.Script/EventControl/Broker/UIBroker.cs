@@ -9,6 +9,7 @@ public static class UIBroker
     //반투명한 검은 배경 활성화, (ActiveUI, bool?Display:Visibility)
     public static Action<VisualElement, bool> ActiveTranslucent;
     public static Action<float, float, float> FadeInOut;//in, stay, out
+    public static Action PopUpStageClear;//in, stay, out
     //스킬 장착 상태 해제
     public static Action InactiveSkillEquip;
     //메뉴 UI 변경

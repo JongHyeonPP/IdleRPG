@@ -53,6 +53,7 @@ public class BossTimerUI : MonoBehaviour, IGeneralUI
     }
     private void StopTimer()
     {
+        root.style.display = DisplayStyle.None;
         if (_timerCoroutine != null)
             StopCoroutine(_timerCoroutine);
     }

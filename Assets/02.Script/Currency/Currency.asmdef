@@ -5,8 +5,7 @@
         "Unity.Services.RemoteConfig",
         "EventControl",
         "Utility",
-        "GameData",
-        "StageSelect"
+        "GameData"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

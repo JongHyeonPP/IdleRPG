@@ -17,8 +17,9 @@ public class AdventureInfoUI : MonoBehaviour, IGeneralUI
     private List<AdventureInfoSlot> _slotArr = new();
     private Label _priceLabel;
     private Label _regionLabel;
-    private Button _startButton;
+    private VisualElement _activePanel;
     private Label _stateLabel;
+    private Toggle _retryToggle;
     //Ref
     private GameData _gameData;
     private AdventureSlot _currentSlot;
@@ -29,6 +30,7 @@ public class AdventureInfoUI : MonoBehaviour, IGeneralUI
     {
         root = GetComponent<UIDocument>().rootVisualElement;
         _gameData = StartBroker.GetGameData();
+        BattleBroker.GetAdventureRetry += () => _retryToggle.value;
     }
     private void Start()
     {
@@ -40,8 +42,10 @@ public class AdventureInfoUI : MonoBehaviour, IGeneralUI
         _listLable = root.Q<Label>("ListLabel");
         _priceLabel = root.Q<Label>("PriceLabel");
         _regionLabel = root.Q<Label>("RegionLabel");
-        _startButton = root.Q<Button>("StartButton");
+        _activePanel = root.Q<VisualElement>("ActivePanel");
         _stateLabel = root.Q<Label>("StateLabel");
+        _retryToggle = root.Q<Toggle>("RetryToggle");
+        _retryToggle.value = false;
         root.Q<Button>("ExitButton").RegisterCallback<ClickEvent>(evt => UIBroker.InactiveCurrentUI());
 
         for (int i = 0; i < 2; i++)
@@ -56,7 +60,7 @@ public class AdventureInfoUI : MonoBehaviour, IGeneralUI
                 _slotArr.Add(new(slotElement, currentIndex));
             }
         }
-        _startButton.RegisterCallback<ClickEvent>(evt => OnStartButtonClick());
+        root.Q<Button>("StartButton").RegisterCallback<ClickEvent>(evt => OnStartButtonClick());
     }
 
     private void OnStartButtonClick()
@@ -118,19 +122,19 @@ public class AdventureInfoUI : MonoBehaviour, IGeneralUI
         int currentProgress = _gameData.adventureProgess[_currentSlotIndex];
         if (index < currentProgress)
         {
-            _startButton.style.display = DisplayStyle.None;
+            _activePanel.style.display = DisplayStyle.None;
             _stateLabel.style.display = DisplayStyle.Flex;
             _stateLabel.text = "보상 수령 완료";
         }
         else if (index > currentProgress)
         {
-            _startButton.style.display = DisplayStyle.None;
+            _activePanel.style.display = DisplayStyle.None;
             _stateLabel.style.display = DisplayStyle.Flex;
             _stateLabel.text = "잠금";
         }
         else
         {
-            _startButton.style.display = DisplayStyle.Flex;
+            _activePanel.style.display = DisplayStyle.Flex;
             _stateLabel.style.display = DisplayStyle.None;
         }
         for (int i = 0; i < _slotArr.Count; i++)
