@@ -8,7 +8,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class TotalStatusUI : MonoBehaviour, IGeneralUI
+public class TotalStatusUI : MonoBehaviour
 {
     public VisualElement root { private set; get; }
     //Status
@@ -55,12 +55,20 @@ public class TotalStatusUI : MonoBehaviour, IGeneralUI
         SetupCostumeInfoPanel(); // 코스튬
 
         Button exitButton = root.Q<Button>("ExitButton");
-        exitButton.RegisterCallback<ClickEvent>(click => UIBroker.InactiveCurrentUI?.Invoke());
+        exitButton.RegisterCallback<ClickEvent>(click =>
+        {
+            UIBroker.InactiveCurrentUI?.Invoke();
+            CostumeManager.Instance.UpdateGameAppearanceData();
+
+            NetworkBroker.SaveServerData(); // 필요없을시 삭제 // 삐용
+        });
+
         InitEquipSlot();
         PlayerBroker.OnEquipWeapon += OnEquipWeapon;
         PlayerBroker.OnSetName += SetName;
         BattleBroker.OnLevelExpSet += SetLevel;
     }
+
     private void Start()
     {
         PlayerController controller = (PlayerController)PlayerBroker.GetPlayerController();
@@ -217,7 +225,7 @@ public class TotalStatusUI : MonoBehaviour, IGeneralUI
     {
         root.style.display = DisplayStyle.Flex;
         UIBroker.ActiveTranslucent(root, true);
-        SetContent();
+        //SetContent();
     }
     private void SetContent()
     {
@@ -327,7 +335,7 @@ public class TotalStatusUI : MonoBehaviour, IGeneralUI
         if (costumeManager == null) return;
 
         // 테스트 데이터 (실제로는 게임 데이터에서 가져옴)
-        List<string> ownedCostumes = costumeManager.TestOwnedCostumes;
+        List<string> ownedCostumes = costumeManager.GetOwnedCostumes();
 
         // 모든 코스튬 데이터 가져오기
         var allCostumeDatas = costumeManager.AllCostumeDatas;
@@ -529,7 +537,7 @@ public class TotalStatusUI : MonoBehaviour, IGeneralUI
         iconFrame.style.borderRightWidth = isSelected ? 6 : 0;
         iconFrame.style.borderBottomWidth = isSelected ? 6 : 0;
         iconFrame.style.borderLeftWidth = isSelected ? 6 : 0;
-        
+
     }
 
     // 코스튬 정보 패널 업데이트 메서드
@@ -545,7 +553,7 @@ public class TotalStatusUI : MonoBehaviour, IGeneralUI
         if (_costumeInfoIcon != null && costume.IconTexture != null)
         {
             _costumeInfoIcon.style.backgroundImage = new StyleBackground(costume.IconTexture);
-            bool isOwned = CostumeManager.Instance.IsOwend(_selectedCostume.Uid);
+            bool isOwned = CostumeManager.Instance.IsOwned(_selectedCostume.Uid);
             _costumeInfoIcon.style.unityBackgroundImageTintColor = isOwned ? costume.IconColor : Color.black;
             _costumeInfoIcon.style.opacity = isOwned ? 1f : 0.7f;
         }
@@ -577,7 +585,7 @@ public class TotalStatusUI : MonoBehaviour, IGeneralUI
         if (_selectedCostume == null || _costumeInfoEquipButton == null) return;
 
         CostumeManager costumeManager = CostumeManager.Instance;
-        bool isOwned = costumeManager.IsOwend(_selectedCostume.Uid);
+        bool isOwned = costumeManager.IsOwned(_selectedCostume.Uid);
         if (isOwned)
         {
             bool isEquipped = costumeManager.IsEquipped(_selectedCostume.Uid);
@@ -585,9 +593,9 @@ public class TotalStatusUI : MonoBehaviour, IGeneralUI
             _costumeInfoEquipButton.style.unityBackgroundImageTintColor = isEquipped ? _costumeBtnEquip : _costumeBtnOn;
             _costumeInfoEquipButton.text = isEquipped ? "해제하기" : "착용하기";
         }
-        else 
+        else
         {
-            _costumeInfoEquipButton.style.unityBackgroundImageTintColor =  _costumeBtnOff;
+            _costumeInfoEquipButton.style.unityBackgroundImageTintColor = _costumeBtnOff;
             _costumeInfoEquipButton.text = "갖고싶다너";
         }
 
@@ -603,7 +611,7 @@ public class TotalStatusUI : MonoBehaviour, IGeneralUI
         if (costumeManager == null) return;
 
         string uid = costume.Uid;
-        if (!costumeManager.IsOwend(uid)) return;
+        if (!costumeManager.IsOwned(uid)) return;
 
         bool isCurrentlyEquipped = costumeManager.IsEquipped(uid);
 
@@ -820,17 +828,4 @@ public class TotalStatusUI : MonoBehaviour, IGeneralUI
     }
     #endregion
     #endregion
-    public void OnBattle()
-    {
-        root.style.display = DisplayStyle.None;
-    }
-
-    public void OnStory()
-    {
-        root.style.display = DisplayStyle.None;
-    }
-
-    public void OnBoss()
-    {
-    }
 }

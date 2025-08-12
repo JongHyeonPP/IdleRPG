@@ -1,21 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum BodyPart
-{
-    // 赣府 包访
-    Head,
-    FaceHair,
-    Hair,
-    Helmet,
 
-    // 个烹 包访
-    Body,
-    Arm_R,
-    Arm_L,
-    Pant_R,
-    Pant_L
-}
 
 public class CharacterRenderer : MonoBehaviour
 {
