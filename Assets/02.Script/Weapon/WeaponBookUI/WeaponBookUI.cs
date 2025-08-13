@@ -28,57 +28,7 @@ public class WeaponBookUI : MonoBehaviour
 
     private void CreateElement(WeaponBookData weaponBook)
     {
-        //var bookDataPanel = root.Q<VisualElement>(weaponBook.bookId);
-        //var nameLabel = bookDataPanel.Q<Label>("NameLabel");
-        //nameLabel.text = weaponBook.bookName;
-        //var button = bookDataPanel.Q<Button>("InfoButton");
-        //button.clickable.clicked += () => ShowWeaponBookStatInfo(weaponBook);
-        //var slotParent = bookDataPanel.Q<VisualElement>("SlotParent");
-        //foreach (var weapon in weaponBook.weapons)
-        //{
-        //    var slot = slotAsset.CloneTree();
-        //    slot.style.flexGrow = slot.style.flexShrink = 0f;
-        //    slotParent.Add(slot);
-        //    var slotIcon = slot.Q<VisualElement>("SlotIcon");
-        //    slotIcon.style.backgroundImage = new(weapon.WeaponSprite);
-        //    switch (weapon.WeaponRarity)
-        //    {
-        //        case Rarity.Common:
-        //            slotIcon.style.color = new StyleColor(Color.gray);
-        //            slotIcon.style.color = new StyleColor(Color.gray);
-        //            break;
-        //        case Rarity.Uncommon:
-        //            slotIcon.style.color = new StyleColor(new Color(0.5f, 0.75f, 1f));
-        //            slotIcon.style.color = new StyleColor(new Color(0.5f, 0.75f, 1f));
-        //            break;
-        //        case Rarity.Rare:
-        //            slotIcon.style.color = new StyleColor(Color.magenta);
-        //            slotIcon.style.color = new StyleColor(Color.magenta);
-        //            break;
-        //        case Rarity.Unique:
-        //            slotIcon.style.color = new StyleColor(Color.green);
-        //            slotIcon.style.color = new StyleColor(Color.green);
-        //            break;
-        //        case Rarity.Legendary:
-        //            slotIcon.style.color = new StyleColor(Color.yellow);
-        //            slotIcon.style.color = new StyleColor(Color.yellow);
-        //            break;
-        //        case Rarity.Mythic:
-        //            slotIcon.style.color = new StyleColor(new Color(0f, 0f, 0.5f));
-        //            slotIcon.style.color = new StyleColor(new Color(0f, 0f, 0.5f));
-        //            break;
-        //        default:
-        //            slotIcon.style.color = new StyleColor(Color.white);
-        //            slotIcon.style.color = new StyleColor(Color.white);
-        //            break;
-        //    }
-        //    WeaponManager.instance.SetIconScale(weapon, slotIcon);
-        //}
-        //var panel = bookDataPanel.Q<VisualElement>("BookDataPanel");
-        //if (weaponBook.weapons.Count > 5)
-        //{
-        //    panel.style.height = 440;
-        //}
+        
         var bookDataPanel = root.Q<VisualElement>(weaponBook.bookId);
         var nameLabel = bookDataPanel.Q<Label>("NameLabel");
         nameLabel.text = weaponBook.bookName;
@@ -132,7 +82,7 @@ public class WeaponBookUI : MonoBehaviour
     {
         _infoElement.style.display = DisplayStyle.Flex;
         var Text = root.Q<Label>("First");
-        Text.text = $" {weaponbook.GetEffectDescription()}";
+        Text.text = $"{weaponbook.GetEffectDescription()}";
 
 
     }

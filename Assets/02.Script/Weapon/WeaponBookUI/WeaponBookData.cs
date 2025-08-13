@@ -16,7 +16,7 @@ public class WeaponBookData : ScriptableObject
         string description = "";
         for (int i = 0; i < upgradeLevels.Length; i++)
         {
-            description += $"{upgradeLevels[i]}강화: 공격력+{upgradeStats[i] * 100}%\n";
+            description += $"*{upgradeLevels[i]}강화: +공격력 {upgradeStats[i]}\n\n";
         }
         return description;
     }

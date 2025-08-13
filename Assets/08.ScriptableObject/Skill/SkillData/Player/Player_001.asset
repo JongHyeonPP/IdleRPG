@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillName: Slash
   uid: Player_001
-  iconSprite: {fileID: 21300000, guid: 275a5bfa4f581a5459d5535d663454ef, type: 3}
+  iconSprite: {fileID: 6201252808942594478, guid: 366f286d02c1a344a8097139c386be8e, type: 3}
   simple: 
   complex: "\uBB3C\uC758 \uD798\uC744 \uB2F4\uC544 \uC801\uC744 \uAC08\uB77C <value*100>%\uC758
     \uD53C\uD574\uB97C \uC785\uD799\uB2C8\uB2E4."

@@ -43,6 +43,7 @@ public class PromoteAbilityUI : MonoBehaviour
     }
     public void ShowPromoteInfo()
     {
+        UIBroker.ActiveTranslucent(root, true);
         root.style.display = DisplayStyle.Flex;
     }
     private void InitInfo()
@@ -220,6 +221,7 @@ public class PromoteAbilityUI : MonoBehaviour
     private void HidePromoteInfo()
     {
         root.style.display = DisplayStyle.None;
+        UIBroker.InactiveCurrentUI?.Invoke();
     }
    
     private string GetKoreanAbilityName(string abilityName)
