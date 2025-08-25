@@ -385,7 +385,6 @@ MonoBehaviour:
     dia: 0
     clover: 0
     scroll: 0
-    statPoint: 0
     equipedSkillArr: []
     playerWeaponId: 
     companionWeaponIdArr:
@@ -398,6 +397,8 @@ MonoBehaviour:
     invalidCount: 0
     equipedCostumes: []
     ownedCostumes: []
+    adventureProgess: 000000000000000000000000000000000000000000000000000000000000000000000000
+    statPoint: 0
 --- !u!4 &1048825963
 Transform:
   m_ObjectHideFlags: 0

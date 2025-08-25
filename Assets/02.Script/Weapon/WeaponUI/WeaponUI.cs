@@ -230,8 +230,7 @@ public class WeaponUI : MonoBehaviour, IMenuUI
         int level = _weaponLevel.ContainsKey(weaponId) ? _weaponLevel[weaponId] : 0;
         SlotSet(weaponData, level, count);
         //Icon
-        weaponIcon.style.backgroundImage = new StyleBackground(weaponData.WeaponSprite.texture);
-        WeaponManager.instance.SetIconScale(weaponData, weaponIcon);
+        WeaponManager.instance.SetWeaponIconToVe(weaponData, weaponIcon);
         switch (weaponData.WeaponRarity)
         {
             case Rarity.Common:
@@ -319,7 +318,7 @@ public class WeaponUI : MonoBehaviour, IMenuUI
 
         ProgressBar countProgressBar = slot.Q<ProgressBar>("CountProgressBar");
 
-        if (level == PriceManager.MAXWEAPONLEVEL)
+        if (level == CurrencyManager.MAXWEAPONLEVEL)
         {
             countProgressBar.style.letterSpacing = 15f;
             countProgressBar.title = $"{count}/Max";
@@ -328,7 +327,7 @@ public class WeaponUI : MonoBehaviour, IMenuUI
         else
         {
             countProgressBar.style.letterSpacing = 42f;
-            int price = PriceManager.instance.GetRequireWeaponCount(weaponData.WeaponRarity, level);
+            int price = CurrencyManager.instance.GetRequireWeaponCount(weaponData.WeaponRarity, level);
             countProgressBar.title = $"{count}/{price}";
             countProgressBar.value = count / (float)price;
         }

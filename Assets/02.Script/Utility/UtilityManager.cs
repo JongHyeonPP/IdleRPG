@@ -60,7 +60,4 @@ public static class UtilityManager
         }
         return formulas;
     }
-
-
-
 }

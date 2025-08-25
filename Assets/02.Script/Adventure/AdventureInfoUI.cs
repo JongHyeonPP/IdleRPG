@@ -26,6 +26,8 @@ public class AdventureInfoUI : MonoBehaviour, IGeneralUI
     private int _currentSlotIndex;
     private StageInfo[] _currentStageInfoArr;
     private StageInfo _currentStage;
+    private int _currentProgress;
+
     private void Awake()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
@@ -74,7 +76,7 @@ public class AdventureInfoUI : MonoBehaviour, IGeneralUI
         }
         UIBroker.ChangeMenu(0);
         UIBroker.FadeInOut(0f, 0.5f, 2f);
-        BattleBroker.SwitchToAdventure(_currentSlotIndex, _gameData.adventureProgess[_currentSlotIndex]);
+        BattleBroker.SwitchToAdventure(_currentSlotIndex, _currentProgress);
     }
 
     internal void ActiveUI(AdventureSlot adventureSlot, int index)
@@ -118,21 +120,24 @@ public class AdventureInfoUI : MonoBehaviour, IGeneralUI
         _diaLable.text = reward.Item1.ToString("N0");
         _cloverLable.text = reward.Item2.ToString("N0");
         _titleLabel.text = _currentStage.stageName;
-        
-        int currentProgress = _gameData.adventureProgess[_currentSlotIndex];
-        if (index < currentProgress)
-        {
-            _activePanel.style.display = DisplayStyle.None;
-            _stateLabel.style.display = DisplayStyle.Flex;
-            _stateLabel.text = "보상 수령 완료";
-        }
-        else if (index > currentProgress)
-        {
-            _activePanel.style.display = DisplayStyle.None;
-            _stateLabel.style.display = DisplayStyle.Flex;
-            _stateLabel.text = "잠금";
-        }
-        else
+        _bossImage.style.left = _currentStage.adventrueInfo.imageLeft;
+        _bossImage.style.scale = new Vector2( _currentStage.adventrueInfo.imageScale, _currentStage.adventrueInfo.imageScale);
+
+
+        _currentProgress = index;
+        //if (index < currentProgress)
+        //{
+        //    _activePanel.style.display = DisplayStyle.None;
+        //    _stateLabel.style.display = DisplayStyle.Flex;
+        //    _stateLabel.text = "보상 수령 완료";
+        //}
+        //else if (index > currentProgress)
+        //{
+        //    _activePanel.style.display = DisplayStyle.None;
+        //    _stateLabel.style.display = DisplayStyle.Flex;
+        //    _stateLabel.text = "잠금";
+        //}
+        //else
         {
             _activePanel.style.display = DisplayStyle.Flex;
             _stateLabel.style.display = DisplayStyle.None;

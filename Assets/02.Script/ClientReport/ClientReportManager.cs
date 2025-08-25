@@ -54,9 +54,9 @@ public class ClientReportManager : MonoBehaviour
         );
     }
 
-    private void QueueResourceReport(int value, Resource resource, Source source)
+    private void QueueResourceReport(int value,string id, Resource resource, Source source)
     {
-        var newResourceReport = new ClientResourceReport(value, resource, source);
+        var newResourceReport = new ClientResourceReport(value, id, resource, source);
         _clientResourceReportList.Add(newResourceReport);
     }
 

@@ -33,22 +33,22 @@ public class CompanionPromoteInfoUI : MonoBehaviour, IGeneralUI
         Label legendaryLabel = probabilityLabelSet.Q<Label>("LegendaryLabel");
         Label mythicLabel = probabilityLabelSet.Q<Label>("MythicLabel");
 
-        commonLabel.style.color = PriceManager.instance.rarityColor[0];
+        commonLabel.style.color = CurrencyManager.instance.rarityColor[0];
         commonLabel.text = $"{Mathf.RoundToInt(_companionPromoteData.probabilityInRarity[0] * 100f)}%";
 
-        uncommonLabel.style.color = PriceManager.instance.rarityColor[1];
+        uncommonLabel.style.color = CurrencyManager.instance.rarityColor[1];
         uncommonLabel.text = $"{Mathf.RoundToInt(_companionPromoteData.probabilityInRarity[1] * 100f)}%";
 
-        rareLabel.style.color = PriceManager.instance.rarityColor[2];
+        rareLabel.style.color = CurrencyManager.instance.rarityColor[2];
         rareLabel.text = $"{Mathf.RoundToInt(_companionPromoteData.probabilityInRarity[2] * 100f)}%";
 
-        uniqueLabel.style.color = PriceManager.instance.rarityColor[3];
+        uniqueLabel.style.color = CurrencyManager.instance.rarityColor[3];
         uniqueLabel.text = $"{Mathf.RoundToInt(_companionPromoteData.probabilityInRarity[3] * 100f)}%";
 
-        legendaryLabel.style.color = PriceManager.instance.rarityColor[4];
+        legendaryLabel.style.color = CurrencyManager.instance.rarityColor[4];
         legendaryLabel.text = $"{Mathf.RoundToInt(_companionPromoteData.probabilityInRarity[4] * 100f)}%";
 
-        mythicLabel.style.color = PriceManager.instance.rarityColor[5];
+        mythicLabel.style.color = CurrencyManager.instance.rarityColor[5];
         mythicLabel.text = $"{Mathf.RoundToInt(_companionPromoteData.probabilityInRarity[5] * 100f)}%";
     }
 
@@ -72,22 +72,22 @@ public class CompanionPromoteInfoUI : MonoBehaviour, IGeneralUI
         labelSet.Q<Label>("CategoriLabel").text = categoriStr;
 
         labelSet.Q<Label>("CommonLabel").text = (isPercent ? statusArr[0] * 100f : statusArr[0]).ToString();
-        labelSet.Q<Label>("CommonLabel").style.color = PriceManager.instance.rarityColor[0];
+        labelSet.Q<Label>("CommonLabel").style.color = CurrencyManager.instance.rarityColor[0];
 
         labelSet.Q<Label>("UncommonLabel").text = (isPercent ? statusArr[1] * 100f : statusArr[1]).ToString();
-        labelSet.Q<Label>("UncommonLabel").style.color = PriceManager.instance.rarityColor[1];
+        labelSet.Q<Label>("UncommonLabel").style.color = CurrencyManager.instance.rarityColor[1];
 
         labelSet.Q<Label>("RareLabel").text = (isPercent ? statusArr[2] * 100f : statusArr[2]).ToString();
-        labelSet.Q<Label>("RareLabel").style.color = PriceManager.instance.rarityColor[2];
+        labelSet.Q<Label>("RareLabel").style.color = CurrencyManager.instance.rarityColor[2];
 
         labelSet.Q<Label>("UniqueLabel").text = (isPercent ? statusArr[3] * 100f : statusArr[3]).ToString();
-        labelSet.Q<Label>("UniqueLabel").style.color = PriceManager.instance.rarityColor[3];
+        labelSet.Q<Label>("UniqueLabel").style.color = CurrencyManager.instance.rarityColor[3];
 
         labelSet.Q<Label>("LegendaryLabel").text = (isPercent ? statusArr[4] * 100f : statusArr[4]).ToString();
-        labelSet.Q<Label>("LegendaryLabel").style.color = PriceManager.instance.rarityColor[4];
+        labelSet.Q<Label>("LegendaryLabel").style.color = CurrencyManager.instance.rarityColor[4];
 
         labelSet.Q<Label>("MythicLabel").text = (isPercent ? statusArr[5] * 100f : statusArr[5]).ToString();
-        labelSet.Q<Label>("MythicLabel").style.color = PriceManager.instance.rarityColor[5];
+        labelSet.Q<Label>("MythicLabel").style.color = CurrencyManager.instance.rarityColor[5];
     }
 
     public void ActiveUI()

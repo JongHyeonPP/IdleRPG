@@ -76,6 +76,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ae4cd10b009746e4e804393cc3b402d8, type: 2}
   _dungeonSlotArr:
   - {fileID: 11400000, guid: 32030f50f329df2438437b1a99c9738b, type: 2}
-  - {fileID: 11400000, guid: 3cc4fda1937bcbc4e9940d6c64e50956, type: 2}
-  - {fileID: 11400000, guid: 45c5192dc9b9cd445bd4f909259a1be4, type: 2}
+  - {fileID: 11400000, guid: dc23118b7428d25438bfd9b0ecebfccb, type: 2}
+  - {fileID: 11400000, guid: ead7d943e8acf574793957b6d5eb8ef5, type: 2}
   _adventureInfoUI: {fileID: 0}
+  _dungeonInfoUI: {fileID: 0}

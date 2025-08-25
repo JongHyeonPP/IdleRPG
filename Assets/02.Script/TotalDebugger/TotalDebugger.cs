@@ -278,12 +278,12 @@ public class TotalDebugger : EditorWindow
                     else
                         _gameData.level += (int)value;
                     _gameData.level = Mathf.Max(_gameData.level, 1);
-                    BattleBroker.OnLevelExpSet();
+                    PlayerBroker.OnLevelExpSet();
                     int statPoint = _gameData.level - prevLevel;
                     if (statPoint > 0)
                     {
                         _gameData.statPoint += statPoint;
-                        BattleBroker.OnStatPointSet?.Invoke();
+                        PlayerBroker.OnStatPointSet?.Invoke();
                     }
                     break;
                 case "Gold":
@@ -292,7 +292,7 @@ public class TotalDebugger : EditorWindow
                     else
                         _gameData.gold += (BigInteger)value;
                     _gameData.gold = BigInteger.Max(_gameData.gold, 0);
-                    BattleBroker.OnGoldSet();
+                    PlayerBroker.OnGoldSet();
                     break;
                 case "Dia":
                     if (isSet)
@@ -300,7 +300,7 @@ public class TotalDebugger : EditorWindow
                     else
                         _gameData.dia += (int)value;
                     _gameData.dia = Mathf.Max(_gameData.dia, 0);
-                    BattleBroker.OnDiaSet();
+                    PlayerBroker.OnDiaSet();
                     break;
                 case "Clover":
                     if (isSet)
@@ -308,15 +308,15 @@ public class TotalDebugger : EditorWindow
                     else
                         _gameData.clover += (int)value;
                     _gameData.clover = Mathf.Max(_gameData.clover, 0);
-                    BattleBroker.OnCloverSet();
+                    PlayerBroker.OnCloverSet();
                     break;
                 case "MaxStage":
                     if (isSet)
                         _gameData.maxStageNum = (int)value;
                     else
                         _gameData.maxStageNum += (int)value;
-                    _gameData.maxStageNum = Mathf.Clamp(_gameData.maxStageNum, 0, 299);
-                    BattleBroker.OnMaxStageSet();
+                    _gameData.maxStageNum = Mathf.Clamp(_gameData.maxStageNum, 0, 300);
+                    PlayerBroker.OnMaxStageSet();
                     break;
                 case "Scroll":
                     if (isSet)
@@ -324,7 +324,7 @@ public class TotalDebugger : EditorWindow
                     else
                         _gameData.scroll += (int)value;
                     _gameData.scroll = Mathf.Max(_gameData.scroll, 0);
-                    BattleBroker.OnScrollSet();
+                    PlayerBroker.OnScrollSet();
                     break;
                 case "StatPoint":
                     if (isSet)
@@ -332,7 +332,7 @@ public class TotalDebugger : EditorWindow
                     else
                         _gameData.statPoint += (int)value;
                     _gameData.statPoint = Mathf.Max(_gameData.statPoint, 0);
-                    BattleBroker.OnStatPointSet();
+                    PlayerBroker.OnStatPointSet();
                     break;
             }
         }
@@ -394,7 +394,7 @@ public class TotalDebugger : EditorWindow
 
             tempValue = Mathf.Max(0, tempValue);
             if (what == "Level")
-                tempValue = Mathf.Min(tempValue, PriceManager.MAXWEAPONLEVEL);
+                tempValue = Mathf.Min(tempValue, CurrencyManager.MAXWEAPONLEVEL);
             weaponDict[uid] = tempValue;
             var weaponData = WeaponManager.instance.weaponDict[uid];
 
@@ -419,7 +419,7 @@ public class TotalDebugger : EditorWindow
             else
                 _gameData.skillLevel[dataName] += intValue;
             bool isPlayerSkill = dataName.Contains("Player");
-            int maxLevel = isPlayerSkill ? PriceManager.MAXPLAYERSKILLLEVEL : PriceManager.MAXCOMPANIONSKILLLEVEL;
+            int maxLevel = isPlayerSkill ? CurrencyManager.MAXPLAYERSKILLLEVEL : CurrencyManager.MAXCOMPANIONSKILLLEVEL;
             _gameData.skillLevel[dataName] = Mathf.Clamp(_gameData.skillLevel[dataName], 0, maxLevel);
             PlayerBroker.OnSkillLevelSet?.Invoke(dataName, _gameData.skillLevel[dataName]);
             if (!isPlayerSkill)
@@ -431,7 +431,7 @@ public class TotalDebugger : EditorWindow
                     {
                         if (skill.uid == dataName)
                         {
-                            BattleBroker.OnCompanionExpSet?.Invoke(i);
+                            PlayerBroker.OnCompanionExpSet?.Invoke(i);
                             return;
                         }
                     }
@@ -467,7 +467,7 @@ public class TotalDebugger : EditorWindow
                 _gameData.skillFragment[rarity] += intValue;
             _gameData.skillFragment[rarity] = Mathf.Max(_gameData.skillFragment[rarity], 0);
 
-            PlayerBroker.OnFragmentSet?.Invoke(rarity, _gameData.skillFragment[rarity]);
+            PlayerBroker.OnFragmentSet?.Invoke();
         }
     }
 
@@ -521,13 +521,13 @@ public class TotalDebugger : EditorWindow
         SetDataPanel(maxStagePanel, "MaxStage", "Max Stage", _gameData.maxStageNum.ToString(), Categori.Currency, false, 120f, 33f);
         SetDataPanel(statPointPanel, "StatPoint", "Stat Point", _gameData.statPoint.ToString(), Categori.Currency, false, 120f, 33f);
         //데이터 변경된 이후 Label Set
-        BattleBroker.OnLevelExpSet += () => { levelPanel.Q<Label>("ValueLabel").text = _gameData.level.ToString(); };
-        BattleBroker.OnGoldSet += () => { goldPanel.Q<Label>("ValueLabel").text = _gameData.gold.ToString(); };
-        BattleBroker.OnDiaSet += () => { diaPanel.Q<Label>("ValueLabel").text = _gameData.dia.ToString(); };
-        BattleBroker.OnCloverSet += () => { cloverPanel.Q<Label>("ValueLabel").text = _gameData.clover.ToString(); };
-        BattleBroker.OnScrollSet += () => { scrollPanel.Q<Label>("ValueLabel").text = _gameData.scroll.ToString(); };
-        BattleBroker.OnMaxStageSet += () => { maxStagePanel.Q<Label>("ValueLabel").text = _gameData.maxStageNum.ToString(); };
-        BattleBroker.OnStatPointSet += () => { statPointPanel.Q<Label>("ValueLabel").text = _gameData.statPoint.ToString(); };
+        PlayerBroker.OnLevelExpSet += () => { levelPanel.Q<Label>("ValueLabel").text = _gameData.level.ToString(); };
+        PlayerBroker.OnGoldSet += () => { goldPanel.Q<Label>("ValueLabel").text = _gameData.gold.ToString(); };
+        PlayerBroker.OnDiaSet += () => { diaPanel.Q<Label>("ValueLabel").text = _gameData.dia.ToString(); };
+        PlayerBroker.OnCloverSet += () => { cloverPanel.Q<Label>("ValueLabel").text = _gameData.clover.ToString(); };
+        PlayerBroker.OnScrollSet += () => { scrollPanel.Q<Label>("ValueLabel").text = _gameData.scroll.ToString(); };
+        PlayerBroker.OnMaxStageSet += () => { maxStagePanel.Q<Label>("ValueLabel").text = _gameData.maxStageNum.ToString(); };
+        PlayerBroker.OnStatPointSet += () => { statPointPanel.Q<Label>("ValueLabel").text = _gameData.statPoint.ToString(); };
 
     }
     private void InitStat()
@@ -1006,10 +1006,10 @@ public class TotalDebugger : EditorWindow
             }
             VisualElement panel = materialPanel.Q<VisualElement>($"{rarity}FragmentPanel");
             SetDataPanel(panel, $"{rarity}", $"{rarity}", value.ToString(), Categori.Material, false);
-            PlayerBroker.OnFragmentSet += (settedRarity, count) =>
+            PlayerBroker.OnFragmentSet += () =>
             {
-                if (settedRarity == rarity)
-                    panel.Q<Label>("ValueLabel").text = _gameData.skillFragment[rarity].ToString();
+                if(_gameData.skillFragment.ContainsKey(rarity))
+                panel.Q<Label>("ValueLabel").text = _gameData.skillFragment[rarity].ToString();
             };
         }
         Label fragmentLabel = materialPanel.Q<VisualElement>("FragmentSeparatePanel").Q<Label>();

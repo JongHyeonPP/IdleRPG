@@ -14,12 +14,14 @@ public class DungeonInfoUI : MonoBehaviour, IGeneralUI
     {
         root = GetComponent<UIDocument>().rootVisualElement;
         _gameData = StartBroker.GetGameData();
+       
     }
     private void Start()
     { }
 
     public void OnBattle()
     {
+        root.style.display = DisplayStyle.None;
     }
 
     public void OnStory()
@@ -30,7 +32,9 @@ public class DungeonInfoUI : MonoBehaviour, IGeneralUI
     {
     }
 
-    internal void ActiveUI(AdventureSlot adventureSlot, int index)
+    public void ActiveUI(DungeonSlot dungeonSlot)
     {
+        root.style.display = DisplayStyle.Flex;
+        UIBroker.ActiveTranslucent(root, true);
     }
 }

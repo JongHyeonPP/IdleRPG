@@ -11,5 +11,7 @@ namespace ClientVerification.Verification
         public Source Source { get; set; }
         [JsonProperty("value")]
         public int Value { get; set; }
+        [JsonProperty("id")]
+        public string Id { get; set; }
     }
 }

@@ -112,10 +112,10 @@ public class OfflineRewardUI : MonoBehaviour
         _gameData.exp += _currentExp;
         _gameData.dia += _currentDia;
         _gameData.clover += _currentClover;
-        BattleBroker.OnGoldSet();
-        BattleBroker.OnDiaSet();
-        BattleBroker.OnLevelExpSet();
-        BattleBroker.OnCloverSet();
+        PlayerBroker.OnGoldSet();
+        PlayerBroker.OnDiaSet();
+        PlayerBroker.OnLevelExpSet();
+        PlayerBroker.OnCloverSet();
         NetworkBroker.OnOfflineReward();
         NetworkBroker.SaveServerData();
     }

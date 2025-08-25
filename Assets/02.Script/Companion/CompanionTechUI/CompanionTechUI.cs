@@ -87,16 +87,16 @@ public class CompanionTechUI : MonoBehaviour, IGeneralUI
         switch (techIndex_0)
         {
             default:
-                techSkillValueColor = PriceManager.instance.rarityColor[6];
+                techSkillValueColor = CurrencyManager.instance.rarityColor[6];
                 break;
             case 1:
-                techSkillValueColor = PriceManager.instance.rarityColor[0];
+                techSkillValueColor = CurrencyManager.instance.rarityColor[0];
                 break;
             case 2:
-                techSkillValueColor = PriceManager.instance.rarityColor[2];
+                techSkillValueColor = CurrencyManager.instance.rarityColor[2];
                 break;
             case 3:
-                techSkillValueColor = PriceManager.instance.rarityColor[4];
+                techSkillValueColor = CurrencyManager.instance.rarityColor[4];
                 break;
         }
         _companionEffectLabel.text = SkillManager.instance.GetParsedComplexExplain(techSkill, companionLevel, techSkillValueColor);

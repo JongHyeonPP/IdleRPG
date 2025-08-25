@@ -44,7 +44,7 @@ public class WeaponManager : MonoBehaviour
                          .ToList();
     }
     
-    public void SetIconScale(WeaponData weaponData, VisualElement weaponIcon)
+    public void SetWeaponIconToVe(WeaponData weaponData, VisualElement weaponIcon)
     {
         float xScale = 1f, yScale = 1f;
         if (weaponData.TextureSize.x > weaponData.TextureSize.y)
@@ -56,6 +56,7 @@ public class WeaponManager : MonoBehaviour
             xScale = weaponData.TextureSize.x / weaponData.TextureSize.y;
         }
         weaponIcon.style.scale = new Vector2(xScale, yScale) * weaponData.TextureScale;
+        weaponIcon.style.backgroundImage = new(weaponData.WeaponSprite);
     }
     private void ApplyReinforcement(WeaponData weaponData, int level)
     {

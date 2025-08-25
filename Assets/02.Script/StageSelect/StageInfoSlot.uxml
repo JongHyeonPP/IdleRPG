@@ -1,8 +1,9 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <engine:VisualElement name="StageInfoSlot" style="flex-grow: 0; flex-shrink: 0; width: 220px; height: 220px; align-items: center; justify-content: center; align-self: center;">
-        <engine:VisualElement name="MainPanel" style="flex-grow: 0; width: 200px; height: 200px; align-items: center; justify-content: center;">
-            <engine:VisualElement style="flex-grow: 1; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Icons/16/CoinYellow.png?fileID=2800000&amp;guid=a0bf3f215edb8c5438fd95a33ea7aee7&amp;type=3#CoinYellow&quot;); position: absolute; width: 70%; height: 70%;" />
-            <engine:VisualElement style="flex-grow: 1; position: absolute; width: 100%; height: 100%; background-image: url(&quot;project://database/Assets/Asset/Wooden_UI/Wooden_UI_png/frame_s_01.png?fileID=2800000&amp;guid=cca143f374ac48f44b7aa0198b0df466&amp;type=3#frame_s_01&quot;);" />
+    <engine:Template name="RewardSlot" src="project://database/Assets/02.Script/OfflineReward/RewardSlot.uxml?fileID=9197481963319205126&amp;guid=e3e87c2c82ecdd145b9b21ebfdcad9a7&amp;type=3#RewardSlot" />
+    <engine:VisualElement name="StageInfoSlot" style="flex-grow: 1; align-items: center;">
+        <engine:Instance template="RewardSlot" name="RewardSlot" style="align-items: center;" />
+        <engine:VisualElement name="LabelPanel" style="flex-grow: 0; flex-shrink: 0; height: 57px; margin-top: 13px; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel3.png?fileID=21300000&amp;guid=77a6dcc512971ab419243a3716436257&amp;type=3#UniversalPanel3&quot;); -unity-background-image-tint-color: rgba(0, 0, 0, 0.23); width: 186px;">
+            <engine:Label text="100%" name="ProbabilityLabel" style="width: 100%; height: 100%; -unity-text-align: middle-center; font-size: 30px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
         </engine:VisualElement>
     </engine:VisualElement>
 </engine:UXML>

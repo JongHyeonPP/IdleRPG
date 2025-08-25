@@ -1,8 +1,10 @@
 using EnumCollection;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
+using Unity.Services.RemoteConfig;
 using UnityEngine;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
@@ -16,8 +18,6 @@ public class BattleManager : MonoBehaviour
     [SerializeField] EnemyPool _ePool0, _ePool1;
     [SerializeField] DropPool _dPool;
     [SerializeField] Transform _spawnSpot, _poolParent;
-    [SerializeField] HashSet<GoldDrop> activeGold = new();
-    [SerializeField] HashSet<ExpDrop> activeExp = new();
 
     [Header("Etc")]
     [SerializeField] CompanionController[] _companions;
@@ -352,10 +352,10 @@ public class BattleManager : MonoBehaviour
                 var companionReward = BattleBroker.GetCompanionReward(techInfo.techIndex_0, techInfo.techIndex_1);
                 _gameData.dia += companionReward.Item1;
                 _gameData.clover += companionReward.Item2;
-                BattleBroker.OnDiaSet();
-                BattleBroker.OnCloverSet();
-                NetworkBroker.QueueResourceReport(companionReward.Item1, Resource.Dia, Source.Companion);
-                NetworkBroker.QueueResourceReport(companionReward.Item2, Resource.Clover, Source.Companion);
+                PlayerBroker.OnDiaSet();
+                PlayerBroker.OnCloverSet();
+                NetworkBroker.QueueResourceReport(companionReward.Item1,null, Resource.Dia, Source.Companion);
+                NetworkBroker.QueueResourceReport(companionReward.Item2,null, Resource.Clover, Source.Companion);
                 _currentStageInfo = StageInfoManager.instance.GetNormalStageInfo(_gameData.currentStageNum);
                 _nextBattleType = BattleType.Default;
                 DelayOnEnd();
@@ -368,10 +368,10 @@ public class BattleManager : MonoBehaviour
                 _gameData.dia += reward.Item1;
                 _gameData.clover += reward.Item2;
                 _gameData.scroll -= StageInfoManager.instance.adventureEntranceFee;
-                BattleBroker.OnDiaSet();
-                BattleBroker.OnCloverSet();
-                BattleBroker.OnScrollSet();
-                NetworkBroker.QueueResourceReport(adventureInfo.adventureIndex_0, Resource.None, Source.Adventure);
+                PlayerBroker.OnDiaSet();
+                PlayerBroker.OnCloverSet();
+                PlayerBroker.OnScrollSet();
+                //NetworkBroker.QueueResourceReport(adventureInfo.adventureIndex_0, null,Resource.None, Source.Adventure);
 
                 var stageInfoArr = StageInfoManager.instance.GetAdventureStageInfo(adventureInfo.adventureIndex_0);
                 if (BattleBroker.GetAdventureRetry() && stageInfoArr != null && stageInfoArr.Length - 1 > adventureInfo.adventureIndex_1)
@@ -395,23 +395,67 @@ public class BattleManager : MonoBehaviour
     private void DropItem(Vector3 pos)
     {
         DropBase drop;
-        if (UtilityManager.CalculateProbability(0.5f))
+
+        // 드롭 확률 원본 (Remote Config에서 가져오기)
+        string probJson = RemoteConfigService.Instance.appConfig.GetJson("DROP_PROBABILITY", "None");
+        var fullProbDict = JsonConvert.DeserializeObject<Dictionary<string, float>>(probJson);
+
+        // 드롭 대상 및 가중치 리스트 구성
+        List<(string type, float weight)> dropCandidates = new()
         {
-            var dropGold = _dPool.GetFromPool<GoldDrop>();
-            activeGold.Add(dropGold);
-            drop = dropGold;
-            drop.transform.position = pos + Vector3.up * 0.5f;
-        }
-        else
+            ("Gold", fullProbDict["Gold"]),
+            ("Exp", fullProbDict["Exp"])
+        };
+
+        // Fragment 조건 확인
+        if (CurrencyManager.instance.currentFragmentValue.count > 0)
+            dropCandidates.Add(("Fragment", fullProbDict["Fragment"]));
+
+        // Weapon 조건 확인
+        if (!string.IsNullOrEmpty(CurrencyManager.instance.currentWeaponValue))
+            dropCandidates.Add(("Weapon", fullProbDict["Weapon"]));
+
+        // 전체 가중치 합계 계산
+        float totalWeight = 0f;
+        foreach (var candidate in dropCandidates)
+            totalWeight += candidate.weight;
+
+        // 정규화된 확률 리스트 생성
+        List<float> normalizedWeights = new();
+        foreach (var candidate in dropCandidates)
+            normalizedWeights.Add(candidate.weight / totalWeight);
+
+        // 확률 기반 인덱스 선택
+        int selectedIndex = UtilityManager.AllocateProbability(normalizedWeights.ToArray());
+
+        // 선택된 드롭 타입에 따라 드롭 생성
+        string selectedType = dropCandidates[selectedIndex].type;
+        switch (selectedType)
         {
-            var dropExp = _dPool.GetFromPool<ExpDrop>();
-            activeExp.Add(dropExp);
-            drop = dropExp;
-            drop.transform.position = pos + Vector3.up * 0.2f;
+            case "Gold":
+                drop = _dPool.GetFromPool<GoldDrop>();
+                drop.transform.position = pos + Vector3.up * 0.5f;
+                break;
+            case "Exp":
+                drop = _dPool.GetFromPool<ExpDrop>();
+                drop.transform.position = pos + Vector3.up * 0.2f;
+                break;
+            case "Fragment":
+                drop = _dPool.GetFromPool<FragmentDrop>();
+                drop.transform.position = pos + Vector3.up * 0.5f;
+                break;
+            case "Weapon":
+                drop = _dPool.GetFromPool<WeaponDrop>();
+                drop.transform.position = pos + Vector3.up * 0.5f;
+                break;
+            default:
+                Debug.LogWarning("Invalid drop type selected.");
+                return;
         }
 
         drop.StartDropMove();
     }
+
 
     private void SetPromoteTech(int compNum, int t0, int t1) { }
 

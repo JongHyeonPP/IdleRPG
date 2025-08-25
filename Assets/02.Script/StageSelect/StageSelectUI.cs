@@ -126,7 +126,7 @@ public class StageSelectUI : MonoBehaviour, IGeneralUI
     }
     public void OnNextStage(int stage)
     {
-        ChangePage(stage / NUMINPAGE);
+        ChangePage((stage - 1) / NUMINPAGE);
     }
     public void OnBattle()
     {

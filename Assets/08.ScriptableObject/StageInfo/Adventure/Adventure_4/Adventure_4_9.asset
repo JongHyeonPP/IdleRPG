@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Adventure_4_9
   m_EditorClassIdentifier: 
   stageNum: 0
-  stageName: Unset Stage
+  stageName: "\uBD89\uC740 \uAC1C\uAD6C\uB9AC \uCC98\uCE58"
   background: 4
   enemy_0: {fileID: 0}
   enemy_1: {fileID: 0}

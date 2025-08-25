@@ -10,7 +10,7 @@ public class TotalGoldUI : MonoBehaviour, IGeneralUI
         root = GetComponent<UIDocument>().rootVisualElement;
         _goldLabel = root.Q<Label>("GoldLabel");
         _gameData = StartBroker.GetGameData();
-        BattleBroker.OnGoldSet += SetGold;
+        PlayerBroker.OnGoldSet += SetGold;
         SetGold();
     }
 

@@ -130,9 +130,17 @@ public class SkillUI : MonoBehaviour, IMenuUI
         _skillId_SlotDict.Add(skillData.uid, currentSlot);
     }
 
-    private void OnFragmentSet(Rarity rarity, int num)
+    private void OnFragmentSet()
     {
-        fragmentLabelDict[rarity].text = num.ToString();
+        foreach (var kvp in _gameData.skillFragment)
+        {
+            if (!fragmentLabelDict.ContainsKey(kvp.Key))
+            {
+                fragmentLabelDict.Add(kvp.Key, new Label());
+            }
+
+            fragmentLabelDict[kvp.Key].text = kvp.Value.ToString();
+        }
     }
     private void OnSkillLevelSet(string skillId, int skillLevel)
     {
@@ -169,7 +177,7 @@ public class SkillUI : MonoBehaviour, IMenuUI
             VisualElement fragment = fragmentGrid.Q<VisualElement>($"Fragment{rarity}");
             VisualElement iconVe = fragment.Q<VisualElement>("IconVe");
             Label numLabel = fragment.Q<Label>("NumLabel");
-            iconVe.style.backgroundImage = new(PriceManager.instance.fragmentSprites[(int)rarity]);
+            iconVe.style.backgroundImage = new(CurrencyManager.instance.fragmentSprites[(int)rarity]);
             fragmentLabelDict.Add(rarity, numLabel);
             if (!StartBroker.GetGameData().skillFragment.TryGetValue(rarity, out int value))
             {
