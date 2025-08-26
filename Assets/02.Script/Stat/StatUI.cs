@@ -54,7 +54,7 @@ public class StatUI : MonoBehaviour, IMenuUI
         InitStatInfo();
         PlayerBroker.OnGoldStatusLevelSet += UpdateGoldStatText;
         PlayerBroker.OnStatPointStatusLevelSet += UpdateStatPointStatText;
-        BattleBroker.OnStatPointSet += StatPointSet;
+        PlayerBroker.OnStatPointSet += StatPointSet;
     }
 
     private void Start()
@@ -282,7 +282,7 @@ public class StatUI : MonoBehaviour, IMenuUI
         _currentValue++;
 
         PlayerBroker.OnGoldStatusLevelSet(stat, _gameData.statLevel_Gold[stat]);
-        BattleBroker.OnGoldSet?.Invoke();
+        PlayerBroker.OnGoldSet?.Invoke();
     }
 
     private void IncreaseStatPointStat(StatusType stat)
@@ -296,7 +296,7 @@ public class StatUI : MonoBehaviour, IMenuUI
         _gameData.statPoint--;
         _gameData.statLevel_StatPoint[stat]++;
         PlayerBroker.OnStatPointStatusLevelSet(stat, _gameData.statLevel_StatPoint[stat]);
-        BattleBroker.OnStatPointSet?.Invoke();
+        PlayerBroker.OnStatPointSet?.Invoke();
     }
 
     private void UpdateGoldStatText(StatusType stat, int level)

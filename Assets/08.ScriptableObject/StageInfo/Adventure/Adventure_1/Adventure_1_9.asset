@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Adventure_1_9
   m_EditorClassIdentifier: 
   stageNum: 0
-  stageName: Unset Stage
+  stageName: "\uC57C\uC0DD\uB3FC\uC9C0 \uCC98\uCE58"
   background: 1
   enemy_0: {fileID: 0}
   enemy_1: {fileID: 0}
@@ -38,3 +38,5 @@ MonoBehaviour:
   adventrueInfo:
     adventureIndex_0: 1
     adventureIndex_1: 9
+    imageLeft: 24
+    imageScale: 1

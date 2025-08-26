@@ -21,7 +21,7 @@ public class GoldDrop : DropBase
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            BattleBroker.OnGoldByDrop(value);
+            BattleBroker.OnDrop(DropType.Gold,value, null);
             dropPool.ReturnToPool(this);
         }
         else if (collision.gameObject.CompareTag("Wall"))
@@ -77,6 +77,6 @@ public class GoldDrop : DropBase
 
     public override void SetValue()
     {
-        value = BattleBroker.GetDropValue(DropType.Gold);
+        value = CurrencyManager.instance.GetGoldRangedValue();
     }
 }

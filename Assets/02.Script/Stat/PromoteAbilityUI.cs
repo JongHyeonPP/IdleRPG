@@ -43,6 +43,7 @@ public class PromoteAbilityUI : MonoBehaviour
     }
     public void ShowPromoteInfo()
     {
+        UIBroker.ActiveTranslucent(root, true);
         root.style.display = DisplayStyle.Flex;
     }
     private void InitInfo()
@@ -54,7 +55,7 @@ public class PromoteAbilityUI : MonoBehaviour
         _isLockEffectArr = new bool[_rank.Length];
         _rankLocks = new List<bool>(_rank.Length);
         _cloverLabel = root.Q<Label>("CloverLabel");
-        BattleBroker.OnCloverSet += SetCloverLabel;
+        PlayerBroker.OnCloverSet += SetCloverLabel;
         _cloverPriceLabel = root.Q<Label>("CloverPriceLabel");
         for (int i = 0; i < _rank.Length; i++)
         {
@@ -170,7 +171,7 @@ public class PromoteAbilityUI : MonoBehaviour
             UpdateAbilityLabel(randomAbility); 
         }
         _gameData.clover -= price;
-        BattleBroker.OnCloverSet();
+        PlayerBroker.OnCloverSet();
         NetworkBroker.SaveServerData();
     }
    
@@ -220,6 +221,7 @@ public class PromoteAbilityUI : MonoBehaviour
     private void HidePromoteInfo()
     {
         root.style.display = DisplayStyle.None;
+        UIBroker.InactiveCurrentUI?.Invoke();
     }
    
     private string GetKoreanAbilityName(string abilityName)

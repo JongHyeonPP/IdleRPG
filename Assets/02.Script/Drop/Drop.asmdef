@@ -3,7 +3,9 @@
     "rootNamespace": "",
     "references": [
         "Utility",
-        "EventControl"
+        "EventControl",
+        "Currency",
+        "Weapon"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

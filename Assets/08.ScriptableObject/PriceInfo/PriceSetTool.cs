@@ -10,13 +10,13 @@ public class PriceSetTool : MonoBehaviour
     [ContextMenu("SetSkillPrice")]
     public void SetSkillPrice()
     {
-        priceInfo.commonSkillPrice = new int[PriceManager.MAXPLAYERSKILLLEVEL+1];
-        priceInfo.uncommonSkillPrice = new int[PriceManager.MAXPLAYERSKILLLEVEL+1];
-        priceInfo.rareSkillPrice = new int[PriceManager.MAXPLAYERSKILLLEVEL+1];
-        priceInfo.uniqueSkillPrice = new int[PriceManager.MAXPLAYERSKILLLEVEL+1];
-        priceInfo.legendarySkillPrice = new int[PriceManager.MAXPLAYERSKILLLEVEL+1];
-        priceInfo.mythicSkillPrice = new int[PriceManager.MAXPLAYERSKILLLEVEL+1];
-        for (int i = 0; i <= PriceManager.MAXPLAYERSKILLLEVEL; i++)
+        priceInfo.commonSkillPrice = new int[CurrencyManager.MAXPLAYERSKILLLEVEL+1];
+        priceInfo.uncommonSkillPrice = new int[CurrencyManager.MAXPLAYERSKILLLEVEL+1];
+        priceInfo.rareSkillPrice = new int[CurrencyManager.MAXPLAYERSKILLLEVEL+1];
+        priceInfo.uniqueSkillPrice = new int[CurrencyManager.MAXPLAYERSKILLLEVEL+1];
+        priceInfo.legendarySkillPrice = new int[CurrencyManager.MAXPLAYERSKILLLEVEL+1];
+        priceInfo.mythicSkillPrice = new int[CurrencyManager.MAXPLAYERSKILLLEVEL+1];
+        for (int i = 0; i <= CurrencyManager.MAXPLAYERSKILLLEVEL; i++)
         {
             int value;
             if (i == 0 || i == 1)
@@ -37,13 +37,13 @@ public class PriceSetTool : MonoBehaviour
     [ContextMenu("SetWeaponPrice")]
     public void SetWeaponPrice()
     {
-        priceInfo.commonWeaponPrice = new int[PriceManager.MAXWEAPONLEVEL];
-        priceInfo.uncommonWeaponPrice = new int[PriceManager.MAXWEAPONLEVEL];
-        priceInfo.rareWeaponPrice = new int[PriceManager.MAXWEAPONLEVEL];
-        priceInfo.uniqueWeaponPrice = new int[PriceManager.MAXWEAPONLEVEL];
-        priceInfo.legendaryWeaponPrice = new int[PriceManager.MAXWEAPONLEVEL];
-        priceInfo.mythicWeaponPrice = new int[PriceManager.MAXWEAPONLEVEL];
-        for (int i = 0; i < PriceManager.MAXWEAPONLEVEL; i++)
+        priceInfo.commonWeaponPrice = new int[CurrencyManager.MAXWEAPONLEVEL];
+        priceInfo.uncommonWeaponPrice = new int[CurrencyManager.MAXWEAPONLEVEL];
+        priceInfo.rareWeaponPrice = new int[CurrencyManager.MAXWEAPONLEVEL];
+        priceInfo.uniqueWeaponPrice = new int[CurrencyManager.MAXWEAPONLEVEL];
+        priceInfo.legendaryWeaponPrice = new int[CurrencyManager.MAXWEAPONLEVEL];
+        priceInfo.mythicWeaponPrice = new int[CurrencyManager.MAXWEAPONLEVEL];
+        for (int i = 0; i < CurrencyManager.MAXWEAPONLEVEL; i++)
         {
             priceInfo.commonWeaponPrice[i] = 4 * (i + 1);
             priceInfo.uncommonWeaponPrice[i] = 4 * (i + 1);
@@ -59,16 +59,16 @@ public class PriceSetTool : MonoBehaviour
     [ContextMenu("SetCompanionSkillPrice")]
     public void SetCompanionSkillPrice()
     {
-        priceInfo.companion0_SkillPrice0 = new PriceInfo.CompanionSkillPrice[PriceManager.MAXCOMPANIONSKILLLEVEL + 1];
-        priceInfo.companion0_SkillPrice1 = new PriceInfo.CompanionSkillPrice[PriceManager.MAXCOMPANIONSKILLLEVEL + 1];
-        priceInfo.companion0_SkillPrice2 = new PriceInfo.CompanionSkillPrice[PriceManager.MAXCOMPANIONSKILLLEVEL + 1];
-        priceInfo.companion1_SkillPrice0 = new PriceInfo.CompanionSkillPrice[PriceManager.MAXCOMPANIONSKILLLEVEL + 1];
-        priceInfo.companion1_SkillPrice1 = new PriceInfo.CompanionSkillPrice[PriceManager.MAXCOMPANIONSKILLLEVEL + 1];
-        priceInfo.companion1_SkillPrice2 = new PriceInfo.CompanionSkillPrice[PriceManager.MAXCOMPANIONSKILLLEVEL + 1];
-        priceInfo.companion2_SkillPrice0 = new PriceInfo.CompanionSkillPrice[PriceManager.MAXCOMPANIONSKILLLEVEL + 1];
-        priceInfo.companion2_SkillPrice1 = new PriceInfo.CompanionSkillPrice[PriceManager.MAXCOMPANIONSKILLLEVEL + 1];
-        priceInfo.companion2_SkillPrice2 = new PriceInfo.CompanionSkillPrice[PriceManager.MAXCOMPANIONSKILLLEVEL + 1];
-        for (int i = 0; i <= PriceManager.MAXCOMPANIONSKILLLEVEL; i++)
+        priceInfo.companion0_SkillPrice0 = new PriceInfo.CompanionSkillPrice[CurrencyManager.MAXCOMPANIONSKILLLEVEL + 1];
+        priceInfo.companion0_SkillPrice1 = new PriceInfo.CompanionSkillPrice[CurrencyManager.MAXCOMPANIONSKILLLEVEL + 1];
+        priceInfo.companion0_SkillPrice2 = new PriceInfo.CompanionSkillPrice[CurrencyManager.MAXCOMPANIONSKILLLEVEL + 1];
+        priceInfo.companion1_SkillPrice0 = new PriceInfo.CompanionSkillPrice[CurrencyManager.MAXCOMPANIONSKILLLEVEL + 1];
+        priceInfo.companion1_SkillPrice1 = new PriceInfo.CompanionSkillPrice[CurrencyManager.MAXCOMPANIONSKILLLEVEL + 1];
+        priceInfo.companion1_SkillPrice2 = new PriceInfo.CompanionSkillPrice[CurrencyManager.MAXCOMPANIONSKILLLEVEL + 1];
+        priceInfo.companion2_SkillPrice0 = new PriceInfo.CompanionSkillPrice[CurrencyManager.MAXCOMPANIONSKILLLEVEL + 1];
+        priceInfo.companion2_SkillPrice1 = new PriceInfo.CompanionSkillPrice[CurrencyManager.MAXCOMPANIONSKILLLEVEL + 1];
+        priceInfo.companion2_SkillPrice2 = new PriceInfo.CompanionSkillPrice[CurrencyManager.MAXCOMPANIONSKILLLEVEL + 1];
+        for (int i = 0; i <= CurrencyManager.MAXCOMPANIONSKILLLEVEL; i++)
         {
             if (i == 0)
             {

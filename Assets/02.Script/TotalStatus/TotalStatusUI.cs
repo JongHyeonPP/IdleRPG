@@ -66,7 +66,7 @@ public class TotalStatusUI : MonoBehaviour
         InitEquipSlot();
         PlayerBroker.OnEquipWeapon += OnEquipWeapon;
         PlayerBroker.OnSetName += SetName;
-        BattleBroker.OnLevelExpSet += SetLevel;
+        PlayerBroker.OnLevelExpSet += SetLevel;
     }
 
     private void Start()
@@ -117,8 +117,7 @@ public class TotalStatusUI : MonoBehaviour
         }
         else
         {
-            equipIcon.style.backgroundImage = new(weaponData.WeaponSprite);
-            WeaponManager.instance.SetIconScale(weaponData, equipIcon);
+            WeaponManager.instance.SetWeaponIconToVe(weaponData, equipIcon);
             nameLabel.text = weaponData.name;
         }
     }

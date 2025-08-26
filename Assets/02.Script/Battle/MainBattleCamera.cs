@@ -5,10 +5,9 @@ public class MainBattleCamera : MonoBehaviour
 {
     [SerializeField] CameraInfo expandInfo;
     [SerializeField] CameraInfo shrinkInfo;
-    private Camera mainCamera;
+    [SerializeField] Camera mainCamera;
     private void Awake()
     {
-        mainCamera = GetComponent<Camera>();
         UIBroker.ChangeMenu += OnMenuUIChange;
     }
     private void SetSize(CameraInfo cameraInfo)

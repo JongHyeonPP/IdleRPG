@@ -29,8 +29,7 @@ public class GainLabelUI : MonoBehaviour
                 _expTexture = _expTexture,
             };
         }
-        BattleBroker.OnGoldByDrop += (value)=> OnCurrencyInBattle(DropType.Gold, value);
-        BattleBroker.OnExpByDrop += (value)=> OnCurrencyInBattle(DropType.Exp, value);
+        BattleBroker.OnDrop += (type, value,id)=> OnCurrencyInBattle(type, value, id);
     }
     private IEnumerator GraduallyHideAlpha()
     {
@@ -44,7 +43,7 @@ public class GainLabelUI : MonoBehaviour
             StartCoroutine(x.GraduallyHidePiece());
         }
     }
-    private void OnCurrencyInBattle(DropType dropType, int value)
+    private void OnCurrencyInBattle(DropType dropType, int value, string id)
     {
         StopAllCoroutines();
         foreach (var x in pieceArr)
@@ -55,10 +54,10 @@ public class GainLabelUI : MonoBehaviour
         {
             if (!pieceArr[i - 1].isActive)
                 continue;
-            pieceArr[i - 1].GetValue(out DropType newType, out int newValue);
-            pieceArr[i].SetValue(newType, newValue);
+            pieceArr[i - 1].GetValue(out DropType newType, out int newValue, out string newId);
+            pieceArr[i].SetValue(newType, newValue, newId);
         }
-        pieceArr[0].SetValue(dropType, value);
+        pieceArr[0].SetValue(dropType, value, id);
         StartCoroutine(GraduallyHideAlpha());
     }
 

@@ -1,24 +1,5 @@
-.unity-progress-bar__container {
-    min-height: 43px;
-    visibility: visible;
-    display: flex;
-    -unity-background-image-tint-color: rgb(255, 255, 255);
-    background-image: url("project://database/Assets/Violet%20Theme%20Ui/Progress%20Bars/Progress%20Bar%20Background.png?fileID=1932520997363718593&guid=3884787ef484b9641b8d705dfa15ea9d&type=3#Progress Bar Background_0");
-    background-color: rgba(0, 0, 0, 0);
-}
-
-.unity-progress-bar__progress {
-    background-color: rgba(255, 255, 255, 0);
-    background-image: url("project://database/Assets/Violet%20Theme%20Ui/Sliders/Fill%20Green.png?fileID=4636151831804572175&guid=5c6b1d8bbb4d72743bce6f67053ac941&type=3#Fill Green_0");
-    -unity-background-image-tint-color: rgb(255, 255, 255);
-}
-
-.unity-progress-bar__background {
-    background-color: rgba(0, 0, 0, 0);
-    visibility: visible;
-    -unity-background-image-tint-color: rgb(255, 255, 255);
-    border-top-width: 0;
-    border-right-width: 0;
-    border-bottom-width: 0;
-    border-left-width: 0;
+.unity-toggle__checkmark {
+    width: 55px;
+    height: 55px;
+    margin-left: 23px;
 }

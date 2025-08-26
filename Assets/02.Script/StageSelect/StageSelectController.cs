@@ -1,69 +1,136 @@
 using UnityEngine.UIElements;
 using UnityEngine;
 using System;
-public class StageSelectController : LVItemController
+
+public class StageSelectController : MonoBehaviour, LVItemController
 {
     private GameData _gameData;
-    //가져온 아이템의 ui 구조를 설정한다.
-    public override void BindItem(VisualElement element, int index)
+
+    public FlexibleListView draggableLV { get; set; }
+
+    // 인터페이스 구현
+    private class ItemCache
     {
-        _gameData = StartBroker.GetGameData();
+        public Button infoButton;
+        public Button moveButton;
+        public Label stageLabel;
+        public Label titleLabel;
+        public Label infoLabel;
+        public VisualElement lockGroup;
+        public VisualElement selectBorder;
+    }
+
+    // 인터페이스 구현
+    public void BindItem(VisualElement element, int index)
+    {
+        if (_gameData == null)
+            _gameData = StartBroker.GetGameData();
+        if (_gameData == null)
+        {
+            Debug.LogError("GameData is null");
+            return;
+        }
+        if (draggableLV == null || draggableLV.items == null || index < 0 || index >= draggableLV.items.Count)
+        {
+            Debug.LogError("draggableLV not ready");
+            return;
+        }
+
         IListViewItem item = draggableLV.items[index];
         StageInfo stageInfo = item as StageInfo;
+        if (stageInfo == null)
+        {
+            Debug.LogError("StageInfo cast failed");
+            return;
+        }
+
+            var cache = new ItemCache
+            {
+                infoButton = element.Q<Button>("InfoButton"),
+                moveButton = element.Q<Button>("MoveButton"),
+                stageLabel = element.Q<Label>("StageLabel"),
+                titleLabel = element.Q<Label>("TitleLabel"),
+                infoLabel = element.Q<Label>("InfoLabel"),
+                lockGroup = element.Q<VisualElement>("LockGroup"),
+                selectBorder = element.Q<VisualElement>("SelectBorder")
+            };
+            element.userData = cache;
+        
+
+        cache.titleLabel.text = stageInfo.stageName;
+        BindOpenState(cache, stageInfo);
+        SetSelected(cache.selectBorder, _gameData.currentStageNum == stageInfo.stageNum);
+
+        cache.moveButton?.UnregisterCallback<ClickEvent>(OnMoveButtonClick);
+        if (cache.moveButton != null)
+        {
+            cache.moveButton.userData = stageInfo.stageNum;
+            cache.moveButton.RegisterCallback<ClickEvent>(OnMoveButtonClick);
+        }
+
+        cache.infoButton?.UnregisterCallback<ClickEvent>(OnInfoButtonClick);
+        if (cache.infoButton != null)
+        {
+            cache.infoButton.userData = stageInfo.stageNum;
+            cache.infoButton.RegisterCallback<ClickEvent>(OnInfoButtonClick);
+        }
+    }
+
+    private void BindOpenState(ItemCache cache, StageInfo stageInfo)
+    {
         int stageNum = stageInfo.stageNum;
-        //VisualElement 가져오기
-        VisualElement bottomImage = element.Q<VisualElement>("BottomImage");
-        Label stageLabel = element.Q<Label>("StageLabel");
-        Label titleLabel = element.Q<Label>("TitleLabel");
-        Label infoLabel = element.Q<Label>("InfoLabel");
-        VisualElement lockGroup = element.Q<VisualElement>("LockGroup");
-        VisualElement selectBorder = element.Q<VisualElement>("SelectBorder");
-        Button moveButton = element.Q<Button>("MoveButton");
-        //VisualElement 설정
-        titleLabel.text = stageInfo.stageName;
-        if (_gameData.maxStageNum >= stageNum)//오픈된 스테이지라면
+        bool isOpen = _gameData.maxStageNum >= stageNum;
+
+        if (isOpen)
         {
-            stageLabel.style.display =bottomImage.style.display =infoLabel.style.display = moveButton.style.display = DisplayStyle.Flex;
-            lockGroup.style.display = DisplayStyle.None;
-            stageLabel.text = $"STAGE {stageInfo.stageNum}";
-            infoLabel.text = stageInfo.GetDropInfo();
-        }
-        else//닫힌 스테이지라면
-        {
-            stageLabel.style.display =bottomImage.style.display =infoLabel.style.display = moveButton.style.display = DisplayStyle.None;
-            lockGroup.style.display = DisplayStyle.Flex;
-        }
-        if (_gameData.currentStageNum == stageNum)
-        {
-            selectBorder.style.display = DisplayStyle.Flex;
+            SetVisible(cache.stageLabel, true);
+            SetVisible(cache.infoButton, true);
+            SetVisible(cache.infoLabel, true);
+            SetVisible(cache.moveButton, true);
+            SetVisible(cache.lockGroup, false);
+
+            cache.stageLabel.text = $"STAGE {stageNum}";
+            cache.infoLabel.text = stageInfo.GetDropInfo();
         }
         else
         {
-            selectBorder.style.display = DisplayStyle.None;
+            SetVisible(cache.stageLabel, false);
+            SetVisible(cache.infoButton, false);
+            SetVisible(cache.infoLabel, false);
+            SetVisible(cache.moveButton, false);
+            SetVisible(cache.lockGroup, true);
         }
-        // 기존 이벤트 제거
-        moveButton.UnregisterCallback<ClickEvent>(OnMoveButtonClick);
-
-        // 버튼에 인덱스를 userData로 저장
-
-        moveButton.userData = stageInfo.stageNum;
-
-        // 클릭 이벤트 등록
-        moveButton.RegisterCallback<ClickEvent>(OnMoveButtonClick);
     }
-    // 버튼 클릭 이벤트 핸들러
+
+    private void SetSelected(VisualElement selectBorder, bool selected)
+    {
+        if (selectBorder == null) return;
+        selectBorder.style.display = selected ? DisplayStyle.Flex : DisplayStyle.None;
+    }
+
+    private void SetVisible(VisualElement ve, bool visible)
+    {
+        if (ve == null) return;
+        ve.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
+    }
+
     private void OnMoveButtonClick(ClickEvent evt)
     {
-        // 클릭된 버튼의 userData를 통해 인덱스 가져오기 
-        
-        var button = evt.target as Button;
-        if (button?.userData is int index)
+        var button = evt.currentTarget as Button;
+        if (button?.userData is int stageNum)
         {
-            _gameData.currentStageNum = index;
-            Debug.Log("Move To Stage" + index);
+            _gameData.currentStageNum = stageNum;
+            Debug.Log("Move To Stage " + stageNum);
             BattleBroker.OnStageChange();
             NetworkBroker.SaveServerData();
             UIBroker.InactiveCurrentUI?.Invoke();
         }
+    }
+
+    private void OnInfoButtonClick(ClickEvent evt)
+    {
+        var button = evt.currentTarget as Button;
+        if (button?.userData is int stageNum)
+            BattleBroker.ActiveStageInfoUI(stageNum);
     }
 }

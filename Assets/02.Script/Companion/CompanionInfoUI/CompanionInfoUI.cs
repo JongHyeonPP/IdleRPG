@@ -67,7 +67,7 @@ public class CompanionInfoUI : MonoBehaviour, IGeneralUI
     private void Start()
     {
         _companionManager = CompanionManager.instance;
-        BattleBroker.OnCompanionExpSet += OnCompanionExpSet;
+        PlayerBroker.OnCompanionExpSet += OnCompanionExpSet;
         PlayerBroker.OnSkillLevelSet += OnSkillLevelSet;
         _companionPromoteData = CompanionManager.instance.companionPromoteData;
     }
@@ -93,7 +93,7 @@ public class CompanionInfoUI : MonoBehaviour, IGeneralUI
         _infoButton = _mainPanelArr[1].Q<Button>("InfoButton");
         _infoButton.RegisterCallback<ClickEvent>(evt=>_companionPromoteInfoUI.ActiveUI());
         cloverLabel = _mainPanelArr[1].Q<Label>("CloverLabel");
-        BattleBroker.OnCloverSet += SetCloverLabel;
+        PlayerBroker.OnCloverSet += SetCloverLabel;
         SetCloverLabel();
         VisualElement promoteEffectSlotParent = root.Q<VisualElement>("PromoteEffectSlotParent");
         for (int i = 0; i < _promoteSlotArr.Length; i++)
@@ -148,7 +148,7 @@ public class CompanionInfoUI : MonoBehaviour, IGeneralUI
                 SetEachPromoteEffect(i);
         }
         _gameData.clover -= price;
-        BattleBroker.OnCloverSet();
+        PlayerBroker.OnCloverSet();
         NetworkBroker.SaveServerData();
     }
 
@@ -226,7 +226,7 @@ public class CompanionInfoUI : MonoBehaviour, IGeneralUI
         //업 한 이후
         _gameData.skillLevel[skillData.uid] = skillLevel;
         _passiveSlotArr[skillIndex].Q<Label>("SkillLevelLabel").text = $"Lv.{skillLevel}";
-        if (skillLevel == PriceManager.MAXCOMPANIONSKILLLEVEL)
+        if (skillLevel == CurrencyManager.MAXCOMPANIONSKILLLEVEL)
         {
             _passiveSlotArr[skillIndex].Q<Button>().style.display = DisplayStyle.None;
             _passiveSlotArr[skillIndex].Q<VisualElement>("MaxLevelLabel").style.display = DisplayStyle.Flex;
@@ -235,7 +235,7 @@ public class CompanionInfoUI : MonoBehaviour, IGeneralUI
         {
             _passiveSlotArr[skillIndex].Q<Button>().style.display = DisplayStyle.Flex;
             _passiveSlotArr[skillIndex].Q<VisualElement>("MaxLevelLabel").style.display = DisplayStyle.None;
-            PriceInfo.CompanionSkillPrice afterPrice = PriceManager.instance.GetRequireCompanionSkill_CloverFragment(_currentCompanionIndex, skillIndex, skillLevel + 1);
+            PriceInfo.CompanionSkillPrice afterPrice = CurrencyManager.instance.GetRequireCompanionSkill_CloverFragment(_currentCompanionIndex, skillIndex, skillLevel + 1);
             Label cloverLabel = _passiveSlotArr[skillIndex].Q<Label>("CloverLabel");
             cloverLabel.text = afterPrice.clover.ToString();
             Label fragmentLabel = _passiveSlotArr[skillIndex].Q<Label>("FragmentLabel");
@@ -251,7 +251,7 @@ public class CompanionInfoUI : MonoBehaviour, IGeneralUI
         {
             currentLevel = 0;
         }
-        PriceInfo.CompanionSkillPrice beforePrice = PriceManager.instance.GetRequireCompanionSkill_CloverFragment(_currentCompanionIndex, skillIndex, currentLevel+1);
+        PriceInfo.CompanionSkillPrice beforePrice = CurrencyManager.instance.GetRequireCompanionSkill_CloverFragment(_currentCompanionIndex, skillIndex, currentLevel+1);
         if (!_gameData.skillFragment.ContainsKey(beforePrice.fragmentRarity))
         {
             _gameData.skillFragment[beforePrice.fragmentRarity] = 0;
@@ -269,7 +269,7 @@ public class CompanionInfoUI : MonoBehaviour, IGeneralUI
         _gameData.skillFragment[beforePrice.fragmentRarity] -= beforePrice.fragment;
         _gameData.skillLevel[uid] = ++currentLevel;
         PlayerBroker.OnSkillLevelSet(uid, currentLevel);
-        BattleBroker.OnCompanionExpSet(_currentCompanionIndex);
+        PlayerBroker.OnCompanionExpSet(_currentCompanionIndex);
     }
     private void OnCompanionExpSet(int companionIndex)
     {
@@ -345,7 +345,7 @@ public class CompanionInfoUI : MonoBehaviour, IGeneralUI
                 currentLevel = 0;
             }
             skillLevelLabel.text = $"Lv.{currentLevel}";
-            if (currentLevel == PriceManager.MAXCOMPANIONSKILLLEVEL)
+            if (currentLevel == CurrencyManager.MAXCOMPANIONSKILLLEVEL)
             {
                 passiveSlot.Q<Button>().style.display = DisplayStyle.None;
                 passiveSlot.Q<Label>("MaxLevelLabel").style.display = DisplayStyle.Flex;
@@ -354,12 +354,12 @@ public class CompanionInfoUI : MonoBehaviour, IGeneralUI
             {
                 passiveSlot.Q<Button>().style.display = DisplayStyle.Flex;
                 passiveSlot.Q<Label>("MaxLevelLabel").style.display = DisplayStyle.None;
-                PriceInfo.CompanionSkillPrice price = PriceManager.instance.GetRequireCompanionSkill_CloverFragment(_currentCompanionIndex, skillIndex, currentLevel + 1);
+                PriceInfo.CompanionSkillPrice price = CurrencyManager.instance.GetRequireCompanionSkill_CloverFragment(_currentCompanionIndex, skillIndex, currentLevel + 1);
                 Label cloverLabel = passiveSlot.Q<Label>("CloverLabel");
                 cloverLabel.text = price.clover.ToString();
                 Label fragmentLabel = passiveSlot.Q<Label>("FragmentLabel");
                 VisualElement fragmentSprite = passiveSlot.Q<VisualElement>("FragmentSprite");
-                fragmentSprite.style.backgroundImage = new(PriceManager.instance.fragmentSprites[(int)price.fragmentRarity]);
+                fragmentSprite.style.backgroundImage = new(CurrencyManager.instance.fragmentSprites[(int)price.fragmentRarity]);
                 fragmentLabel.text = price.fragment.ToString();
             }
             iconSprite.style.backgroundImage = new(skillData.iconSprite);
@@ -412,7 +412,7 @@ public class CompanionInfoUI : MonoBehaviour, IGeneralUI
         float effectValue = CompanionManager.instance.GetCompanionPromoteValue(tuple.Item1, tuple.Item2);
         
         effectLabel.text = CompanionManager.instance.GetCompanionPromoteText(tuple.Item1, effectValue);
-        effectLabel.style.color = PriceManager.instance.rarityColor[(int)tuple.Item2];
+        effectLabel.style.color = CurrencyManager.instance.rarityColor[(int)tuple.Item2];
     }
 
     private void RefreshRenderLayer()

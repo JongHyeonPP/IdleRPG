@@ -24,12 +24,12 @@ public class CurrentStageUI : MonoBehaviour, IGeneralUI
     private void OnClickBossEnter(ClickEvent evt)
     {
         root.style.display = DisplayStyle.None;
+        UIBroker.ChangeMenu(0);
         BattleBroker.SwitchToBoss();
     }
 
     private void OnClickUI(ClickEvent evt)
     {
-        Debug.Log("Click CurrentStage Ui");
         stageSelectUI.ToggleUi(true);
     }
 

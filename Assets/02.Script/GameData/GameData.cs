@@ -84,7 +84,7 @@ public class GameData
     public List<string> ownedCostumes = new();      // 보유한 코스튬
     #endregion
 
-    public int[] adventureProgess = new int[9];//모험 진행도
+    public int[] adventureProgess = new int[9];
 
     #region 서버에 없음
     public int statPoint;

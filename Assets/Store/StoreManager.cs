@@ -261,7 +261,7 @@ public class StoreManager : MonoSingleton<StoreManager>
     //    VisualElement slot = _slotDict[weaponData.UID];
     //    ProgressBar countProgressBar = slot.Q<ProgressBar>("CountProgressBar");
     //    int level = _weaponLevel[weaponData.UID];
-    //    int price = PriceManager.instance.GetRequireWeaponCount(weaponData.WeaponRarity, level);
+    //    int price = CurrencyManager.instance.GetRequireWeaponCount(weaponData.WeaponRarity, level);
     //    countProgressBar.title = $"{count}/{price}";
     //    countProgressBar.value = count / (float)price;
     //}

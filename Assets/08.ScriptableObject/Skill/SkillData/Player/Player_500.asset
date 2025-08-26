@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillName: Burst
   uid: Player_500
-  iconSprite: {fileID: 21300000, guid: 275a5bfa4f581a5459d5535d663454ef, type: 3}
+  iconSprite: {fileID: -8976129629788330115, guid: 16603015e8f526342a7bf252a9b81bd0, type: 3}
   simple: 
   complex: 
   rarity: 5

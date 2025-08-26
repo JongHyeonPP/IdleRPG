@@ -1,0 +1,74 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:Template name="ExitButton" src="project://database/Assets/02.Script/DefaultUI/ExitButton.uxml?fileID=9197481963319205126&amp;guid=56c49e16b4a3e0641931b48714473123&amp;type=3#ExitButton" />
+    <Style src="project://database/Assets/02.Script/Companion/CompanionInfoUI/CompanionInfoUI.uss?fileID=7433441132597879392&amp;guid=06bf4bb68679e084abdc158a458f4fc1&amp;type=3#CompanionInfoUI" />
+    <Style src="project://database/Assets/02.Script/ScrollTool/FlexibleListView.uss?fileID=7433441132597879392&amp;guid=22300913a31f2274cb80b411a7a6b5a4&amp;type=3#FlexibleListView" />
+    <engine:VisualElement name="AdventureInfoUI" style="flex-grow: 0; position: absolute; background-color: rgba(152, 97, 6, 0); align-self: center; width: 1000px; height: 1472px; font-size: 35px; color: rgb(255, 255, 255); background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/Window.png?fileID=21300000&amp;guid=63655f4cc96936340989153c4eccea19&amp;type=3#Window&quot;); -unity-background-image-tint-color: rgb(115, 75, 30); align-items: center; justify-content: center; -unity-font-definition: url(&quot;project://database/Assets/05.Font/Maplestory%20Light.ttf?fileID=12800000&amp;guid=b7853b5ad26567e41a3c4210e64c5419&amp;type=3#Maplestory Light&quot;); text-shadow: 2px 2px 0 rgb(0, 0, 0); bottom: 417px;">
+        <engine:VisualElement name="Frame" picking-mode="Ignore" style="flex-grow: 1; position: absolute; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/WindowStroke.png?fileID=21300000&amp;guid=8a7a753f989769c4ebd7f236420af813&amp;type=3#WindowStroke&quot;); width: 102%; height: 102%;" />
+        <engine:VisualElement name="MainPanel" picking-mode="Ignore" style="flex-grow: 0; width: 92%; height: 96%; flex-shrink: 0;">
+            <engine:VisualElement name="CategoriButtonParent" style="flex-grow: 0; height: 107px; background-color: rgba(0, 0, 0, 0); flex-direction: row; justify-content: center; align-items: center; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/TitleBar.png?fileID=2800000&amp;guid=a331d5e1dd3208d4ab0085903c241b8a&amp;type=3#TitleBar&quot;); padding-bottom: 29px; font-size: 45px; -unity-text-outline-color: rgb(0, 0, 0); letter-spacing: 23px; -unity-background-image-tint-color: rgb(63, 63, 63);">
+                <engine:Label text="국립 모험가 조합" style="color: rgb(241, 205, 162); margin-top: 13px;" />
+            </engine:VisualElement>
+            <engine:VisualElement name="VerticalParent" style="flex-grow: 1; margin-left: 50px; margin-top: 50px; margin-right: 50px; margin-bottom: 50px;">
+                <engine:VisualElement name="VerticalPanel_0" style="flex-grow: 0; flex-shrink: 0; height: 422px; flex-direction: row;">
+                    <engine:VisualElement name="Left" style="flex-grow: 1; width: 82px;">
+                        <engine:VisualElement name="InfoParent" style="flex-grow: 1;">
+                            <engine:VisualElement name="InfoPanel" style="flex-grow: 0; height: 64px; flex-shrink: 0; flex-direction: row;">
+                                <engine:VisualElement style="flex-grow: 0; width: 50px; height: 50px; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Icons/32/ScrollRoll.png?fileID=2800000&amp;guid=a0a8f252a8253a54292d25824d74f625&amp;type=3#ScrollRoll&quot;); flex-shrink: 0;" />
+                                <engine:Label text="앵그리보어 처치" name="TitleLabel" style="margin-left: 23px;" />
+                            </engine:VisualElement>
+                            <engine:Label text="몬스터 처리 의뢰입니다." style="margin-left: 20px;" />
+                        </engine:VisualElement>
+                        <engine:VisualElement name="RegionPanel" style="flex-grow: 1;">
+                            <engine:Label text="지역 정보" name="RegionInfoLabel" />
+                            <engine:VisualElement name="RegionImage" style="flex-grow: 0; background-image: url(&quot;project://database/Assets/07.Texture/Backgrouond/BG_Ruins.png?fileID=2800000&amp;guid=e2804d75a609e3c4a9f5e592ee99fd9f&amp;type=3#BG_Ruins&quot;); align-items: center; justify-content: center; width: 366px; flex-shrink: 0; height: 121px;">
+                                <engine:Label text="그림자  계곡" name="RegionLabel" />
+                            </engine:VisualElement>
+                        </engine:VisualElement>
+                    </engine:VisualElement>
+                    <engine:VisualElement name="BossPanel" style="flex-grow: 0; background-image: url(&quot;project://database/Assets/07.Texture/UI/Scroll_0.png?fileID=2800000&amp;guid=7a81c03dce9750f4f8bc85d14cf51f7c&amp;type=3#Scroll_0&quot;); align-items: center; justify-content: flex-start; flex-shrink: 0; width: 401px; height: 460px; top: -40px; padding-top: 67px;">
+                        <engine:Label text="Wanted" style="-unity-font-definition: url(&quot;project://database/Assets/Store/font/Galmuri11_MainFont.ttf?fileID=12800000&amp;guid=db08679a010d4084c84f83c57830d6d4&amp;type=3#Galmuri11_MainFont&quot;); font-size: 39px; letter-spacing: 23px; color: rgb(120, 26, 0); display: flex;" />
+                        <engine:VisualElement name="Padding" style="flex-grow: 0; flex-shrink: 0; height: 15px;" />
+                        <engine:VisualElement name="BossBorderPanel" style="flex-grow: 0; flex-shrink: 0; width: 229px; height: 247px; border-left-color: rgb(171, 88, 0); border-right-color: rgb(171, 88, 0); border-top-color: rgb(171, 88, 0); border-bottom-color: rgb(171, 88, 0); border-top-width: 8px; border-right-width: 8px; border-bottom-width: 8px; border-left-width: 8px; -unity-background-image-tint-color: rgb(113, 113, 113); border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px; display: flex; background-color: rgba(0, 0, 0, 0.44);">
+                            <engine:VisualElement name="BossImage" style="flex-grow: 0; bottom: 0; height: 146px; flex-shrink: 0; position: absolute; align-self: center; width: 183px; background-image: url(&quot;project://database/Assets/Asset/PixelFantasy/PixelMonsters/Pack1/Pig/BrownPig.png?fileID=4723107735738678597&amp;guid=c35daf1f04c549f4acee8f5d63fc43af&amp;type=3#Idle_0&quot;); background-size: 200% 200%; background-position-y: bottom 0; background-position-x: center 0; margin-bottom: 6px;" />
+                            <engine:Label text="BOSS" style="bottom: 0; right: 0; position: absolute; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 5px; padding-bottom: 5px; padding-left: 0; color: rgb(255, 0, 0); -unity-font-definition: url(&quot;project://database/Assets/Store/font/Galmuri11_MainFont.ttf?fileID=12800000&amp;guid=db08679a010d4084c84f83c57830d6d4&amp;type=3#Galmuri11_MainFont&quot;); letter-spacing: 11px; -unity-text-outline-width: 1px; -unity-text-outline-color: rgb(0, 0, 0); -unity-font-style: bold; font-size: 35px;" />
+                        </engine:VisualElement>
+                    </engine:VisualElement>
+                </engine:VisualElement>
+                <engine:VisualElement name="VerticalPanel_1" style="flex-grow: 0; flex-shrink: 0; height: 121px; width: 811px; align-self: center; background-color: rgba(255, 255, 255, 0); flex-direction: row; align-items: center; justify-content: center; margin-top: 12px;">
+                    <engine:VisualElement name="Recommend" style="flex-grow: 0; flex-shrink: 0; height: 120px; width: 305px; align-self: center; background-color: rgba(255, 255, 255, 0.1); margin-top: 0; flex-direction: row; align-items: center; justify-content: flex-start; margin-right: 0; margin-bottom: 0; margin-left: 0;">
+                        <engine:Label text="추천 레벨 :" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-top: 0; padding-right: 20px; padding-bottom: 0; padding-left: 23px; font-size: 41px; -unity-text-align: upper-center;" />
+                        <engine:Label text="67" name="RecommendLabel" style="width: 132px; -unity-text-align: upper-left; font-size: 40px; padding-left: 7px;" />
+                    </engine:VisualElement>
+                    <engine:VisualElement name="Padding" style="flex-grow: 0; width: 30px;" />
+                    <engine:VisualElement name="VerticalPanel_1" style="flex-grow: 0; flex-shrink: 0; height: 120px; width: 466px; align-self: center; background-color: rgba(255, 255, 255, 0.1); margin-top: 0; flex-direction: row; align-items: center; justify-content: center; margin-right: 0; margin-bottom: 0; margin-left: 0;">
+                        <engine:Label text="탐험 보상" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-top: 0; padding-right: 45px; padding-bottom: 0; padding-left: 30px; font-size: 40px;" />
+                        <engine:VisualElement style="flex-grow: 0; width: 60px; flex-shrink: 0; height: 60px; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Icons/32/Gem01.png?fileID=2800000&amp;guid=486112d5a03a3ee41ac790455313a1ab&amp;type=3#Gem01&quot;);" />
+                        <engine:Label text="1,100" name="DiaLabel" style="width: 132px; -unity-text-align: upper-center; font-size: 40px; padding-left: 0; margin-left: 0;" />
+                    </engine:VisualElement>
+                </engine:VisualElement>
+                <engine:VisualElement name="VerticalPanel_2" style="flex-grow: 0; flex-shrink: 0; align-items: center;">
+                    <engine:Label text="입장 목록" name="ListLabel" style="height: 58px; -unity-text-align: upper-center; margin-top: 28px;" />
+                    <engine:ListView name="ListView" focusable="false" virtualization-method="DynamicHeight" item-template="project://database/Assets/02.Script/StageSelect/StageSelectItem.uxml?fileID=9197481963319205126&amp;guid=6fd9c9c8b9f8f5d47a34f34db3962668&amp;type=3#StageSelectItem" style="height: 459px; top: 0; background-color: rgba(255, 255, 255, 0); width: 100%; color: rgb(255, 255, 255); flex-grow: 1; padding-bottom: 25px;" />
+                </engine:VisualElement>
+                <engine:VisualElement name="VerticalPanel_3" picking-mode="Ignore" style="flex-grow: 1; flex-shrink: 0; align-items: center;">
+                    <engine:VisualElement name="ActivePanel" style="flex-grow: 1; width: 100%;">
+                        <engine:Button name="StartButton" focusable="false" style="position: relative; width: 250px; height: 125px; display: flex; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; -unity-background-image-tint-color: rgb(255, 156, 49); background-color: rgba(188, 188, 188, 0); background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel3.png?fileID=21300000&amp;guid=77a6dcc512971ab419243a3716436257&amp;type=3#UniversalPanel3&quot;); color: rgb(255, 255, 255); align-items: center; font-size: 30px; justify-content: center; align-self: center;">
+                            <engine:VisualElement name="Detail" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; display: flex;">
+                                <engine:VisualElement picking-mode="Ignore" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel3TBevel.png?fileID=21300000&amp;guid=4fd1298263d8b1248802bb6b7d0e559c&amp;type=3#UniversalPanel3TBevel&quot;); -unity-background-image-tint-color: rgb(255, 197, 134);" />
+                                <engine:VisualElement picking-mode="Ignore" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel3BBevel.png?fileID=21300000&amp;guid=5d2da8262ca5ec742b0c111d6548a1d3&amp;type=3#UniversalPanel3BBevel&quot;); -unity-background-image-tint-color: rgb(209, 127, 39);" />
+                            </engine:VisualElement>
+                            <engine:VisualElement name="CloverPanel" style="flex-grow: 0; width: 134px; background-color: rgba(0, 0, 0, 0.5); height: 49px; justify-content: center; border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; flex-direction: row; align-items: center; margin-bottom: -1px;">
+                                <engine:VisualElement name="CloverSprite" style="flex-grow: 0; width: 30px; height: 30px; flex-shrink: 0; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Icons/32/ScrollRoll.png?fileID=2800000&amp;guid=a0a8f252a8253a54292d25824d74f625&amp;type=3#ScrollRoll&quot;); margin-left: 12px;" />
+                                <engine:Label text="10" name="PriceLabel" style="position: relative; right: 0; flex-grow: 1; font-size: 35px;" />
+                            </engine:VisualElement>
+                            <engine:Label text="시작" name="UpgradeLabel" style="font-size: 36px;" />
+                        </engine:Button>
+                        <engine:Toggle label="반복 진행" toggle-on-label-click="false" name="RetryToggle" value="true" focusable="false" style="position: absolute; right: -33px; bottom: -8px; font-size: 51px;" />
+                    </engine:VisualElement>
+                    <engine:Label text="잠금" name="StateLabel" style="margin-top: 21px; font-size: 54px;" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+        </engine:VisualElement>
+        <engine:Instance template="ExitButton" name="ExitButton" style="position: absolute; bottom: -160px;" />
+    </engine:VisualElement>
+</engine:UXML>

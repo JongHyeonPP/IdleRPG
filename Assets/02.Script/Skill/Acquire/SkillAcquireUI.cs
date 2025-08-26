@@ -17,7 +17,7 @@ public class SkillAcquireUI : MonoBehaviour, IGeneralUI
         root = GetComponent<UIDocument>().rootVisualElement;
         slotParentPanel = root.Q<VisualElement>("SlotParentPanel");
         _draggableScrollView = GetComponent<DraggableScrollView>();
-        BattleBroker.OnLevelExpSet += OnLevelExpSet;
+        PlayerBroker.OnLevelExpSet += OnLevelExpSet;
         PlayerBroker.OnSkillLevelSet += OnSkillLevelSet;
         PlayerBroker.OnSkillLevelSet +=(str, num)=> OnLevelExpSet();
         _gameData = StartBroker.GetGameData();

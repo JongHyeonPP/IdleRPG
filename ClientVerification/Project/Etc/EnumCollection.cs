@@ -29,7 +29,10 @@ public enum StatusType
 public enum Resource
 {
     //재화 종류
-    Gold, Exp, Dia, Clover, Scroll
+    Gold, Exp, Dia, Clover, Scroll,
+    Fragment,
+    None,
+    Weapon
 }
 public enum Source
 {

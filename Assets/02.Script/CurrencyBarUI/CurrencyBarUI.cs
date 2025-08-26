@@ -28,9 +28,9 @@ public class CurrencyBarUI : MonoBehaviour, IGeneralUI
         _diaLabel = root.Q<Label>("DiaLabel");
 
         PlayerBroker.OnSetName += SetName;
-        BattleBroker.OnDiaSet += SetDia;
-        BattleBroker.OnCloverSet += SetEmerald;
-        BattleBroker.OnLevelExpSet += SetLevelExp;
+        PlayerBroker.OnDiaSet += SetDia;
+        PlayerBroker.OnCloverSet += SetEmerald;
+        PlayerBroker.OnLevelExpSet += SetLevelExp;
         OnSetLevel(_gameData.level);
         SetName(_gameData.userName);
         SetLevelExp();

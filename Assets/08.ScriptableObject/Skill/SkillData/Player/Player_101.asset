@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillName: DarkSlash
   uid: Player_101
-  iconSprite: {fileID: 21300000, guid: 275a5bfa4f581a5459d5535d663454ef, type: 3}
+  iconSprite: {fileID: -4287362093729093706, guid: bc50bbdee2fd7cb4097d8d2081ef0481, type: 3}
   simple: 
   complex: 
   rarity: 1
