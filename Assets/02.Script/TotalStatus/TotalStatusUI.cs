@@ -345,20 +345,49 @@ public class TotalStatusUI : MonoBehaviour
         int filterTypeIndex = (int)_currentFilterType;
         var filteredCostumes = costumeManager.GetCostumesByFilterType(filterTypeIndex);
 
-        // 기존 컨테이너 찾기 (CostumeContainer0~5)
+        costumeScrollView.Clear();
+
+    
         List<VisualElement> containers = new List<VisualElement>();
-        for (int i = 0; i < 6; i++) // 최대 6개의 컨테이너 (0~5)
+        int itemsPerRow = 5;
+        int totalContainersNeeded = Mathf.CeilToInt((float)filteredCostumes.Count / itemsPerRow);
+        for (int i = 0; i < totalContainersNeeded; i++) // 최대 6개의 컨테이너 (0~5)
         {
-            VisualElement container = costumeScrollView.Q<VisualElement>($"CostumeContainer{i}");
+            VisualElement container = _costumeContainerAsset.CloneTree();
+            costumeScrollView.Add(container);
             if (container != null)
             {
                 containers.Add(container);
                 // 모든 컨테이너 내용을 초기화
                 container.Clear();
                 container.style.display = DisplayStyle.None;
+                container.style.flexDirection = FlexDirection.Row;
+                container.style.flexWrap = Wrap.Wrap;
             }
         }
 
+/*        VisualElement defaultContainer = root.Q<VisualElement>("CostumeContainerTemplate");
+        //  ScrollView costumeScrollView = root.Q<ScrollView>("CostumeScrollView");
+
+        if (defaultContainer == null || costumeScrollView == null) return;
+
+        // 기존 컨테이너 제거
+        costumeScrollView.Clear();
+
+        List<VisualElement> containers = new List<VisualElement>();
+        int itemsPerRow = 5;
+        int totalContainersNeeded = Mathf.CeilToInt((float)filteredCostumes.Count / itemsPerRow);
+
+        for (int i = 0; i < totalContainersNeeded; i++)
+        {
+            VisualElement container = _costumeContainerAsset.CloneTree();
+            container.name = $"CostumeContainer{5 + i}";
+            container.style.display = DisplayStyle.Flex;
+
+            costumeScrollView.Add(container);
+            containers.Add(container);
+        }
+*/
         if (containers.Count == 0) return;
 
         // 필터링된 코스튬이 없는 경우 표시할 메시지
@@ -380,8 +409,8 @@ public class TotalStatusUI : MonoBehaviour
         }
 
         // 코스튬 데이터 5개 단위 그룹화
-        int itemsPerRow = 5;
-        int totalContainersNeeded = Mathf.CeilToInt((float)filteredCostumes.Count / itemsPerRow);
+       // int itemsPerRow = 5;
+       // int totalContainersNeeded = Mathf.CeilToInt((float)filteredCostumes.Count / itemsPerRow);
 
         // 필요한 컨테이너가 충분한지 확인
         if (totalContainersNeeded > containers.Count)

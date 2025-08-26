@@ -10,6 +10,9 @@ public class StoreManager : MonoSingleton<StoreManager>
     [Header("Data")]
     [SerializeField] private WeaponData[] _weaponDatas;             // 무기 데이터들
     [SerializeField] private List<WeaponData> _weaponSaveDatas;     // 뽑힌 무기 데이터들
+    [SerializeField] private int _weapon1CoinPrice = 10;
+    [SerializeField] private int _weapon10CoinPrice = 100;
+    
 
     public List<WeaponData> WeaponSaveDatas => _weaponSaveDatas;    // 이거 가져다 써 일단 정욱핑
 
@@ -40,6 +43,10 @@ public class StoreManager : MonoSingleton<StoreManager>
     private VisualElement _hamsterUI;                               // 햄스터 UI 요소
     private Label _hamsterText;                                     // 햄스터 대화 텍스트
     private VisualElement _hamsterImage;                            // 햄스터 이미지
+
+    //파티클
+    private VisualElement _storeFX;          // 파티클 위치 기준용 VE (클릭 통과)
+    [SerializeField] private ParticleSystem _storeFxPS; // 열 때 재생할 파티클
 
     // System
     // 제네릭 Gacha 시스템 (WeaponData가 IGachaItem을 구현한다고 가정)
@@ -81,8 +88,11 @@ public class StoreManager : MonoSingleton<StoreManager>
         // 제네릭 GachaSystem으로 변경 (타입 파라미터 추가)
         _gachaSystem = new GachaSystem<WeaponData>(_weaponDatas);
         // 만약 CostumeManager.instance.AllCostumeDatas가 CostumeData[] 타입이라면...
-      //  __costumeGachaSystem = new GachaSystem<CostumeItem>(CostumeManager.Instance.AllCostumeDatas);
+        //  __costumeGachaSystem = new GachaSystem<CostumeItem>(CostumeManager.Instance.AllCostumeDatas);
 
+        // 서버 데이터 받아서? price값 조정
+        _weapon1CoinPrice = 1;
+        _weapon1CoinPrice = 10;
 
         var root = _storeUIDocument.rootVisualElement;
         _root = root; // 저장핑
@@ -90,8 +100,31 @@ public class StoreManager : MonoSingleton<StoreManager>
         _weaponGrid = root?.Q<VisualElement>("WeaponGrid");
         _rowVE1 = root?.Q<VisualElement>("RowVE1");
         _rowVE2 = root?.Q<VisualElement>("RowVE2");
-        _weapon1Btn = root?.Q<Button>("Weapon1Btn");
-        _weapon10Btn = root?.Q<Button>("Weapon10Btn");
+
+        #region 무기 슬롯
+        // Itemslot0 루트부터 가져오기
+        var itemSlot0 = _root?.Q<VisualElement>("ItemSlot0");
+
+        // StorePanel_0, StorePanel_1 접근
+        var storePanel0 = itemSlot0?.Q<VisualElement>("StorePanel_0");
+        var storePanel1 = itemSlot0?.Q<VisualElement>("StorePanel_1");
+
+        _weapon1Btn = storePanel0?.Q<Button>("StoreBtn");
+        _weapon10Btn = storePanel1?.Q<Button>("StoreBtn");
+
+        var priceLabel0 = storePanel0?.Q<Label>("PriceLabel");
+        var infoLabel0 = storePanel0?.Q<Label>("InfoLabel");
+
+        var priceLabel1 = storePanel1?.Q<Label>("PriceLabel");
+        var infoLabel1 = storePanel1?.Q<Label>("InfoLabel");
+
+        // 값 바꾸기
+        if (priceLabel0 != null) priceLabel0.text = _weapon1CoinPrice.ToString();
+        if (infoLabel0 != null) infoLabel0.text = "1회 뽑기";
+
+        if (priceLabel1 != null) priceLabel1.text = _weapon10CoinPrice.ToString();
+        if (infoLabel1 != null) infoLabel1.text = "10회 뽑기";
+        #endregion
 
         // Popup 초기화
         _popup = root?.Q<VisualElement>("Popup");
@@ -103,19 +136,17 @@ public class StoreManager : MonoSingleton<StoreManager>
         _hamsterText = root?.Q<Label>("HamsterText");
         _hamsterImage = root?.Q<VisualElement>("HamsterImage");
 
-        // 햄스터 이미지 설정
+/*        // 햄스터 이미지 설정
         if (_hamsterImage != null && _hamsterSprite != null)
         {
             _hamsterImage.style.backgroundImage = new StyleBackground(_hamsterSprite);
         }
-
+*/
         // 햄스터 초기 텍스트 설정
         SetHamsterText(_hamsterMessages[0]);
 
         // Popup 비활성화
         SetPopupVisibility(false);
-
-        _panel.style.display = DisplayStyle.Flex;
 
         _weapon1Btn.RegisterCallback<ClickEvent>(evt => DrawMultipleWeapons(1));
         _weapon10Btn.RegisterCallback<ClickEvent>(evt => DrawMultipleWeapons(10));
@@ -125,7 +156,31 @@ public class StoreManager : MonoSingleton<StoreManager>
         // 루트 요소에 클릭 이벤트 추가
         _popup.RegisterCallback<PointerDownEvent>(evt => ClosePopup());
 
+        _storeFX = root.Q<VisualElement>("StoreFX");
+        if (_storeFX != null)
+        {
+            _storeFX.pickingMode = PickingMode.Ignore; // 클릭/레이캐스트 통과
+        }
     }
+
+    public void OpenStore()
+    {
+        // 상점 패널 보여주기(프로젝트 방식에 맞게)
+        if (_panel != null) _panel.style.display = DisplayStyle.Flex;
+
+        // 필요하면 초기에 팝업/그리드 정리
+        SetPopupVisibility(false);
+        ClearGrid();
+
+        // 파티클 재생
+        PlayStoreFxAt(_storeFX);
+    }
+
+    private void PlayStoreFxAt(VisualElement ve)
+    {
+        _storeFxPS.Play(true);
+    }
+
 
     /// <summary>
     /// 햄스터 텍스트 설정 함수
@@ -228,8 +283,9 @@ public class StoreManager : MonoSingleton<StoreManager>
         // 저장된 무기데이터들
         // 이거 가져다가 추가해서 쓰면 되는디
 
-        var gameData = StartBroker.GetGameData();
-        _weaponCount = gameData.weaponCount;
+        //var gameData = StartBroker.GetGameData();
+        //var gameData = StartBroker.GetGameData();
+       // _weaponCount = gameData.weaponCount;
         //PlayerBroker.OnWeaponCountSet += OnWeaponCountSet;
 
         _weaponSaveDatas = drawnWeapons;
