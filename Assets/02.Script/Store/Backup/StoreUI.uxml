@@ -3,7 +3,7 @@
     <engine:Template name="ItemSlot 1" src="project://database/Assets/02.Script/Store/ItemSlotCostume.uxml?fileID=9197481963319205126&amp;guid=5a47b8d4f1ba106409b04a50f1ff883b&amp;type=3#ItemSlotCostume" />
     <engine:Template name="StoreSlotItem" src="project://database/Assets/Store/StoreSlotItem.uxml?fileID=9197481963319205126&amp;guid=9c72b3998fca96849b6f487b73c41781&amp;type=3#StoreSlotItem" />
     <engine:VisualElement name="StoreUI" picking-mode="Ignore" style="flex-grow: 0; background-color: rgb(128, 69, 9); height: 1000px; bottom: 0; position: absolute; width: 100%; align-items: center; justify-content: flex-start; -unity-font-definition: url(&quot;project://database/Assets/05.Font/Maplestory%20Light.ttf?fileID=12800000&amp;guid=b7853b5ad26567e41a3c4210e64c5419&amp;type=3#Maplestory Light&quot;);">
-        <engine:VisualElement name="MainPanel" style="flex-grow: 0; width: 95%; height: 95%; display: flex;">
+        <engine:VisualElement name="MainPanel" style="flex-grow: 0; width: 95%; height: 974px; display: flex;">
             <engine:VisualElement name="ButtonParent" style="flex-grow: 0; height: 120px; flex-shrink: 0; flex-direction: row; justify-content: flex-start; align-items: center; color: rgb(255, 255, 255); font-size: 40px; visibility: visible; letter-spacing: 30px; background-image: url(&quot;project://database/Assets/Asset/Wooden_UI/Wooden_UI_png/Plank_07.png?fileID=2800000&amp;guid=d0b159b4b7dc2ba42855372ba849c485&amp;type=3#Plank_07&quot;); -unity-background-image-tint-color: rgb(183, 183, 183); padding-left: 10px; width: 100%; margin-top: 28px;">
                 <engine:Button name="ShopButton" style="height: 80px; width: 190px; margin-left: 20px; background-color: rgba(255, 255, 255, 0); background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel1.png?fileID=21300000&amp;guid=9eba597d30b7a114ea7924c3748871ed&amp;type=3#UniversalPanel1&quot;); border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; margin-right: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-background-image-tint-color: rgba(255, 255, 255, 0);">
                     <engine:VisualElement name="OutLine" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel1Outline.png?fileID=21300000&amp;guid=9411c12f93fbda143a9a1d7c02c9e378&amp;type=3#UniversalPanel1Outline&quot;); position: absolute; width: 100%; height: 100%; -unity-background-image-tint-color: rgb(255, 255, 255);" />
@@ -15,8 +15,8 @@
                 </engine:Button>
             </engine:VisualElement>
             <engine:VisualElement name="Separator" style="flex-grow: 0; width: 100%; align-self: center; height: 20px; background-color: rgba(180, 130, 83, 0); margin-top: 5px; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/Separator.png?fileID=2800000&amp;guid=6905ee83a67947e4cb1e8e775a2e9794&amp;type=3#Separator&quot;); display: flex; margin-left: 19px;" />
-            <engine:VisualElement name="PanelParent" style="flex-grow: 1; align-items: center; justify-content: space-between; background-image: url(&quot;project://database/Assets/Store/Img/StoreBg.png?fileID=2800000&amp;guid=95d0f1d574bfa6a498d606731cb74ff0&amp;type=3#StoreBg&quot;);">
-                <engine:VisualElement name="CompanionPanel" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; align-items: stretch;">
+            <engine:VisualElement name="PanelParent" style="flex-grow: 1; align-items: center; justify-content: space-between; background-image: url(&quot;project://database/Assets/Store/Img/StoreBg.png?fileID=2800000&amp;guid=95d0f1d574bfa6a498d606731cb74ff0&amp;type=3#StoreBg&quot;); display: flex;">
+                <engine:VisualElement name="CompanionPanel" style="flex-grow: 1; position: absolute; width: 100%; height: 757px; align-items: stretch; top: 20px;">
                     <engine:VisualElement name="NPC" style="flex-grow: 1; flex-direction: column; height: 697px; width: 502px; display: flex; position: absolute; background-size: 20% 100%; top: 21px; left: -81px; align-items: center;">
                         <engine:VisualElement name="Blank" style="flex-grow: 1; background-image: none; height: 0; display: none; width: 60px;" />
                         <engine:VisualElement name="HamEtc0" style="flex-grow: 1; position: absolute; background-image: url(&quot;project://database/Assets/Store/Img/HamEtc.png?fileID=2800000&amp;guid=4bcdd3ebce3fbe342a7f17f26f2552a0&amp;type=3#HamEtc&quot;); height: 204px; width: 264px; top: 504px; left: 109px;" />
@@ -39,12 +39,14 @@
                     <engine:VisualElement name="Blank" style="flex-grow: 1; background-image: none; height: 20%; width: 604px; display: none;" />
                 </engine:VisualElement>
                 <engine:VisualElement name="JobPanel" style="flex-grow: 1; width: 100%; height: 100%; position: absolute; display: none;" />
+                <engine:VisualElement name="StoreFX" style="flex-grow: 1; position: absolute; background-image: url(&quot;project://database/Assets/07.Texture/RenderTexture/ParticleRenderTexture.renderTexture?fileID=8400000&amp;guid=fa7eb1d800f8e844c8b43bd23dffd8fa&amp;type=2#ParticleRenderTexture&quot;); width: 1273px; height: 1127px; top: -78px; left: -98px;" />
             </engine:VisualElement>
         </engine:VisualElement>
         <engine:VisualElement name="Frame" picking-mode="Ignore" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/WindowStroke2.png?fileID=21300000&amp;guid=f1ad16e66091e1344a57f36d05134015&amp;type=3#WindowStroke2&quot;); display: flex; top: 0; left: 4px;" />
     </engine:VisualElement>
     <engine:VisualElement name="Popup" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.95); width: 100%; height: 100%; -unity-text-outline-color: rgb(0, 0, 0); max-height: none; display: none; position: absolute;">
         <engine:VisualElement name="WeaponGrid" style="flex-grow: 1; width: 100%; height: 100%; display: flex;">
+            <engine:Button name="PopupCloseBtn" style="position: absolute; height: 100%; width: 100%; border-left-color: rgba(149, 149, 149, 0); border-right-color: rgba(149, 149, 149, 0); border-top-color: rgba(149, 149, 149, 0); border-bottom-color: rgba(149, 149, 149, 0); background-color: rgba(188, 188, 188, 0);" />
             <engine:VisualElement style="flex-grow: 1; height: 50%;" />
             <engine:VisualElement name="RowVE1" style="flex-grow: 1; width: 100%; height: 30%; white-space: normal; align-items: stretch; align-self: center; justify-content: space-between; flex-direction: row; margin-top: 1%; margin-right: 1%; margin-bottom: 1%; margin-left: 1%; padding-top: 2%; padding-right: 2%; padding-bottom: 2%; padding-left: 2%;">
                 <engine:Instance template="StoreSlotItem" name="TemplateContainer" style="height: 100%; width: 100%;" />
@@ -63,5 +65,4 @@
             <engine:VisualElement style="flex-grow: 1; height: 50%;" />
         </engine:VisualElement>
     </engine:VisualElement>
-    <engine:VisualElement style="flex-grow: 1; position: absolute; background-image: url(&quot;project://database/Assets/07.Texture/RenderTexture/ParticleRenderTexture.renderTexture?fileID=8400000&amp;guid=fa7eb1d800f8e844c8b43bd23dffd8fa&amp;type=2#ParticleRenderTexture&quot;); width: 1009px; height: 673px; top: 1610px; left: 36px;" />
 </engine:UXML>

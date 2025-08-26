@@ -20,6 +20,7 @@ public class StoreUI : MonoBehaviour, IMenuUI
     void IMenuUI.ActiveUI()
     {
         root.style.display = DisplayStyle.Flex;
+        StoreManager.Instance.OpenStore();
     }
 
     void IMenuUI.InactiveUI()

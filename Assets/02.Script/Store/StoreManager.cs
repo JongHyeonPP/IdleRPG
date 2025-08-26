@@ -12,7 +12,10 @@ public class StoreManager : MonoSingleton<StoreManager>
     [SerializeField] private List<WeaponData> _weaponSaveDatas;     // 뽑힌 무기 데이터들
     [SerializeField] private int _weapon1CoinPrice = 10;
     [SerializeField] private int _weapon10CoinPrice = 100;
-    
+
+    [SerializeField] private int _costume1CoinPrice = 10;
+    [SerializeField] private int _costume10CoinPrice = 100;
+
 
     public List<WeaponData> WeaponSaveDatas => _weaponSaveDatas;    // 이거 가져다 써 일단 정욱핑
 
@@ -126,10 +129,35 @@ public class StoreManager : MonoSingleton<StoreManager>
         if (infoLabel1 != null) infoLabel1.text = "10회 뽑기";
         #endregion
 
+        #region 코스튬 슬롯
+        // Itemslot1  가져오기
+        var itemSlot1 = _root?.Q<VisualElement>("ItemSlot1");
+
+        // StorePanel_0, StorePanel_1 접근
+        var storePanel0_1 = itemSlot0?.Q<VisualElement>("StorePanel_0");
+        var storePanel1_1 = itemSlot0?.Q<VisualElement>("StorePanel_1");
+
+        _weapon1Btn = storePanel0?.Q<Button>("StoreBtn");
+        _weapon10Btn = storePanel1?.Q<Button>("StoreBtn");
+
+        var priceLabel0_1 = storePanel0_1?.Q<Label>("PriceLabel");
+        var infoLabel0_1 = storePanel0_1?.Q<Label>("InfoLabel");
+
+        var priceLabel1_1 = storePanel1_1?.Q<Label>("PriceLabel");
+        var infoLabel1_1 = storePanel1_1?.Q<Label>("InfoLabel");
+
+        // 값 바꾸기
+        if (priceLabel0_1 != null) priceLabel0_1.text = _weapon1CoinPrice.ToString();
+        if (infoLabel0_1 != null) infoLabel0_1.text = "1회 뽑기";
+
+        if (priceLabel1_1 != null) priceLabel1_1.text = _weapon10CoinPrice.ToString();
+        if (infoLabel1_1 != null) infoLabel1_1.text = "10회 뽑기";
+        #endregion
+
         // Popup 초기화
         _popup = root?.Q<VisualElement>("Popup");
         _popupCloseBtn = root?.Q<Button>("PopupCloseBtn");
-        _openPopupBtn = root?.Q<Button>("OpenPopupBtn");
+       // _openPopupBtn = root?.Q<Button>("OpenPopupBtn");
 
         // 햄스터 UI 초기화
         _hamsterUI = root?.Q<VisualElement>("HamsterUI");
@@ -151,7 +179,7 @@ public class StoreManager : MonoSingleton<StoreManager>
         _weapon1Btn.RegisterCallback<ClickEvent>(evt => DrawMultipleWeapons(1));
         _weapon10Btn.RegisterCallback<ClickEvent>(evt => DrawMultipleWeapons(10));
         _popupCloseBtn.RegisterCallback<ClickEvent>(evt => SetPopupVisibility(false));
-        _openPopupBtn.RegisterCallback<ClickEvent>(evt => SetPopupVisibility(true));
+        //_openPopupBtn.RegisterCallback<ClickEvent>(evt => SetPopupVisibility(true));
 
         // 루트 요소에 클릭 이벤트 추가
         _popup.RegisterCallback<PointerDownEvent>(evt => ClosePopup());
@@ -166,11 +194,11 @@ public class StoreManager : MonoSingleton<StoreManager>
     public void OpenStore()
     {
         // 상점 패널 보여주기(프로젝트 방식에 맞게)
-        if (_panel != null) _panel.style.display = DisplayStyle.Flex;
+        //if (_panel != null) _panel.style.display = DisplayStyle.Flex;
 
         // 필요하면 초기에 팝업/그리드 정리
-        SetPopupVisibility(false);
-        ClearGrid();
+//        SetPopupVisibility(false);
+       // ClearGrid();
 
         // 파티클 재생
         PlayStoreFxAt(_storeFX);
@@ -178,6 +206,7 @@ public class StoreManager : MonoSingleton<StoreManager>
 
     private void PlayStoreFxAt(VisualElement ve)
     {
+        ve.style.display = DisplayStyle.Flex;
         _storeFxPS.Play(true);
     }
 
