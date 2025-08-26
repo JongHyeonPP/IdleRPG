@@ -333,7 +333,7 @@ public class CostumeManager : MonoBehaviour
             _characterRenderer.AppItem(partData.Part, partData.CostumeSprite, partData.CostumeColor);
         }
 
-        Debug.Log($"기본 아이템 '{defaultItem.Name}' 적용됨");
+        Debug.Log($"[CostumeManager] 기본 아이템 '{defaultItem.Name}' 적용됨");
     }
     public void UpdateGameAppearanceData() => _characterRenderer.UpdateGameAppearanceData();
 

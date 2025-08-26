@@ -91,7 +91,7 @@ public class CostumeCharacterRenderer : MonoBehaviour
 
     public void AppItem(BodyPart part, Sprite sprite, Color color)
     {
-        Debug.Log("AddIem추가! ->"+part+sprite+color);
+        Debug.Log($"[CostumeManager]AddIem추가 -> [part:{part}]");
 
         if (_partRenderers.Count == 0)
             UpdateRendererDictionary();
