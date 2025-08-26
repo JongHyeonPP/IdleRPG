@@ -8,6 +8,7 @@ public class DungeonInfoUI : MonoBehaviour, IGeneralUI
 {
     //UI
     public VisualElement root { get; private set; }
+
     //Ref
     private GameData _gameData;
     private void Awake()

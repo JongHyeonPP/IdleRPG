@@ -8,7 +8,7 @@ using System.Collections;
 public class StageSelectUI : MonoBehaviour, IGeneralUI
 {
     private const int NUMINPAGE = 20;
-    [SerializeField] FlexibleListView _draggableLV;
+    FlexibleListView _draggableLV;
     public VisualElement root { get; private set; }
     public VisualElement rootChild;
     private Background[] backgrounds;
@@ -20,6 +20,7 @@ public class StageSelectUI : MonoBehaviour, IGeneralUI
     private void Awake()
     {
         // Background 배열 초기화
+        _draggableLV = GetComponent<FlexibleListView>();
         backgrounds = (Background[])Enum.GetValues(typeof(Background));
         root = GetComponent<UIDocument>().rootVisualElement;
         rootChild = root.Q<VisualElement>("StageSelectUI");

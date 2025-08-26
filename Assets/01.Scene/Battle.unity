@@ -3905,6 +3905,8 @@ GameObject:
   - component: {fileID: 1775166712}
   - component: {fileID: 1775166714}
   - component: {fileID: 1775166713}
+  - component: {fileID: 1775166715}
+  - component: {fileID: 1775166716}
   m_Layer: 0
   m_Name: DungeonInfoUI
   m_TagString: Untagged
@@ -3958,6 +3960,34 @@ MonoBehaviour:
   m_WorldSpaceSizeMode: 1
   m_WorldSpaceWidth: 1920
   m_WorldSpaceHeight: 1080
+--- !u!114 &1775166715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1775166711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92fce378b6ea86d468ce56b43549bb95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _scrollSpeed: 1
+  _mode: 0
+  _targetDocument: {fileID: 0}
+  _scrollViewName: 
+--- !u!114 &1775166716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1775166711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3d1773c19abbc14e98c8c156c155ac2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1844569140
 GameObject:
   m_ObjectHideFlags: 0

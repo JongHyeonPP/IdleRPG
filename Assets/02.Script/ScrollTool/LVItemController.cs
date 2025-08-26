@@ -2,17 +2,8 @@ using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public abstract class LVItemController:MonoBehaviour
+public interface LVItemController
 {
-    public FlexibleListView draggableLV { protected get; set; }
-    [SerializeField] private VisualTreeAsset _itemTemplate; // VisualTreeAsset 원본
-
-    public VisualElement GetTemplate()
-    {
-        // 템플릿 생성
-        TemplateContainer element = _itemTemplate.CloneTree();
-        return element;
-    }
-
-    public abstract void BindItem(VisualElement element, int index);
+    FlexibleListView draggableLV {get; set; }
+    void BindItem(VisualElement element, int index);
 }
