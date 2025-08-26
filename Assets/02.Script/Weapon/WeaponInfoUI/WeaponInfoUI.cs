@@ -131,7 +131,7 @@ public class WeaponInfoUI : MonoBehaviour, IGeneralUI
         _powerLabel.text = $"공격력: {currentPower} → {nextPower}";
         _criticalDamageLabel.text = $"치명타 공격력: {currentCritDmg} → {nextCritDmg}";
         _criticalLabel.text = $"치명타 확률: {currentCrit} → {nextCrit}%";
-        WeaponManager.instance.SetIconScale(weaponData, _weaponImage);
+        WeaponManager.instance.SetWeaponIconToVe(weaponData, _weaponImage);
         _currentWeapon = weaponData;
     }
     private void Reinforce(string weaponID)

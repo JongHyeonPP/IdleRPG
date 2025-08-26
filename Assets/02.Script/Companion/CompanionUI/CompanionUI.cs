@@ -37,7 +37,7 @@ public class CompanionUI : MonoBehaviour, IMenuUI
         InitPanelButton();
         InitCompanionPanel();
         InitTechPanel();
-        BattleBroker.OnCompanionExpSet += OnCompanionExpSet;
+        PlayerBroker.OnCompanionExpSet += OnCompanionExpSet;
         
     }
     private void InitPanelButton()

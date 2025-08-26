@@ -18,15 +18,11 @@ public class FlexibleListView : DraggableScrollView
     private void SetListView()
     {
         listView = _targetDocument.rootVisualElement.Q<ListView>();
-        listView.makeItem = MakeItem;
+        listView.makeItem = ()=>listView.itemTemplate.CloneTree();
         listView.bindItem = BindItem;
         listView.selectionType = SelectionType.Single;
         listView.Rebuild();
 
-    }
-    private VisualElement MakeItem()
-    {
-        return _controller.GetTemplate();
     }
 
     private void BindItem(VisualElement element, int index)

@@ -21,15 +21,15 @@ public class AdventureUI : MonoBehaviour, IMenuUI
     private Button _adventureButton;
     private Button _dungeonButton;
 
-    private readonly Color inactiveColor = new(0.7f, 0.7f, 0.7f);
-    private readonly Color activeColor = new(1f, 1f, 1f);
+    private readonly Color inactiveColor = new Color(0.7f, 0.7f, 0.7f);
+    private readonly Color activeColor = new Color(1f, 1f, 1f);
 
     [Header("Adventure Panel")]
     [SerializeField] AdventureSlot[] _adventureSlotArr;
     private VisualElement _adventurePanel;
 
     [Header("Dungeon Panel")]
-    [SerializeField] AdventureSlot[] _dungeonSlotArr;
+    [SerializeField] DungeonSlot[] _dungeonSlotArr;
     private VisualElement _dungeonPanel;
 
     [SerializeField] AdventureInfoUI _adventureInfoUI;
@@ -44,37 +44,59 @@ public class AdventureUI : MonoBehaviour, IMenuUI
         _adventurePanel = root.Q<VisualElement>("AdventurePanel");
         _dungeonPanel = root.Q<VisualElement>("DungeonPanel");
 
-        InitSlotPanel(_adventurePanel, _adventureSlotArr, OnAdventureSlotClicked);
-        InitSlotPanel(_dungeonPanel, _dungeonSlotArr, OnDungeonSlotClicked);
+        InitAdventureSlotPanel();
+        InitDungeonSlotPanel();
 
         InitCategoriButton();
 
         _scrollLabel = root.Q<Label>("ScrollLabel");
-        BattleBroker.OnScrollSet += OnScrollSet;
-        BattleBroker.OnScrollSet();
+        PlayerBroker.OnScrollSet += OnScrollSet;
+        PlayerBroker.OnScrollSet();
     }
 
-    private void InitSlotPanel(VisualElement panel, AdventureSlot[] slotArr, Action<int> clickAction)
+    private void InitAdventureSlotPanel()
     {
-        var slotParent = panel.Q<VisualElement>("SlotParent");
-        var childrenList = slotParent.Children().ToList();
+        VisualElement slotParent = _adventurePanel.Q<VisualElement>("SlotParent");
+        List<VisualElement> childrenList = slotParent.Children().ToList();
 
         for (int i = 0; i < childrenList.Count; i++)
         {
-            var index = i;
-            var slotElement = childrenList[i];
-            var slot = slotArr[i];
+            int index = i;
+            VisualElement slotElement = childrenList[i];
+            AdventureSlot slot = _adventureSlotArr[i];
 
             slot.InitAtStart(slotElement, new(slotElement, this));
             slotElement.Q<Label>("NameLabel").text = slot.stageRegion.regionName;
-            slotElement.Q<VisualElement>("SlotIcon").style.backgroundImage = new(slot.slotIcon);
+            slotElement.Q<VisualElement>("SlotIcon").style.backgroundImage = new StyleBackground(slot.slotIcon);
 
-            // 핵심: 클릭 이벤트 안에서 해금 여부 체크
-            slotElement.RegisterCallback<ClickEvent>((evt) =>
+            slotElement.RegisterCallback<ClickEvent>((ClickEvent evt) =>
             {
                 int unlockedSlotCount = Mathf.CeilToInt(_gameData.maxStageNum / 20f);
                 if (index < unlockedSlotCount)
-                    clickAction(index);
+                    OnAdventureSlotClicked(index);
+            });
+        }
+    }
+
+    private void InitDungeonSlotPanel()
+    {
+        VisualElement slotParent = _dungeonPanel.Q<VisualElement>("SlotParent");
+        List<VisualElement> childrenList = slotParent.Children().ToList();
+
+        for (int i = 0; i < childrenList.Count; i++)
+        {
+            int index = i;
+            VisualElement slotElement = childrenList[i];
+            DungeonSlot slot = _dungeonSlotArr[i];
+
+            slot.InitAtStart(slotElement, new(slotElement, this));
+            slotElement.Q<Label>("NameLabel").text = slot.stageRegion.regionName;
+            slotElement.Q<VisualElement>("SlotIcon").style.backgroundImage = new StyleBackground(slot.slotIcon);
+
+            slotElement.RegisterCallback<ClickEvent>((evt) =>
+            {
+                int unlockedSlotCount = Mathf.CeilToInt(_gameData.maxStageNum / 20f);
+                OnDungeonSlotClicked(index);
             });
         }
     }
@@ -93,13 +115,13 @@ public class AdventureUI : MonoBehaviour, IMenuUI
                 slot.progressBar.style.display = DisplayStyle.Flex;
                 slot.progressBar.value = _gameData.adventureProgess[i] / 10f;
                 slot.noticeDot.StartNotice();
-                slot.namePanel.style.opacity = new(1f);
+                slot.namePanel.style.opacity = new StyleFloat(1f);
                 slot.nameLabel.style.display = DisplayStyle.Flex;
             }
             else
             {
                 slot.progressBar.style.display = DisplayStyle.None;
-                slot.namePanel.style.opacity = new(0.2f);
+                slot.namePanel.style.opacity = new StyleFloat(0.2f);
                 slot.nameLabel.style.display = DisplayStyle.None;
             }
         }
@@ -112,7 +134,7 @@ public class AdventureUI : MonoBehaviour, IMenuUI
 
     private void OnDungeonSlotClicked(int index)
     {
-        _dungeonInfoUI.ActiveUI(_dungeonSlotArr[index], index);
+        _dungeonInfoUI.ActiveUI(_dungeonSlotArr[index]);
     }
 
     private void InitCategoriButton()
@@ -145,7 +167,6 @@ public class AdventureUI : MonoBehaviour, IMenuUI
     private void OnAdventureButtonClicked()
     {
         SwitchPanel(_adventurePanel, _dungeonPanel, _adventureButton, _dungeonButton);
-        
     }
 
     private void OnDungeonButtonClicked()

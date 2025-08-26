@@ -11,7 +11,7 @@ public class ExpDrop : DropBase
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            BattleBroker.OnExpByDrop(value);
+            BattleBroker.OnDrop(DropType.Exp,value,null);
             dropPool.ReturnToPool(this);
         }
     }
@@ -27,6 +27,6 @@ public class ExpDrop : DropBase
 
     public override void SetValue()
     {
-        value = BattleBroker.GetDropValue(DropType.Exp);
+        value = CurrencyManager.instance.currentExpValue;
     }
 }

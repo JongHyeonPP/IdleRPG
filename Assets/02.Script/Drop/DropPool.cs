@@ -7,10 +7,14 @@ public class DropPool : MonoBehaviour
     // 각각의 드롭 타입별 풀
     public Queue<GoldDrop> goldPool { get; private set; } = new();
     public Queue<ExpDrop> expPool { get; private set; } = new();
+    public Queue<FragmentDrop> fragmentPool { get; private set; } = new();
+    public Queue<WeaponDrop> weaponPool { get; private set; } = new();
 
     // 풀에 있는 오브젝트들의 부모 트랜스폼
     public Transform goldParent;
     public Transform expParent;
+    public Transform fragmentParent;
+    public Transform weaponParent;
 
     // 풀의 크기
     private int _poolSize = 10;
@@ -19,11 +23,16 @@ public class DropPool : MonoBehaviour
     private Dictionary<Type, GameObject> prefabDict = new();
     public GameObject goldPrefab;
     public GameObject expPrefab;
+    public GameObject fragmentPrefab;
+    public GameObject weaponPrefab;
 
     private void Start()
     {
         prefabDict.Add(typeof(GoldDrop), goldPrefab);
         prefabDict.Add(typeof(ExpDrop), expPrefab);
+        prefabDict.Add(typeof(FragmentDrop), fragmentPrefab);
+        prefabDict.Add(typeof(WeaponDrop), weaponPrefab);
+
         InitializePool(); // 초기화
     }
 
@@ -32,15 +41,19 @@ public class DropPool : MonoBehaviour
     {
         // 골드 풀 초기화
         for (int i = 0; i < _poolSize; i++)
-        {
             goldPool.Enqueue(InstantiateDrop<GoldDrop>(goldParent));
-        }
 
         // 경험치 풀 초기화
         for (int i = 0; i < _poolSize; i++)
-        {
             expPool.Enqueue(InstantiateDrop<ExpDrop>(expParent));
-        }
+
+        // 프래그먼트 풀 초기화
+        for (int i = 0; i < _poolSize; i++)
+            fragmentPool.Enqueue(InstantiateDrop<FragmentDrop>(fragmentParent));
+
+        // 무기 풀 초기화
+        for (int i = 0; i < _poolSize; i++)
+            weaponPool.Enqueue(InstantiateDrop<WeaponDrop>(weaponParent));
     }
 
     // 드롭 오브젝트를 생성해서 반환
@@ -57,9 +70,7 @@ public class DropPool : MonoBehaviour
         T drop = obj.GetComponent<T>();
 
         if (drop == null)
-        {
             Debug.LogError($"{typeof(T).Name}에 대한 컴포넌트를 찾을 수 없습니다.");
-        }
 
         obj.SetActive(false);
         drop.InitDropBase(this);
@@ -71,10 +82,13 @@ public class DropPool : MonoBehaviour
     {
         Queue<T> pool = GetPool<T>();
         T result;
+
         if (pool == null)
         {
             Debug.LogError($"{typeof(T).Name}에 대한 풀을 찾을 수 없습니다.");
+            return null;
         }
+
         if (pool.Count > 0)
         {
             T drop = pool.Dequeue();
@@ -85,6 +99,7 @@ public class DropPool : MonoBehaviour
         {
             result = InstantiateDrop<T>(GetParent<T>());
         }
+
         MediatorManager<IMoveByPlayer>.RegisterMediator(result);
         result.SetValue();
         return result;
@@ -98,7 +113,7 @@ public class DropPool : MonoBehaviour
         if (pool == null)
         {
             Debug.LogError($"{typeof(T).Name}에 대한 풀을 찾을 수 없습니다.");
-            Destroy(drop.gameObject); // 풀이 없으면 파괴
+            Destroy(drop.gameObject);
             return;
         }
 
@@ -112,13 +127,14 @@ public class DropPool : MonoBehaviour
     private Queue<T> GetPool<T>() where T : Component
     {
         if (typeof(T) == typeof(GoldDrop))
-        {
             return goldPool as Queue<T>;
-        }
         else if (typeof(T) == typeof(ExpDrop))
-        {
             return expPool as Queue<T>;
-        }
+        else if (typeof(T) == typeof(FragmentDrop))
+            return fragmentPool as Queue<T>;
+        else if (typeof(T) == typeof(WeaponDrop))
+            return weaponPool as Queue<T>;
+
         return null;
     }
 
@@ -126,13 +142,14 @@ public class DropPool : MonoBehaviour
     private Transform GetParent<T>() where T : Component
     {
         if (typeof(T) == typeof(GoldDrop))
-        {
             return goldParent;
-        }
         else if (typeof(T) == typeof(ExpDrop))
-        {
             return expParent;
-        }
+        else if (typeof(T) == typeof(FragmentDrop))
+            return fragmentParent;
+        else if (typeof(T) == typeof(WeaponDrop))
+            return weaponParent;
+
         return null;
     }
 }

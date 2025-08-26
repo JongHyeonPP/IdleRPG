@@ -30,7 +30,9 @@ namespace EnumCollection
     }
     public enum DropType
     {
-        Gold, Exp
+        Gold, Exp,
+        Fragment,
+        Weapon
     }
     public enum Rarity
     {
@@ -73,7 +75,9 @@ namespace EnumCollection
     {
         //재화 종류
         Gold, Exp, Dia, Clover, Scroll,
-        None
+        Fragment,
+        None,
+        Weapon
     }
     public enum Source
     {

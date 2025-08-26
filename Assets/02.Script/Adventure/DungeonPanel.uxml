@@ -1,11 +1,11 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <engine:Template name="AdventureSlot" src="project://database/Assets/02.Script/Adventure/AdventureSlot.uxml?fileID=9197481963319205126&amp;guid=94d31c0ac3d039341a4534dd8dd8f873&amp;type=3#AdventureSlot" />
+    <engine:Template name="DungeonSlot" src="project://database/Assets/02.Script/Adventure/DungeonSlot.uxml?fileID=9197481963319205126&amp;guid=ff7fe4dd51a9f3e4daeaeee463f9a8a3&amp;type=3#DungeonSlot" />
     <engine:VisualElement name="AdventurePanel" style="flex-grow: 1; align-items: center; overflow: hidden;">
         <engine:VisualElement name="BackgroundPanel" style="flex-grow: 0; height: 1600px; flex-shrink: 0; background-image: url(&quot;project://database/Assets/Asset/Fantasy_Map_Creator/1_Background/bg_3_dirtpaper.png?fileID=2800000&amp;guid=81fcab3b7f871dc4c9b7c314075ce5df&amp;type=3#bg_3_dirtpaper&quot;); width: 2300px; position: absolute; -unity-background-image-tint-color: rgb(255, 255, 255);" />
         <engine:VisualElement name="SlotParent" style="flex-grow: 1; position: absolute; height: 1600px; width: 100%;">
-            <engine:Instance template="AdventureSlot" name="Slot_0" style="position: absolute; left: 505px; top: 1244px;" />
-            <engine:Instance template="AdventureSlot" name="Slot_1" style="top: 726px; left: 90px; position: absolute;" />
-            <engine:Instance template="AdventureSlot" name="Slot_2" style="top: 154px; left: 644px; position: absolute;" />
+            <engine:Instance template="DungeonSlot" name="Slot_0" style="position: absolute; left: 501px; top: 1103px; scale: 1.3 1.3;" />
+            <engine:Instance template="DungeonSlot" name="Slot_1" style="position: absolute; top: 723px; left: 96px; scale: 1.3 1.3;" />
+            <engine:Instance template="DungeonSlot" name="Slot_2" style="position: absolute; left: 649px; top: 127px; scale: 1.3 1.3;" />
         </engine:VisualElement>
     </engine:VisualElement>
 </engine:UXML>

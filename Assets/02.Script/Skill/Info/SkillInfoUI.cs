@@ -99,7 +99,7 @@ public class SkillInfoUI : MonoBehaviour,IGeneralUI
         {
             ownPanel.style.display = DisplayStyle.Flex;
             disownPanel.style.display = DisplayStyle.None;
-            if (skillLevel == PriceManager.MAXPLAYERSKILLLEVEL)
+            if (skillLevel == CurrencyManager.MAXPLAYERSKILLLEVEL)
             {
                 maxLevelLabel.style.display = DisplayStyle.Flex;
                 upgradeButton.style.display = DisplayStyle.None;
@@ -108,7 +108,7 @@ public class SkillInfoUI : MonoBehaviour,IGeneralUI
             {
                 maxLevelLabel.style.display = DisplayStyle.None;
                 upgradeButton.style.display = DisplayStyle.Flex;
-                fragmentLabel.text = PriceManager.instance.GetRequireFragment_Skill(skillData.rarity, skillLevel + 1).ToString();
+                fragmentLabel.text = CurrencyManager.instance.GetRequireFragment_Skill(skillData.rarity, skillLevel + 1).ToString();
             }
         }
     }
@@ -116,24 +116,24 @@ public class SkillInfoUI : MonoBehaviour,IGeneralUI
     {
         Rarity rarity = currentSkillData.rarity;
         string uid = currentSkillData.uid;
-        int requiredFragment = PriceManager.instance.GetRequireFragment_Skill(rarity, _gameData.skillLevel[uid]+1);
+        int requiredFragment = CurrencyManager.instance.GetRequireFragment_Skill(rarity, _gameData.skillLevel[uid]+1);
         if (!_gameData.skillFragment.TryGetValue(rarity, out int ownedSkillFragement))
         {
             ownedSkillFragement = 0;
         }
         if (requiredFragment <= ownedSkillFragement)//재화가 충분할 경우
         {
-            _gameData.skillFragment[rarity] -= PriceManager.instance.GetRequireFragment_Skill(rarity, _gameData.skillLevel[uid]+1);
-            PlayerBroker.OnFragmentSet(rarity, _gameData.skillFragment[rarity]);
+            _gameData.skillFragment[rarity] -= CurrencyManager.instance.GetRequireFragment_Skill(rarity, _gameData.skillLevel[uid]+1);
+            PlayerBroker.OnFragmentSet();
             _gameData.skillLevel[uid]++;
-            if (_gameData.skillLevel[uid] == PriceManager.MAXPLAYERSKILLLEVEL)
+            if (_gameData.skillLevel[uid] == CurrencyManager.MAXPLAYERSKILLLEVEL)
             {
                 maxLevelLabel.style.display = DisplayStyle.Flex;
                 upgradeButton.style.display = DisplayStyle.None;
             }
             else
             {
-                fragmentLabel.text = PriceManager.instance.GetRequireFragment_Skill(rarity, _gameData.skillLevel[uid]+1).ToString();
+                fragmentLabel.text = CurrencyManager.instance.GetRequireFragment_Skill(rarity, _gameData.skillLevel[uid]+1).ToString();
             }
             levelLabel.text = $"Lv.{_gameData.skillLevel[currentSkillData.uid]}";
             PlayerBroker.OnSkillLevelSet(currentSkillData.uid, _gameData.skillLevel[currentSkillData.uid]);

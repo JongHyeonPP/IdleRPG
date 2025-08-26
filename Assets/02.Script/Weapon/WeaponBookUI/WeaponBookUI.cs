@@ -41,7 +41,6 @@ public class WeaponBookUI : MonoBehaviour
             //slot.style.flexGrow = slot.style.flexShrink = 0f;
             slotParent.Add(slot);
             var slotIcon = slot.Q<VisualElement>("WeaponIcon");
-            slotIcon.style.backgroundImage = new(weapon.WeaponSprite);
             VisualElement weaponBackground = slot.Q<VisualElement>("BackgroundPanel");
             switch (weapon.WeaponRarity)
             {
@@ -69,7 +68,7 @@ public class WeaponBookUI : MonoBehaviour
             }
             Label levelLabel = slot.Q<Label>("LevelLabel");
           
-            WeaponManager.instance.SetIconScale(weapon, slotIcon);
+            WeaponManager.instance.SetWeaponIconToVe(weapon, slotIcon);
         }
         var panel = bookDataPanel.Q<VisualElement>("BookDataPanel");
         if (weaponBook.weapons.Count > 5)

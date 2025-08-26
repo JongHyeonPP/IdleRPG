@@ -18,13 +18,7 @@ public static class BattleBroker
     //보스 HP 변경 시 비율 전달
     public static Action<float> OnBossHpChanged;
 
-    public static Action OnGoldSet;
-    public static Action OnStatPointSet;
-    public static Action OnLevelExpSet;
-    public static Action OnDiaSet;
-    public static Action OnCloverSet; 
-    public static Action OnScrollSet;
-    public static Action OnMaxStageSet;
+    
     public static Action<int> RefreshStageSelectUI;
     public static Func<bool> IsCanAttack;
 
@@ -35,15 +29,12 @@ public static class BattleBroker
     public static Action<int, (int,int)> SwitchToCompanionBattle;
     //동료
     public static Action<int> ControllCompanionMove;//0 : 멈춤, 1 : 움직임, 2 : 공격
-    public static Action<int> OnCompanionExpSet;
+    
     //승급
     public static Action<Rank> ChallengeRank;
 
     public static Func<BigInteger> GetNeedExp;
-    public static Action<int> OnExpByDrop;
-    public static Action<int> OnGoldByDrop;
-
-    public static Func<DropType, int> GetDropValue;
+    public static Action<DropType, int, string> OnDrop;
 
     public static Action SetCameraExpand;
     public static Action SetCameraShrink;
