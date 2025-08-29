@@ -11,14 +11,20 @@ public class DungeonInfoUI : MonoBehaviour, IGeneralUI
 
     //Ref
     private GameData _gameData;
+
+    FlexibleListView _draggableLV;
     private void Awake()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
         _gameData = StartBroker.GetGameData();
-       
+        _draggableLV = GetComponent<FlexibleListView>();
+
     }
     private void Start()
-    { }
+    {
+        List<IListViewItem> items = StageInfoManager.instance.GetDungeonStageInfo(0).Select(item=>(IListViewItem)item).ToList();
+        _draggableLV.ChangeItems(items);
+    }
 
     public void OnBattle()
     {

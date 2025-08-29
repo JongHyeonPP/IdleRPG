@@ -67,6 +67,8 @@ public class StageInfo : ScriptableObject, IListViewItem
         public float imageLeft;
         public float imageScale = 1f;
     }
+
+
     [ContextMenu("SetAdventureIndex")]
     public void SetAdventureIndex()
     {
