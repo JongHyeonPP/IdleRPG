@@ -798,6 +798,7 @@ MonoBehaviour:
   _mode: 0
   _targetDocument: {fileID: 0}
   _scrollViewName: 
+  _clickSuppressDuration: 0.12
 --- !u!1 &414872055
 GameObject:
   m_ObjectHideFlags: 0
@@ -3034,6 +3035,7 @@ MonoBehaviour:
     equipedCostumes: []
     ownedCostumes: []
     adventureProgess: 000000000000000000000000000000000000000000000000000000000000000000000000
+    dungeonProgress: 000000000000000000000000
     statPoint: 0
   skillUI: {fileID: 246605442210432971}
   equipedSkillUI: {fileID: 8205451347979957151}
@@ -4145,6 +4147,7 @@ MonoBehaviour:
   _mode: 0
   _targetDocument: {fileID: 0}
   _scrollViewName: 
+  _clickSuppressDuration: 0.12
 --- !u!114 &1775166716
 MonoBehaviour:
   m_ObjectHideFlags: 0

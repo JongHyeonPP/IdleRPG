@@ -94,7 +94,7 @@ public class StatUI : MonoBehaviour, IMenuUI
     {
         for (int i = 0; i < _categoriPanels.Length; i++)
         {
-            bool isActive = (i == index);
+            bool isActive = i == index;
             _categoriPanels[i].style.display = isActive ? DisplayStyle.Flex : DisplayStyle.None;
 
             var btn = _categoriButtons[i];
@@ -102,7 +102,8 @@ public class StatUI : MonoBehaviour, IMenuUI
                 isActive ? activeColor.r : inactiveColor.r,
                 isActive ? activeColor.g : inactiveColor.g,
                 isActive ? activeColor.b : inactiveColor.b,
-                isActive ? 0.1f : 0f);
+                isActive ? 0.1f : 0f
+            );
 
             btn.Q<VisualElement>("OutLine").style.unityBackgroundImageTintColor = isActive ? activeColor : inactiveColor;
             btn.Q<Label>().style.color = isActive ? activeColor : inactiveColor;
@@ -112,9 +113,7 @@ public class StatUI : MonoBehaviour, IMenuUI
     private void InitEnhancePanel()
     {
         foreach (var stat in _statsByGold)
-        {
             InitEnhanceElement(stat);
-        }
     }
 
     private void InitEnhanceElement(StatusType stat)
@@ -122,9 +121,9 @@ public class StatUI : MonoBehaviour, IMenuUI
         var element = _categoriPanels[0].Q<VisualElement>($"{stat}Element");
         _goldStatDict[stat] = element;
 
-        var (name, icon) = _statInfoDict[stat];
-        element.Q<Label>("StatName").text = name;
-        element.Q<VisualElement>("StatIcon").style.backgroundImage = new(icon);
+        var info = _statInfoDict[stat];
+        element.Q<Label>("StatName").text = info.name;
+        element.Q<VisualElement>("StatIcon").style.backgroundImage = new(info.icon);
         element.Q<VisualElement>("EventVe").RegisterCallback<PointerDownEvent>(_ => OnPointerDown(stat, true));
 
         if (!_gameData.statLevel_Gold.ContainsKey(stat))
@@ -139,9 +138,7 @@ public class StatUI : MonoBehaviour, IMenuUI
         StatPointSet();
 
         foreach (var stat in _statsByStatPoint)
-        {
             InitGrowElement(stat);
-        }
     }
 
     private void InitGrowElement(StatusType stat)
@@ -149,9 +146,9 @@ public class StatUI : MonoBehaviour, IMenuUI
         var element = _categoriPanels[1].Q<VisualElement>($"{stat}Element");
         _statPointStatDict[stat] = element;
 
-        var (name, icon) = _statInfoDict[stat];
-        element.Q<Label>("StatName").text = name;
-        element.Q<VisualElement>("StatIcon").style.backgroundImage = new(icon);
+        var info = _statInfoDict[stat];
+        element.Q<Label>("StatName").text = info.name;
+        element.Q<VisualElement>("StatIcon").style.backgroundImage = new(info.icon);
         element.Q<VisualElement>("EventVe").RegisterCallback<PointerDownEvent>(_ => OnPointerDown(stat, false));
 
         if (!_gameData.statLevel_StatPoint.ContainsKey(stat))
@@ -164,9 +161,7 @@ public class StatUI : MonoBehaviour, IMenuUI
     {
         var abilityButton = _categoriPanels[2].Q<Button>("AbilityButton");
         foreach (var rank in _rank)
-        {
             InitPromoteElement(rank);
-        }
         abilityButton.RegisterCallback<ClickEvent>(_ => _promoteAbilityUI.ShowPromoteInfo());
     }
 
@@ -179,11 +174,14 @@ public class StatUI : MonoBehaviour, IMenuUI
         var completeLabel = element.Q<Label>("CompleteLabel");
         var icon = element.Q<VisualElement>("Icon");
         var button = element.Q<Button>("ChallengeButton");
+        var lockPanel = element.Q<VisualElement>("LockPanel");
 
-        int currentRankIndex = PlayerBroker.GetPlayerRankIndex?.Invoke() ?? 0;
+        int currentRankIndex = _gameData.playerRankIndex;
         int thisRankIndex = (int)rank;
 
-        string name = "", ability = "", recommand = "";
+        string name = "";
+        string ability = "";
+        string recommand = "";
         Sprite sprite = null;
 
         switch (rank)
@@ -205,13 +203,26 @@ public class StatUI : MonoBehaviour, IMenuUI
         recommandLabel.text = recommand;
         icon.style.backgroundImage = new(sprite);
 
-        bool cleared = thisRankIndex <= currentRankIndex;
-        completeLabel.style.display = cleared ? DisplayStyle.Flex : DisplayStyle.None;
-        button.style.display = cleared ? DisplayStyle.None : DisplayStyle.Flex;
-        recommandLabel.style.display = cleared ? DisplayStyle.None : DisplayStyle.Flex;
+        bool isCleared = thisRankIndex < currentRankIndex;
+        bool isCurrent = thisRankIndex == currentRankIndex;
+        bool isLocked = thisRankIndex > currentRankIndex;
 
-        if (!cleared)
+        completeLabel.style.display = isCleared ? DisplayStyle.Flex : DisplayStyle.None;
+        recommandLabel.style.display = isCurrent ? DisplayStyle.Flex : DisplayStyle.None;
+
+        button.style.display = isCurrent ? DisplayStyle.Flex : DisplayStyle.None;
+        button.SetEnabled(isCurrent);
+        button.clicked -= () => BattleBroker.ChallengeRank?.Invoke(rank);
+        if (isCurrent)
             button.clicked += () => BattleBroker.ChallengeRank?.Invoke(rank);
+
+        lockPanel.style.display = isLocked ? DisplayStyle.Flex : DisplayStyle.None;
+
+        float tint = isLocked ? 0.6f : 1f;
+        icon.style.unityBackgroundImageTintColor = new Color(tint, tint, tint, 1f);
+        nameLabel.style.color = isLocked ? new Color(0.7f, 0.7f, 0.7f) : new Color(1f, 1f, 1f);
+        abilityLabel.style.color = nameLabel.style.color;
+        recommandLabel.style.color = nameLabel.style.color;
     }
 
     private void Update()

@@ -1,5 +1,4 @@
 using EnumCollection;
-using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 
 public class WeaponDrop : DropBase

@@ -1,25 +1,21 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.Numerics;
-using EnumCollection;
 using Newtonsoft.Json;
-using NUnit.Framework;
-using UnityEngine;
+using PurchaseProcessor.Attribute;
 
-[Serializable]
 public class GameData
 {
-    #region ÀçÈ­ (Gold, Exp, Dia, Clover, Scroll)
+    #region ì¬í™” (Gold, Exp, Dia, Clover, Scroll)
     public BigInteger gold;
     public BigInteger exp;
     public int level;
-    public int dia;     // À¯·á ÀçÈ­ - »Ì±â
-    public int clover;  // À¯·á ÀçÈ­ - °­È­
-    public int scroll;  // ´øÀü ÀÔÀå±Ç
+    public int dia;     // ìœ ë£Œ ì¬í™” - ë½‘ê¸°
+    public int clover;  // ìœ ë£Œ ì¬í™” - ê°•í™”
+    public int scroll;  // ë˜ì „ ì…ì¥ê¶Œ
     #endregion
 
-    #region ´É·ÂÄ¡ ¹× ½ºÅÈ
-
+    #region ëŠ¥ë ¥ì¹˜ ë° ìŠ¤íƒ¯
 
     [JsonConverter(typeof(Struct_Struct_DictConverter<StatusType, int>))]
     public Dictionary<StatusType, int> statLevel_Gold = new();
@@ -31,7 +27,7 @@ public class GameData
     public Dictionary<int, (StatusType, int)> stat_Promote = new();
     #endregion
 
-    #region ½ºÅ³ °ü·Ã
+    #region ìŠ¤í‚¬ ê´€ë ¨
     public Dictionary<string, int> skillLevel = new();
 
     [JsonConverter(typeof(Struct_Struct_DictConverter<Rarity, int>))]
@@ -40,25 +36,24 @@ public class GameData
     public string[] equipedSkillArr = new string[5];
     #endregion
 
-    #region ¹«±â °ü·Ã
+    #region ë¬´ê¸° ê´€ë ¨
     public Dictionary<string, int> weaponCount = new();
     public Dictionary<string, int> weaponLevel = new();
     public string playerWeaponId;
     public string[] companionWeaponIdArr = new string[3];
     #endregion
 
-    #region ½ºÅ×ÀÌÁö ÁøÇà Á¤º¸
-    public int currentStageNum;  // ÇöÀç À§Ä¡ÇÑ ½ºÅ×ÀÌÁö
-    public int maxStageNum;      // ÃÖ´ë Å¬¸®¾îÇÑ ½ºÅ×ÀÌÁö
+    #region ìŠ¤í…Œì´ì§€ ì§„í–‰ ì •ë³´
+    public int currentStageNum;  // í˜„ì¬ ìœ„ì¹˜í•œ ìŠ¤í…Œì´ì§€
+    public int maxStageNum;      // ìµœëŒ€ í´ë¦¬ì–´í•œ ìŠ¤í…Œì´ì§€
     #endregion
 
-    #region ÇÃ·¹ÀÌ¾î Á¤º¸
+    #region í”Œë ˆì´ì–´ ì •ë³´
     public string userName;
     public int invalidCount;
     #endregion
 
-    #region ½Â±Ş È¿°ú °ü·Ã (Player & Companion)
-    public int playerRankIndex;
+    #region ìŠ¹ê¸‰ íš¨ê³¼ ê´€ë ¨ (Player & Companion)
 
     [JsonConverter(typeof(Struct_StructTuple_DictConverter<int, StatusType, Rarity>))]
     public Dictionary<int, (StatusType, Rarity)> playerPromoteEffect = new();
@@ -80,16 +75,13 @@ public class GameData
     public (int, int)[] currentCompanionPromoteTech = new (int, int)[3];
     #endregion
 
-    #region ÄÚ½ºÆ¬
-    public List<string> equipedCostumes = new();    // ÀåÂøÇÑ ÄÚ½ºÆ¬
-    public List<string> ownedCostumes = new();      // º¸À¯ÇÑ ÄÚ½ºÆ¬
+    #region ì½”ìŠ¤íŠ¬
+    public List<string> equipedCostumes = new();    // ì¥ì°©í•œ ì½”ìŠ¤íŠ¬
+    public List<string> ownedCostumes = new();      // ë³´ìœ í•œ ì½”ìŠ¤íŠ¬
     #endregion
 
-    public int[] adventureProgess = new int[9];
+    public int[] adventureProgess = new int[9];//ëª¨í—˜ ì§„í–‰ë„
     public int[] dungeonProgress = new int[3];
 
-
-    #region ¼­¹ö¿¡ ¾øÀ½
-    public int statPoint;
-    #endregion
+    public int playerRankIndex;
 }

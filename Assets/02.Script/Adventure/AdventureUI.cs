@@ -1,3 +1,4 @@
+using EnumCollection;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -35,6 +36,8 @@ public class AdventureUI : MonoBehaviour, IMenuUI
     [SerializeField] AdventureInfoUI _adventureInfoUI;
     [SerializeField] DungeonInfoUI _dungeonInfoUI;
 
+    private List<VisualElement> _dungeonSlotElements;
+
     private void Awake()
     {
         _gameData = StartBroker.GetGameData();
@@ -69,11 +72,9 @@ public class AdventureUI : MonoBehaviour, IMenuUI
             slotElement.Q<Label>("NameLabel").text = slot.stageRegion.regionName;
             slotElement.Q<VisualElement>("SlotIcon").style.backgroundImage = new StyleBackground(slot.slotIcon);
 
-            slotElement.RegisterCallback<ClickEvent>((ClickEvent evt) =>
+            slotElement.RegisterCallback<ClickEvent>(_ =>
             {
-                int unlockedSlotCount = Mathf.CeilToInt(_gameData.maxStageNum / 20f);
-                if (index < unlockedSlotCount)
-                    OnAdventureSlotClicked(index);
+                OnAdventureSlotClicked(index);
             });
         }
     }
@@ -81,24 +82,25 @@ public class AdventureUI : MonoBehaviour, IMenuUI
     private void InitDungeonSlotPanel()
     {
         VisualElement slotParent = _dungeonPanel.Q<VisualElement>("SlotParent");
-        List<VisualElement> childrenList = slotParent.Children().ToList();
+        _dungeonSlotElements = slotParent.Children().ToList();
 
-        for (int i = 0; i < childrenList.Count; i++)
+        for (int i = 0; i < _dungeonSlotElements.Count; i++)
         {
             int index = i;
-            VisualElement slotElement = childrenList[i];
+            VisualElement slotElement = _dungeonSlotElements[i];
             DungeonSlot slot = _dungeonSlotArr[i];
 
             slot.InitAtStart(slotElement, new(slotElement, this));
             slotElement.Q<Label>("NameLabel").text = slot.stageRegion.regionName;
             slotElement.Q<VisualElement>("SlotIcon").style.backgroundImage = new StyleBackground(slot.slotIcon);
 
-            slotElement.RegisterCallback<ClickEvent>((evt) =>
+            slotElement.RegisterCallback<ClickEvent>(_ =>
             {
-                int unlockedSlotCount = Mathf.CeilToInt(_gameData.maxStageNum / 20f);
                 OnDungeonSlotClicked(index);
             });
         }
+
+        UpdateDungeonSlotStates();
     }
 
     private void UpdateAdventureSlotProgress()
@@ -127,15 +129,98 @@ public class AdventureUI : MonoBehaviour, IMenuUI
         }
     }
 
+    private void UpdateDungeonSlotStates()
+    {
+        for (int i = 0; i < _dungeonSlotElements.Count; i++)
+        {
+            bool unlocked = IsDungeonSlotUnlocked(i);
+            ApplyDungeonSlotVisualState(i, unlocked);
+        }
+    }
+
+    private bool IsDungeonSlotUnlocked(int index)
+    {
+        int requiredRankIndex = index + 2;
+        return _gameData.playerRankIndex >= requiredRankIndex;
+    }
+
+private void ApplyDungeonSlotVisualState(int index, bool unlocked)
+{
+    VisualElement slotElement = _dungeonSlotElements[index];
+
+    VisualElement namePanel = slotElement.Q<VisualElement>("NamePanel");
+    Label nameLabel = slotElement.Q<Label>("NameLabel");
+    VisualElement lockPanel = slotElement.Q<VisualElement>("LockPanel");
+    VisualElement iconVe = slotElement.Q<VisualElement>("SlotIcon");
+
+    VisualElement typeFrame = slotElement.Q<VisualElement>("TypeFrame");
+    VisualElement typeIcon = slotElement.Q<VisualElement>("TypeIcon");
+
+    if (lockPanel != null)
+        lockPanel.style.display = unlocked ? DisplayStyle.None : DisplayStyle.Flex;
+
+    if (namePanel != null)
+        namePanel.style.opacity = new StyleFloat(unlocked ? 1f : 0.2f);
+
+    if (nameLabel != null)
+        nameLabel.style.display = unlocked ? DisplayStyle.Flex : DisplayStyle.None;
+
+    if (iconVe != null)
+    {
+        float tint = unlocked ? 1f : 0.6f;
+        iconVe.style.unityBackgroundImageTintColor = new Color(tint, tint, tint, 1f);
+    }
+
+    // 여기서 TypeFrame/TypeIcon 처리
+    if (typeFrame != null)
+        typeFrame.style.display = unlocked ? DisplayStyle.Flex : DisplayStyle.None;
+
+    if (typeIcon != null)
+        typeIcon.style.display = unlocked ? DisplayStyle.Flex : DisplayStyle.None;
+
+    slotElement.SetEnabled(true);
+}
+
+
     private void OnAdventureSlotClicked(int index)
     {
-        _adventureInfoUI.ActiveUI(_adventureSlotArr[index], index);
+        int unlockedSlotCount = Mathf.CeilToInt(_gameData.maxStageNum / 20f);
+
+        if (index < unlockedSlotCount)
+        {
+            _adventureInfoUI.ActiveUI(_adventureSlotArr[index], index);
+        }
+        else
+        {
+            UIBroker.ShowPopUpInBattle("아직 개방되지 않은 지역입니다.");
+        }
     }
 
     private void OnDungeonSlotClicked(int index)
     {
-        _dungeonInfoUI.ActiveUI(_dungeonSlotArr[index]);
+        if (IsDungeonSlotUnlocked(index))
+        {
+            _dungeonInfoUI.ActiveUI(index, _dungeonSlotArr[index]);
+        }
+        else
+        {
+            // index+1 → 필요한 Rank 인덱스
+            Rank requiredRank = (Rank)(index + 1);
+            string rankName = "";
+
+            switch (requiredRank)
+            {
+                case Rank.Bronze: rankName = "브론즈"; break;
+                case Rank.Iron: rankName = "아이언"; break;
+                case Rank.Silver: rankName = "실버"; break;
+                case Rank.Gold: rankName = "골드"; break;
+                default: rankName = requiredRank.ToString(); break;
+            }
+
+            UIBroker.ShowPopUpInBattle($"{rankName} 랭크 달성 후 입장 가능");
+        }
     }
+
 
     private void InitCategoriButton()
     {
@@ -162,6 +247,9 @@ public class AdventureUI : MonoBehaviour, IMenuUI
 
         SetButtonStyle(activeBtn, activeColor, activeColor, activeColor, 0.1f);
         SetButtonStyle(inactiveBtn, inactiveColor, inactiveColor, inactiveColor, 0f);
+
+        if (show == _dungeonPanel)
+            UpdateDungeonSlotStates();
     }
 
     private void OnAdventureButtonClicked()
@@ -182,6 +270,8 @@ public class AdventureUI : MonoBehaviour, IMenuUI
     void IMenuUI.ActiveUI()
     {
         UpdateAdventureSlotProgress();
+        UpdateDungeonSlotStates();
+
         root.style.display = DisplayStyle.Flex;
 
         if (_animCoroutine != null)

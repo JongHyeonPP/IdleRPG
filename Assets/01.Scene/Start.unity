@@ -395,9 +395,11 @@ MonoBehaviour:
     maxStageNum: 0
     userName: 
     invalidCount: 0
+    playerRankIndex: 0
     equipedCostumes: []
     ownedCostumes: []
     adventureProgess: 000000000000000000000000000000000000000000000000000000000000000000000000
+    dungeonProgress: 000000000000000000000000
     statPoint: 0
 --- !u!4 &1048825963
 Transform:

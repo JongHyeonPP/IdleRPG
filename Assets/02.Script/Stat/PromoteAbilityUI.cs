@@ -51,7 +51,7 @@ public class PromoteAbilityUI : MonoBehaviour
         var exitButton = root.Q<Button>("ExitButton");
         var valueButton = root.Q<Button>("ValueButton");
         _rerollButton = root.Q<Button>("RerollButton");
-        int currentRankIndex = PlayerBroker.GetPlayerRankIndex?.Invoke() ?? 0;
+        int currentRankIndex = _gameData.playerRankIndex;
         _isLockEffectArr = new bool[_rank.Length];
         _rankLocks = new List<bool>(_rank.Length);
         _cloverLabel = root.Q<Label>("CloverLabel");
@@ -132,7 +132,7 @@ public class PromoteAbilityUI : MonoBehaviour
         _rankLocks[rankIndex] = _isLockEffectArr[rankIndex];
         int lockCount = _isLockEffectArr.Count(item => item);
 
-        int currentRankIndex = PlayerBroker.GetPlayerRankIndex?.Invoke() ?? 0;
+        int currentRankIndex = _gameData.playerRankIndex;
         int currentActiveEffectCount = _isLockEffectArr
             .Select((_, i) => i)
             .Count(i => i <= currentRankIndex);

@@ -10,6 +10,7 @@ public class StageInfo : ScriptableObject, IListViewItem
     public int stageNum;
     public string stageName;
     public Background background;
+    public int recommendLevel;
     [Header("Enemy Info")]
     public EnemyStatus enemy_0;
     public EnemyStatus enemy_1;
