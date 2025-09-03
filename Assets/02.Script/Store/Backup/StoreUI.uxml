@@ -42,7 +42,7 @@
                 <engine:VisualElement name="StoreFX" style="flex-grow: 1; position: absolute; background-image: url(&quot;project://database/Assets/07.Texture/RenderTexture/ParticleRenderTexture.renderTexture?fileID=8400000&amp;guid=fa7eb1d800f8e844c8b43bd23dffd8fa&amp;type=2#ParticleRenderTexture&quot;); width: 1273px; height: 1127px; top: -78px; left: -98px;" />
             </engine:VisualElement>
         </engine:VisualElement>
-        <engine:VisualElement name="Frame" picking-mode="Ignore" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/WindowStroke2.png?fileID=21300000&amp;guid=f1ad16e66091e1344a57f36d05134015&amp;type=3#WindowStroke2&quot;); display: flex; top: 0; left: 4px;" />
+        <engine:VisualElement name="Frame" picking-mode="Ignore" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/WindowStroke2.png?fileID=21300000&amp;guid=f1ad16e66091e1344a57f36d05134015&amp;type=3#WindowStroke2&quot;);" />
     </engine:VisualElement>
     <engine:VisualElement name="Popup" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.95); width: 100%; height: 100%; -unity-text-outline-color: rgb(0, 0, 0); max-height: none; display: none; position: absolute;">
         <engine:VisualElement name="WeaponGrid" style="flex-grow: 1; width: 100%; height: 100%; display: flex;">

@@ -1,8 +1,9 @@
-using System.Collections.Generic;
-using UnityEngine.UIElements;
-using UnityEngine;
-using System.Collections;
 using EnumCollection;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.UIElements;
 
 
 public class StoreManager : MonoSingleton<StoreManager>
@@ -12,7 +13,6 @@ public class StoreManager : MonoSingleton<StoreManager>
     [SerializeField] private List<WeaponData> _weaponSaveDatas;     // 뽑힌 무기 데이터들
     [SerializeField] private int _weapon1CoinPrice = 10;
     [SerializeField] private int _weapon10CoinPrice = 100;
-
     [SerializeField] private int _costume1CoinPrice = 10;
     [SerializeField] private int _costume10CoinPrice = 100;
 
@@ -21,6 +21,7 @@ public class StoreManager : MonoSingleton<StoreManager>
 
     [Header("UI")]
     [SerializeField] private UIDocument _storeUIDocument;           // UI 문서
+    [SerializeField] private UIDocument _storePopupDocument;           // UI 문서
     [SerializeField] private VisualTreeAsset _storeSlotItem;        // 슬롯아이템
     [SerializeField] private Sprite _hamsterSprite;                 // 햄스터 스프라이트
     [SerializeField] private AudioClip _popupSound;                 // 팝업 효과음
@@ -34,6 +35,8 @@ public class StoreManager : MonoSingleton<StoreManager>
     private VisualElement _weaponGrid;                              // 무기 그리드
     private Button _weapon1Btn;                                     // 무기 1회 뽑기 버튼
     private Button _weapon10Btn;                                    // 무기 10회 뽑기 버튼
+    private Button _costume1Btn;                                    // 코스튬 1회 뽑기 버튼
+    private Button _costume10Btn;                                   // 코스튬 10회 뽑기 버튼
 
     // Popup UI
     private VisualElement _popup;                                   // Popup VisualElement
@@ -49,13 +52,12 @@ public class StoreManager : MonoSingleton<StoreManager>
 
     //파티클
     private VisualElement _storeFX;          // 파티클 위치 기준용 VE (클릭 통과)
-    [SerializeField] private ParticleSystem _storeFxPS; // 열 때 재생할 파티클
 
     // System
     // 제네릭 Gacha 시스템 (WeaponData가 IGachaItem을 구현한다고 가정)
     private GachaSystem<WeaponData> _gachaSystem;
     // 예시로 코스튬 관련 가차 시스템 (코스튬 데이터가 IGachaItem을 구현해야 함)
-    private GachaSystem<CostumeItem> __costumeGachaSystem;
+    private GachaSystem<CostumeItem> _costumeGachaSystem;
 
     private bool _isPopupVisible = false;
     private const int STORE_ROW = 2;
@@ -101,8 +103,7 @@ public class StoreManager : MonoSingleton<StoreManager>
         _root = root; // 저장핑
         _panel = root?.Q<VisualElement>("Panel");
         _weaponGrid = root?.Q<VisualElement>("WeaponGrid");
-        _rowVE1 = root?.Q<VisualElement>("RowVE1");
-        _rowVE2 = root?.Q<VisualElement>("RowVE2");
+ 
 
         #region 무기 슬롯
         // Itemslot0 루트부터 가져오기
@@ -137,8 +138,8 @@ public class StoreManager : MonoSingleton<StoreManager>
         var storePanel0_1 = itemSlot0?.Q<VisualElement>("StorePanel_0");
         var storePanel1_1 = itemSlot0?.Q<VisualElement>("StorePanel_1");
 
-        _weapon1Btn = storePanel0?.Q<Button>("StoreBtn");
-        _weapon10Btn = storePanel1?.Q<Button>("StoreBtn");
+        _costume1Btn = storePanel0?.Q<Button>("StoreBtn");
+        _costume10Btn = storePanel1?.Q<Button>("StoreBtn");
 
         var priceLabel0_1 = storePanel0_1?.Q<Label>("PriceLabel");
         var infoLabel0_1 = storePanel0_1?.Q<Label>("InfoLabel");
@@ -147,17 +148,23 @@ public class StoreManager : MonoSingleton<StoreManager>
         var infoLabel1_1 = storePanel1_1?.Q<Label>("InfoLabel");
 
         // 값 바꾸기
-        if (priceLabel0_1 != null) priceLabel0_1.text = _weapon1CoinPrice.ToString();
+        if (priceLabel0_1 != null) priceLabel0_1.text = _costume1CoinPrice.ToString();
         if (infoLabel0_1 != null) infoLabel0_1.text = "1회 뽑기";
 
-        if (priceLabel1_1 != null) priceLabel1_1.text = _weapon10CoinPrice.ToString();
+        if (priceLabel1_1 != null) priceLabel1_1.text = _costume10CoinPrice.ToString();
         if (infoLabel1_1 != null) infoLabel1_1.text = "10회 뽑기";
         #endregion
 
+        var popuproot = _storePopupDocument.rootVisualElement;
+
         // Popup 초기화
-        _popup = root?.Q<VisualElement>("Popup");
-        _popupCloseBtn = root?.Q<Button>("PopupCloseBtn");
-       // _openPopupBtn = root?.Q<Button>("OpenPopupBtn");
+        _popup = popuproot?.Q<VisualElement>("Popup");
+        _popupCloseBtn = popuproot?.Q<Button>("PopupCloseBtn");
+        _popup.style.display = DisplayStyle.None;
+        _rowVE1 = popuproot?.Q<VisualElement>("RowVE1");
+        _rowVE2 = popuproot?.Q<VisualElement>("RowVE2");
+        // _openPopupBtn = root?.Q<Button>("OpenPopupBtn");
+
 
         // 햄스터 UI 초기화
         _hamsterUI = root?.Q<VisualElement>("HamsterUI");
@@ -178,6 +185,8 @@ public class StoreManager : MonoSingleton<StoreManager>
 
         _weapon1Btn.RegisterCallback<ClickEvent>(evt => DrawMultipleWeapons(1));
         _weapon10Btn.RegisterCallback<ClickEvent>(evt => DrawMultipleWeapons(10));
+        //_costume1Btn.RegisterCallback<ClickEvent>(evt => DrawCostumeItems(1));
+       // _costume10Btn.RegisterCallback<ClickEvent>(evt => DrawCostumeItems(10));
         _popupCloseBtn.RegisterCallback<ClickEvent>(evt => SetPopupVisibility(false));
         //_openPopupBtn.RegisterCallback<ClickEvent>(evt => SetPopupVisibility(true));
 
@@ -189,6 +198,13 @@ public class StoreManager : MonoSingleton<StoreManager>
         {
             _storeFX.pickingMode = PickingMode.Ignore; // 클릭/레이캐스트 통과
         }
+
+        // 가차시스템
+/*        _costumeGachaSystem = new GachaSystem<CostumeItem>(
+            CostumeManager.Instance.AllCostumeDatas
+                .Where(c => !CostumeManager.Instance.IsOwned(c.Uid)) // 중복 제외
+                .ToArray()
+        );*/
     }
 
     public void OpenStore()
@@ -207,7 +223,7 @@ public class StoreManager : MonoSingleton<StoreManager>
     private void PlayStoreFxAt(VisualElement ve)
     {
         ve.style.display = DisplayStyle.Flex;
-        _storeFxPS.Play(true);
+        ParticleFxManager.Instance.Play("StoreOpen");
     }
 
 
@@ -281,7 +297,9 @@ public class StoreManager : MonoSingleton<StoreManager>
             SetHamsterText(_hamsterMessages[0]);
         }
 
-        StartCoroutine(AniPopup(isVisible));  // 애니메이션 시작
+
+        _popup.style.display = isVisible?DisplayStyle.Flex: DisplayStyle.None;
+        //StartCoroutine(AniPopup(isVisible));  // 애니메이션 시작
     }
 
     /// <summary>
@@ -339,6 +357,7 @@ public class StoreManager : MonoSingleton<StoreManager>
         UpdateLog(drawnWeapons);
     }
 
+
    
 
     //private void OnWeaponCountSet(object weaponDataObj, int count)
@@ -374,15 +393,22 @@ public class StoreManager : MonoSingleton<StoreManager>
             var weaponImageTexture = weapon.WeaponSprite.texture;
             var weaponImageStyle = new StyleBackground(weaponImageTexture);
             icon.style.backgroundImage = weaponImageStyle;
+            icon.style.width = 180;
+            icon.style.height = 180;
+            //  icon.style.display = DisplayStyle.Flex;
+            /*            icon.style.backgroundImage = new StyleBackground(weapon.WeaponSprite); // 스프라이트 직접
+                        icon.style.backgroundColor = Color.clear; // 혹시 검정 덮여있으면 제거*/
 
             var nameLabel = slot.Q<Label>("WeaponName");
             if (nameLabel != null)
             {
-                nameLabel.text = $"{weapon.WeaponName}";
+               // nameLabel.text = WrapText(weapon.WeaponName.Replace(" ", "\n"), 7);
+                nameLabel.text = WrapText(weapon.WeaponName, 7);
+                nameLabel.style.height = 30;
             }
 
             // 무기 희귀도에 따라 슬롯 스타일 변경
-            SetSlotRarityStyle(slot, weapon.WeaponRarity);
+            //  SetSlotRarityStyle(slot, weapon.WeaponRarity);
 
             // 그리드에 추가
             if (cnt >= STORE_COLUMN)
@@ -391,7 +417,7 @@ public class StoreManager : MonoSingleton<StoreManager>
                 _rowVE1.Add(slot);
 
             // 슬롯 애니메이션 시작 (슬롯마다 지연 시간 증가)
-            StartCoroutine(AniSlotDelay(slot, cnt * delayInterval));
+            //StartCoroutine(AniSlotDelay(slot, cnt * delayInterval));
 
             cnt++;
         }
@@ -482,6 +508,64 @@ public class StoreManager : MonoSingleton<StoreManager>
         }
     }
 
+    private void DrawCostumeItems(int count)
+    {
+        if (_drawSound != null && _audioSource != null)
+            _audioSource.PlayOneShot(_drawSound);
+
+        // 중복 제거된 데이터로 뽑기 시스템 재생성
+        _costumeGachaSystem = new GachaSystem<CostumeItem>(
+            CostumeManager.Instance.AllCostumeDatas
+                .Where(c => !CostumeManager.Instance.IsOwned(c.Uid))
+                .ToArray()
+        );
+
+        var drawnCostumes = _costumeGachaSystem.DrawItems(count);
+        foreach (var costume in drawnCostumes)
+        {
+            CostumeManager.Instance.OwnedCostumes.Add(costume.Uid); // 소유 등록
+        }
+
+        CostumeManager.Instance.UpdateCostumeData();
+
+        SetHamsterText("코스튬이 도착했어요!");
+
+        SetPopupVisibility(true);
+        UpdateCostumeGridUI(drawnCostumes);  // 아래 함수 필요
+    }
+
+    private void UpdateCostumeGridUI(List<CostumeItem> costumes)
+    {
+        ClearGrid();
+
+        int cnt = 0;
+        foreach (var costume in costumes)
+        {
+            var slot = _storeSlotItem.CloneTree();
+
+            var icon = slot.Q<VisualElement>("WeaponIcon"); // 동일 이름 재사용
+            icon.style.backgroundImage = new StyleBackground(costume.IconTexture);
+            icon.style.width = 180;
+            icon.style.height = 180;
+
+            var nameLabel = slot.Q<Label>("WeaponName");
+            if (nameLabel != null)
+            {
+                nameLabel.text = WrapText(costume.Name, 7);
+                nameLabel.style.height = 30;
+            }
+
+            if (cnt >= STORE_COLUMN)
+                _rowVE2.Add(slot);
+            else
+                _rowVE1.Add(slot);
+
+            cnt++;
+        }
+    }
+
+
+
     // 그리드 초기화
     private void ClearGrid()
     {
@@ -498,6 +582,40 @@ public class StoreManager : MonoSingleton<StoreManager>
             log += $"- {weapon.name} ({weapon.WeaponRarity})\n";
         }
         Debug.Log(log);
+    }
+
+    string WrapText(string text, int maxCharsPerLine)
+    {
+        if (string.IsNullOrEmpty(text)) return text;
+
+        var words = text.Split(' ');
+        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+        int currentLineLength = 0;
+
+        foreach (var word in words)
+        {
+            // 단어가 현재 줄에 들어갈 수 있으면 추가
+            if (currentLineLength + word.Length <= maxCharsPerLine)
+            {
+                if (currentLineLength > 0)
+                {
+                    sb.Append(" ");
+                    currentLineLength++;
+                }
+                sb.Append(word);
+                currentLineLength += word.Length;
+            }
+            else
+            {
+                // 새 줄 시작
+                sb.Append("\n");
+                sb.Append(word);
+                currentLineLength = word.Length;
+            }
+        }
+
+        return sb.ToString();
     }
 
     /// <summary>
@@ -541,55 +659,30 @@ public class StoreManager : MonoSingleton<StoreManager>
     /// </summary>
     private IEnumerator AniSlotDelay(VisualElement slot, float delay)
     {
-        // 텀을 먼저 대기
         yield return new WaitForSeconds(delay);
 
-        // 애니메이션 시작
         float duration = 0.5f;
         float elapsed = 0f;
         Vector3 startScale = new Vector3(0.5f, 0.5f, 1f);
-        Vector3 endScale = new Vector3(1.1f, 1.1f, 1f);  // 약간 더 크게 확대
-        Vector3 finalScale = new Vector3(1f, 1f, 1f);    // 최종 크기
+        Vector3 endScale = Vector3.one;
 
         slot.style.scale = new StyleScale(startScale);
         slot.style.opacity = 0f;
-        slot.style.rotate = new StyleRotate(new Rotate(-5f)); // 살짝 틀어진 상태로 시작
 
-        // 첫 번째 단계: 확대 + 회전 복구
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
-            float easedT = EaseOutBack(t); // 튕기는 효과
-
-            // 스케일 및 투명도 조정
-            slot.style.scale = new StyleScale(Vector3.Lerp(startScale, endScale, easedT));
-            slot.style.opacity = Mathf.Lerp(0f, 1f, easedT);
-            slot.style.rotate = new StyleRotate(new Rotate(Mathf.Lerp(-5f, 0f, easedT)));
-
-            yield return null;
-        }
-
-        // 두 번째 단계: 정상 크기로 돌아가기
-        elapsed = 0f;
-        float secondDuration = 0.2f;
-
-        while (elapsed < secondDuration)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / secondDuration);
             float easedT = EaseInOutCubic(t);
 
-            // 스케일 조정
-            slot.style.scale = new StyleScale(Vector3.Lerp(endScale, finalScale, easedT));
+            slot.style.scale = new StyleScale(Vector3.Lerp(startScale, endScale, easedT));
+            slot.style.opacity = Mathf.Lerp(0f, 1f, easedT);
 
             yield return null;
         }
 
-        // 최종 상태 설정
-        slot.style.scale = new StyleScale(finalScale);
+        slot.style.scale = new StyleScale(Vector3.one);
         slot.style.opacity = 1f;
-        slot.style.rotate = new StyleRotate(new Rotate(0f));
     }
 
 
@@ -598,47 +691,32 @@ public class StoreManager : MonoSingleton<StoreManager>
     /// </summary>
     private IEnumerator AniPopup(bool isVisible)
     {
-        float duration = 0.4f;  // 애니메이션 시간 (초)
+        float duration = 1f;
         float elapsed = 0f;
 
-        // 초기값과 목표값 설정
-        Vector3 startScale = isVisible ? new Vector3(0.7f, 0.7f, 1f) : new Vector3(1f, 1f, 1f);
-        Vector3 endScale = isVisible ? new Vector3(1f, 1f, 1f) : new Vector3(0.7f, 0.7f, 1f);
-        float startY = isVisible ? 30f : 0f;
-        float endY = isVisible ? 0f : 30f;
+        if (_popup == null) yield break;
 
-        // 팝업 표시 스타일 변경
-        if (isVisible) _popup.style.display = DisplayStyle.Flex;
+        if (isVisible)
+            _popup.style.display = DisplayStyle.Flex;
 
-        // 애니메이션 루프
+        float startOpacity = isVisible ? 0f : 0.6f;
+        float endOpacity = isVisible ? 0.6f : 0f;
+
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
-            float easedT = isVisible ? EaseOutBack(t) : EaseInCubic(t); // 나타날 때는 튕기는 효과, 사라질 때는 부드럽게
+            float easedT = EaseInOutQuad(t);
 
-            // 스케일 조정
-            _popup.style.scale = new StyleScale(Vector3.Lerp(startScale, endScale, easedT));
-
-            // Y축 이동 (위에서 아래로 내려오는 효과)
-            _popup.style.translate = new StyleTranslate(new Translate(0, Mathf.Lerp(startY, endY, easedT), 0));
-
-            // 투명도 조정
-            _popup.style.opacity = Mathf.Lerp(isVisible ? 0f : 1f, isVisible ? 1f : 0f, easedT);
+            _popup.style.opacity = Mathf.Lerp(startOpacity, endOpacity, easedT);
 
             yield return null;
         }
 
-        // 애니메이션 완료 후 처리
-        if (!isVisible) _popup.style.display = DisplayStyle.None;
+        _popup.style.opacity = endOpacity;
 
-        // 최종 상태 확실히 설정
-        if (isVisible)
-        {
-            _popup.style.scale = new StyleScale(endScale);
-            _popup.style.translate = new StyleTranslate(new Translate(0, 0, 0));
-            _popup.style.opacity = 1f;
-        }
+        if (!isVisible)
+            _popup.style.display = DisplayStyle.None;
     }
 
     /// <summary>

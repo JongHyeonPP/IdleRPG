@@ -1,0 +1,24 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:Template name="StoreSlotItem" src="project://database/Assets/Store/StoreSlotItem.uxml?fileID=9197481963319205126&amp;guid=9c72b3998fca96849b6f487b73c41781&amp;type=3#StoreSlotItem" />
+    <engine:VisualElement name="Popup" style="flex-grow: 1; background-color: rgb(0, 0, 0); width: 100%; height: 100%; -unity-text-outline-color: rgb(0, 0, 0); max-height: none; display: flex; position: absolute;">
+        <engine:VisualElement name="WeaponGrid" style="flex-grow: 1; width: 100%; height: 100%; display: flex;">
+            <engine:Button name="PopupCloseBtn" style="position: absolute; height: 100%; width: 100%; border-left-color: rgba(149, 149, 149, 0); border-right-color: rgba(149, 149, 149, 0); border-top-color: rgba(149, 149, 149, 0); border-bottom-color: rgba(149, 149, 149, 0); background-color: rgba(188, 188, 188, 0);" />
+            <engine:VisualElement style="flex-grow: 1; height: 50%;" />
+            <engine:VisualElement name="RowVE1" style="flex-grow: 1; width: 100%; height: 413px; white-space: normal; align-items: flex-end; align-self: stretch; justify-content: space-around; flex-direction: row; margin-top: 1%; margin-right: 1%; margin-bottom: 1%; margin-left: 1%; padding-top: 2%; padding-right: 2%; padding-bottom: 2%; padding-left: 2%; -unity-font-style: bold;">
+                <engine:Instance template="StoreSlotItem" name="TemplateContainer" style="height: 100%; width: 100%; font-size: 10px;" />
+                <engine:Instance template="StoreSlotItem" name="TemplateContainer" style="height: 100%; width: 100%; display: flex;" />
+                <engine:Instance template="StoreSlotItem" name="TemplateContainer" style="height: 100%; width: 100%; display: flex;" />
+                <engine:Instance template="StoreSlotItem" name="TemplateContainer" style="height: 100%; width: 100%; display: flex;" />
+                <engine:Instance template="StoreSlotItem" name="TemplateContainer" style="height: 100%; width: 100%; display: flex;" />
+            </engine:VisualElement>
+            <engine:VisualElement name="RowVE2" style="flex-grow: 1; width: 100%; height: 413px; white-space: normal; align-items: flex-end; align-self: stretch; justify-content: space-around; flex-direction: row; margin-top: 1%; margin-right: 1%; margin-bottom: 1%; margin-left: 1%; padding-top: 2%; padding-right: 2%; padding-bottom: 2%; padding-left: 2%; -unity-font-style: bold;">
+                <engine:Instance template="StoreSlotItem" name="TemplateContainer" style="height: 100%; width: 100%; font-size: 10px;" />
+                <engine:Instance template="StoreSlotItem" name="TemplateContainer" style="height: 100%; width: 100%; display: flex;" />
+                <engine:Instance template="StoreSlotItem" name="TemplateContainer" style="height: 100%; width: 100%; display: flex;" />
+                <engine:Instance template="StoreSlotItem" name="TemplateContainer" style="height: 100%; width: 100%; display: flex;" />
+                <engine:Instance template="StoreSlotItem" name="TemplateContainer" style="height: 100%; width: 100%; display: flex;" />
+            </engine:VisualElement>
+            <engine:VisualElement style="flex-grow: 1; height: 50%;" />
+        </engine:VisualElement>
+    </engine:VisualElement>
+</engine:UXML>

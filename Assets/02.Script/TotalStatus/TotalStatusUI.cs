@@ -61,6 +61,8 @@ public class TotalStatusUI : MonoBehaviour
             CostumeManager.Instance.UpdateGameAppearanceData();
 
             NetworkBroker.SaveServerData(); // 필요없을시 삭제 // 삐용
+
+            ParticleFxManager.Instance.Stop("CostumeEffect");
         });
 
         InitEquipSlot();
@@ -655,6 +657,7 @@ public class TotalStatusUI : MonoBehaviour
             costumeManager.EquipPartCostume(uid, costume.CostumeType);
         }
 
+        ParticleFxManager.Instance.Play("CostumeEffect");
         // 변경 사항 저장 
         //costumeManager.SaveCostumeChanges();
     }

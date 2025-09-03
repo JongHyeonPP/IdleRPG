@@ -26,5 +26,6 @@ public class StoreUI : MonoBehaviour, IMenuUI
     void IMenuUI.InactiveUI()
     {
         root.style.display = DisplayStyle.None;
+        ParticleFxManager.Instance.Stop("StoreOpen");
     }
 }
