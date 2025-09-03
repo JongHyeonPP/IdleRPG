@@ -54,28 +54,57 @@ public class EquipedSkillUI : MonoBehaviour, IGeneralUI
     }
     private void OnItemClicked(int index)
     {
+        //if (isEquipActive)
+        //{
+        //    string[] equipedSkillArr = _gameData.equipedSkillArr;
+        //    for (int i = 0; i < equipedSkillArr.Length; i++)
+        //    {
+        //        if (equipedSkillArr[i] == currentSkillData.uid)
+        //        {
+        //            if (i == index)
+        //                return;
+        //            else
+        //            {
+        //                IconArr[i].style.display = DisplayStyle.None;
+        //                equipedSkillArr[i] = null;
+        //            }
+        //        }
+        //    }
+        //    PlayerBroker.OnSkillChanged(currentSkillData.uid, index);
+        //    IconArr[index].style.display = DisplayStyle.Flex;
+        //    IconArr[index].style.backgroundImage = new(SkillManager.instance.GetSkillData(currentSkillData.uid).iconSprite);
+        //    _skillUI.ToggleEquipBackground(false);
+        //    _gameData.equipedSkillArr[index] = currentSkillData.uid;
+
+        //    isEquipActive = false;
+        //}
         if (isEquipActive)
         {
             string[] equipedSkillArr = _gameData.equipedSkillArr;
+
+            string previousSkillId = equipedSkillArr[index];
+            if (!string.IsNullOrEmpty(previousSkillId))
+            {
+                int prevIndex = System.Array.IndexOf(equipedSkillArr, previousSkillId);
+                if (prevIndex >= 0)
+                    IconArr[prevIndex].style.display = DisplayStyle.None;
+            }
+
             for (int i = 0; i < equipedSkillArr.Length; i++)
             {
                 if (equipedSkillArr[i] == currentSkillData.uid)
                 {
-                    if (i == index)
-                        return;
-                    else
-                    {
-                        IconArr[i].style.display = DisplayStyle.None;
-                        equipedSkillArr[i] = null;
-                    }
+                    IconArr[i].style.display = DisplayStyle.None;
+                    equipedSkillArr[i] = null;
                 }
             }
+
             PlayerBroker.OnSkillChanged(currentSkillData.uid, index);
             IconArr[index].style.display = DisplayStyle.Flex;
             IconArr[index].style.backgroundImage = new(SkillManager.instance.GetSkillData(currentSkillData.uid).iconSprite);
+            equipedSkillArr[index] = currentSkillData.uid;
+
             _skillUI.ToggleEquipBackground(false);
-            _gameData.equipedSkillArr[index] = currentSkillData.uid;
-           
             isEquipActive = false;
         }
     }

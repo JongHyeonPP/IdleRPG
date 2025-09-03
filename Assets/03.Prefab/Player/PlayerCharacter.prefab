@@ -1261,6 +1261,7 @@ GameObject:
   - component: {fileID: 4834762564010942703}
   - component: {fileID: 3544974287285890260}
   - component: {fileID: 8122742350621976436}
+  - component: {fileID: 4162046143561258757}
   m_Layer: 0
   m_Name: PlayerCharacter
   m_TagString: Player
@@ -1378,6 +1379,7 @@ MonoBehaviour:
   _bodyLeftFoot: {fileID: 4341245802747946653}
   _bodyRightFoot: {fileID: 5110832561139658155}
   _defaultAppearanceData: {fileID: 11400000, guid: 1d5bc107f11424e4da0c76931a4471d0, type: 2}
+  _currentAppearanceData: {fileID: 0}
 --- !u!70 &8122742350621976436
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -1415,6 +1417,23 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0.43}
   m_Size: {x: 0.8, y: 1.19}
   m_Direction: 0
+--- !u!114 &4162046143561258757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3208487076215499159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e783b6887231ea439c4db07f0bf853c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healOnHit: {fileID: 11400000, guid: 3d99eb8010834c647b9d79f690a9cc6a, type: 2}
+  healProc: 20
+  damagePlus: {fileID: 11400000, guid: d8269165c61ea7844a212216508a4a6b, type: 2}
+  doubleHit: {fileID: 11400000, guid: fc42c6f20562bf44789aebadae39074e, type: 2}
+  doubleHitProc: 20
 --- !u!1 &3260949892194529672
 GameObject:
   m_ObjectHideFlags: 0
