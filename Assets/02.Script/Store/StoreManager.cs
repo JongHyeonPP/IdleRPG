@@ -1,22 +1,34 @@
-using System.Collections.Generic;
-using UnityEngine.UIElements;
-using UnityEngine;
-using System.Collections;
 using EnumCollection;
-using Unity.Services.CloudCode;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Unity.Services.CloudCode;
+using Unity.Services.RemoteConfig;
+using UnityEngine;
+using UnityEngine.UIElements;
+using Random = UnityEngine.Random;
+using Newtonsoft.Json.Linq;
 
 
 public class StoreManager : MonoSingleton<StoreManager>
 {
     [Header("Data")]
+    private GameData _gameData;
+
+
+    //키 = (어떤 걸, 몇 개 뽑을지), 값 = (무슨 재화가, 몇 개인지)
+    //Ex) prices[(GachaType.Weapon, 1)] => (Resource.Dia, 10)
+    Dictionary<(GachaType gachaType, int num), (Resource resource, int num)> prices = new();
+
+
     [SerializeField] private WeaponData[] _weaponDatas;             // 무기 데이터들
     [SerializeField] private List<WeaponData> _weaponSaveDatas;     // 뽑힌 무기 데이터들
-    [SerializeField] private int _weapon1CoinPrice = 10;
-    [SerializeField] private int _weapon10CoinPrice = 100;
+    //[SerializeField] private int _weapon1CoinPrice = 10;
+    //[SerializeField] private int _weapon10CoinPrice = 100;
 
-    [SerializeField] private int _costume1CoinPrice = 10;
-    [SerializeField] private int _costume10CoinPrice = 100;
+    //[SerializeField] private int _costume1CoinPrice = 10;
+    //[SerializeField] private int _costume10CoinPrice = 100;
 
 
     public List<WeaponData> WeaponSaveDatas => _weaponSaveDatas;    // 이거 가져다 써 일단 정욱핑
@@ -75,9 +87,59 @@ public class StoreManager : MonoSingleton<StoreManager>
     //Data
     private Dictionary<string, int> _weaponCount;
 
-    private void Start() => InitStore();
+    private void Start() {
+        _gameData = StartBroker.GetGameData();
+        InitPriceFromRc();
+        InitStore();
+    }
+    public void InitPriceFromRc()
+    {
+        try
+        {
+            // RC에서 GACHA_INFO 전체 JSON 문자열 가져오기 (로컬 캐시에서 읽음)
+            var json = RemoteConfigService.Instance.appConfig.GetJson("GACHA_INFO");
+            if (string.IsNullOrEmpty(json))
+                throw new Exception("GACHA_INFO가 비어 있습니다.");
 
-    private void OnEnable() => InitStore(); // 테스트용
+            var root = JObject.Parse(json);
+            var cost = root["cost"] as JObject;
+            if (cost == null)
+                throw new Exception("GACHA_INFO.cost 노드를 찾을 수 없습니다.");
+
+            void SetPrice(GachaType gType, int n, JToken node)
+            {
+                if (node == null) throw new Exception($"cost 노드가 없습니다: {gType} x{n}");
+
+                string resourceStr = node["resource"]?.ToString();
+                if (string.IsNullOrEmpty(resourceStr))
+                    throw new Exception($"resource가 비어 있습니다: {gType} x{n}");
+
+                if (!Enum.TryParse<Resource>(resourceStr, true, out var resEnum))
+                    throw new Exception($"알 수 없는 재화 타입입니다: {resourceStr} ({gType} x{n})");
+
+                int amount = node["amount"]?.Value<int>() ?? 0;
+                if (amount <= 0)
+                    throw new Exception($"amount가 올바르지 않습니다: {amount} ({gType} x{n})");
+
+                prices[(gType, n)] = (resEnum, amount);
+            }
+
+            var weapon = cost["weapon"];
+            var costume = cost["costume"];
+
+            SetPrice(GachaType.Weapon, 1, weapon?["single"]);
+            SetPrice(GachaType.Weapon, 10, weapon?["multi10"]);
+            SetPrice(GachaType.Costume, 1, costume?["single"]);
+            SetPrice(GachaType.Costume, 10, costume?["multi10"]);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"InitPriceFromRc 실패: {e.Message}");
+            throw;
+        }
+    }
+
+    //private void OnEnable() => InitStore(); // 순서 꼬여서 주석 처리함
 
     /// <summary>
     /// 초반 세팅
@@ -96,8 +158,8 @@ public class StoreManager : MonoSingleton<StoreManager>
         //  __costumeGachaSystem = new GachaSystem<CostumeItem>(CostumeManager.Instance.AllCostumeDatas);
 
         // 서버 데이터 받아서? price값 조정
-        _weapon1CoinPrice = 1;
-        _weapon1CoinPrice = 10;
+        //_weapon1CoinPrice = 1;
+        //_weapon1CoinPrice = 10;
 
         var root = _storeUIDocument.rootVisualElement;
         _root = root; // 저장핑
@@ -124,10 +186,10 @@ public class StoreManager : MonoSingleton<StoreManager>
         var infoLabel1 = storePanel1?.Q<Label>("InfoLabel");
 
         // 값 바꾸기
-        if (priceLabel0 != null) priceLabel0.text = _weapon1CoinPrice.ToString();
+        if (priceLabel0 != null) priceLabel0.text = prices[(GachaType.Weapon, 1)].num.ToString();//무기 1개 뽑는 가격
         if (infoLabel0 != null) infoLabel0.text = "1회 뽑기";
 
-        if (priceLabel1 != null) priceLabel1.text = _weapon10CoinPrice.ToString();
+        if (priceLabel1 != null) priceLabel1.text = prices[(GachaType.Weapon, 10)].num.ToString();//무기 10개 뽑는 가격
         if (infoLabel1 != null) infoLabel1.text = "10회 뽑기";
         #endregion
 
@@ -136,8 +198,8 @@ public class StoreManager : MonoSingleton<StoreManager>
         var itemSlot1 = _root?.Q<VisualElement>("ItemSlot1");
 
         // StorePanel_0, StorePanel_1 접근
-        var storePanel0_1 = itemSlot0?.Q<VisualElement>("StorePanel_0");
-        var storePanel1_1 = itemSlot0?.Q<VisualElement>("StorePanel_1");
+        var storePanel0_1 = itemSlot1?.Q<VisualElement>("StorePanel_0");
+        var storePanel1_1 = itemSlot1?.Q<VisualElement>("StorePanel_1");
 
         _weapon1Btn = storePanel0?.Q<Button>("StoreBtn");
         _weapon10Btn = storePanel1?.Q<Button>("StoreBtn");
@@ -149,10 +211,10 @@ public class StoreManager : MonoSingleton<StoreManager>
         var infoLabel1_1 = storePanel1_1?.Q<Label>("InfoLabel");
 
         // 값 바꾸기
-        if (priceLabel0_1 != null) priceLabel0_1.text = _weapon1CoinPrice.ToString();
+        if (priceLabel0_1 != null) priceLabel0_1.text = prices[(GachaType.Costume, 1)].num.ToString();//무기 1개 뽑는 가격
         if (infoLabel0_1 != null) infoLabel0_1.text = "1회 뽑기";
 
-        if (priceLabel1_1 != null) priceLabel1_1.text = _weapon10CoinPrice.ToString();
+        if (priceLabel1_1 != null) priceLabel1_1.text = prices[(GachaType.Costume, 10)].num.ToString();//코스튬 10개 뽑는 가격
         if (infoLabel1_1 != null) infoLabel1_1.text = "10회 뽑기";
         #endregion
 
@@ -724,8 +786,20 @@ public class StoreManager : MonoSingleton<StoreManager>
                 args);
 
         Debug.Log($"[Gacha] {type} x{num} => {string.Join(", ", result)}");
-        PlayerBroker.OnGacha(type, num);//가챠 이후의 동작은 델리게이트로 구현 요망
+
+        var priceInfo = prices[(type, num)];
+        switch (priceInfo.resource)
+        {
+            case Resource.Dia:
+                _gameData.dia -= priceInfo.num;
+                break;
+            default:
+                throw new Exception($"지원하지 않는 재화 타입: {priceInfo.resource}");
+        }
+
+        PlayerBroker.OnGacha?.Invoke(type, num); //가챠 이후의 동작은 델리게이트로 구현 요망
     }
+
 #if UNITY_EDITOR
     // ---- Weapon 테스트 ----
     [ContextMenu("GachaTest/Weapon x1")]
