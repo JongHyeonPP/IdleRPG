@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PurchaseProcessor")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8dfabf671f92b0d225756fade8ad6e6e80928a08")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dd43bc6e2f3256e4d6bf34de822c10cddd2faf0a")]
 [assembly: System.Reflection.AssemblyProductAttribute("PurchaseProcessor")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PurchaseProcessor")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
