@@ -89,4 +89,8 @@ namespace EnumCollection
         //재화 사용처
         Status
     }
+    public enum GachaType
+    {
+        Weapon, Costume
+    }
 }

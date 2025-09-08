@@ -10,22 +10,23 @@ using System.Security.Cryptography;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Purchase;
 
-namespace Purchase
+namespace PurchaseProcessor.Currency
 {
-    public class PurchaseController
+    public class CurrencyController
     {
         private readonly HttpClient _http;
-        private readonly ILogger<PurchaseController> _logger;
+        private readonly ILogger<CurrencyController> _logger;
 
-        public PurchaseController(ILogger<PurchaseController> logger)
+        public CurrencyController(ILogger<CurrencyController> logger)
         {
             _logger = logger;
             _http = new HttpClient();
         }
 
-        [CloudCodeFunction("ProcessPurchase")]
-        public async Task<PurchaseResult> ProcessPurchaseAsync(
+        [CloudCodeFunction("ProcessCurrency")]
+        public async Task<CurrencyResult> ProcessCurrencyAsync(
             string receipt,
             string productId,
             string playerId,
@@ -53,7 +54,7 @@ namespace Purchase
 
                 receiptPreview = Short(receipt, 220);
 
-                using (var doc = System.Text.Json.JsonDocument.Parse(receipt))
+                using (var doc = JsonDocument.Parse(receipt))
                 {
                     var root = doc.RootElement;
                     if (root.TryGetProperty("Payload", out var payloadEl))
@@ -64,7 +65,7 @@ namespace Purchase
                             // 기본은 payload 문자열을 보관
                             payloadRaw = Short(payloadStr, 1000);
 
-                            using var payloadDoc = System.Text.Json.JsonDocument.Parse(payloadStr);
+                            using var payloadDoc = JsonDocument.Parse(payloadStr);
                             var payloadRoot = payloadDoc.RootElement;
 
                             // IAP v5 형태: Payload.json 안에 실제 내부 JSON 문자열이 들어있는 경우가 많음
@@ -76,7 +77,7 @@ namespace Purchase
                                     // inner json을 최종 payload로 채택
                                     payloadRaw = Short(innerJson, 1000);
 
-                                    using var innerDoc = System.Text.Json.JsonDocument.Parse(innerJson);
+                                    using var innerDoc = JsonDocument.Parse(innerJson);
                                     var innerRoot = innerDoc.RootElement;
 
                                     if (innerRoot.TryGetProperty("purchaseToken", out var ptEl))
@@ -160,7 +161,7 @@ namespace Purchase
                 if (!resp.IsSuccessStatusCode)
                     return Fail($"verify failed http {(int)resp.StatusCode} {body}");
 
-                using (var vdoc = System.Text.Json.JsonDocument.Parse(body))
+                using (var vdoc = JsonDocument.Parse(body))
                 {
                     var vroot = vdoc.RootElement;
                     if (vroot.TryGetProperty("purchaseState", out var psEl))
@@ -175,12 +176,12 @@ namespace Purchase
                 var grants = new List<(string currency, int amount)>();
                 try
                 {
-                    using var catDoc = System.Text.Json.JsonDocument.Parse(iapCatalogJson);
+                    using var catDoc = JsonDocument.Parse(iapCatalogJson);
                     var catRoot = catDoc.RootElement;
                     if (catRoot.TryGetProperty("products", out var products) &&
                         products.TryGetProperty(productId, out var productNode) &&
                         productNode.TryGetProperty("grants", out var grantsArr) &&
-                        grantsArr.ValueKind == System.Text.Json.JsonValueKind.Array)
+                        grantsArr.ValueKind == JsonValueKind.Array)
                     {
                         foreach (var g in grantsArr.EnumerateArray())
                         {
@@ -220,12 +221,12 @@ namespace Purchase
 
                 success = true;
                 reason = $"granted {grants.Count} grants orderId={orderId}";
-                return new PurchaseResult { Success = true, Message = reason };
+                return new CurrencyResult { Success = true, Message = reason };
             }
             catch (Exception e)
             {
                 reason = $"fatal error {e.Message}";
-                return new PurchaseResult { Success = false, Message = reason };
+                return new CurrencyResult { Success = false, Message = reason };
             }
             finally
             {
@@ -258,14 +259,14 @@ namespace Purchase
                 }
             }
 
-            PurchaseResult Fail(string msg)
+            CurrencyResult Fail(string msg)
             {
                 reason = msg;
-                return new PurchaseResult { Success = false, Message = msg };
+                return new CurrencyResult { Success = false, Message = msg };
             }
 
             static string Short(string s, int max) =>
-                string.IsNullOrEmpty(s) ? s : (s.Length > max ? s.Substring(0, max) : s);
+                string.IsNullOrEmpty(s) ? s : s.Length > max ? s.Substring(0, max) : s;
         }
 
         private static async Task<bool> ApplyGrantsToGameDataAsync(
@@ -334,9 +335,9 @@ namespace Purchase
             var sb = new StringBuilder(s.Length);
             foreach (var ch in s)
             {
-                if ((ch >= 'A' && ch <= 'Z') ||
-                    (ch >= 'a' && ch <= 'z') ||
-                    (ch >= '0' && ch <= '9') ||
+                if (ch >= 'A' && ch <= 'Z' ||
+                    ch >= 'a' && ch <= 'z' ||
+                    ch >= '0' && ch <= '9' ||
                     ch == '_' || ch == '-')
                     sb.Append(ch);
                 else
@@ -401,7 +402,7 @@ namespace Purchase
         }
     }
 
-    public class PurchaseResult
+    public class CurrencyResult
     {
         [JsonProperty("success")]
         public bool Success { get; set; }

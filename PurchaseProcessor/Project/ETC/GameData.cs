@@ -84,4 +84,5 @@ public class GameData
     public int[] dungeonProgress = new int[3];
 
     public int playerRankIndex;
+    public int gachaThreshold;
 }

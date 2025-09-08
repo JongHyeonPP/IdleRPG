@@ -1,8 +1,10 @@
-using System.Collections.Generic;
-using UnityEngine.UIElements;
-using UnityEngine;
-using System.Collections;
 using EnumCollection;
+using System.Collections;
+using System.Collections.Generic;
+using Unity.Services.CloudCode;
+using UnityEngine;
+using UnityEngine.UIElements;
+using static UnityEngine.Rendering.GPUSort;
 
 
 public class StoreManager : MonoSingleton<StoreManager>
@@ -61,6 +63,7 @@ public class StoreManager : MonoSingleton<StoreManager>
 
     //Data
     private Dictionary<string, int> _weaponCount;
+    
 
     private void Start() => InitStore();
 

@@ -103,9 +103,9 @@ public class PurchaseManager : MonoBehaviour
 
         try
         {
-            PurchaseResult result = await CloudCodeService.Instance.CallModuleEndpointAsync<PurchaseResult>(
+            CurrencyResult result = await CloudCodeService.Instance.CallModuleEndpointAsync<CurrencyResult>(
                 "PurchaseProcessor",
-                "ProcessPurchase",
+                "ProcessCurrency",
                 args
             );
 

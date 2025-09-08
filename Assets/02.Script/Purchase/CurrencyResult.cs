@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PurchaseResult
+public class CurrencyResult
 {
     public bool success;
     public string message;

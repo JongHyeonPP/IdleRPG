@@ -3,6 +3,8 @@ using UnityEngine.UIElements;
 using UnityEngine;
 using System.Collections;
 using EnumCollection;
+using Unity.Services.CloudCode;
+using System.Threading.Tasks;
 
 
 public class StoreManager : MonoSingleton<StoreManager>
@@ -706,4 +708,38 @@ public class StoreManager : MonoSingleton<StoreManager>
     {
         return -(Mathf.Cos(Mathf.PI * t) - 1) / 2;
     }
+    //뭐 뽑을지랑 몇 개 뽑을지 매개변수로 넣어서 호출
+    private async Task CallGacha(GachaType type, int num)
+    {
+        Dictionary<string, object> args = new()
+    {
+        { "gachaType", type.ToString() },
+        { "gachaNum",  num }
+    };
+
+        List<string> result = await CloudCodeService.Instance
+            .CallModuleEndpointAsync<List<string>>(
+                "PurchaseProcessor",
+                "ProcessGacha",
+                args);
+
+        Debug.Log($"[Gacha] {type} x{num} => {string.Join(", ", result)}");
+        PlayerBroker.OnGacha(type, num);//가챠 이후의 동작은 델리게이트로 구현 요망
+    }
+#if UNITY_EDITOR
+    // ---- Weapon 테스트 ----
+    [ContextMenu("GachaTest/Weapon x1")]
+    public async void GachaTest_Weapon_1() => await CallGacha(GachaType.Weapon, 1);
+
+    [ContextMenu("GachaTest/Weapon x10")]
+    public async void GachaTest_Weapon_10() => await CallGacha(GachaType.Weapon, 10);
+
+    // ---- Costume 테스트 ----
+    [ContextMenu("GachaTest/Costume x1")]
+    public async void GachaTest_Costume_1() => await CallGacha(GachaType.Costume, 1);
+
+    [ContextMenu("GachaTest/Costume x10")]
+    public async void GachaTest_Costume_10() => await CallGacha(GachaType.Costume, 10);
+#endif
+
 }
