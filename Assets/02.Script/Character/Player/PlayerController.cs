@@ -51,7 +51,6 @@ public class PlayerController : Attackable
         PlayerBroker.OnGoldStatusLevelSet += OnGoldStatusSet;
         PlayerBroker.OnStatPointStatusLevelSet += OnStatPointStatusSet;
         BattleBroker.OnBossTimeLimit += OnDead;
-        PlayerBroker.GetPlayerController += GetPlayerController;
         BattleBroker.SwitchToBattle += InitToBattle;
         BattleBroker.SwitchToBoss += InitToBattle;
         BattleBroker.SwitchToCompanionBattle += (arg0, arg1)=> InitToBattle();
@@ -59,8 +58,6 @@ public class PlayerController : Attackable
         BattleBroker.SwitchToDungeon += (arg0, arg1)=> InitToBattle();
         PlayerBroker.OnPromoteStatusSet += OnPromoteStatusSet;
     }
-
-    private PlayerController GetPlayerController() => this;
 
     private void InitToBattle()
     {
@@ -183,7 +180,8 @@ public class PlayerController : Attackable
         anim.ResetTrigger("Attack");
         anim.SetTrigger("Die");
         PlayerBroker.OnPlayerDead();
-        StopCoroutine(attackCoroutine);
+        if (attackCoroutine != null)
+            StopCoroutine(attackCoroutine);
         StartCoroutine(DeadAfterWhile());
     }
     private IEnumerator DeadAfterWhile()

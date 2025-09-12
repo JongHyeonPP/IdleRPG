@@ -16,7 +16,6 @@ public class EnemyController : Attackable, IMoveByPlayer
     private float deadDuration = 1f;//죽는데 걸리는 시간
 
     public EnemyHpBar enemyHpBar;
-    public bool IsMonster => _status.isMonster;
     private void Start()
     {
         MediatorManager<IMoveByPlayer>.RegisterMediator(this);

@@ -71,7 +71,7 @@ public class TotalStatusUI : MonoBehaviour
 
     private void Start()
     {
-        PlayerController controller = (PlayerController)PlayerBroker.GetPlayerController();
+        PlayerController controller = (PlayerController)BattleBroker.GetPlayerController();
         _status = (PlayerStatus)controller.GetStatus();
 
         AppearancePanelInit();

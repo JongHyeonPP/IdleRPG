@@ -50,4 +50,7 @@ public static class BattleBroker
     public static Action<int> ActiveStageInfoUI;
 
     public static Func<int, int, object> GetDungeonReward;
+
+	public static Func<object> GetPlayerController;//PlayerController
+	public static Func<object> GetEnemyArray;//EnemyController[]
 }

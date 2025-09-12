@@ -40,9 +40,11 @@ public class CurrencyManager : MonoBehaviour
 
     private string _requireExpFormula;
 
-    public Sprite[] fragmentSprites;
-    public Sprite goldSprite;
-    public Sprite expSprite;
+    public Sprite[] _fragmentSprites;
+    public Sprite _goldSprite;
+    public Sprite _expSprite;
+    public Sprite _diaSprite;
+    public Sprite _cloverSprite;
     public Color[] rarityColor;
 
     [SerializeField] private PriceInfo _priceInfo;
@@ -82,7 +84,36 @@ public class CurrencyManager : MonoBehaviour
         PlayerBroker.OnLevelExpSet += OnLevelExpSet;
         BattleBroker.GetNeedExp = GetNeedExp;
     }
+    private void Start()
+    {
+        PlayerBroker.GetResourceSprite = GetResourceSprite;
+        PlayerBroker.GetFragmentSprite = GetFragmentSprite;
+    }
 
+    private Sprite GetResourceSprite(Resource resource)
+    {
+        switch (resource)
+        {
+            case Resource.Gold:
+                return _goldSprite;
+            case Resource.Exp:
+                return _expSprite;
+            case Resource.Dia:
+                return _diaSprite;
+            case Resource.Clover:
+                return _cloverSprite;
+            case Resource.Scroll:
+                break;
+            case Resource.Fragment:
+                throw new Exception("Use GetFragmentSprite");
+            case Resource.None:
+                break;
+            case Resource.Weapon:
+                break;
+        }
+        return null;
+    }
+    private Sprite GetFragmentSprite(Rarity rarity) => _fragmentSprites[(int)rarity];
     private void OnDrop(DropType type, int value, string id)
     {
         switch (type)

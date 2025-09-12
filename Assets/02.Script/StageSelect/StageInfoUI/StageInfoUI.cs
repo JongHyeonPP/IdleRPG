@@ -31,8 +31,8 @@ public class StageInfoUI : MonoBehaviour, IGeneralUI
         fragmentSlot = new(root.Q<VisualElement>("FragmentSlot"));
         fragmentSlot.iconVe.style.scale = new Vector2(0.8f, 0.8f);
 
-        goldSlot.iconVe.style.backgroundImage = new(CurrencyManager.instance.goldSprite);
-        expSlot.iconVe.style.backgroundImage = new(CurrencyManager.instance.expSprite);
+        goldSlot.iconVe.style.backgroundImage = new(CurrencyManager.instance._goldSprite);
+        expSlot.iconVe.style.backgroundImage = new(CurrencyManager.instance._expSprite);
 
         weaponSlot.valueLabel.style.visibility = Visibility.Hidden;
         VisualElement rewardIconVe = weaponSlot.root.Q<VisualElement>("RewardIcon");
@@ -59,7 +59,7 @@ public class StageInfoUI : MonoBehaviour, IGeneralUI
 
         // 아이콘 세팅 (무기/조각 전용)
         if (slotStates["Fragment"].active)
-            fragmentSlot.iconVe.style.backgroundImage = new(CurrencyManager.instance.fragmentSprites[(int)currentFragmentValue.Item1]);
+            fragmentSlot.iconVe.style.backgroundImage = new(CurrencyManager.instance._fragmentSprites[(int)currentFragmentValue.Item1]);
         if (slotStates["Weapon"].active)
             WeaponManager.instance.SetWeaponIconToVe(WeaponManager.instance.weaponDict[currentWeaponValue], weaponSlot.iconVe);
 

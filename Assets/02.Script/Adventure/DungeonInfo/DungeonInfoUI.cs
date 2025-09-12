@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
+using EnumCollection;
 
 public class DungeonInfoUI : MonoBehaviour, IGeneralUI
 {
@@ -10,8 +11,8 @@ public class DungeonInfoUI : MonoBehaviour, IGeneralUI
     private VisualElement _activePanel;
     private Label _stateLabel;
     private Label _recommendLabel;
-    private VisualElement RewardIcon;
-
+    private VisualElement _rewardIcon;
+    private Label _rewardLabel;
 
     private GameData _gameData;
     private FlexibleListView _fListView;
@@ -33,6 +34,8 @@ public class DungeonInfoUI : MonoBehaviour, IGeneralUI
         _recommendLabel = root.Q<Label>("RecommendLabel");
         _stateLabel = root.Q<Label>("StateLabel");
         _bossImage = root.Q<VisualElement>("BossImage");
+        _rewardIcon = root.Q<VisualElement>("RewardIcon");
+        _rewardLabel = root.Q<Label>("RewardLabel");
     }
 
     private void OnStartButtonClick()
@@ -100,5 +103,10 @@ public class DungeonInfoUI : MonoBehaviour, IGeneralUI
         _bossImage.style.left = _currentStageInfo.adventrueInfo.imageLeft;
         _bossImage.style.scale = new Vector2(_currentStageInfo.adventrueInfo.imageScale, _currentStageInfo.adventrueInfo.imageScale);
 
+        StageInfo.AdventureInfo adventureStageInfo = stageInfo.adventrueInfo;
+        DungeonReward dungeonInfo = StageInfoManager.instance.GetDungeonReward(adventureStageInfo.adventureIndex_0, adventureStageInfo.adventureIndex_1);
+        var sprite = PlayerBroker.GetResourceSprite(dungeonInfo.resource);
+        _rewardIcon.style.backgroundImage = new(sprite);
+        _rewardLabel.text = dungeonInfo.amount.ToString("N0");
     }
 }

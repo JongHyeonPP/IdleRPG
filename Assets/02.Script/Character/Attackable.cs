@@ -12,12 +12,12 @@ using Vector3 = UnityEngine.Vector3;
 
 public abstract class Attackable : MonoBehaviour
 {
-    [HideInInspector]public Attackable target;
+    [HideInInspector] public Attackable target;
     protected float attackTerm = 1f;
     public Animator anim;
     public BigInteger hp;
     protected Coroutine attackCoroutine;
-    [HideInInspector]public bool isDead;
+    [HideInInspector] public bool isDead;
     protected EquipedSkill[] equipedSkillArr = new EquipedSkill[10];
     private EquipedSkill _defaultAttack;
     protected Camera mainCamera;
@@ -25,29 +25,34 @@ public abstract class Attackable : MonoBehaviour
     private GameData _gameData;
     private float _tempSpeedPercent = 0f;
     private PassiveSkill _passive;
-   
+
+    private EquipedSkill _lastUsedSkill;
+
     private void OnEnable()
     {
         if (_passive == null)
             _passive = GetComponent<PassiveSkill>();
     }
+
     private void Awake()
     {
         _gameData = StartBroker.GetGameData();
     }
+
     protected void SetDefaultAttack()
     {
         _defaultAttack = new();
     }
+
     public void StartAttack()
     {
         attackCoroutine = StartCoroutine(AttackLoop());
     }
-    //AttackTerm 간격마다 우선 순위에 있는 스킬 사용
-
 
     protected virtual IEnumerator AttackLoop()
+    // AttackTerm 간격마다 우선 순위에 있는 스킬 사용
     {
+
         if (target == null)
             yield break;
 
@@ -67,9 +72,7 @@ public abstract class Attackable : MonoBehaviour
 
             foreach (var tgt in targets)
             {
-
                 BigInteger baseDamage = CalculateBaseDamage(currentSkill);
-
                 BigInteger finalDamage = ApplyPassives(baseDamage, currentSkill.skillData.type, tgt);
           
                 tgt.ReceiveSkill(finalDamage, currentSkill.skillData.type);
@@ -79,7 +82,6 @@ public abstract class Attackable : MonoBehaviour
                     StartCoroutine(TargetKill());
                 }
             }
-
 
             VisualEffectToTarget(targets, currentSkill.skillData);
 
@@ -106,34 +108,20 @@ public abstract class Attackable : MonoBehaviour
 
         return _defaultAttack;
     }
+
     private (float preDelay, float postDelay) GetAttackDelays(EquipedSkill skill)
     {
         if (skill == _defaultAttack)
-            return (attackTerm, attackTerm); 
+            return (attackTerm, attackTerm);
         else
             return (skill.skillData.preDelay, skill.skillData.postDelay);
     }
+
     private void ApplySpeedBuff(SkillData skill)
     {
-
-        //if (_gameData == null) return;
-
-        //if (skill.type == SkillType.SpeedBuff)
-        //{
-        //    if (_gameData.skillLevel.TryGetValue(skill.uid, out int level))
-        //    {
-        //        if (level >= 0 && level < skill.value.Count)
-        //        {
-        //            float addPercent = skill.value[level];
-        //            _tempSpeedPercent += addPercent;
-        //            _onSpeed = true;
-        //            StartCoroutine(SpeedDelay(6f, addPercent));
-        //        }
-        //    }
-        //}
         if (skill.type != SkillType.SpeedBuff) return;
 
-        int level = 0; 
+        int level = 0;
         if (level >= 0 && level < skill.value.Count)
         {
             float addPercent = skill.value[level];
@@ -142,6 +130,7 @@ public abstract class Attackable : MonoBehaviour
             StartCoroutine(SpeedDelay(6f, addPercent));
         }
     }
+
     private IEnumerator WaitWithAttackSpeed(float baseDelay)
     {
         float elapsed = 0f;
@@ -151,14 +140,13 @@ public abstract class Attackable : MonoBehaviour
             speedMultiplier = Mathf.Max(speedMultiplier, 0.01f);
 
             elapsed += Time.deltaTime * speedMultiplier;
-          
+
             yield return null;
         }
     }
 
     private float GetAttackSpeedMultiplier()
     {
-
         float speedValue = 0f;
 
         if (_onSpeed)
@@ -183,8 +171,8 @@ public abstract class Attackable : MonoBehaviour
 
         return 1f + speedValue / 10f;
     }
-    
     #endregion
+
     private IEnumerator SpeedDelay(float duration, float buffValue)
     {
         yield return new WaitForSeconds(duration);
@@ -196,6 +184,7 @@ public abstract class Attackable : MonoBehaviour
             _onSpeed = false;
         }
     }
+
     private void AnimBehavior(EquipedSkill currentSkill, SkillData skillData)
     {
         if (currentSkill == _defaultAttack)
@@ -250,13 +239,14 @@ public abstract class Attackable : MonoBehaviour
             attackCoroutine = null;
         }
     }
-   
+
     private IEnumerator TargetKill()
     {
         StopCoroutine(attackCoroutine);
         yield return new WaitForSeconds(0.5f);
         target = null;
     }
+
     private void ReceiveSkill(BigInteger calcedValue, SkillType skillType)
     {
         switch (skillType)
@@ -265,25 +255,53 @@ public abstract class Attackable : MonoBehaviour
                 hp = hp - calcedValue;
                 if (hp < 0)
                     hp = 0;
-                EnemyController enemyController = this as EnemyController;
-                if (enemyController != null && enemyController.IsMonster)
+
+                if (this is EnemyController)
+                {
                     anim.SetTrigger("Hit");
+                }
+                else
+                {
+                    // 모든 자식의 SpriteRenderer 색상 변경
+                    StartCoroutine(FlashRed());
+                }
+
                 Vector3 screenPos = mainCamera.WorldToScreenPoint(transform.position);
                 BattleBroker.ShowDamageText(screenPos, calcedValue.ToString("N0"));
                 break;
+
             case SkillType.Heal:
                 break;
         }
- 
         OnReceiveSkill();
         if (hp == 0)
         {
             OnDead();
         }
     }
-    
 
-    private void VisualEffectToTarget(List<Attackable> targets,SkillData skilldata)
+    private IEnumerator FlashRed()
+    {
+        SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>();
+        Color[] originalColors = new Color[renderers.Length];
+
+        // 원래 색 저장 후 빨간색으로 변경
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            originalColors[i] = renderers[i].color;
+            renderers[i].color = Color.red;
+        }
+
+        yield return new WaitForSeconds(0.1f); // 0.1초 동안 빨강색 유지
+
+        // 원래 색상으로 복원
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            renderers[i].color = originalColors[i];
+        }
+    }
+
+    private void VisualEffectToTarget(List<Attackable> targets, SkillData skilldata)
     {
         if (skilldata == null || skilldata.visualEffectPrefab == null)
             return;
@@ -298,7 +316,7 @@ public abstract class Attackable : MonoBehaviour
                 break;
 
             case SkillEffectSpawnType.InFrontOfCaster:
-                Vector3 forwardPos = transform.position + transform.forward * 1f; 
+                Vector3 forwardPos = transform.position + transform.forward * 1f;
                 SkillEffectPoolManager.Instance.SpawnEffect(skilldata, forwardPos);
                 break;
 
@@ -327,6 +345,7 @@ public abstract class Attackable : MonoBehaviour
                 break;
         }
     }
+
     private IEnumerator MoveProjectile(GameObject proj, float speed, float lifeTime)
     {
         float elapsed = 0f;
@@ -340,24 +359,37 @@ public abstract class Attackable : MonoBehaviour
         if (proj != null)
             Destroy(proj);
     }
+
     private List<Attackable> GetTargets(SkillTarget range, int targetNum)
     {
-        
-        List<Attackable> result = new();
+        if (this is PlayerController)
+        {
+            var enemies = (EnemyController[])BattleBroker.GetEnemyArray();
 
-        Attackable[] allEnemies = FindObjectsOfType<EnemyController>()
-            .Where(e => e != this && !e.isDead)
-            .Cast<Attackable>() 
-            .ToArray();
+            if (enemies == null || enemies.Length == 0)
+            {
+                return new List<Attackable>();
+            }
 
-        var sortedEnemies = allEnemies
-            .OrderBy(a => Vector3.Distance(transform.position, a.transform.position))
-            .Take(targetNum);
-
-        result.AddRange(sortedEnemies);
-
-        return result;
+            return enemies
+                .Where(e => e != null && !e.isDead)   // null 제거 + 죽은 애도 제외
+                .Cast<Attackable>()
+                .OrderBy(a => Vector3.Distance(transform.position, a.transform.position))
+                .Take(targetNum)
+                .ToList();
+        }
+        else
+        {
+            var player = BattleBroker.GetPlayerController();
+            if (player == null)
+            {
+                return new List<Attackable>();
+            }
+            return new List<Attackable> { (Attackable)player };
+        }
     }
+
+
 
     #region passive
     protected virtual BigInteger CalculateBaseDamage(EquipedSkill skill)
@@ -371,6 +403,7 @@ public abstract class Attackable : MonoBehaviour
         damage /= 100;
         return damage;
     }
+
     private BigInteger ApplyPassives(BigInteger damage, SkillType skillType, Attackable target)
     {
         if (_passive == null) return damage;
@@ -380,7 +413,6 @@ public abstract class Attackable : MonoBehaviour
             damage += damage * (BigInteger)(percent / 100f);
         }
 
-        
         if (_passive.TryGetDoubleHit(out float procChance, out int doubleHitLevel))
         {
             if (UnityEngine.Random.value < procChance / 100f) damage += damage;
@@ -400,8 +432,8 @@ public abstract class Attackable : MonoBehaviour
         return damage;
     }
     #endregion
+
     public abstract ICharacterStatus GetStatus();
     protected abstract void OnDead();
     protected abstract void OnReceiveSkill();
-
 }

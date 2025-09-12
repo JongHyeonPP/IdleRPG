@@ -41,6 +41,7 @@ public class StageInfoManager : MonoBehaviour
     public int adventureDiaIncrease;
     public int adventureCloverIncrease;
     public List<(int, int)> adventureRewardList = new();// dia, clover
+
     // Dungeon 보상 캐시
     private Dictionary<int, DungeonReward>[] dungeonRewards = new Dictionary<int, DungeonReward>[3];
 
@@ -48,8 +49,6 @@ public class StageInfoManager : MonoBehaviour
 
     [Header("CompanionReward")]
     public List<(int, int, int, int)> companionRewardList = new();// dia, clover, diaIncrease, cloverIncrease
-
-    
 
     public StageRegion GetRegionInfo(int index) => _stageRegionArr[index];
 
@@ -84,7 +83,7 @@ public class StageInfoManager : MonoBehaviour
         return new(reward.Item1 + adventureDiaIncrease * index_1, reward.Item2 + adventureCloverIncrease * index_1);
     }
 
-    public object GetDungeonReward(int dungeonIndex, int stageIndex)
+    public DungeonReward GetDungeonReward(int dungeonIndex, int stageIndex)
     {
         if (dungeonIndex < 0 || dungeonIndex >= dungeonRewards.Length)
         {
@@ -139,7 +138,7 @@ public class StageInfoManager : MonoBehaviour
         string rewardJson = RemoteConfigService.Instance.appConfig.GetJson("DUNGEON_REWARD", "None");
         if (string.IsNullOrEmpty(rewardJson) || rewardJson == "None")
         {
-            Debug.LogError("DUNGEON_INFO not found in RemoteConfig");
+            Debug.LogError("DUNGEON_REWARD not found in RemoteConfig");
             return;
         }
 
@@ -176,7 +175,7 @@ public class StageInfoManager : MonoBehaviour
 
                             if (Enum.TryParse(rarityStr, true, out Rarity rarity))
                             {
-                                dict[stageIndex] = new DungeonReward(Resource.Fragment, amount, rarity);
+                                dict[stageIndex] = new DungeonReward(Resource.Fragment, amount);
                             }
                             else
                             {
@@ -199,13 +198,11 @@ public class StageInfoManager : MonoBehaviour
     {
         List<IListViewItem> items = new();
 
-        // 유효성 검사
         if (_normalStageInfoArr == null || start < 0 || count <= 0 || start >= _normalStageInfoArr.Length)
         {
             return items;
         }
 
-        // 지정된 범위만큼 데이터를 가져옴
         int end = Mathf.Min(start + count, _normalStageInfoArr.Length);
         for (int i = start; i < end; i++)
         {
@@ -277,64 +274,4 @@ public class StageInfoManager : MonoBehaviour
             default: return null;
         }
     }
-
-#if UNITY_EDITOR
-    [ContextMenu("SetDefaultStatus")]
-    public void SetDefaultStatus()
-    {
-        foreach (StageInfo x in _normalStageInfoArr)
-        {
-            x.enemyStatusFromStage.maxHp = 10.ToString();
-            x.enemyStatusFromStage.resist = 0f;
-            EditorUtility.SetDirty(x);
-        }
-        foreach (StageInfo x in _normalStageInfoArr)
-        {
-            x.bossStatusFromStage.maxHp = 100.ToString();
-            x.bossStatusFromStage.resist = 0f;
-            x.bossStatusFromStage.power = 10.ToString();
-            x.bossStatusFromStage.penetration = 0f;
-            EditorUtility.SetDirty(x);
-        }
-        AssetDatabase.SaveAssets();
-        AssetDatabase.Refresh();
-    }
-
-    [ContextMenu("Rename Adventure->Dungeon (Dungeon StageInfos)")]
-    private void RenameAdventureToDungeon()
-    {
-        RenameArrayAssets(_dungeon_0);
-        RenameArrayAssets(_dungeon_1);
-        RenameArrayAssets(_dungeon_2);
-
-        AssetDatabase.SaveAssets();
-        AssetDatabase.Refresh();
-    }
-
-    private void RenameArrayAssets(StageInfo[] arr)
-    {
-        if (arr == null) return;
-        foreach (var so in arr)
-        {
-            if (so == null) continue;
-
-            string path = AssetDatabase.GetAssetPath(so);
-            string fileName = System.IO.Path.GetFileNameWithoutExtension(path);
-
-            if (fileName.Contains("Adventure"))
-            {
-                string newName = fileName.Replace("Adventure", "Dungeon");
-                string error = AssetDatabase.RenameAsset(path, newName);
-                if (!string.IsNullOrEmpty(error))
-                {
-                    Debug.LogError($"Rename failed for {fileName}: {error}");
-                }
-                else
-                {
-                    Debug.Log($"Renamed {fileName} -> {newName}");
-                }
-            }
-        }
-    }
-#endif
 }

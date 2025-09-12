@@ -107,7 +107,7 @@ public class BattleManager : MonoBehaviour
             _controller.StartAttack();
             BattleBroker.ControllCompanionMove?.Invoke(2);
 
-            if (battleType is BattleType.Boss or BattleType.CompanionTech)
+            if (battleType is BattleType.Boss or BattleType.CompanionTech or BattleType.Adventure or BattleType.Dungeon)
                 _controller.target.StartAttack();
 
             _isMove = false;
@@ -194,6 +194,9 @@ public class BattleManager : MonoBehaviour
             EnemyType.Boss => _currentStageInfo.bossStatusFromStage.penetration,
             _ => 0f
         };
+
+        BattleBroker.GetPlayerController += () => _controller;
+        BattleBroker.GetEnemyArray += () => _enemies;
     }
 
 
