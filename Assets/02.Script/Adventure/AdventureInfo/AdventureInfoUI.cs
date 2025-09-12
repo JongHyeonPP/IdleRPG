@@ -116,10 +116,12 @@ public class AdventureInfoUI : MonoBehaviour, IGeneralUI
         index = Mathf.Min(index, _currentStageInfoArr.Length-1);
         (int, int) reward = BattleBroker.GetAdventureReward(_currentSlotIndex, index);
         _currentStage = _currentStageInfoArr[index];
-        _bossImage.style.backgroundImage = new(_currentStage.boss.prefab.GetComponentInChildren<SpriteRenderer>().sprite);
+        
         _diaLable.text = reward.Item1.ToString("N0");
         _cloverLable.text = reward.Item2.ToString("N0");
         _titleLabel.text = _currentStage.stageName;
+
+        _bossImage.style.backgroundImage = new(_currentStage.boss.prefab.GetComponentInChildren<SpriteRenderer>().sprite);
         _bossImage.style.left = _currentStage.adventrueInfo.imageLeft;
         _bossImage.style.scale = new Vector2( _currentStage.adventrueInfo.imageScale, _currentStage.adventrueInfo.imageScale);
 

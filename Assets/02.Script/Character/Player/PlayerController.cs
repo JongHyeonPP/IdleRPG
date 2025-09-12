@@ -56,6 +56,7 @@ public class PlayerController : Attackable
         BattleBroker.SwitchToBoss += InitToBattle;
         BattleBroker.SwitchToCompanionBattle += (arg0, arg1)=> InitToBattle();
         BattleBroker.SwitchToAdventure += (arg0, arg1)=> InitToBattle();
+        BattleBroker.SwitchToDungeon += (arg0, arg1)=> InitToBattle();
         PlayerBroker.OnPromoteStatusSet += OnPromoteStatusSet;
     }
 

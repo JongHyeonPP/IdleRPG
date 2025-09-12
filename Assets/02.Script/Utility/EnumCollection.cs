@@ -53,7 +53,8 @@ namespace EnumCollection
     public enum BattleType
     {
         Default, Boss,CompanionTech, Story, None,
-        Adventure
+        Adventure,
+        Dungeon
     }
     public enum EnemyType
     {
@@ -82,7 +83,7 @@ namespace EnumCollection
     public enum Source
     {
         //¿Á»≠ »πµÊ√≥
-        Battle, Adventure, Companion
+        Battle, Adventure, Companion, Dungeon
     }
     public enum SpendType
     {

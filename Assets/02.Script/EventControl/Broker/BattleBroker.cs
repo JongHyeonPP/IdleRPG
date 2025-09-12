@@ -26,6 +26,7 @@ public static class BattleBroker
     public static Action SwitchToBattle;
     public static Action SwitchToBoss;
     public static Action<int, int> SwitchToAdventure;
+    public static Action<int, int> SwitchToDungeon;
     public static Action<int, (int,int)> SwitchToCompanionBattle;
     //µ¿·á
     public static Action<int> ControllCompanionMove;//0 : ¸ØÃã, 1 : ¿òÁ÷ÀÓ, 2 : °ø°Ý
@@ -47,4 +48,6 @@ public static class BattleBroker
     public static Func<bool> GetAdventureRetry;
 
     public static Action<int> ActiveStageInfoUI;
+
+    public static Func<int, int, object> GetDungeonReward;
 }

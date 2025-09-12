@@ -10,11 +10,15 @@ public class DungeonInfoUI : MonoBehaviour, IGeneralUI
     private VisualElement _activePanel;
     private Label _stateLabel;
     private Label _recommendLabel;
+    private VisualElement RewardIcon;
+
 
     private GameData _gameData;
     private FlexibleListView _fListView;
     private DungeonInfoController _dungeonInfoController;
 
+    private StageInfo _currentStageInfo;
+    private VisualElement _bossImage;
     private void Awake()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
@@ -28,6 +32,7 @@ public class DungeonInfoUI : MonoBehaviour, IGeneralUI
         _activePanel = root.Q<VisualElement>("ActivePanel");
         _recommendLabel = root.Q<Label>("RecommendLabel");
         _stateLabel = root.Q<Label>("StateLabel");
+        _bossImage = root.Q<VisualElement>("BossImage");
     }
 
     private void OnStartButtonClick()
@@ -38,8 +43,16 @@ public class DungeonInfoUI : MonoBehaviour, IGeneralUI
             UIBroker.ShowPopUpInBattle("스테이지를 선택하세요");
             return;
         }
-        Debug.Log(stageInfo.name);
-        // 여기서 실제 시작 로직 연결하면 됨
+        int fee = StageInfoManager.instance.adventureEntranceFee;
+        UIBroker.InactiveCurrentUI();
+        if (_gameData.scroll < fee)
+        {
+            UIBroker.ShowPopUpInBattle("입장 비용이 부족합니다.");
+            return;
+        }
+        UIBroker.ChangeMenu(0);
+        UIBroker.FadeInOut(0f, 0.5f, 2f);
+        BattleBroker.SwitchToDungeon(_currentStageInfo.adventrueInfo.adventureIndex_0, _currentStageInfo.adventrueInfo.adventureIndex_1);
     }
 
     public void OnBattle()
@@ -80,7 +93,12 @@ public class DungeonInfoUI : MonoBehaviour, IGeneralUI
     // DungeonInfoController가 선택될 때마다 호출
     public void OnClickedSlot(StageInfo stageInfo)
     {
+        _currentStageInfo = stageInfo;
         _recommendLabel.text = stageInfo.recommendLevel.ToString();
-      
+
+        _bossImage.style.backgroundImage = new(_currentStageInfo.boss.prefab.GetComponentInChildren<SpriteRenderer>().sprite);
+        _bossImage.style.left = _currentStageInfo.adventrueInfo.imageLeft;
+        _bossImage.style.scale = new Vector2(_currentStageInfo.adventrueInfo.imageScale, _currentStageInfo.adventrueInfo.imageScale);
+
     }
 }

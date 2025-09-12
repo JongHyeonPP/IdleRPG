@@ -1,3 +1,4 @@
+using EnumCollection;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -39,14 +40,18 @@ public class StageInfoManager : MonoBehaviour
     [Header("AdventureReward")]
     public int adventureDiaIncrease;
     public int adventureCloverIncrease;
-    public List<(int, int)> adventureRewardList = new();//dia, clover
+    public List<(int, int)> adventureRewardList = new();// dia, clover
+    // Dungeon 보상 캐시
+    private Dictionary<int, DungeonReward>[] dungeonRewards = new Dictionary<int, DungeonReward>[3];
+
     public int adventureEntranceFee;
+
     [Header("CompanionReward")]
-    public List<(int, int, int, int)> companionRewardList = new();//dia, clover, diaIncrease, cloverIncrease
+    public List<(int, int, int, int)> companionRewardList = new();// dia, clover, diaIncrease, cloverIncrease
+
     
+
     public StageRegion GetRegionInfo(int index) => _stageRegionArr[index];
-
-
 
     private void Awake()
     {
@@ -60,8 +65,11 @@ public class StageInfoManager : MonoBehaviour
         }
         SetAdventureReward();
         SetCompanionReward();
+        SetDungeonReward();
+
         BattleBroker.GetCompanionReward += GetCompanionReward;
         BattleBroker.GetAdventureReward += GetAdventureReward;
+        BattleBroker.GetDungeonReward += GetDungeonReward;
     }
 
     private (int, int) GetCompanionReward(int index_0, int index_1)
@@ -69,10 +77,28 @@ public class StageInfoManager : MonoBehaviour
         (int, int, int, int) reward = companionRewardList[index_0];
         return new(reward.Item1 + reward.Item3 * index_1, reward.Item2 + reward.Item4 * index_1);
     }
+
     private (int, int) GetAdventureReward(int index_0, int index_1)
     {
         (int, int) reward = adventureRewardList[index_0];
-        return new(reward.Item1 + adventureDiaIncrease*index_1, reward.Item2 + adventureCloverIncrease * index_1);
+        return new(reward.Item1 + adventureDiaIncrease * index_1, reward.Item2 + adventureCloverIncrease * index_1);
+    }
+
+    public object GetDungeonReward(int dungeonIndex, int stageIndex)
+    {
+        if (dungeonIndex < 0 || dungeonIndex >= dungeonRewards.Length)
+        {
+            Debug.LogError($"Invalid dungeonIndex: {dungeonIndex}");
+            return null;
+        }
+
+        if (dungeonRewards[dungeonIndex] == null || !dungeonRewards[dungeonIndex].ContainsKey(stageIndex))
+        {
+            Debug.LogError($"Dungeon reward not found for index {dungeonIndex}, stage {stageIndex}");
+            return null;
+        }
+
+        return dungeonRewards[dungeonIndex][stageIndex];
     }
 
     private void SetCompanionReward()
@@ -81,7 +107,8 @@ public class StageInfoManager : MonoBehaviour
         Dictionary<string, object> rewardDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(rewardJson);
         for (int i = 0; i < 3; i++)
         {
-            Dictionary<string, string> adventureRewardDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(Convert.ToString(rewardDict[$"Companion_{i}"]));
+            Dictionary<string, string> adventureRewardDict =
+                JsonConvert.DeserializeObject<Dictionary<string, string>>(Convert.ToString(rewardDict[$"Companion_{i}"]));
             int dia = int.Parse(adventureRewardDict["Dia"]);
             int clover = int.Parse(adventureRewardDict["Clover"]);
             int diaIncrease = int.Parse(adventureRewardDict["DiaIncrease"]);
@@ -98,12 +125,74 @@ public class StageInfoManager : MonoBehaviour
         adventureCloverIncrease = Convert.ToInt32(rewardDict["CloverIncrease"]);
         for (int i = 0; i < 9; i++)
         {
-            Dictionary<string, string> adventureRewardDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(Convert.ToString( rewardDict[$"Adventure_{i}"]));
+            Dictionary<string, string> adventureRewardDict =
+                JsonConvert.DeserializeObject<Dictionary<string, string>>(Convert.ToString(rewardDict[$"Adventure_{i}"]));
             int dia = int.Parse(adventureRewardDict["Dia"]);
             int clover = int.Parse(adventureRewardDict["Clover"]);
             adventureRewardList.Add(new(dia, clover));
         }
         adventureEntranceFee = Convert.ToInt32(rewardDict["EntranceFee"]);
+    }
+
+    private void SetDungeonReward()
+    {
+        string rewardJson = RemoteConfigService.Instance.appConfig.GetJson("DUNGEON_REWARD", "None");
+        if (string.IsNullOrEmpty(rewardJson) || rewardJson == "None")
+        {
+            Debug.LogError("DUNGEON_INFO not found in RemoteConfig");
+            return;
+        }
+
+        Dictionary<string, object> rewardDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(rewardJson);
+
+        for (int dungeonIdx = 0; dungeonIdx < 3; dungeonIdx++)
+        {
+            string key = $"Dungeon_{dungeonIdx}";
+            if (!rewardDict.ContainsKey(key)) continue;
+
+            Dictionary<string, object> dungeonData =
+                JsonConvert.DeserializeObject<Dictionary<string, object>>(rewardDict[key].ToString());
+
+            var dict = new Dictionary<int, DungeonReward>();
+
+            foreach (var pair in dungeonData)
+            {
+                if (pair.Key == "RewardType") continue;
+
+                int stageIndex = int.Parse(pair.Key);
+
+                switch (dungeonIdx)
+                {
+                    case 0: // Gold
+                        dict[stageIndex] = new DungeonReward(Resource.Gold, Convert.ToInt32(pair.Value));
+                        break;
+
+                    case 1: // Fragment (등급, 수량)
+                        string[] parts = pair.Value.ToString().Split(',');
+                        if (parts.Length == 2)
+                        {
+                            string rarityStr = parts[0].Trim();
+                            int amount = int.Parse(parts[1].Trim());
+
+                            if (Enum.TryParse(rarityStr, true, out Rarity rarity))
+                            {
+                                dict[stageIndex] = new DungeonReward(Resource.Fragment, amount, rarity);
+                            }
+                            else
+                            {
+                                Debug.LogError($"Invalid rarity: {rarityStr}");
+                            }
+                        }
+                        break;
+
+                    case 2: // Clover
+                        dict[stageIndex] = new DungeonReward(Resource.Clover, Convert.ToInt32(pair.Value));
+                        break;
+                }
+            }
+
+            dungeonRewards[dungeonIdx] = dict;
+        }
     }
 
     public List<IListViewItem> GetStageInfosAsItem(int start, int count)
@@ -125,7 +214,9 @@ public class StageInfoManager : MonoBehaviour
 
         return items;
     }
-    public StageInfo GetNormalStageInfo(int stageNum) => _normalStageInfoArr[stageNum-1];
+
+    public StageInfo GetNormalStageInfo(int stageNum) => _normalStageInfoArr[stageNum - 1];
+
     public StageInfo GetCompanionTechStageInfo(int companionIndex, (int, int) companionTech)
     {
         StageInfo result = null;
@@ -134,88 +225,59 @@ public class StageInfoManager : MonoBehaviour
             case 0:
                 switch (companionTech.Item1)
                 {
-                    case 1:
-                        result =  _companion_0_1[companionTech.Item2];
-                        break;
-                    case 2:
-                        result =  _companion_0_2[companionTech.Item2];
-                        break;
-                    case 3:
-                        result =  _companion_0_3[companionTech.Item2];
-                        break;
+                    case 1: result = _companion_0_1[companionTech.Item2]; break;
+                    case 2: result = _companion_0_2[companionTech.Item2]; break;
+                    case 3: result = _companion_0_3[companionTech.Item2]; break;
                 }
                 break;
             case 1:
                 switch (companionTech.Item1)
                 {
-                    case 1:
-                        result =  _companion_1_1[companionTech.Item2];
-                        break;
-                    case 2:
-                        result =  _companion_1_2[companionTech.Item2];
-                        break;
-                    case 3:
-                        result =  _companion_1_3[companionTech.Item2];
-                        break;
+                    case 1: result = _companion_1_1[companionTech.Item2]; break;
+                    case 2: result = _companion_1_2[companionTech.Item2]; break;
+                    case 3: result = _companion_1_3[companionTech.Item2]; break;
                 }
                 break;
             case 2:
                 switch (companionTech.Item1)
                 {
-                    case 1:
-                        result =  _companion_2_1[companionTech.Item2];
-                        break;
-                    case 2:
-                        result =  _companion_2_2[companionTech.Item2];
-                        break;
-                    case 3:
-                        result = _companion_2_3[companionTech.Item2];
-                        break;
+                    case 1: result = _companion_2_1[companionTech.Item2]; break;
+                    case 2: result = _companion_2_2[companionTech.Item2]; break;
+                    case 3: result = _companion_2_3[companionTech.Item2]; break;
                 }
                 break;
         }
         return result;
     }
+
     public StageInfo[] GetAdventureStageInfo(int index)
     {
         switch (index)
         {
-            case 0:
-                return _adventure_0;
-            case 1:
-                return _adventure_1;
-            case 2:
-                return _adventure_2;
-            case 3:
-                return _adventure_3;
-            case 4:
-                return _adventure_4;
-            case 5:
-                return _adventure_5;
-            case 6:
-                return _adventure_6;
-            case 7:
-                return _adventure_7;
-            case 8:
-                return _adventure_8;
-            default:
-                return null;
+            case 0: return _adventure_0;
+            case 1: return _adventure_1;
+            case 2: return _adventure_2;
+            case 3: return _adventure_3;
+            case 4: return _adventure_4;
+            case 5: return _adventure_5;
+            case 6: return _adventure_6;
+            case 7: return _adventure_7;
+            case 8: return _adventure_8;
+            default: return null;
         }
     }
+
     public StageInfo[] GetDungeonStageInfo(int index)
     {
         switch (index)
         {
-            case 0:
-                return _dungeon_0;
-            case 1:
-                return _dungeon_1;
-            case 2:
-                return _dungeon_2;
-            default:
-                return null;
+            case 0: return _dungeon_0;
+            case 1: return _dungeon_1;
+            case 2: return _dungeon_2;
+            default: return null;
         }
     }
+
 #if UNITY_EDITOR
     [ContextMenu("SetDefaultStatus")]
     public void SetDefaultStatus()
@@ -234,10 +296,10 @@ public class StageInfoManager : MonoBehaviour
             x.bossStatusFromStage.penetration = 0f;
             EditorUtility.SetDirty(x);
         }
-        // 변경된 데이터를 애셋 파일에 저장
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
     }
+
     [ContextMenu("Rename Adventure->Dungeon (Dungeon StageInfos)")]
     private void RenameAdventureToDungeon()
     {
