@@ -1,45 +1,62 @@
-
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class DraggableScrollView : MonoBehaviour
 {
-
     public ScrollView scrollView;
-    public bool _isDragging { get; private set; } // 드래그 상태 플래그
-    private Vector2 _previousPointerPosition; // 이전 프레임에서의 터치/마우스 위치
+    public bool _isDragging { get; private set; }
+    private Vector2 _previousPointerPosition;
     private Vector2 _previousScrollOffset;
-    private float _dragThreshold = 5f; // 드래그로 판단하는 최소 이동 거리
+    private float _dragThreshold = 5f;
 
-    // 인스펙터 노출
     [SerializeField] private float _scrollSpeed = 1f;
     [SerializeField] private ScrollViewMode _mode;
     [SerializeField] protected UIDocument _targetDocument;
     [SerializeField] private string _scrollViewName;
 
+    [SerializeField] private float _clickSuppressDuration = 0.12f;
+    private float _suppressUntilTime;
+
     private void Awake()
     {
         InitScrollView();
     }
+
     public void InitScrollView()
     {
         if (_targetDocument == null)
             _targetDocument = GetComponent<UIDocument>();
-        if (_scrollViewName == string.Empty)
+
+        if (_targetDocument == null)
+        {
+            Debug.LogError("UIDocument is null");
+            Destroy(this);
+            return;
+        }
+
+        if (string.IsNullOrEmpty(_scrollViewName))
             scrollView = _targetDocument.rootVisualElement.Q<ScrollView>();
         else
-            scrollView = _targetDocument.rootVisualElement.Q<VisualElement>(_scrollViewName).Q<ScrollView>();
+            scrollView = _targetDocument.rootVisualElement.Q<VisualElement>(_scrollViewName)?.Q<ScrollView>();
+
         if (scrollView == null)
+        {
+            Debug.LogError("ScrollView not found");
             Destroy(this);
+            return;
+        }
+
         scrollView.verticalScrollerVisibility = ScrollerVisibility.Hidden;
         scrollView.horizontalScrollerVisibility = ScrollerVisibility.Hidden;
         scrollView.mode = _mode;
         _previousPointerPosition = Vector2.zero;
+
 #if UNITY_EDITOR || UNITY_STANDALONE
         SetEvents();
 #endif
     }
+
     private Coroutine _scrollLockCoroutine;
     private Vector2 _lockedScrollPosition;
 
@@ -47,16 +64,11 @@ public class DraggableScrollView : MonoBehaviour
     {
         if (scrollView == null) return;
 
-        // 현재 스크롤 위치 저장
         _lockedScrollPosition = scrollView.scrollOffset;
 
-        // 기존 코루틴이 실행 중이라면 중지
         if (_scrollLockCoroutine != null)
-        {
             StopCoroutine(_scrollLockCoroutine);
-        }
 
-        // 새 코루틴 실행
         _scrollLockCoroutine = StartCoroutine(KeepScrollPosition());
     }
 
@@ -64,11 +76,11 @@ public class DraggableScrollView : MonoBehaviour
     {
         while (true)
         {
-            // 스크롤 위치를 고정된 위치로 강제 설정
             scrollView.scrollOffset = _lockedScrollPosition;
-            yield return null; // 매 프레임마다 실행
+            yield return null;
         }
     }
+
     public void UnlockScrollPosition()
     {
         if (_scrollLockCoroutine != null)
@@ -86,19 +98,24 @@ public class DraggableScrollView : MonoBehaviour
         {
             scrollView.UnregisterCallback<PointerMoveEvent>(BlockScrollEvent);
             scrollView.UnregisterCallback<WheelEvent>(BlockScrollEvent);
-        }).ExecuteLater(100); // 100ms (0.1초) 후 해제
+        }).ExecuteLater(100);
     }
+
     private void BlockScrollEvent(EventBase evt)
     {
         evt.StopPropagation();
     }
+
+    public bool ShouldBlockClick()
+    {
+        return _isDragging || Time.unscaledTime < _suppressUntilTime;
+    }
+
 #if UNITY_EDITOR || UNITY_STANDALONE
     void Update()
     {
-        // 터치 또는 마우스 입력을 통해 드래그 상태를 판단
         bool pointerDown = false;
         Vector2 currentPointerPosition = Vector2.zero;
-
 
         if (Input.GetMouseButton(0))
         {
@@ -107,11 +124,12 @@ public class DraggableScrollView : MonoBehaviour
         }
         else if (Input.GetMouseButtonUp(0))
         {
-            _isDragging = false; // 드래그 종료
+            if (_isDragging)
+                _suppressUntilTime = Time.unscaledTime + _clickSuppressDuration;
+
+            _isDragging = false;
         }
 
-
-        // 드래그 판정
         if (pointerDown)
         {
             if (_previousPointerPosition != Vector2.zero)
@@ -119,7 +137,7 @@ public class DraggableScrollView : MonoBehaviour
                 float distance = Vector2.Distance(currentPointerPosition, _previousPointerPosition);
                 if (distance > _dragThreshold)
                 {
-                    _isDragging = true; // 드래그 상태로 전환
+                    _isDragging = true;
                 }
             }
             _previousPointerPosition = currentPointerPosition;
@@ -141,15 +159,12 @@ public class DraggableScrollView : MonoBehaviour
             }
         });
 
-        scrollView.RegisterCallback<PointerMoveEvent>(evt =>
-        {
-            OnPointerMove(evt);
-        });
+        scrollView.RegisterCallback<PointerMoveEvent>(OnPointerMove);
     }
 
     private void OnPointerMove(PointerMoveEvent evt)
     {
-        if (_isDragging) // 드래그 중이면 스크롤 동작 수행
+        if (_isDragging)
         {
             Vector2 newScrollOffset = _previousScrollOffset;
 
@@ -197,7 +212,5 @@ public class DraggableScrollView : MonoBehaviour
             evt.StopPropagation();
         }
     }
-
 #endif
-
 }

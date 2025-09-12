@@ -143,6 +143,8 @@ namespace ClientVerification.Verification
             server.currentCompanionPromoteTech = (ValueTuple<int, int>[])client.currentCompanionPromoteTech.Clone();
             server.equipedCostumes = new(client.equipedCostumes);
             server.ownedCostumes = new(client.ownedCostumes);
+            server.playerRankIndex = client.playerRankIndex;
+            
         }
 
         private void ApplyOfflineReward(IExecutionContext context, IGameApiClient gameApiClient, IVerificationSystem verificationSystem)

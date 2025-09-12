@@ -27,6 +27,9 @@ namespace ClientVerification.Verification
 
         private readonly Dictionary<string, object> adventureReward;
 
+        // 운영에서 Remote Config로 바꾸고 싶으면 주입하면 됨
+        private readonly int maxLevel = 9999;
+
         public ResourceVerifier(
             List<ResourceReport> reports,
             GameData serverData,
@@ -132,6 +135,9 @@ namespace ClientVerification.Verification
             foreach (var kv in fragDelta) AddOrIncrease(serverData.skillFragment, kv.Key, kv.Value);
             foreach (var kv in weaponDelta) AddOrIncrease(serverData.weaponCount, kv.Key, kv.Value);
 
+            // 저장 직전 최종 정규화로 불변식 강제
+            NormalizeLevelAndExp();
+
             return true;
         }
 
@@ -186,6 +192,8 @@ namespace ClientVerification.Verification
                     {
                         var ok = ValidateGoldExp(expDropFormula, "EXP_DROP_FORMULA", report, out failReason);
                         if (!ok) return false;
+                        // 리포트 단위 레벨업은 선택 사항
+                        // 최종 저장 직전 NormalizeLevelAndExp에서 다시 보정
                         ProcessLevelUp();
                         return true;
                     }
@@ -450,23 +458,106 @@ namespace ClientVerification.Verification
             return true;
         }
 
+        // 기존 자리 유지. 내부에서는 정규화만 호출
         private void ProcessLevelUp()
         {
-            if (string.IsNullOrWhiteSpace(levelUpRequireExp)) return;
-            var exp = serverData.exp;
+            NormalizeLevelAndExp();
+        }
+
+        // 요구 경험치 계산 안전 래퍼
+        private bool TryGetRequiredExpForLevel(int level, out BigInteger required)
+        {
+            required = BigInteger.Zero;
+
+            if (string.IsNullOrWhiteSpace(levelUpRequireExp))
+                return false;
+
+            if (level < 1)
+                return false;
+
+            var expr = levelUpRequireExp.Replace("{level}", level.ToString(CultureInfo.InvariantCulture));
+            if (!TryComputeBigInt(expr, out var val, out _))
+                return false;
+
+            if (val <= BigInteger.Zero)
+                return false;
+
+            required = val;
+            return true;
+        }
+
+        // 저장 직전 불변식 강제
+        private void NormalizeLevelAndExp()
+        {
             var level = serverData.level;
-            var safety = 100000;
-            while (safety-- > 0)
+            var exp = serverData.exp;
+
+            if (level < 1) level = 1;
+
+            if (level >= maxLevel)
             {
-                var expr = levelUpRequireExp.Replace("{level}", level.ToString(CultureInfo.InvariantCulture));
-                if (!TryComputeBigInt(expr, out var required, out _)) break;
-                if (required <= BigInteger.Zero) break;
-                if (exp < required) break;
+                level = maxLevel;
+
+                if (TryGetRequiredExpForLevel(level, out var cap))
+                {
+                    var capMinusOne = cap - BigInteger.One;
+                    if (capMinusOne < BigInteger.Zero) capMinusOne = BigInteger.Zero;
+                    if (exp > capMinusOne) exp = capMinusOne;
+                }
+                else
+                {
+                    exp = BigInteger.Zero;
+                }
+
+                serverData.level = level;
+                serverData.exp = exp;
+                return;
+            }
+
+            int guard = 0;
+            while (guard++ <= maxLevel)
+            {
+                if (!TryGetRequiredExpForLevel(level, out var required))
+                    break;
+
+                if (exp < required)
+                    break;
+
                 exp -= required;
                 level++;
+
+                if (level >= maxLevel)
+                {
+                    if (TryGetRequiredExpForLevel(level, out var cap))
+                    {
+                        var capMinusOne = cap - BigInteger.One;
+                        if (capMinusOne < BigInteger.Zero) capMinusOne = BigInteger.Zero;
+                        if (exp > capMinusOne) exp = capMinusOne;
+                    }
+                    else
+                    {
+                        exp = BigInteger.Zero;
+                    }
+                    break;
+                }
             }
-            serverData.exp = exp;
+
             serverData.level = level;
+            serverData.exp = exp;
+
+            // 마지막 방어 한 번 더
+            if (level < maxLevel && TryGetRequiredExpForLevel(level, out var req) && exp >= req)
+            {
+                guard = 0;
+                while (guard++ <= maxLevel && TryGetRequiredExpForLevel(level, out req) && exp >= req)
+                {
+                    exp -= req;
+                    level++;
+                    if (level >= maxLevel) break;
+                }
+                serverData.level = level;
+                serverData.exp = exp;
+            }
         }
 
         private bool TryGetReportId(object report, out string id, out string failReason)

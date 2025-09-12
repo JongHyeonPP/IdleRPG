@@ -38,3 +38,5 @@ MonoBehaviour:
   adventrueInfo:
     adventureIndex_0: 0
     adventureIndex_1: 0
+    imageLeft: 0
+    imageScale: 1

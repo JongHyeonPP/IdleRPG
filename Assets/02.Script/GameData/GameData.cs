@@ -58,6 +58,7 @@ public class GameData
     #endregion
 
     #region 승급 효과 관련 (Player & Companion)
+    public int playerRankIndex;
 
     [JsonConverter(typeof(Struct_StructTuple_DictConverter<int, StatusType, Rarity>))]
     public Dictionary<int, (StatusType, Rarity)> playerPromoteEffect = new();
@@ -85,7 +86,9 @@ public class GameData
     #endregion
 
     public int[] adventureProgess = new int[9];
+    public int[] dungeonProgress = new int[3];
 
+    public int gachaThreshold;
     #region 서버에 없음
     public int statPoint;
     #endregion

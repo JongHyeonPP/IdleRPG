@@ -224,5 +224,14 @@ public class PlayerController : Attackable
         EquipedSkill currentSkill = new(SkillManager.instance.GetSkillData(skillId));
         equipedSkillArr[index] = currentSkill;
     }
+    public void Heal(BigInteger amount)
+    {
+        if (isDead) return;
 
+        hp += amount;
+        if (hp > _status.MaxHp)
+            hp = _status.MaxHp;
+
+        
+    }
 }

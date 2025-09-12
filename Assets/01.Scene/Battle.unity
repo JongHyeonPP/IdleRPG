@@ -339,6 +339,7 @@ Transform:
   - {fileID: 999121754}
   - {fileID: 832954543}
   - {fileID: 1775166712}
+  - {fileID: 8627036122896441924}
   m_Father: {fileID: 197069069}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &86115819
@@ -927,6 +928,7 @@ MonoBehaviour:
   _mode: 0
   _targetDocument: {fileID: 0}
   _scrollViewName: 
+  _clickSuppressDuration: 0.12
 --- !u!1 &414872055
 GameObject:
   m_ObjectHideFlags: 0
@@ -2024,6 +2026,18 @@ MonoBehaviour:
   m_WorldSpaceSizeMode: 1
   m_WorldSpaceWidth: 1920
   m_WorldSpaceHeight: 1080
+--- !u!114 &803405301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6398603105489779720}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67357dd81ebc35e45912ddce38941854, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &807469625 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3186463921687421119, guid: b48b658f55065d44a832a61c797d02d4, type: 3}
@@ -3617,9 +3631,11 @@ MonoBehaviour:
     maxStageNum: 0
     userName: 
     invalidCount: 0
+    playerRankIndex: 0
     equipedCostumes: []
     ownedCostumes: []
     adventureProgess: 000000000000000000000000000000000000000000000000000000000000000000000000
+    dungeonProgress: 000000000000000000000000
     statPoint: 0
   skillUI: {fileID: 246605442210432971}
   equipedSkillUI: {fileID: 8205451347979957151}
@@ -4764,6 +4780,7 @@ MonoBehaviour:
   _mode: 0
   _targetDocument: {fileID: 0}
   _scrollViewName: 
+  _clickSuppressDuration: 0.12
 --- !u!114 &1775166716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5067,6 +5084,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: WeaponUI
       objectReference: {fileID: 0}
+    - target: {fileID: 7114904568410203960, guid: 6d9509790b5b3b3498a2a7468d519bdb, type: 3}
+      propertyPath: bookInfoUI
+      value: 
+      objectReference: {fileID: 803405301}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6135,7 +6156,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7712351157666273572, guid: b42a2fa9a37ddce43a6659a3a0a3a135, type: 3}
       propertyPath: m_SortingOrder
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6296,6 +6317,25 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8375171638978871619, guid: 6727c0329d9d1884083a223de975f8c8, type: 3}
   m_PrefabInstance: {fileID: 4578400390806531054}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4980206565633133318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6398603105489779720}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PanelSettings: {fileID: 11400000, guid: f2f0eb129a3062647b27e4d7a574aeaa, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: 3921a63708e19e147aa1bdc05fd8bc73, type: 3}
+  m_SortingOrder: 6
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
 --- !u!114 &5018594655820901180
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6609,11 +6649,33 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7975244810154016699, guid: 1c6f5ccdf96f3c14b87c402678d11b38, type: 3}
+      propertyPath: sourceAsset
+      value: 
+      objectReference: {fileID: 9197481963319205126, guid: 766e8043d484ed643b196925c918d0bc, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1c6f5ccdf96f3c14b87c402678d11b38, type: 3}
+--- !u!1 &6398603105489779720
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8627036122896441924}
+  - component: {fileID: 4980206565633133318}
+  - component: {fileID: 803405301}
+  m_Layer: 0
+  m_Name: BookInfoUI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &6618793514176739885
 GameObject:
   m_ObjectHideFlags: 0
@@ -7336,6 +7398,21 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7425640d6d667864fa7ac9425f54fac9, type: 3}
+--- !u!4 &8627036122896441924
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6398603105489779720}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 80642810}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &9054940638694495400
 MonoBehaviour:
   m_ObjectHideFlags: 0

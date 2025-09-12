@@ -30,7 +30,10 @@ public class StageInfoManager : MonoBehaviour
     [SerializeField] StageInfo[] _adventure_6;
     [SerializeField] StageInfo[] _adventure_7;
     [SerializeField] StageInfo[] _adventure_8;
-
+    [Header("Dungeon")]
+    [SerializeField] StageInfo[] _dungeon_0;
+    [SerializeField] StageInfo[] _dungeon_1;
+    [SerializeField] StageInfo[] _dungeon_2;
     [Header("Region")]
     [SerializeField] StageRegion[] _stageRegionArr;
     [Header("AdventureReward")]
@@ -40,7 +43,7 @@ public class StageInfoManager : MonoBehaviour
     public int adventureEntranceFee;
     [Header("CompanionReward")]
     public List<(int, int, int, int)> companionRewardList = new();//dia, clover, diaIncrease, cloverIncrease
-
+    
     public StageRegion GetRegionInfo(int index) => _stageRegionArr[index];
 
 
@@ -173,6 +176,46 @@ public class StageInfoManager : MonoBehaviour
         }
         return result;
     }
+    public StageInfo[] GetAdventureStageInfo(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                return _adventure_0;
+            case 1:
+                return _adventure_1;
+            case 2:
+                return _adventure_2;
+            case 3:
+                return _adventure_3;
+            case 4:
+                return _adventure_4;
+            case 5:
+                return _adventure_5;
+            case 6:
+                return _adventure_6;
+            case 7:
+                return _adventure_7;
+            case 8:
+                return _adventure_8;
+            default:
+                return null;
+        }
+    }
+    public StageInfo[] GetDungeonStageInfo(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                return _dungeon_0;
+            case 1:
+                return _dungeon_1;
+            case 2:
+                return _dungeon_2;
+            default:
+                return null;
+        }
+    }
 #if UNITY_EDITOR
     [ContextMenu("SetDefaultStatus")]
     public void SetDefaultStatus()
@@ -195,38 +238,40 @@ public class StageInfoManager : MonoBehaviour
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
     }
-    [ContextMenu("SetDefaultReward")]
-    public void SetDefaultReward()
+    [ContextMenu("Rename Adventure->Dungeon (Dungeon StageInfos)")]
+    private void RenameAdventureToDungeon()
     {
-        // 변경된 데이터를 애셋 파일에 저장
+        RenameArrayAssets(_dungeon_0);
+        RenameArrayAssets(_dungeon_1);
+        RenameArrayAssets(_dungeon_2);
+
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
     }
 
-    public StageInfo[] GetAdventureStageInfo(int currentSlotIndex)
+    private void RenameArrayAssets(StageInfo[] arr)
     {
-        switch (currentSlotIndex)
+        if (arr == null) return;
+        foreach (var so in arr)
         {
-            case 0:
-                return _adventure_0;
-            case 1:
-                return _adventure_1;
-            case 2:
-                return _adventure_2;
-            case 3:
-                return _adventure_3;
-            case 4:
-                return _adventure_4;
-            case 5:
-                return _adventure_5;
-            case 6:
-                return _adventure_6;
-            case 7:
-                return _adventure_7;
-            case 8:
-                return _adventure_8;
-            default:
-                return null;
+            if (so == null) continue;
+
+            string path = AssetDatabase.GetAssetPath(so);
+            string fileName = System.IO.Path.GetFileNameWithoutExtension(path);
+
+            if (fileName.Contains("Adventure"))
+            {
+                string newName = fileName.Replace("Adventure", "Dungeon");
+                string error = AssetDatabase.RenameAsset(path, newName);
+                if (!string.IsNullOrEmpty(error))
+                {
+                    Debug.LogError($"Rename failed for {fileName}: {error}");
+                }
+                else
+                {
+                    Debug.Log($"Renamed {fileName} -> {newName}");
+                }
+            }
         }
     }
 #endif

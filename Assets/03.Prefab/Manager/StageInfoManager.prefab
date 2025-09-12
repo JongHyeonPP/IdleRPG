@@ -471,6 +471,39 @@ MonoBehaviour:
   - {fileID: 11400000, guid: beef69a7139cd55498c860810b5f7dd9, type: 2}
   - {fileID: 11400000, guid: 18b765cb3a374f54e92fe34b48f39246, type: 2}
   - {fileID: 11400000, guid: ea1095ae37d498f4e89d8533cba5e803, type: 2}
+  _dungeon_0:
+  - {fileID: 11400000, guid: c8b1d369581f122438e163dd23ac9873, type: 2}
+  - {fileID: 11400000, guid: ec799837644a3264dba4cde2c6a5b9aa, type: 2}
+  - {fileID: 11400000, guid: edbf2430b11a85d4ea959b119a7728ba, type: 2}
+  - {fileID: 11400000, guid: 154d86223b7500a47b68eb7d56daced3, type: 2}
+  - {fileID: 11400000, guid: 1bc50a677b395724b921c48b73c41906, type: 2}
+  - {fileID: 11400000, guid: 21beb3cc44ecdde429e0cacf96553832, type: 2}
+  - {fileID: 11400000, guid: ff0b718f4aff2be48a554ab81739797e, type: 2}
+  - {fileID: 11400000, guid: 9ec6be52c2dbdc247a5f6920debe3132, type: 2}
+  - {fileID: 11400000, guid: f7fb3f80301325541bcd64717fb9116b, type: 2}
+  - {fileID: 11400000, guid: cf5cab252d1b0d64da42190d710a4634, type: 2}
+  _dungeon_1:
+  - {fileID: 11400000, guid: 079bc9f170656c7418530f4ab18569e1, type: 2}
+  - {fileID: 11400000, guid: ffb3cfdd937352640b7ace3c00da7a27, type: 2}
+  - {fileID: 11400000, guid: fe736a1943cb87f4dac45a4a66db08a2, type: 2}
+  - {fileID: 11400000, guid: 77c80c548cac030429625a377b1e92ae, type: 2}
+  - {fileID: 11400000, guid: 8f6c67c9d0be06244b02a632bc826a8c, type: 2}
+  - {fileID: 11400000, guid: 1c954deb3d6285f4480130028c5572e0, type: 2}
+  - {fileID: 11400000, guid: c963e30b6fbcadc44bac70948b37e7ca, type: 2}
+  - {fileID: 11400000, guid: cf65c8b784f62a5449408f6b9f7b0979, type: 2}
+  - {fileID: 11400000, guid: 1cb9c8f55e1709246a25724e1a7bc678, type: 2}
+  - {fileID: 11400000, guid: f982513e44c8f40448f6be5a07a5e733, type: 2}
+  _dungeon_2:
+  - {fileID: 11400000, guid: ad349dc5c440aa943b324248064a20a7, type: 2}
+  - {fileID: 11400000, guid: 0fbffa375909c744cb062742fd200535, type: 2}
+  - {fileID: 11400000, guid: 64c83aa144bcaa64a81282fb37f619a7, type: 2}
+  - {fileID: 11400000, guid: 0b42daeb85b26a743bc8642878dc3f8e, type: 2}
+  - {fileID: 11400000, guid: 1cce35c664741e441a25e5b406c168fa, type: 2}
+  - {fileID: 11400000, guid: 4d8bc7991ff5c4e4b96ee3b250d69ac2, type: 2}
+  - {fileID: 11400000, guid: 3dd15c4b900ec904f83448ac026857e2, type: 2}
+  - {fileID: 11400000, guid: c39a805d95b1db045b8b9ea04dbfb83b, type: 2}
+  - {fileID: 11400000, guid: 5693ea8a7b42db54781c7a0844a802e3, type: 2}
+  - {fileID: 11400000, guid: 9c2d08a9360ea9544b8c44809186ad02, type: 2}
   _stageRegionArr:
   - {fileID: 11400000, guid: ac7ec89dbcb4da54aa2969c48c0b53b1, type: 2}
   - {fileID: 11400000, guid: a743ad552504a934c8763cb5cba55d55, type: 2}
@@ -487,5 +520,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: dddf629b49fa4a547bb32c2009046cd8, type: 2}
   - {fileID: 11400000, guid: 3340139b6ed28694b83b1dc1c26dd1c1, type: 2}
   - {fileID: 11400000, guid: efb1785340981da42941b117cfedad0e, type: 2}
-  diaIncrease: 0
-  cloverIncrease: 0
+  adventureDiaIncrease: 0
+  adventureCloverIncrease: 0
+  adventureEntranceFee: 0

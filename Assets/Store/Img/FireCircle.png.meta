@@ -223,7 +223,10 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      FireCircle_0: 4770711244979882348
+      FireCircle_1: -8287120377516875404
+      FireCircle_2: 3140409385297800429
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

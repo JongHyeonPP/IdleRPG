@@ -1,85 +1,175 @@
-using UnityEngine;
-using UnityEngine.UIElements;
-using UnityEngine.Purchasing;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using UnityEngine;
+using UnityEngine.Purchasing;
+using Unity.Services.Core;
 using Unity.Services.Authentication;
 using Unity.Services.CloudCode;
 
-public class PurchaseManager : MonoBehaviour, IStoreListener
+public class PurchaseManager : MonoBehaviour
 {
-    private IStoreController _controller;
-    private IExtensionProvider _extensions;
-
-
-    
-
-    void Awake()
+    private StoreController storeController;
+    private bool isInitialized;
+    private readonly List<ProductDefinition> productDefs = new()
     {
-        InitIAP();
-        NetworkBroker.PurchaseItem += (productId) =>
-        {
-            _controller?.InitiatePurchase(productId);
-        };
-    }
-    void InitIAP()
-    {
-        ConfigurationBuilder builder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
-        builder.AddProduct(ProductIds.DIA_0, ProductType.Consumable);
-        builder.AddProduct(ProductIds.DIA_1, ProductType.Consumable);
-        UnityPurchasing.Initialize(this, builder);
-    }
-
-    // --------- IStoreListener 인터페이스 ---------
-
-    public void OnInitialized(IStoreController controller, IExtensionProvider extensions)
-    {
-        _controller = controller;
-        _extensions = extensions;
-        Debug.Log("IAP 초기화 완료");
-    }
-
-    public void OnInitializeFailed(InitializationFailureReason error)
-    {
-        Debug.LogError($"IAP 초기화 실패: {error}");
-    }
-
-    public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs purchaseArgs)
-    {
-        HandlePurchaseAsync(purchaseArgs);
-        return PurchaseProcessingResult.Pending; // 유니티에게 '처리 보류' 신호
-    }
-
-    private async void HandlePurchaseAsync(PurchaseEventArgs purchaseArgs)
-    {
-        Dictionary<string, object> args = new()
-    {
-        { "receipt", purchaseArgs.purchasedProduct.receipt },
-        { "productId", purchaseArgs.purchasedProduct.definition.id },
-        { "playerId", AuthenticationService.Instance.PlayerId },
+        new ProductDefinition(ProductIds.DIA_0, ProductType.Consumable),
+        new ProductDefinition(ProductIds.DIA_1, ProductType.Consumable)
     };
 
-        PurchaseResult purchaseResult = await CloudCodeService.Instance.CallModuleEndpointAsync<PurchaseResult>(
-            "PurchaseProcessor",
-            "ProcessPurchase",
-            args
-        );
+    private void Awake()
+    {
+        // 외부 요청으로 구매 시작
+        NetworkBroker.PurchaseItem += OnPurchaseRequest;
+        _ = InitializeIapAsync();
+    }
 
-        // 서버 검증 성공 시
-        //NetworkBroker.OnPurchaseSuccess?.Invoke(purchaseArgs.purchasedProduct.definition.id);
-        Debug.Log("구매 완료 : " + purchaseArgs.purchasedProduct.receipt);
-        // 구매 확정 처리
-        _controller.ConfirmPendingPurchase(purchaseArgs.purchasedProduct);
+    private async Task InitializeIapAsync()
+    {
+        // 컨트롤러 생성
+        storeController = UnityIAPServices.StoreController();
+
+        // 필수 이벤트 구독
+        storeController.OnProductsFetched += OnProductsFetched;
+        storeController.OnProductsFetchFailed += OnProductsFetchFailed;
+        storeController.OnPurchasesFetched += OnPurchasesFetched;
+        storeController.OnPurchasePending += OnPurchasePending;
+        storeController.OnPurchaseFailed += OnPurchaseFailed;
+        storeController.OnPurchaseConfirmed += OnPurchaseConfirmed;
+
+        // 스토어 연결
+        await storeController.Connect();
+
+        // 상품 정보 가져오기
+        storeController.FetchProducts(productDefs);
+    }
+
+    private void OnProductsFetched(List<Product> products)
+    {
+        isInitialized = true;
+        Debug.Log($"IAP 초기화 완료, 상품 개수 {products.Count}");
+        // 보류 주문 복구 처리
+        storeController.FetchPurchases();
+    }
+
+    private void OnProductsFetchFailed(ProductFetchFailed reason)
+    {
+        Debug.LogError($"상품 정보 조회 실패, 코드 {reason.FailureReason}");
+    }
+
+    private void OnPurchasesFetched(Orders orders)
+    {
+        // 필요시 기존 확정 주문, 보류 주문, 지연 주문을 점검 가능
+        Debug.Log($"기존 주문 로드, 확정 {orders.ConfirmedOrders.Count}, 보류 {orders.PendingOrders.Count}");
+    }
+
+    private void OnPurchaseRequest(string productId)
+    {
+        if (!isInitialized)
+        {
+            Debug.LogWarning("IAP 미초기화 상태, 나중에 다시 시도");
+            return;
+        }
+
+        Product product = storeController.GetProductById(productId);
+        if (product == null || !product.availableToPurchase)
+        {
+            Debug.LogError($"구매 불가 상품, id {productId}");
+            return;
+        }
+
+        storeController.PurchaseProduct(productId); // v5 방식
+    }
+
+    // 구매 보류 발생 시점, 여기서 서버 검증 후 확정
+    private void OnPurchasePending(PendingOrder pending)
+    {
+        Debug.Log($"구매 보류 수신, tx {pending.Info.TransactionID}");
+        _ = HandlePendingOrderAsync(pending);
+    }
+
+    private async Task HandlePendingOrderAsync(PendingOrder pending)
+    {
+        string receipt = pending.Info.Receipt;
+        string productId = TryGetProductId(pending);
+        string playerId = AuthenticationService.Instance.PlayerId;
+
+        var args = new Dictionary<string, object>
+    {
+        { "receipt", receipt },
+        { "productId", productId },
+        { "playerId", playerId }
+    };
+
+        try
+        {
+            CurrencyResult result = await CloudCodeService.Instance.CallModuleEndpointAsync<CurrencyResult>(
+                "PurchaseProcessor",
+                "ProcessCurrency",
+                args
+            );
+
+            //  반드시 체크
+            if (result == null)
+            {
+                Debug.LogError("[IAP] 서버 검증 결과 null ? 보류 유지");
+                return;
+            }
+            if (!result.success)
+            {
+                Debug.LogError($"[IAP] 서버 검증 실패: {result.message} ? 보류 유지");
+                return;
+            }
+
+
+
+            // 여기서만 확정
+            storeController.ConfirmPurchase(pending);
+            Debug.Log($"구매 확정 완료, productId {productId}");
+            NetworkBroker.OnPurchaseSuccess(productId);
+
+
+
+
+        }
+        catch (CloudCodeException cce)
+        {
+            Debug.LogError($"[IAP] CloudCode 예외 {cce.Reason}, {cce.Message} ? 보류 유지");
+            return;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"[IAP] 예외 {e.Message} ? 보류 유지");
+            return;
+        }
     }
 
 
-    public void OnPurchaseFailed(Product product, PurchaseFailureReason failureReason)
+    private static string TryGetProductId(PendingOrder pending)
     {
-        Debug.LogError($"구매 실패: {failureReason}");
+        // 1) v5 정식: Info.PurchasedProductInfo[0].productId 사용
+        try
+        {
+            var infos = pending?.Info?.PurchasedProductInfo;
+            if (infos != null && infos.Count > 0 && !string.IsNullOrEmpty(infos[0].productId))
+                return infos[0].productId;
+        }
+        catch { /* 무시하고 폴백 */ }
+
+        // 2) 최종 폴백
+        return "unknown_product";   // v5에는 pending.Product가 없음
     }
 
-    public void OnInitializeFailed(InitializationFailureReason error, string message)
+
+
+    private void OnPurchaseFailed(FailedOrder failed)
     {
-        Debug.LogError($"초기화 실패: {message}");
+        Debug.LogError($"구매 실패, 코드 {failed.FailureReason}");
+    }
+
+    private void OnPurchaseConfirmed(Order order)
+    {
+        Debug.Log($"구매 확정 이벤트, tx {order.Info.TransactionID}");
+        // 필요시 영수증이나 트랜잭션 기록을 저장
     }
 }

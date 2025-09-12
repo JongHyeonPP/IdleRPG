@@ -82,4 +82,7 @@ public class GameData
     #endregion
 
     public int[] adventureProgess = new int[9];//모험 진행도
+    public int[] dungeonProgress = new int[3];
+
+    public int playerRankIndex;
 }

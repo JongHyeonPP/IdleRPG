@@ -4,7 +4,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.ConstrainedExecution;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 using Vector3 = UnityEngine.Vector3;
 
 public abstract class Attackable : MonoBehaviour
@@ -20,7 +23,15 @@ public abstract class Attackable : MonoBehaviour
     protected Camera mainCamera;
     private bool _onSpeed = false;
     private GameData _gameData;
-    private void Start()
+    private float _tempSpeedPercent = 0f;
+    private PassiveSkill _passive;//
+    private EquipedSkill _lastUsedSkill;
+    private void OnEnable()
+    {
+        if (_passive == null)
+            _passive = GetComponent<PassiveSkill>();
+    }
+    private void Awake()
     {
         _gameData = StartBroker.GetGameData();
     }
@@ -30,89 +41,159 @@ public abstract class Attackable : MonoBehaviour
     }
     public void StartAttack()
     {
-        attackCoroutine = StartCoroutine(AttackRoop());
+        attackCoroutine = StartCoroutine(AttackLoop());
     }
     //AttackTerm 간격마다 우선 순위에 있는 스킬 사용
-    private IEnumerator AttackRoop()
+
+
+    private IEnumerator AttackLoop()
     {
         if (target == null)
             yield break;
+
         while (true)
         {
+            EquipedSkill currentSkill = GetNextSkill();
+            var (preDelay, postDelay) = GetAttackDelays(currentSkill);
+            SkillData skilldata = currentSkill.skillData;
+            ApplySpeedBuff(skilldata);
 
-            EquipedSkill currentSkill = null;
-            foreach (EquipedSkill skill in equipedSkillArr)
+            yield return WaitWithAttackSpeed(preDelay);
+
+            AnimBehavior(currentSkill, currentSkill.skillData);
+
+            var targets = GetTargets(currentSkill.skillData.target, currentSkill.skillData.targetNum);
+
+            foreach (var tgt in targets)
             {
-                if (skill == null)
-                    continue;
-                if (skill.IsSkillAble)
+
+                BigInteger baseDamage = CalculateBaseDamage(currentSkill);
+
+                BigInteger finalDamage = ApplyPassives(baseDamage, currentSkill.skillData.type, tgt);
+
+                tgt.ReceiveSkill(finalDamage, currentSkill.skillData.type);
+
+                if (target.hp == 0)
                 {
-                    currentSkill = skill;
-                    skill.SetCoolMax();
-                    break;
+                    StartCoroutine(TargetKill());
                 }
             }
-            if (currentSkill == null)
+
+
+            VisualEffectToTarget(targets, currentSkill.skillData);
+
+            if (currentSkill == _defaultAttack)
             {
-                currentSkill = _defaultAttack;
-                if (this is PlayerController)
-                    ProgressCoolAttack();
+                ProgressCoolAttack();
             }
-            //Debug.Log(currentSkill.skillData.name);
-            SkillData skillData = currentSkill.skillData;
-            if (skillData.isAnim)
-            {
-                float speedValue = 0;
-                if (_onSpeed)
-                {
-                    speedValue += 2f;
-                }
-                
-            
-                for (int i = 0; i < CompanionManager.instance.companionArr.Length; i++)
-                {
-                    CompanionController companion = CompanionManager.instance.companionArr[i];
-                    //if (companion.companionStatus.companionEffect.type == SkillType.SpeedBuff)
-                    //{
-                    //    speedValue += companion.companionStatus.companionEffect.value[CompanionManager.instance.GetCompanionLevelExp(i).Item1 ];
-                    //}
-                    IEnumerable<SkillData> speedBuff = companion.companionStatus.companionSkillArr.Where(item => item.type == SkillType.SpeedBuff);
-                    foreach (SkillData speedSkill in speedBuff)
-                    {
-                        if (!_gameData.skillLevel.ContainsKey(speedSkill.uid) || _gameData.skillLevel[speedSkill.uid] == 0)
-                        {
-                            speedValue += speedSkill.value[_gameData.skillLevel[speedSkill.uid]];
-                        }
-                    }
-                }
-                if (skillData.type == SkillType.SpeedBuff)
-                {
-                    if (_gameData.skillLevel.TryGetValue(skillData.uid, out int level))
-                    {
-                        if (level < skillData.value.Count)
-                        {
-                            speedValue += 100f;
-                            _onSpeed = true;
-                         
-                            StartCoroutine(SpeedDelay(6f));
-                        }
-                    }
-                }
 
-                yield return new WaitForSeconds(skillData.preDelay * (1f / (1f + speedValue)));
-                AnimBehavior(currentSkill, skillData);
-                List<Attackable> targets = GetTargets(skillData.target, skillData.targetNum);
-                ActiveSkillToTarget(targets, currentSkill);//핵심
-                VisualEffectToTarget(targets, skillData);
-                yield return new WaitForSeconds(skillData.postDelay * (1f / (1f + speedValue)));
-
-    }
+            yield return WaitWithAttackSpeed(postDelay);
         }
     }
-    private IEnumerator SpeedDelay(float delay)
+
+    #region New
+    private EquipedSkill GetNextSkill()
     {
-        yield return new WaitForSeconds(delay);
-        _onSpeed=false;
+        foreach (var skill in equipedSkillArr)
+        {
+            if (skill != null && skill.IsSkillAble)
+            {
+                skill.SetCoolMax();
+                return skill;
+            }
+        }
+
+        return _defaultAttack;
+    }
+    private (float preDelay, float postDelay) GetAttackDelays(EquipedSkill skill)
+    {
+        if (skill == _defaultAttack)
+            return (attackTerm, attackTerm); 
+        else
+            return (skill.skillData.preDelay, skill.skillData.postDelay);
+    }
+    private void ApplySpeedBuff(SkillData skill)
+    {
+
+        //if (_gameData == null) return;
+
+        //if (skill.type == SkillType.SpeedBuff)
+        //{
+        //    if (_gameData.skillLevel.TryGetValue(skill.uid, out int level))
+        //    {
+        //        if (level >= 0 && level < skill.value.Count)
+        //        {
+        //            float addPercent = skill.value[level];
+        //            _tempSpeedPercent += addPercent;
+        //            _onSpeed = true;
+        //            StartCoroutine(SpeedDelay(6f, addPercent));
+        //        }
+        //    }
+        //}
+        if (skill.type != SkillType.SpeedBuff) return;
+
+        int level = 0; 
+        if (level >= 0 && level < skill.value.Count)
+        {
+            float addPercent = skill.value[level];
+            _tempSpeedPercent += addPercent;
+            _onSpeed = true;
+            StartCoroutine(SpeedDelay(6f, addPercent));
+        }
+    }
+    private IEnumerator WaitWithAttackSpeed(float baseDelay)
+    {
+        float elapsed = 0f;
+        while (elapsed < baseDelay)
+        {
+            float speedMultiplier = GetAttackSpeedMultiplier();
+            speedMultiplier = Mathf.Max(speedMultiplier, 0.01f);
+
+            elapsed += Time.deltaTime * speedMultiplier;
+          
+            yield return null;
+        }
+    }
+
+    private float GetAttackSpeedMultiplier()
+    {
+
+        float speedValue = 0f;
+
+        if (_onSpeed)
+            speedValue += _tempSpeedPercent;
+
+        foreach (var companion in CompanionManager.instance.companionArr)
+        {
+            IEnumerable<SkillData> speedBuffs = companion.companionStatus.companionSkillArr
+                                                .Where(item => item.type == SkillType.SpeedBuff);
+
+            foreach (var speedSkill in speedBuffs)
+            {
+                if (_gameData.skillLevel.TryGetValue(speedSkill.uid, out int level))
+                {
+                    if (level >= 0 && level < speedSkill.value.Count)
+                    {
+                        speedValue += speedSkill.value[level];
+                    }
+                }
+            }
+        }
+
+        return 1f + speedValue / 10f;
+    }
+    
+    #endregion
+    private IEnumerator SpeedDelay(float duration, float buffValue)
+    {
+        yield return new WaitForSeconds(duration);
+        _tempSpeedPercent -= buffValue;
+
+        if (_tempSpeedPercent <= 0)
+        {
+            _tempSpeedPercent = 0;
+            _onSpeed = false;
+        }
     }
     private void AnimBehavior(EquipedSkill currentSkill, SkillData skillData)
     {
@@ -159,26 +240,7 @@ public abstract class Attackable : MonoBehaviour
             attackCoroutine = null;
         }
     }
-    private void ActiveSkillToTarget(List<Attackable> targets, EquipedSkill skill)
-    {
-        ICharacterStatus myStatus = GetStatus();
-        SkillData skillData = skill.skillData;
-        int skillLevel = skill.level;
-        BigInteger calcedValue = new(skillData.value[skillLevel] * 100f);
-        calcedValue *= myStatus.Power;
-        calcedValue /= 100;
-        //100을 곱하고 계산 후 다시 나눠주면 소수점 아래 2자리까지 보존
-        foreach (var target in targets)
-        {
-            //ICharacterStatus targetStatus = target.GetStatus();
-            //일련의 계산 진행
-            target.ReceiveSkill(calcedValue, skillData.type);
-        }
-        if (target.hp == 0)
-        {
-            StartCoroutine(TargetKill());
-        }
-    }
+   
     private IEnumerator TargetKill()
     {
         StopCoroutine(attackCoroutine);
@@ -208,7 +270,7 @@ public abstract class Attackable : MonoBehaviour
             OnDead();
         }
     }
-
+    
 
     private void VisualEffectToTarget(List<Attackable> targets,SkillData skilldata)
     {
@@ -269,14 +331,7 @@ public abstract class Attackable : MonoBehaviour
     }
     private List<Attackable> GetTargets(SkillTarget range, int targetNum)
     {
-        //List<Attackable> result = new();
-        //switch (range)
-        //{
-        //    default:
-        //        result.Add(target);
-        //        break;
-        //}
-        //return result;
+        
         List<Attackable> result = new();
 
         Attackable[] allEnemies = FindObjectsOfType<EnemyController>()
@@ -292,6 +347,43 @@ public abstract class Attackable : MonoBehaviour
 
         return result;
     }
+
+    #region passive
+    private BigInteger CalculateBaseDamage(EquipedSkill skill)
+    {
+        ICharacterStatus status = GetStatus();
+        SkillData skillData = skill.skillData;
+        int skillLevel = skill.level;
+
+        BigInteger damage = new(skillData.value[skillLevel] * 100f);
+        damage *= status.Power;
+        damage /= 100;
+        return damage;
+    }
+    private BigInteger ApplyPassives(BigInteger damage, SkillType skillType, Attackable target)
+    {
+        if (_passive == null) return damage;
+
+        if (_passive.TryGetDamagePlus(out float percent, out int level))
+        {
+            damage += damage * (BigInteger)(percent / 100f);
+        }
+
+        
+        if (_passive.TryGetDoubleHit(out float procChance, out int doubleHitLevel))
+        {
+            if (UnityEngine.Random.value < procChance / 100f) damage += damage;
+        }
+
+        if (_passive.TryGetHealOnHit(out float healPercent, out int healLevel))
+        {
+            BigInteger healAmount = GetStatus().MaxHp * (BigInteger)(healPercent / 100f);
+            (this as PlayerController)?.Heal(healAmount);
+        }
+
+        return damage;
+    }
+    #endregion
     public abstract ICharacterStatus GetStatus();
     protected abstract void OnDead();
     protected abstract void OnReceiveSkill();

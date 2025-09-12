@@ -45,4 +45,4 @@ MonoBehaviour:
   postDelay: 1
   isAnim: 1
   visualEffectPrefab: {fileID: 5021638172128956239, guid: 7aa5b373380bae0459711760bc459ca3, type: 3}
-  isActiveSkill: 0
+  isActiveSkill: 1

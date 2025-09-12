@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PurchaseProcessor")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+33142449851ce805afcccd5c7374b40d53054ac2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dd43bc6e2f3256e4d6bf34de822c10cddd2faf0a")]
 [assembly: System.Reflection.AssemblyProductAttribute("PurchaseProcessor")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PurchaseProcessor")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

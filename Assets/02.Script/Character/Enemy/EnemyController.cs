@@ -39,7 +39,8 @@ public class EnemyController : Attackable, IMoveByPlayer
         BattleBroker.OnEnemyDead?.Invoke(transform.position);
         isDead = true;
         anim.SetBool("Die", true);
-        enemyHpBar.pool.ReturnToPool(enemyHpBar);
+        if (enemyHpBar != null)
+            enemyHpBar.pool.ReturnToPool(enemyHpBar);
         enemyHpBar = null;
         StartCoroutine(OnDeadCoroutine());
     }
@@ -110,7 +111,8 @@ public class EnemyController : Attackable, IMoveByPlayer
         {
             BattleBroker.OnBossHpChanged(ratio);
         }
-        enemyHpBar.SetHpRatio(ratio);
+        if (enemyHpBar != null)
+            enemyHpBar.SetHpRatio(ratio);
     }
     private void OnDestroy()
     {

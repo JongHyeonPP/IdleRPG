@@ -70,6 +70,8 @@ public class BattleManager : MonoBehaviour
 
     private void SetWeaponSprite(string id, WeaponType type)
     {
+        if (string.IsNullOrEmpty(id))
+            return;
         PlayerBroker.OnEquipWeapon(id != null ? WeaponManager.instance.weaponDict[id] : null, type);
     }
 
