@@ -770,7 +770,6 @@ public class StoreManager : MonoSingleton<StoreManager>
     {
         return -(Mathf.Cos(Mathf.PI * t) - 1) / 2;
     }
-    //뭐 뽑을지랑 몇 개 뽑을지 매개변수로 넣어서 호출
     private async Task CallGacha(GachaType type, int num)
     {
         Dictionary<string, object> args = new()
@@ -779,27 +778,61 @@ public class StoreManager : MonoSingleton<StoreManager>
         { "gachaNum",  num }
     };
 
-        List<string> result = await CloudCodeService.Instance
-            .CallModuleEndpointAsync<List<string>>(
+        GachaResult result = await CloudCodeService.Instance
+            .CallModuleEndpointAsync<GachaResult>(
                 "PurchaseProcessor",
                 "ProcessGacha",
                 args);
 
-        Debug.Log($"[Gacha] {type} x{num} => {string.Join(", ", result)}");
-
-        var priceInfo = prices[(type, num)];
-        switch (priceInfo.resource)
+        if (!result.Success)
         {
-            case Resource.Dia:
-                _gameData.dia -= priceInfo.num;
-                PlayerBroker.OnDiaSet();
-                break;
-            default:
-                throw new Exception($"지원하지 않는 재화 타입: {priceInfo.resource}");
+            Debug.LogWarning($"[Gacha] 실패: {result.Message}");
+            // 여기서 팝업 띄우거나 UI 갱신 (예: 다이아 부족 안내)
+            return;
         }
 
-        PlayerBroker.OnGacha?.Invoke(type, num); //가챠 이후의 동작은 델리게이트로 구현 요망
+        Debug.Log($"[Gacha] {type} x{num} => {string.Join(", ", result.Items)}");
+
+        // 서버에서 이미 차감했지만, 클라이언트 로컬 GameData도 갱신
+        _gameData.dia = result.RemainDia;
+        PlayerBroker.OnDiaSet();
+
+        switch (type)
+        {
+            case GachaType.Weapon:
+                foreach (var weaponId in result.Items)
+                {
+                    if (string.IsNullOrWhiteSpace(weaponId))
+                        continue;
+
+                    // 로컬 GameData 갱신
+                    if (_gameData.weaponCount.ContainsKey(weaponId))
+                        _gameData.weaponCount[weaponId]++;
+                    else
+                        _gameData.weaponCount[weaponId] = 1;
+
+                    // 브로커 이벤트 알림 (무기ID, 갱신된 수량)
+                    PlayerBroker.OnWeaponCountSet?.Invoke(weaponId, _gameData.weaponCount[weaponId]);
+                }
+                break;
+
+            case GachaType.Costume:
+                foreach (var costumeId in result.Items)
+                {
+                    if (string.IsNullOrWhiteSpace(costumeId))
+                        continue;
+
+                    if (!_gameData.ownedCostumes.Contains(costumeId))
+                        _gameData.ownedCostumes.Add(costumeId);
+
+                    // 필요하다면 OnCostumeOwnedSet 같은 이벤트도 동일한 방식으로 호출 가능
+                }
+                break;
+        }
+
     }
+
+
 
 #if UNITY_EDITOR
     // ---- Weapon 테스트 ----

@@ -224,7 +224,7 @@ public class TotalStatusUI : MonoBehaviour
     {
         root.style.display = DisplayStyle.Flex;
         UIBroker.ActiveTranslucent(root, true);
-        //SetContent();
+        SetContent();
     }
     private void SetContent()
     {

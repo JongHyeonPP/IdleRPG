@@ -21,7 +21,7 @@ namespace Purchase.Gacha
         }
 
         [CloudCodeFunction("ProcessGacha")]
-        public async Task<List<string>> ProcessCurrencyAsync(
+        public async Task<GachaResult> ProcessCurrencyAsync(
             GachaType gachaType,
             int gachaNum,
             IExecutionContext context,
@@ -29,12 +29,11 @@ namespace Purchase.Gacha
             IPurchaseSystem purchaseSystem
         )
         {
-
             try
             {
                 ValidateCount(gachaNum);
 
-                List<string> result;
+                GachaResult result;
 
                 switch (gachaType)
                 {
@@ -47,7 +46,11 @@ namespace Purchase.Gacha
                         break;
 
                     default:
-                        throw new Exception($"지원하지 않는 GachaType: {gachaType}");
+                        return new GachaResult
+                        {
+                            Success = false,
+                            Message = $"지원하지 않는 GachaType: {gachaType}"
+                        };
                 }
 
                 return result;
@@ -55,44 +58,47 @@ namespace Purchase.Gacha
             catch (Exception e)
             {
                 _logger.LogError($"ProcessGacha 실패: {e.Message}");
-                throw;
+                return new GachaResult
+                {
+                    Success = false,
+                    Message = $"예외 발생: {e.Message}"
+                };
             }
         }
 
         // -------------------- Weapon --------------------
-        private async Task<List<string>> ProcessWeaponGacha(
+        private async Task<GachaResult> ProcessWeaponGacha(
             int gachaNum,
             IExecutionContext context,
             IGameApiClient gameApiClient,
             IPurchaseSystem purchaseSystem
         )
         {
-            // 1. Remote Config 읽기
             var gachaInfo = purchaseSystem.GetRemoteConfig<Dictionary<string, object>>(context, gameApiClient, "GACHA_INFO");
             JObject gachaInfoObj = JObject.FromObject(gachaInfo);
 
-            // 2. GameData 불러오기
             var res = await gameApiClient.CloudSaveData.GetItemsAsync(
                 context, context.ServiceToken, context.ProjectId, context.PlayerId, new() { "GameData" });
 
-            GameData data;
-            if (res.Data.Results.Count == 0 || res.Data.Results[0].Value == null)
-            {
-                data = new GameData { level = 1, maxStageNum = 1, currentStageNum = 1, gachaThreshold = 0 };
-            }
-            else
-            {
-                data = JsonConvert.DeserializeObject<GameData>(res.Data.Results[0].Value.ToString())
-                       ?? new GameData { level = 1, maxStageNum = 1, currentStageNum = 1, gachaThreshold = 0 };
-            }
+            GameData data = res.Data.Results.Count == 0 || res.Data.Results[0].Value == null
+                ? new GameData { level = 1, maxStageNum = 1, currentStageNum = 1, gachaThreshold = 0 }
+                : JsonConvert.DeserializeObject<GameData>(res.Data.Results[0].Value.ToString())
+                  ?? new GameData { level = 1, maxStageNum = 1, currentStageNum = 1, gachaThreshold = 0 };
 
-            // 3. 가격 계산 및 재화 차감
             ResolveCost(gachaInfoObj, "weapon", gachaNum, out string resource, out int amount);
-            Spend(data, resource, amount);
+
+            if (!Spend(data, resource, amount, out string failMsg))
+            {
+                return new GachaResult
+                {
+                    Success = false,
+                    Message = failMsg,
+                    RemainDia = data.dia
+                };
+            }
 
             int threshold = data.gachaThreshold;
 
-            // 4. 무기 풀 로드
             Dictionary<string, object> itemBundle =
                 purchaseSystem.GetRemoteConfig<Dictionary<string, object>>(context, gameApiClient, "ITEM_NAME_BUNDLE");
 
@@ -117,7 +123,12 @@ namespace Purchase.Gacha
 
                 List<string> pool = weaponList.Where(w => GetRarityFromId(w) == rarity).ToList();
                 if (pool.Count == 0)
-                    throw new Exception($"rarity {rarity}에 해당하는 무기가 없습니다.");
+                    return new GachaResult
+                    {
+                        Success = false,
+                        Message = $"rarity {rarity}에 해당하는 무기가 없습니다.",
+                        RemainDia = data.dia
+                    };
 
                 string picked = pool[random.Next(pool.Count)];
                 result.Add(picked);
@@ -127,7 +138,9 @@ namespace Purchase.Gacha
 
             data.gachaThreshold = threshold;
 
-            // 5. 저장
+            ApplyWeaponResult(data, result);
+
+
             await gameApiClient.CloudSaveData.SetItemAsync(
                 context, context.ServiceToken, context.ProjectId, context.PlayerId,
                 new("GameData", JsonConvert.SerializeObject(data)));
@@ -135,12 +148,17 @@ namespace Purchase.Gacha
             _logger.LogInformation(
                 $"Weapon 가챠 완료 | Num={gachaNum}, Cost={resource}:{amount}, NewThreshold={threshold}, Remain={data.dia}, Result={string.Join(", ", result)}");
 
-
-            return result;
+            return new GachaResult
+            {
+                Success = true,
+                Message = "Weapon 가챠 성공",
+                Items = result,
+                RemainDia = data.dia
+            };
         }
 
         // -------------------- Costume --------------------
-        private async Task<List<string>> ProcessCostumeGacha(
+        private async Task<GachaResult> ProcessCostumeGacha(
             int gachaNum,
             IExecutionContext context,
             IGameApiClient gameApiClient,
@@ -150,47 +168,57 @@ namespace Purchase.Gacha
             var gachaInfo = purchaseSystem.GetRemoteConfig<Dictionary<string, object>>(context, gameApiClient, "GACHA_INFO");
             JObject gachaInfoObj = JObject.FromObject(gachaInfo);
 
-            // GameData 로드
             var res = await gameApiClient.CloudSaveData.GetItemsAsync(
                 context, context.ServiceToken, context.ProjectId, context.PlayerId, new() { "GameData" });
 
-            GameData data;
-            if (res.Data.Results.Count == 0 || res.Data.Results[0].Value == null)
-            {
-                data = new GameData();
-            }
-            else
-            {
-                data = JsonConvert.DeserializeObject<GameData>(res.Data.Results[0].Value.ToString())
-                       ?? new GameData();
-            }
+            GameData data = res.Data.Results.Count == 0 || res.Data.Results[0].Value == null
+                ? new GameData()
+                : JsonConvert.DeserializeObject<GameData>(res.Data.Results[0].Value.ToString())
+                  ?? new GameData();
 
-            // 가격 계산 및 차감
             ResolveCost(gachaInfoObj, "costume", gachaNum, out string resource, out int amount);
-            Spend(data, resource, amount);
+
+            if (!Spend(data, resource, amount, out string failMsg))
+            {
+                return new GachaResult
+                {
+                    Success = false,
+                    Message = failMsg,
+                    RemainDia = data.dia
+                };
+            }
 
             Dictionary<string, object> itemBundle =
                 purchaseSystem.GetRemoteConfig<Dictionary<string, object>>(context, gameApiClient, "ITEM_NAME_BUNDLE");
 
             if (!itemBundle.ContainsKey("costumes"))
-                throw new Exception("ITEM_NAME_BUNDLE에 'costumes' 키가 없습니다.");
+            {
+                return new GachaResult
+                {
+                    Success = false,
+                    Message = "ITEM_NAME_BUNDLE에 'costumes' 키가 없습니다.",
+                    RemainDia = data.dia
+                };
+            }
 
             Dictionary<string, List<string>> costumeBundle =
                 JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(itemBundle["costumes"].ToString());
 
-            List<string> bodyList = costumeBundle.GetValueOrDefault("Body", new());
-            List<string> hairList = costumeBundle.GetValueOrDefault("Hair", new());
-            List<string> helmetList = costumeBundle.GetValueOrDefault("Helmet", new());
-            List<string> pantList = costumeBundle.GetValueOrDefault("Pant", new());
-
             List<string> pool = new();
-            pool.AddRange(bodyList);
-            pool.AddRange(hairList);
-            pool.AddRange(helmetList);
-            pool.AddRange(pantList);
+            pool.AddRange(costumeBundle.GetValueOrDefault("Body", new()));
+            pool.AddRange(costumeBundle.GetValueOrDefault("Hair", new()));
+            pool.AddRange(costumeBundle.GetValueOrDefault("Helmet", new()));
+            pool.AddRange(costumeBundle.GetValueOrDefault("Pant", new()));
 
             if (pool.Count == 0)
-                throw new Exception("코스튬 풀 데이터가 비어 있습니다.");
+            {
+                return new GachaResult
+                {
+                    Success = false,
+                    Message = "코스튬 풀 데이터가 비어 있습니다.",
+                    RemainDia = data.dia
+                };
+            }
 
             Random random = new Random();
             List<string> result = new();
@@ -201,34 +229,55 @@ namespace Purchase.Gacha
                 result.Add(picked);
             }
 
-            // 저장
+            ApplyCostumeResult(data, result);
+
             await gameApiClient.CloudSaveData.SetItemAsync(
                 context, context.ServiceToken, context.ProjectId, context.PlayerId,
                 new("GameData", JsonConvert.SerializeObject(data)));
+
             _logger.LogInformation(
                 $"Costume 가챠 완료 | Num={gachaNum}, Cost={resource}:{amount}, Remain={data.dia}, Result={string.Join(", ", result)}");
 
-
-            return result;
+            return new GachaResult
+            {
+                Success = true,
+                Message = "Costume 가챠 성공",
+                Items = result,
+                RemainDia = data.dia
+            };
         }
 
         // -------------------- Helpers --------------------
-        private void Spend(GameData data, string resource, int amount)
+        private bool Spend(GameData data, string resource, int amount, out string message)
         {
+            message = string.Empty;
+
             if (string.IsNullOrWhiteSpace(resource))
-                throw new Exception("재화 키가 비었습니다.");
+            {
+                message = "재화 키가 비었습니다.";
+                return false;
+            }
+
             if (amount <= 0)
-                throw new Exception($"차감 금액이 올바르지 않습니다. amount={amount}");
+            {
+                message = $"차감 금액이 올바르지 않습니다. amount={amount}";
+                return false;
+            }
 
             switch (resource)
             {
                 case "dia":
                     if (data.dia < amount)
-                        throw new Exception($"다이아 부족 | 보유: {data.dia}, 필요: {amount}");
+                    {
+                        message = $"다이아 부족 | 보유: {data.dia}, 필요: {amount}";
+                        return false;
+                    }
                     data.dia -= amount;
-                    break;
+                    return true;
+
                 default:
-                    throw new Exception($"지원하지 않는 재화 타입: {resource}");
+                    message = $"지원하지 않는 재화 타입: {resource}";
+                    return false;
             }
         }
 
@@ -273,6 +322,32 @@ namespace Purchase.Gacha
             if (!int.TryParse(node["amount"]?.ToString(), out amount) || amount <= 0)
                 throw new Exception($"GACHA_INFO cost.amount가 올바르지 않습니다. type={type}, count={gachaNum}");
         }
+
+        private void ApplyWeaponResult(GameData data, List<string> weapons)
+        {
+            foreach (var weaponId in weapons)
+            {
+                if (string.IsNullOrWhiteSpace(weaponId))
+                    continue;
+
+                if (data.weaponCount.ContainsKey(weaponId))
+                    data.weaponCount[weaponId]++;
+                else
+                    data.weaponCount[weaponId] = 1;
+            }
+        }
+
+        private void ApplyCostumeResult(GameData data, List<string> costumes)
+        {
+            foreach (var costumeId in costumes)
+            {
+                if (string.IsNullOrWhiteSpace(costumeId))
+                    continue;
+
+                if (!data.ownedCostumes.Contains(costumeId))
+                    data.ownedCostumes.Add(costumeId);
+            }
+        }
     }
 
     public enum GachaType
@@ -294,5 +369,13 @@ namespace Purchase.Gacha
 
         [JsonProperty("rates")]
         public List<double> Rates { get; set; }
+    }
+
+    public class GachaResult
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; }
+        public List<string> Items { get; set; } = new();
+        public int RemainDia { get; set; }
     }
 }

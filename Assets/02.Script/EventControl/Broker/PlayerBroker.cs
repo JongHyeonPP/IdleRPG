@@ -50,7 +50,6 @@ public static class PlayerBroker
     public static Action<AppearanceData> OnPlayerAppearanceChange;
     public static Action<int, AppearanceData> OnCompanionAppearanceChange;//int : CompanionIndex
 
-    public static Action<GachaType, int> OnGacha;
 
     public static Func<Resource, Sprite> GetResourceSprite;
     public static Func<Rarity, Sprite> GetFragmentSprite;
