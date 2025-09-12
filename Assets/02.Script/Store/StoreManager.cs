@@ -792,6 +792,7 @@ public class StoreManager : MonoSingleton<StoreManager>
         {
             case Resource.Dia:
                 _gameData.dia -= priceInfo.num;
+                PlayerBroker.OnDiaSet();
                 break;
             default:
                 throw new Exception($"지원하지 않는 재화 타입: {priceInfo.resource}");
