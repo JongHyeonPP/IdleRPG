@@ -12,8 +12,7 @@ public class PassiveSkill : MonoBehaviour
     public SkillData damagePlus;
 
     public SkillData doubleHit;
-    
-
+    public SkillData expPlus;
     private GameData _gd;
 
     void Awake()
@@ -34,7 +33,7 @@ public class PassiveSkill : MonoBehaviour
     {
         healPercent = 0f;
         if (!TryGetLevel(healOnHit, out level)) return false;
-        if (!TryProc(healProc)) return false;            
+      //  if (!TryProc(healProc)) return false;            
         healPercent = healOnHit.value[level];           
         return healPercent > 0f;
     }
@@ -46,7 +45,13 @@ public class PassiveSkill : MonoBehaviour
         extraPercent = doubleHit.value[level];           
         return extraPercent > 0f;
     }
-
+    public bool TryGetPlusExp(out float percent, out int level)
+    {
+        percent = 0f;
+        if (!TryGetLevel(expPlus, out level)) return false;
+        percent = expPlus.value[level];
+        return percent > 0f;
+    }
     private bool TryGetLevel(SkillData sd, out int level)
     {
         level = 0;
@@ -74,7 +79,9 @@ public class PassiveSkill : MonoBehaviour
 
         if (doubleHit != null)
             _gd.skillLevel[doubleHit.uid] = 5;
+        if (expPlus != null)
+            _gd.skillLevel[expPlus.uid] = 5;
 
-        Debug.Log("모든 패시브 스킬을 강제로 5레벨로 설정했습니다!");
+        Debug.Log("5레벨설정");
     }
 }

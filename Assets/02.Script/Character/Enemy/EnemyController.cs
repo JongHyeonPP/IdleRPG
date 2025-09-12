@@ -134,4 +134,28 @@ public class EnemyController : Attackable, IMoveByPlayer
     
     }
 
+    protected override IEnumerator AttackLoop()
+    {
+        if (target == null)
+            yield break;
+
+        while (true)
+        {
+           
+
+            yield return new WaitForSeconds(attackTerm);
+
+            if (target == null || target.isDead)
+                yield break;
+
+            if (anim != null)
+            {
+                anim.SetTrigger("Attack");
+            }
+          
+            BigInteger dmg = _status.Power;
+            target.ReceiveDamage(dmg);
+         
+        }
+    }
 }

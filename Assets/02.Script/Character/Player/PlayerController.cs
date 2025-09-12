@@ -189,6 +189,8 @@ public class PlayerController : Attackable
     {
         yield return new WaitForSeconds(1f);
         BattleBroker.SwitchToBattle();
+        isDead = false;
+        hp = _status.MaxHp;
         anim.SetTrigger("Revive");
     }
 

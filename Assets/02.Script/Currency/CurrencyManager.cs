@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Numerics;
+using System.Runtime.ConstrainedExecution;
 using Unity.Services.RemoteConfig;
 using UnityEngine;
 using static PriceInfo;
@@ -50,7 +51,8 @@ public class CurrencyManager : MonoBehaviour
     public const int MAXWEAPONLEVEL = 20;
 
     private readonly Dictionary<int, List<string>> weaponByStage = new();
-
+    private bool _ExpPassiveOn=false;
+    private float _expPlusPercent;
     private void Awake()
     {
         instance = this;
@@ -74,7 +76,7 @@ public class CurrencyManager : MonoBehaviour
             LoadWeaponTable(weaponJson);
 
         _requireExpFormula = RemoteConfigService.Instance.appConfig.GetString("LEVEL_UP_REQUIRE_EXP", "None");
-
+        
         BattleBroker.OnStageChange += OnStageChange;
         BattleBroker.OnDrop += OnDrop;
         PlayerBroker.OnLevelExpSet += OnLevelExpSet;
@@ -111,11 +113,21 @@ public class CurrencyManager : MonoBehaviour
 
     private void GetExpByDrop(int value)
     {
+        Debug.Log($"원래경험치:{value}");
+        if (_ExpPassiveOn)
+        {
+            value += Mathf.CeilToInt(value * _expPlusPercent / 100f);
+        }
+        Debug.Log($"추가된경험치:{value}");
         _gameData.exp += value;
         PlayerBroker.OnLevelExpSet();
         NetworkBroker.QueueResourceReport(value, null, Resource.Exp, Source.Battle);
     }
-
+    public void PassiveOn(float expPercent)
+    {
+        _ExpPassiveOn = true;   
+        _expPlusPercent = expPercent;
+    }
     private void OnLevelExpSet()
     {
         while (true)

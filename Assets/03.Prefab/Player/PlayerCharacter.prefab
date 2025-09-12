@@ -1433,7 +1433,7 @@ MonoBehaviour:
   healProc: 20
   damagePlus: {fileID: 11400000, guid: d8269165c61ea7844a212216508a4a6b, type: 2}
   doubleHit: {fileID: 11400000, guid: fc42c6f20562bf44789aebadae39074e, type: 2}
-  doubleHitProc: 20
+  expPlus: {fileID: 11400000, guid: ebec86d423f1c8246a806ec9fcba60e8, type: 2}
 --- !u!1 &3260949892194529672
 GameObject:
   m_ObjectHideFlags: 0

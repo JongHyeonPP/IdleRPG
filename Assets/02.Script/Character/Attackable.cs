@@ -24,8 +24,8 @@ public abstract class Attackable : MonoBehaviour
     private bool _onSpeed = false;
     private GameData _gameData;
     private float _tempSpeedPercent = 0f;
-    private PassiveSkill _passive;//
-    private EquipedSkill _lastUsedSkill;
+    private PassiveSkill _passive;
+   
     private void OnEnable()
     {
         if (_passive == null)
@@ -46,7 +46,7 @@ public abstract class Attackable : MonoBehaviour
     //AttackTerm 간격마다 우선 순위에 있는 스킬 사용
 
 
-    private IEnumerator AttackLoop()
+    protected virtual IEnumerator AttackLoop()
     {
         if (target == null)
             yield break;
@@ -54,6 +54,7 @@ public abstract class Attackable : MonoBehaviour
         while (true)
         {
             EquipedSkill currentSkill = GetNextSkill();
+         
             var (preDelay, postDelay) = GetAttackDelays(currentSkill);
             SkillData skilldata = currentSkill.skillData;
             ApplySpeedBuff(skilldata);
@@ -70,10 +71,10 @@ public abstract class Attackable : MonoBehaviour
                 BigInteger baseDamage = CalculateBaseDamage(currentSkill);
 
                 BigInteger finalDamage = ApplyPassives(baseDamage, currentSkill.skillData.type, tgt);
-
+          
                 tgt.ReceiveSkill(finalDamage, currentSkill.skillData.type);
 
-                if (target.hp == 0)
+                if (target.hp <= 0)
                 {
                     StartCoroutine(TargetKill());
                 }
@@ -230,7 +231,16 @@ public abstract class Attackable : MonoBehaviour
             }
         }
     }
-
+    public virtual void ReceiveDamage(BigInteger damage)
+    {
+        hp -= damage;
+        Debug.Log($"{name}의 받은데미지:{damage}, 체력={hp}");
+        if (hp <= 0 && !isDead)
+        {
+            isDead = true;
+            OnDead();
+        }
+    }
     public void StopAttack()
     {
         target = null;
@@ -264,6 +274,7 @@ public abstract class Attackable : MonoBehaviour
             case SkillType.Heal:
                 break;
         }
+ 
         OnReceiveSkill();
         if (hp == 0)
         {
@@ -349,7 +360,7 @@ public abstract class Attackable : MonoBehaviour
     }
 
     #region passive
-    private BigInteger CalculateBaseDamage(EquipedSkill skill)
+    protected virtual BigInteger CalculateBaseDamage(EquipedSkill skill)
     {
         ICharacterStatus status = GetStatus();
         SkillData skillData = skill.skillData;
@@ -377,8 +388,13 @@ public abstract class Attackable : MonoBehaviour
 
         if (_passive.TryGetHealOnHit(out float healPercent, out int healLevel))
         {
-            BigInteger healAmount = GetStatus().MaxHp * (BigInteger)(healPercent / 100f);
+            BigInteger healAmount = (GetStatus().MaxHp * (BigInteger)healPercent) / 100;
             (this as PlayerController)?.Heal(healAmount);
+        }
+
+        if (_passive.TryGetPlusExp(out float expPercent, out int expLevel))
+        {
+            CurrencyManager.instance.PassiveOn(expPercent);
         }
 
         return damage;
