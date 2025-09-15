@@ -44,15 +44,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 899cd6c83d8cac84f89eda906e16561e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fragmentSprites:
-  - {fileID: 21300000, guid: f00ebf5f3deae0f468a140750040a64c, type: 3}
-  - {fileID: 21300000, guid: 7651491213e74554d93849ed82c03fb5, type: 3}
-  - {fileID: 21300000, guid: 9577df180274c0846bb38a79770cea22, type: 3}
-  - {fileID: 21300000, guid: b5648c760c659924295a665a3ff30f13, type: 3}
-  - {fileID: 21300000, guid: d789ee68355ada448b195513d176f65a, type: 3}
+  currentGoldValue: 0
+  currentExpValue: 0
+  currentWeaponValue: 
+  _fragmentSprites:
+  - {fileID: 21300000, guid: 763282434841e654fa86476b044d6b64, type: 3}
+  - {fileID: 21300000, guid: cb8f174708b95974993d23231ab4d789, type: 3}
+  - {fileID: 21300000, guid: 8ce80031bb4a9a241b9b07153864dca7, type: 3}
+  - {fileID: 21300000, guid: afbd44ff19b51cf458256212553cf758, type: 3}
+  - {fileID: 21300000, guid: 060e5e2348cf6b94ebeaaa393ced053b, type: 3}
   - {fileID: 21300000, guid: e8b24ce5de8862d428db6594c2c1719a, type: 3}
-  goldSprite: {fileID: 21300000, guid: a0bf3f215edb8c5438fd95a33ea7aee7, type: 3}
-  expSprite: {fileID: 21300000, guid: bb2038ace4e9b8f468e2826856ca3b98, type: 3}
+  _goldSprite: {fileID: 21300000, guid: a0bf3f215edb8c5438fd95a33ea7aee7, type: 3}
+  _expSprite: {fileID: 21300000, guid: bb2038ace4e9b8f468e2826856ca3b98, type: 3}
+  _diaSprite: {fileID: 21300000, guid: 486112d5a03a3ee41ac790455313a1ab, type: 3}
+  _cloverSprite: {fileID: 21300000, guid: 7e406199c949f1449bc592e1e4db1487, type: 3}
   rarityColor:
   - {r: 0.03137255, g: 0.8392157, b: 1, a: 1}
   - {r: 0, g: 0.7921569, b: 0, a: 1}

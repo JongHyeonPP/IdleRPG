@@ -47,7 +47,7 @@ class GainLabelPiece
                 break;
             case DropType.Fragment:
                 Rarity rarity = Enum.Parse<Rarity>(id);
-                _iconElement.style.backgroundImage = new(CurrencyManager.instance.fragmentSprites[(int)rarity]);
+                _iconElement.style.backgroundImage = new(CurrencyManager.instance._fragmentSprites[(int)rarity]);
                 _iconElement.style.scale = Vector2.one;
                 break;
             case DropType.Weapon:

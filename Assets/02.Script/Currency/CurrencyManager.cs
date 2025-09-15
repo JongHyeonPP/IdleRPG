@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Numerics;
+using System.Runtime.ConstrainedExecution;
 using Unity.Services.RemoteConfig;
 using UnityEngine;
 using static PriceInfo;
@@ -39,9 +40,11 @@ public class CurrencyManager : MonoBehaviour
 
     private string _requireExpFormula;
 
-    public Sprite[] fragmentSprites;
-    public Sprite goldSprite;
-    public Sprite expSprite;
+    public Sprite[] _fragmentSprites;
+    public Sprite _goldSprite;
+    public Sprite _expSprite;
+    public Sprite _diaSprite;
+    public Sprite _cloverSprite;
     public Color[] rarityColor;
 
     [SerializeField] private PriceInfo _priceInfo;
@@ -50,7 +53,8 @@ public class CurrencyManager : MonoBehaviour
     public const int MAXWEAPONLEVEL = 20;
 
     private readonly Dictionary<int, List<string>> weaponByStage = new();
-
+    private bool _ExpPassiveOn=false;
+    private float _expPlusPercent;
     private void Awake()
     {
         instance = this;
@@ -74,13 +78,42 @@ public class CurrencyManager : MonoBehaviour
             LoadWeaponTable(weaponJson);
 
         _requireExpFormula = RemoteConfigService.Instance.appConfig.GetString("LEVEL_UP_REQUIRE_EXP", "None");
-
+        
         BattleBroker.OnStageChange += OnStageChange;
         BattleBroker.OnDrop += OnDrop;
         PlayerBroker.OnLevelExpSet += OnLevelExpSet;
         BattleBroker.GetNeedExp = GetNeedExp;
     }
+    private void Start()
+    {
+        PlayerBroker.GetResourceSprite = GetResourceSprite;
+        PlayerBroker.GetFragmentSprite = GetFragmentSprite;
+    }
 
+    private Sprite GetResourceSprite(Resource resource)
+    {
+        switch (resource)
+        {
+            case Resource.Gold:
+                return _goldSprite;
+            case Resource.Exp:
+                return _expSprite;
+            case Resource.Dia:
+                return _diaSprite;
+            case Resource.Clover:
+                return _cloverSprite;
+            case Resource.Scroll:
+                break;
+            case Resource.Fragment:
+                throw new Exception("Use GetFragmentSprite");
+            case Resource.None:
+                break;
+            case Resource.Weapon:
+                break;
+        }
+        return null;
+    }
+    private Sprite GetFragmentSprite(Rarity rarity) => _fragmentSprites[(int)rarity];
     private void OnDrop(DropType type, int value, string id)
     {
         switch (type)
@@ -111,11 +144,21 @@ public class CurrencyManager : MonoBehaviour
 
     private void GetExpByDrop(int value)
     {
+        Debug.Log($"원래경험치:{value}");
+        if (_ExpPassiveOn)
+        {
+            value += Mathf.CeilToInt(value * _expPlusPercent / 100f);
+        }
+        Debug.Log($"추가된경험치:{value}");
         _gameData.exp += value;
         PlayerBroker.OnLevelExpSet();
         NetworkBroker.QueueResourceReport(value, null, Resource.Exp, Source.Battle);
     }
-
+    public void PassiveOn(float expPercent)
+    {
+        _ExpPassiveOn = true;   
+        _expPlusPercent = expPercent;
+    }
     private void OnLevelExpSet()
     {
         while (true)

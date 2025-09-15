@@ -20,18 +20,6 @@ public class CurrencyBarUI : MonoBehaviour, IGeneralUI
     {
         root = GetComponent<UIDocument>().rootVisualElement;
         _gameData = StartBroker.GetGameData();
-        PlayerBroker.OnGacha += OnGacha;
-    }
-
-    private void OnGacha(GachaType type, int arg2)
-    {
-        switch (type)
-        {
-            case GachaType.Weapon:
-            case GachaType.Costume:
-                SetDia();
-                break;
-        }
     }
 
     void Start()

@@ -16,7 +16,6 @@ public class EnemyController : Attackable, IMoveByPlayer
     private float deadDuration = 1f;//죽는데 걸리는 시간
 
     public EnemyHpBar enemyHpBar;
-    public bool IsMonster => _status.isMonster;
     private void Start()
     {
         MediatorManager<IMoveByPlayer>.RegisterMediator(this);
@@ -134,4 +133,28 @@ public class EnemyController : Attackable, IMoveByPlayer
     
     }
 
+    protected override IEnumerator AttackLoop()
+    {
+        if (target == null)
+            yield break;
+
+        while (true)
+        {
+           
+
+            yield return new WaitForSeconds(attackTerm);
+
+            if (target == null || target.isDead)
+                yield break;
+
+            if (anim != null)
+            {
+                anim.SetTrigger("Attack");
+            }
+          
+            BigInteger dmg = _status.Power;
+            target.ReceiveDamage(dmg);
+         
+        }
+    }
 }

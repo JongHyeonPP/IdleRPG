@@ -359,7 +359,7 @@ public class CompanionInfoUI : MonoBehaviour, IGeneralUI
                 cloverLabel.text = price.clover.ToString();
                 Label fragmentLabel = passiveSlot.Q<Label>("FragmentLabel");
                 VisualElement fragmentSprite = passiveSlot.Q<VisualElement>("FragmentSprite");
-                fragmentSprite.style.backgroundImage = new(CurrencyManager.instance.fragmentSprites[(int)price.fragmentRarity]);
+                fragmentSprite.style.backgroundImage = new(CurrencyManager.instance._fragmentSprites[(int)price.fragmentRarity]);
                 fragmentLabel.text = price.fragment.ToString();
             }
             iconSprite.style.backgroundImage = new(skillData.iconSprite);

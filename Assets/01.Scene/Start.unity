@@ -400,6 +400,7 @@ MonoBehaviour:
     ownedCostumes: []
     adventureProgess: 000000000000000000000000000000000000000000000000000000000000000000000000
     dungeonProgress: 000000000000000000000000
+    gachaThreshold: 0
     statPoint: 0
 --- !u!4 &1048825963
 Transform:

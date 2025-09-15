@@ -1,10 +1,11 @@
 using EnumCollection;
 using System;
+using UnityEngine;
 
 public static class PlayerBroker
 {
     //PlayerController에서 능력치 얻어옴 - PlayerController
-    public static Func<object> GetPlayerController;//PlayerController
+    
     //골드로 올린 스탯 적용
     public static Action<StatusType, int> OnGoldStatusLevelSet;
     //스탯 포인트로 올린 스탯 적용
@@ -49,5 +50,7 @@ public static class PlayerBroker
     public static Action<AppearanceData> OnPlayerAppearanceChange;
     public static Action<int, AppearanceData> OnCompanionAppearanceChange;//int : CompanionIndex
 
-    public static Action<GachaType, int> OnGacha;
+
+    public static Func<Resource, Sprite> GetResourceSprite;
+    public static Func<Rarity, Sprite> GetFragmentSprite;
 }

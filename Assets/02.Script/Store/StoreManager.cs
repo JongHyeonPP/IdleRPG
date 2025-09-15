@@ -851,6 +851,7 @@ public class StoreManager : MonoSingleton<StoreManager>
     {
         return -(Mathf.Cos(Mathf.PI * t) - 1) / 2;
     }
+
     //�� �������� �� �� ������ �Ű������� �־ ȣ��
     private async Task CallGacha(GachaType type, int num)
     {
@@ -860,26 +861,61 @@ public class StoreManager : MonoSingleton<StoreManager>
         { "gachaNum",  num }
     };
 
-        List<string> result = await CloudCodeService.Instance
-            .CallModuleEndpointAsync<List<string>>(
+        GachaResult result = await CloudCodeService.Instance
+            .CallModuleEndpointAsync<GachaResult>(
                 "PurchaseProcessor",
                 "ProcessGacha",
                 args);
 
-        Debug.Log($"[Gacha] {type} x{num} => {string.Join(", ", result)}");
-
-        var priceInfo = prices[(type, num)];
-        switch (priceInfo.resource)
+        if (!result.Success)
         {
-            case Resource.Dia:
-                _gameData.dia -= priceInfo.num;
-                break;
-            default:
-                throw new Exception($"�������� �ʴ� ��ȭ Ÿ��: {priceInfo.resource}");
+            Debug.LogWarning($"[Gacha] ����: {result.Message}");
+            // ���⼭ �˾� ���ų� UI ���� (��: ���̾� ���� �ȳ�)
+            return;
         }
 
-        PlayerBroker.OnGacha?.Invoke(type, num); //��í ������ ������ ��������Ʈ�� ���� ���
+        Debug.Log($"[Gacha] {type} x{num} => {string.Join(", ", result.Items)}");
+
+        // �������� �̹� ����������, Ŭ���̾�Ʈ ���� GameData�� ����
+        _gameData.dia = result.RemainDia;
+        PlayerBroker.OnDiaSet();
+
+        switch (type)
+        {
+            case GachaType.Weapon:
+                foreach (var weaponId in result.Items)
+                {
+                    if (string.IsNullOrWhiteSpace(weaponId))
+                        continue;
+
+                    // ���� GameData ����
+                    if (_gameData.weaponCount.ContainsKey(weaponId))
+                        _gameData.weaponCount[weaponId]++;
+                    else
+                        _gameData.weaponCount[weaponId] = 1;
+
+                    // ���Ŀ �̺�Ʈ �˸� (����ID, ���ŵ� ����)
+                    PlayerBroker.OnWeaponCountSet?.Invoke(weaponId, _gameData.weaponCount[weaponId]);
+                }
+                break;
+
+            case GachaType.Costume:
+                foreach (var costumeId in result.Items)
+                {
+                    if (string.IsNullOrWhiteSpace(costumeId))
+                        continue;
+
+                    if (!_gameData.ownedCostumes.Contains(costumeId))
+                        _gameData.ownedCostumes.Add(costumeId);
+
+                    // �ʿ��ϴٸ� OnCostumeOwnedSet ���� �̺�Ʈ�� ������ ������� ȣ�� ����
+                }
+                break;
+        }
+
     }
+
+
 
 #if UNITY_EDITOR
     // ---- Weapon �׽�Ʈ ----

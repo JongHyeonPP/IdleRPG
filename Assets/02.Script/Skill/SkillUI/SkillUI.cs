@@ -177,7 +177,7 @@ public class SkillUI : MonoBehaviour, IMenuUI
             VisualElement fragment = fragmentGrid.Q<VisualElement>($"Fragment{rarity}");
             VisualElement iconVe = fragment.Q<VisualElement>("IconVe");
             Label numLabel = fragment.Q<Label>("NumLabel");
-            iconVe.style.backgroundImage = new(CurrencyManager.instance.fragmentSprites[(int)rarity]);
+            iconVe.style.backgroundImage = new(CurrencyManager.instance._fragmentSprites[(int)rarity]);
             fragmentLabelDict.Add(rarity, numLabel);
             if (!StartBroker.GetGameData().skillFragment.TryGetValue(rarity, out int value))
             {

@@ -30,7 +30,7 @@ public class PlayerBarUI : MonoBehaviour, IGeneralUI
     private void SetBarPosition()
     {
         VisualElement vertical = GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("Vertical");
-        var controller = (MonoBehaviour)PlayerBroker.GetPlayerController();
+        MonoBehaviour controller = (MonoBehaviour)BattleBroker.GetPlayerController();
 
         // 월드 좌표를 스크린 좌표로 변환
         Vector3 screenPoint = Camera.main.WorldToScreenPoint(controller.transform.position);
@@ -86,7 +86,7 @@ public class PlayerBarUI : MonoBehaviour, IGeneralUI
     }
     public void OnBattle()
     {
-        root.style.display = DisplayStyle.None;
+        root.style.display = DisplayStyle.Flex;
     }
 
     public void OnStory()

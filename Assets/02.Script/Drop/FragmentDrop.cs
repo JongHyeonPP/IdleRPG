@@ -31,6 +31,6 @@ public class FragmentDrop : DropBase
         (Rarity, int) value = CurrencyManager.instance.GetFragmentRangedValue();
         rarity = value.Item1;
         base.value = value.Item2;
-        GetComponent<SpriteRenderer>().sprite = CurrencyManager.instance.fragmentSprites[(int)rarity];
+        GetComponent<SpriteRenderer>().sprite = CurrencyManager.instance._fragmentSprites[(int)rarity];
     }
 }
