@@ -19,7 +19,7 @@ MonoBehaviour:
   complex: 
   rarity: 0
   isPlayerSkill: 1
-  skillCoolType: 0
+  skillCoolType: 2
   cooltime: 0
   coolAttack: 0
   requireMp: 0

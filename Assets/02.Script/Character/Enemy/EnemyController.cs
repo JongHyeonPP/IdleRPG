@@ -157,4 +157,8 @@ public class EnemyController : Attackable, IMoveByPlayer
          
         }
     }
+    public override BigInteger GetMaxHp()
+    {
+        return _status != null ? _status.MaxHp : hp;
+    }
 }

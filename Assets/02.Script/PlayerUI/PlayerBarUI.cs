@@ -65,10 +65,10 @@ public class PlayerBarUI : MonoBehaviour, IGeneralUI
     {
         _hpBar.value = ratio;
         _delayedBar.value = ratio;
-        //if (_delayedHpCoroutine != null)
-        //    StopCoroutine(_delayedHpCoroutine);
+        if (_delayedHpCoroutine != null)
+            StopCoroutine(_delayedHpCoroutine);
 
-        //_delayedHpCoroutine = StartCoroutine(AnimateDelayedHpBar(ratio));
+        _delayedHpCoroutine = StartCoroutine(AnimateDelayedHpBar(ratio));
     }
 
     private IEnumerator AnimateDelayedHpBar(float targetRatio)

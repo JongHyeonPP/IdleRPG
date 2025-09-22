@@ -235,4 +235,8 @@ public class PlayerController : Attackable
 
         
     }
+    public override BigInteger GetMaxHp()
+    {
+        return _status.MaxHp;
+    }
 }

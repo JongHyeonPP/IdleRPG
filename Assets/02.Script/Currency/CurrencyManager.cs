@@ -144,12 +144,12 @@ public class CurrencyManager : MonoBehaviour
 
     private void GetExpByDrop(int value)
     {
-        Debug.Log($"원래경험치:{value}");
+       // Debug.Log($"원래경험치:{value}");
         if (_ExpPassiveOn)
         {
             value += Mathf.CeilToInt(value * _expPlusPercent / 100f);
         }
-        Debug.Log($"추가된경험치:{value}");
+       // Debug.Log($"추가된경험치:{value}");
         _gameData.exp += value;
         PlayerBroker.OnLevelExpSet();
         NetworkBroker.QueueResourceReport(value, null, Resource.Exp, Source.Battle);

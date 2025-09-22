@@ -42,6 +42,15 @@ public class SkillManager : MonoBehaviour
     {
         return acquireInfoArr[i];
     }
+    public List<SkillAcquireInfo> GetAllPassiveSkills()
+    {
+        if (acquireInfoArr == null) return new List<SkillAcquireInfo>();
+
+        return acquireInfoArr
+            .Where(info => info != null && info.SkillData != null && !info.SkillData.isActiveSkill)
+            .ToList();
+    }
+    public IEnumerable<SkillAcquireInfo> GetAllPlayerSkills() => acquireInfoArr.Where(info => info.SkillData.isPlayerSkill);
     public string GetParsedComplexExplain(SkillData skillData, int skillLevel, Color color)
     {
         string colorHex = ColorUtility.ToHtmlStringRGB(color);

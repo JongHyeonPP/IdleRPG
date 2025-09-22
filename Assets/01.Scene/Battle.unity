@@ -3050,6 +3050,7 @@ MonoBehaviour:
     ownedCostumes: []
     adventureProgess: 000000000000000000000000000000000000000000000000000000000000000000000000
     dungeonProgress: 000000000000000000000000
+    gachaThreshold: 0
     statPoint: 0
   skillUI: {fileID: 246605442210432971}
   equipedSkillUI: {fileID: 8205451347979957151}
@@ -5774,6 +5775,42 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 578890846}
     m_Modifications:
+    - target: {fileID: 757714611926206905, guid: 67119468d4946b64e8ad54d56a69d5ec, type: 3}
+      propertyPath: playerSkillArr.Array.size
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 757714611926206905, guid: 67119468d4946b64e8ad54d56a69d5ec, type: 3}
+      propertyPath: 'acquireInfoArr.Array.data[16]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 541c9772a9584be449e62914ea8adbf8, type: 2}
+    - target: {fileID: 757714611926206905, guid: 67119468d4946b64e8ad54d56a69d5ec, type: 3}
+      propertyPath: 'acquireInfoArr.Array.data[17]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 4bcd72d1ad0b9014d8655f3d2243e0cc, type: 2}
+    - target: {fileID: 757714611926206905, guid: 67119468d4946b64e8ad54d56a69d5ec, type: 3}
+      propertyPath: 'acquireInfoArr.Array.data[18]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 51b89f7f2043ccd49b9210a936a9d203, type: 2}
+    - target: {fileID: 757714611926206905, guid: 67119468d4946b64e8ad54d56a69d5ec, type: 3}
+      propertyPath: 'acquireInfoArr.Array.data[19]'
+      value: 
+      objectReference: {fileID: 11400000, guid: b3b0fa6b7947e5e4fa24053bf8c8f44c, type: 2}
+    - target: {fileID: 757714611926206905, guid: 67119468d4946b64e8ad54d56a69d5ec, type: 3}
+      propertyPath: 'playerSkillArr.Array.data[16]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 3d99eb8010834c647b9d79f690a9cc6a, type: 2}
+    - target: {fileID: 757714611926206905, guid: 67119468d4946b64e8ad54d56a69d5ec, type: 3}
+      propertyPath: 'playerSkillArr.Array.data[17]'
+      value: 
+      objectReference: {fileID: 11400000, guid: d8269165c61ea7844a212216508a4a6b, type: 2}
+    - target: {fileID: 757714611926206905, guid: 67119468d4946b64e8ad54d56a69d5ec, type: 3}
+      propertyPath: 'playerSkillArr.Array.data[18]'
+      value: 
+      objectReference: {fileID: 11400000, guid: fc42c6f20562bf44789aebadae39074e, type: 2}
+    - target: {fileID: 757714611926206905, guid: 67119468d4946b64e8ad54d56a69d5ec, type: 3}
+      propertyPath: 'playerSkillArr.Array.data[19]'
+      value: 
+      objectReference: {fileID: 11400000, guid: ebec86d423f1c8246a806ec9fcba60e8, type: 2}
     - target: {fileID: 1693461480969304149, guid: 67119468d4946b64e8ad54d56a69d5ec, type: 3}
       propertyPath: m_Name
       value: SkillManger

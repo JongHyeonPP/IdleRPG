@@ -22,6 +22,7 @@ public class SkillAcquireUI : MonoBehaviour, IGeneralUI
         PlayerBroker.OnSkillLevelSet +=(str, num)=> OnLevelExpSet();
         _gameData = StartBroker.GetGameData();
     }
+
     private void Start()
     {
         root.style.display = DisplayStyle.None;
@@ -33,35 +34,27 @@ public class SkillAcquireUI : MonoBehaviour, IGeneralUI
     private void OnSkillLevelSet(string skillId, int skillLevel)
     {
         SkillData skillData = SkillManager.instance.GetSkillData(skillId);
-        if (!skillData.isPlayerSkill)
-            return;
-        VisualElement targetSlot = _acquireSlotDict.Where(item => item.Key.SkillData.uid == skillId).FirstOrDefault().Value;
-        bool isActiveSkill = skillData.isActiveSkill;
-        VisualElement panel_1 = targetSlot.Q<VisualElement>(isActiveSkill?"ActivePanel_1": "PassivePanel_1");
-        if (skillLevel == 0)
-        {
-            panel_1.style.visibility = Visibility.Visible;
-        }
-        else
-        {
-            panel_1.style.visibility = Visibility.Hidden;
-        }
-        
+        if (skillData == null || !skillData.isPlayerSkill) return;
+
+        var kvp = _acquireSlotDict.FirstOrDefault(item => item.Key.SkillData.uid == skillId);
+        if (kvp.Key == null || kvp.Value == null) return; 
+
+        VisualElement targetSlot = kvp.Value;
+        VisualElement panel_1 = targetSlot.Q<VisualElement>(skillData.isActiveSkill ? "ActivePanel_1" : "PassivePanel_1");
+        if (panel_1 == null) return; 
+
+        panel_1.style.visibility = (skillLevel == 0) ? Visibility.Visible : Visibility.Hidden;
     }
 
     private void OnLevelExpSet()
     {
         int level = _gameData.level;
-        foreach (KeyValuePair<SkillAcquireInfo, VisualElement> kvp in _acquireSlotDict)
+        foreach (var kvp in _acquireSlotDict)
         {
-            if (kvp.Key.acquireLevel > level)//배우지 못하는 경우
-            {
-                kvp.Value.Q<VisualElement>("LockPanel").style.display = DisplayStyle.Flex;
-            }
-            else//배울 수 있는 경우
-            {
-                kvp.Value.Q<VisualElement>("LockPanel").style.display = DisplayStyle.None;
-            }
+            var lockPanel = kvp.Value.Q<VisualElement>("LockPanel");
+            if (lockPanel == null) continue;
+
+            lockPanel.style.display = (kvp.Key.acquireLevel > level) ? DisplayStyle.Flex : DisplayStyle.None;
         }
         CheckUnacquiredExist();
     }
@@ -69,22 +62,35 @@ public class SkillAcquireUI : MonoBehaviour, IGeneralUI
 
     private void SetEntireSlots()
     {
-        for(int i =0;i<slotParentPanel.childCount;i++)
+        for (int i = 0; i < slotParentPanel.childCount; i++)
         {
             VisualElement slot = slotParentPanel.ElementAt(i);
             SkillAcquireInfo info = SkillManager.instance.GetInfo(i);
-            SetSkillAcquireSlot(slot, info);
+            if (info == null || info.SkillData == null) continue;
+
+            if (info.SkillData.isActiveSkill)
+                SetSkillAcquireSlot(slot, info);
+        }
+
+        foreach (var info in SkillManager.instance.GetAllPassiveSkills())
+        {
+            if (info == null || info.SkillData == null) continue;
+            SetPassiveSkillInSlot(info);
         }
     }
     private void OnSlotClicked(SkillData skillData, VisualElement iconVe)
     {
-        if (_draggableScrollView._isDragging)
-            return;
-        Dictionary<string, int> skillLevel = _gameData.skillLevel;
+        if (_draggableScrollView._isDragging) return;
+        if (skillData == null || iconVe == null) return;
+
         iconVe.style.visibility = Visibility.Hidden;
-        if (!skillLevel.ContainsKey(skillData.name) || skillLevel[skillData.name]==0)
-           _gameData.skillLevel[skillData.name] = 1;
-        PlayerBroker.OnSkillLevelSet(skillData.name, 1);
+
+        string key = skillData.uid; 
+        if (!_gameData.skillLevel.ContainsKey(key) || _gameData.skillLevel[key] == 0)
+        {
+            _gameData.skillLevel[key] = 1;
+            PlayerBroker.OnSkillLevelSet(key, 1);
+        }
     }
     private void SetSkillAcquireSlot(VisualElement slot, SkillAcquireInfo info)
     {
@@ -131,6 +137,7 @@ public class SkillAcquireUI : MonoBehaviour, IGeneralUI
         }
 
     }
+
     public void CheckUnacquiredExist()
     {
         List<SkillAcquireInfo> keys = _acquireSlotDict.Keys.ToList();
@@ -141,7 +148,7 @@ public class SkillAcquireUI : MonoBehaviour, IGeneralUI
             {
                 break;
             }
-            if (!_gameData.skillLevel.ContainsKey(info.SkillData.uid)||_gameData.skillLevel[info.SkillData.uid]==0)
+            if (!_gameData.skillLevel.ContainsKey(info.SkillData.uid) || _gameData.skillLevel[info.SkillData.uid] == 0)
             {
                 UIBroker.OnMenuUINotice(2, true);
                 _skillUI.skillAcquireNotice.StartNotice();
@@ -150,6 +157,48 @@ public class SkillAcquireUI : MonoBehaviour, IGeneralUI
         }
         UIBroker.OnMenuUINotice(2, false);
         _skillUI.skillAcquireNotice.StopNotice();
+    }
+
+    private void SetPassiveSkillInSlot(SkillAcquireInfo info)
+    {
+        VisualElement slot = FindSlotForLevel(info.acquireLevel);
+        if (slot == null || info.SkillData == null) return;
+
+        if (!_acquireSlotDict.ContainsKey(info))
+            _acquireSlotDict.Add(info, slot);
+
+        VisualElement passivePanel = slot.Q<VisualElement>("PassivePanel_1");
+        if (passivePanel == null) return;
+
+        VisualElement iconVe = passivePanel.Q<VisualElement>("SkillIcon");
+        if (iconVe == null) return;
+
+        iconVe.style.backgroundImage = new StyleBackground(info.SkillData.iconSprite);
+        iconVe.RegisterCallback<ClickEvent>(evt => OnSlotClicked(info.SkillData, iconVe));
+
+        string key = info.SkillData.uid;
+        if (_gameData.skillLevel.ContainsKey(key) && _gameData.skillLevel[key] != 0)
+        {
+            passivePanel.style.visibility = Visibility.Hidden;
+        }
+        else
+        {
+            passivePanel.style.visibility = Visibility.Visible;
+        }
+    }
+    private VisualElement FindSlotForLevel(int acquireLevel)
+    {
+        for (int i = 0; i < slotParentPanel.childCount; i++)
+        {
+            VisualElement slot = slotParentPanel.ElementAt(i);
+            Label levelLabel = slot.Q<Label>("LevelLabel");
+            if (levelLabel != null && int.TryParse(levelLabel.text, out int level))
+            {
+                if (level == acquireLevel)
+                    return slot;
+            }
+        }
+        return null;
     }
     public void ActiveUI()
     {

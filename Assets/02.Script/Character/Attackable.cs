@@ -26,7 +26,6 @@ public abstract class Attackable : MonoBehaviour
     private float _tempSpeedPercent = 0f;
     private PassiveSkill _passive;
 
-    private EquipedSkill _lastUsedSkill;
 
     private void OnEnable()
     {
@@ -222,13 +221,7 @@ public abstract class Attackable : MonoBehaviour
     }
     public virtual void ReceiveDamage(BigInteger damage)
     {
-        hp -= damage;
-        Debug.Log($"{name}의 받은데미지:{damage}, 체력={hp}");
-        if (hp <= 0 && !isDead)
-        {
-            isDead = true;
-            OnDead();
-        }
+        ReceiveSkill(damage, SkillType.Damage);
     }
     public void StopAttack()
     {
@@ -252,9 +245,11 @@ public abstract class Attackable : MonoBehaviour
         switch (skillType)
         {
             case SkillType.Damage:
-                hp = hp - calcedValue;
+                hp -= calcedValue;
                 if (hp < 0)
                     hp = 0;
+
+               
 
                 if (this is EnemyController)
                 {
@@ -262,20 +257,27 @@ public abstract class Attackable : MonoBehaviour
                 }
                 else
                 {
-                    // 모든 자식의 SpriteRenderer 색상 변경
                     StartCoroutine(FlashRed());
                 }
 
-                Vector3 screenPos = mainCamera.WorldToScreenPoint(transform.position);
+                Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
                 BattleBroker.ShowDamageText(screenPos, calcedValue.ToString("N0"));
                 break;
 
             case SkillType.Heal:
+                hp += calcedValue;
+                if (hp > GetMaxHp()) 
+                    hp = GetMaxHp();
+              
                 break;
+
         }
+
         OnReceiveSkill();
-        if (hp == 0)
+
+        if (hp == 0 && !isDead)
         {
+            isDead = true;
             OnDead();
         }
     }
@@ -372,7 +374,7 @@ public abstract class Attackable : MonoBehaviour
             }
 
             return enemies
-                .Where(e => e != null && !e.isDead)   // null 제거 + 죽은 애도 제외
+                .Where(e => e != null && !e.isDead)   
                 .Cast<Attackable>()
                 .OrderBy(a => Vector3.Distance(transform.position, a.transform.position))
                 .Take(targetNum)
@@ -389,7 +391,7 @@ public abstract class Attackable : MonoBehaviour
         }
     }
 
-
+    public abstract BigInteger GetMaxHp();
 
     #region passive
     protected virtual BigInteger CalculateBaseDamage(EquipedSkill skill)

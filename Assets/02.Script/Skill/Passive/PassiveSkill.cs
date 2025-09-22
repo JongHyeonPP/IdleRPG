@@ -84,4 +84,24 @@ public class PassiveSkill : MonoBehaviour
 
         Debug.Log("5레벨설정");
     }
+
+    [ContextMenu("Force Passive Skills to Level 0")]
+    private void ForcePassiveLevel0()
+    {
+        if (_gd?.skillLevel == null)
+            return;
+
+        if (healOnHit != null)
+            _gd.skillLevel[healOnHit.uid] = 0;
+
+        if (damagePlus != null)
+            _gd.skillLevel[damagePlus.uid] = 0;
+
+        if (doubleHit != null)
+            _gd.skillLevel[doubleHit.uid] = 0;
+        if (expPlus != null)
+            _gd.skillLevel[expPlus.uid] = 0;
+
+        Debug.Log("5레벨설정");
+    }
 }
