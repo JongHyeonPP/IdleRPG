@@ -2393,6 +2393,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2563616178948785401, guid: ad8e202a54b9f294d9ece3d43f9f054a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2840846634887417305, guid: ad8e202a54b9f294d9ece3d43f9f054a, type: 3}
       propertyPath: m_Camera
       value: 
@@ -2493,7 +2497,27 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4356649237708612167, guid: ad8e202a54b9f294d9ece3d43f9f054a, type: 3}
+      propertyPath: _mappingBias
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4356649237708612167, guid: ad8e202a54b9f294d9ece3d43f9f054a, type: 3}
+      propertyPath: _cornerRadius
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4356649237708612167, guid: ad8e202a54b9f294d9ece3d43f9f054a, type: 3}
+      propertyPath: _outlineWidth
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 4356649237708612167, guid: ad8e202a54b9f294d9ece3d43f9f054a, type: 3}
+      propertyPath: _cornerSegments
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4916188572829932683, guid: ad8e202a54b9f294d9ece3d43f9f054a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5593502487583207160, guid: ad8e202a54b9f294d9ece3d43f9f054a, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}

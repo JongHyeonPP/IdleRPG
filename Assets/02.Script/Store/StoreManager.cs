@@ -70,6 +70,19 @@ public class StoreManager : MonoSingleton<StoreManager>
 
     private readonly string[] _hamsterMessages = { "어서오세요!", "앗!", "좋은 걸 뽑아보자!", "가자~!" };
 
+    // ── Slot Appear/Bob FX params ────────────────────────────────────────────────
+    [Header("Slot FX")]
+    [SerializeField] private float _appearDuration = 0.35f;   // 슬롯 등장 팝 애니 길이
+    [SerializeField] private float _appearStagger = 0.05f;   // 슬롯 간 지연
+    [SerializeField] private float _bobAmplitude = 6f;      // 보브(상하) 진폭(px)
+    [SerializeField] private float _bobPeriod = 1.6f;     // 보브 1회전 시간(sec)
+    [SerializeField] private float _popScale = 1.08f;    // 입장 시 살짝 확대 정도
+    [SerializeField] private AnimationCurve _popEase = AnimationCurve.EaseInOut(0, 0, 1, 1);
+
+    private readonly Dictionary<VisualElement, Coroutine> _bobRoutines = new();
+
+    private readonly Dictionary<Rarity, Vector2> _rarityOffsetMap = new();
+
     #endregion
 
     #region Unity Lifecycle
@@ -118,7 +131,6 @@ public class StoreManager : MonoSingleton<StoreManager>
         catch (Exception e)
         {
             Debug.LogError($"InitPriceFromRc 오류: {e.Message}");
-            // 가격 초기화 실패도 사용자에게 명확히 전달
             ShowErrorPopup("상점 가격 정보를 불러오지 못했습니다.\n잠시 후 다시 시도해 주세요.");
             throw;
         }
@@ -234,10 +246,32 @@ public class StoreManager : MonoSingleton<StoreManager>
 
         BuildSlotPool();
         HideAllSlots();
-
+        BuildRarityOffsetMap();
         #endregion
     }
 
+
+/*    public enum Rarity
+    {
+        Common,
+        Uncommon,
+        Rare,
+        Unique,
+        Legendary,
+        Mythic,
+    }*/
+
+    private void BuildRarityOffsetMap()
+    {
+        _rarityOffsetMap.Clear();
+
+        _rarityOffsetMap[Rarity.Common] = new Vector2(-914f, 11f);
+        _rarityOffsetMap[Rarity.Uncommon] = new Vector2(-914f, 11f);
+        _rarityOffsetMap[Rarity.Rare] = new Vector2(-914f, 11f);
+        _rarityOffsetMap[Rarity.Unique] = new Vector2(-914f, 11f);
+        _rarityOffsetMap[Rarity.Legendary] = new Vector2(-914f, 11f);
+        _rarityOffsetMap[Rarity.Mythic] = new Vector2(-914f, 11f);
+    }
     private void BuildSlotPool()
     {
         if (_rowVE1 == null || _rowVE2 == null) return;
@@ -311,6 +345,10 @@ public class StoreManager : MonoSingleton<StoreManager>
 
         SetHamsterText(isVisible ? _hamsterMessages[Random.Range(1, _hamsterMessages.Length)] : _hamsterMessages[0]);
         _popup.style.display = isVisible ? DisplayStyle.Flex : DisplayStyle.None;
+
+        // 닫힐 때 슬롯 애니 정리
+        if (!isVisible)
+            StopAllSlotFx();
     }
 
     public void ClosePopup() => SetPopupVisibility(false);
@@ -336,6 +374,10 @@ public class StoreManager : MonoSingleton<StoreManager>
         else SetHamsterText(_hamsterMessages[0]);
 
         _errorPopup.style.display = isVisible ? DisplayStyle.Flex : DisplayStyle.None;
+
+        // 에러 팝업 표시 시에도 슬롯 애니 정리
+        if (isVisible)
+            StopAllSlotFx();
     }
 
     public void ShowErrorPopup(string msg)
@@ -512,13 +554,10 @@ public class StoreManager : MonoSingleton<StoreManager>
                 var icon = slot.Q<VisualElement>("WeaponIcon");
                 if (icon != null && weapon.WeaponSprite != null)
                 {
-                    icon.style.width = 180;
-                    icon.style.height = 180;
                     icon.style.backgroundImage = new StyleBackground(weapon.WeaponSprite.texture);
-#pragma warning disable 618
-                    icon.style.unityBackgroundScaleMode = ScaleMode.ScaleAndCrop;
-#pragma warning restore 618
                 }
+
+                ApplyRarityOffsetTo(icon, weapon.WeaponRarity);
 
                 var nameLabel = slot.Q<Label>("WeaponName");
                 if (nameLabel != null)
@@ -534,6 +573,9 @@ public class StoreManager : MonoSingleton<StoreManager>
                 slot.style.display = DisplayStyle.None;
             }
         }
+
+        // 등장 FX 실행
+        PlayAppearFxForVisibleSlots();
     }
 
     private void UpdateCostumeGridUI(List<CostumeItem> costumes)
@@ -551,12 +593,9 @@ public class StoreManager : MonoSingleton<StoreManager>
                 var icon = slot.Q<VisualElement>("WeaponIcon");
                 if (icon != null && costume.IconTexture != null)
                 {
-                    icon.style.width = 180;
-                    icon.style.height = 180;
+
                     icon.style.backgroundImage = new StyleBackground(costume.IconTexture);
-#pragma warning disable 618
-                    icon.style.unityBackgroundScaleMode = ScaleMode.ScaleAndCrop;
-#pragma warning restore 618
+
                 }
 
                 var nameLabel = slot.Q<Label>("WeaponName");
@@ -573,10 +612,14 @@ public class StoreManager : MonoSingleton<StoreManager>
                 slot.style.display = DisplayStyle.None;
             }
         }
+
+        // 등장 FX 실행
+        PlayAppearFxForVisibleSlots();
     }
 
     private void HideAllSlots()
     {
+        StopAllSlotFx();
         foreach (var s in _slots) s.style.display = DisplayStyle.None;
     }
 
@@ -585,6 +628,106 @@ public class StoreManager : MonoSingleton<StoreManager>
         string log = "뽑기 결과:\n";
         foreach (var weapon in weapons) log += $"- {weapon.name} ({weapon.WeaponRarity})\n";
         Debug.Log(log);
+    }
+
+    #endregion
+
+    #region Slot Appear/Bob FX
+
+    private IEnumerable<VisualElement> VisibleSlots()
+    {
+        foreach (var s in _slots)
+        {
+            if (s.resolvedStyle.display == DisplayStyle.Flex) yield return s;
+        }
+    }
+
+    // 등급별 offset다르게 주기
+    private void ApplyRarityOffsetTo(VisualElement target, Rarity rarity, string moverName = "RT_SlotBg")
+    {
+
+        if (target == null) return;
+
+        var mover = target.Q<VisualElement>(moverName);
+        if (mover == null) return;
+
+        Vector2 off = _rarityOffsetMap.TryGetValue(rarity, out var v) ? v : Vector2.zero;
+        mover.style.translate = new StyleTranslate(new Translate(off.x, off.y, 0));
+    }
+
+
+    private void PlayAppearFxForVisibleSlots()
+    {
+        StopAllSlotFx(); // 중복 방지
+        int idx = 0;
+        foreach (var slot in VisibleSlots())
+        {
+            float delay = _appearStagger * idx++;
+            StartCoroutine(Co_AppearThenBob(slot, delay));
+        }
+    }
+
+    private IEnumerator Co_AppearThenBob(VisualElement slot, float delay)
+    {
+        if (delay > 0f) yield return new WaitForSeconds(delay);
+
+        // 초기 상태
+        slot.style.opacity = 0f;
+        slot.style.scale = new StyleScale(new Vector3(0.92f, 0.92f, 1f));
+        slot.style.translate = new StyleTranslate(new Translate(0, 8f, 0));
+
+        float t = 0f;
+        while (t < _appearDuration)
+        {
+            t += Time.deltaTime;
+            float e = _popEase.Evaluate(Mathf.Clamp01(t / _appearDuration));
+
+            float y = Mathf.Lerp(8f, 0f, e);
+            float s = Mathf.Lerp(0.92f, _popScale, e);
+            slot.style.opacity = e;
+            slot.style.scale = new StyleScale(new Vector3(s, s, 1f));
+            slot.style.translate = new StyleTranslate(new Translate(0, y, 0));
+            yield return null;
+        }
+
+        // 스냅
+        slot.style.scale = new StyleScale(Vector3.one);
+        slot.style.translate = new StyleTranslate(new Translate(0, 0, 0));
+
+        // 보브 시작
+        if (!_bobRoutines.ContainsKey(slot))
+        {
+            _bobRoutines[slot] = StartCoroutine(Co_Bob(slot, Random.Range(0f, 1f)));
+        }
+    }
+
+    private IEnumerator Co_Bob(VisualElement slot, float phaseOffset)
+    {
+        float t = phaseOffset * _bobPeriod;
+        while (true)
+        {
+            t += Time.deltaTime;
+            float phase = (t % _bobPeriod) / _bobPeriod;
+            float y = Mathf.Sin(phase * Mathf.PI * 2f) * _bobAmplitude;
+            slot.style.translate = new StyleTranslate(new Translate(0, y, 0));
+            yield return null;
+        }
+    }
+
+    private void StopAllSlotFx()
+    {
+        foreach (var kv in _bobRoutines.ToList())
+        {
+            if (kv.Value != null) StopCoroutine(kv.Value);
+        }
+        _bobRoutines.Clear();
+
+        foreach (var s in _slots)
+        {
+            s.style.opacity = 1f;
+            s.style.scale = new StyleScale(Vector3.one);
+            s.style.translate = new StyleTranslate(new Translate(0, 0, 0));
+        }
     }
 
     #endregion
@@ -612,6 +755,7 @@ public class StoreManager : MonoSingleton<StoreManager>
         return sb.ToString();
     }
 
+    // 기존 단일 슬롯 팝 애니(미사용 가능). 유지해둠.
     private IEnumerator AnimateSlot(VisualElement slot)
     {
         float duration = 0.5f, elapsed = 0f;
