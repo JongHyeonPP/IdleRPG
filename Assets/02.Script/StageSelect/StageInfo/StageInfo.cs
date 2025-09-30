@@ -23,7 +23,7 @@ public class StageInfo : ScriptableObject, IListViewItem
     public AdventureInfo adventrueInfo;
     public string GetDropInfo()
     {
-        return $"Currently Undefined";
+        return "";
     }
     [Serializable]
     public class EnemyStatusFromStage

@@ -152,13 +152,9 @@ namespace ClientVerification.Verification
                     return AdventureCase(report, out failReason);
 
                 case Source.Companion:
-                    failReason = BuildFail(
-                        "Verify.UnsupportedSource",
-                        "Companion source is not supported yet",
-                        new { resource = report.Resource.ToString(), reportedValue = report.Value }
-                    );
-                    return false;
-
+                    return CompanionCase(report, out failReason);
+                case Source.Dungeon:
+                    return DungeonCase(report, out failReason);
                 default:
                     failReason = BuildFail(
                         "Verify.UnknownSource",
@@ -453,6 +449,16 @@ namespace ClientVerification.Verification
         }
 
         private bool AdventureCase(ResourceReport report, out string failReason)
+        {
+            failReason = "";
+            return true;
+        }
+        private bool CompanionCase(ResourceReport report, out string failReason)
+        {
+            failReason = "";
+            return true;
+        }
+        private bool DungeonCase(ResourceReport report, out string failReason)
         {
             failReason = "";
             return true;

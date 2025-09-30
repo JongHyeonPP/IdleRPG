@@ -73,12 +73,12 @@ public class StatUI : MonoBehaviour, IMenuUI
 
     private void InitStatInfo()
     {
-        _statInfoDict[StatusType.Power] = ("STR", powerSprite);
-        _statInfoDict[StatusType.MaxHp] = ("HP", maxHpSprite);
-        _statInfoDict[StatusType.HpRecover] = ("VIT", hpRecoverSprite);
-        _statInfoDict[StatusType.Critical] = ("치명타", criticalSprite);
-        _statInfoDict[StatusType.CriticalDamage] = ("CRI", criticalDamageSprite);
-        _statInfoDict[StatusType.GoldAscend] = ("LUK", goldAscendSprite);
+        _statInfoDict[StatusType.Power] = ("공격력", powerSprite);
+        _statInfoDict[StatusType.MaxHp] = ("체력", maxHpSprite);
+        _statInfoDict[StatusType.HpRecover] = ("체력 회복", hpRecoverSprite);
+        _statInfoDict[StatusType.Critical] = ("치명타 확률", criticalSprite);
+        _statInfoDict[StatusType.CriticalDamage] = ("치명타 피해량", criticalDamageSprite);
+        _statInfoDict[StatusType.GoldAscend] = ("골드 획득량", goldAscendSprite);
     }
 
     private void InitButton()
@@ -121,7 +121,7 @@ public class StatUI : MonoBehaviour, IMenuUI
         var element = _categoriPanels[0].Q<VisualElement>($"{stat}Element");
         _goldStatDict[stat] = element;
 
-        var info = _statInfoDict[stat];
+        (string name, Sprite icon) info = _statInfoDict[stat];
         element.Q<Label>("StatName").text = info.name;
         element.Q<VisualElement>("StatIcon").style.backgroundImage = new(info.icon);
         element.Q<VisualElement>("EventVe").RegisterCallback<PointerDownEvent>(_ => OnPointerDown(stat, true));
