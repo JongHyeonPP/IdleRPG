@@ -131,7 +131,8 @@ public class MenuControlUI : MonoBehaviour, IGeneralUI
                 case BattleType.Boss:
                 case BattleType.CompanionTech:
                 case BattleType.Adventure:
-                    if (index == 3 || index == 4) // 동료 or 모험
+                case BattleType.Dungeon:
+                    if (index == 3 || index == 4 || index ==5) // 동료 or 모험
                     {
                         UIBroker.ShowPopUpInBattle("전투중에는 이용이 불가합니다");
                         return;
@@ -170,17 +171,18 @@ public class MenuControlUI : MonoBehaviour, IGeneralUI
 
     private void UpdateCameraSize(int index)
     {
-        // 전투 중이면 카메라 조정 금지
-        if (BattleBroker.GetBattleType != null)
-        {
-            switch (BattleBroker.GetBattleType())
-            {
-                case BattleType.Boss:
-                case BattleType.CompanionTech:
-                case BattleType.Adventure:
-                    return;
-            }
-        }
+        //// 전투 중이면 카메라 조정 금지
+        //if (BattleBroker.GetBattleType != null)
+        //{
+        //    switch (BattleBroker.GetBattleType())
+        //    {
+        //        case BattleType.Boss:
+        //        case BattleType.CompanionTech:
+        //        case BattleType.Adventure:
+        //        case BattleType.Dungeon:
+        //            return;
+        //    }
+        //}
 
         CameraInfo targetInfo = (index == 0 || index == 1 || index == 2) ? shrinkInfo : expandInfo;
 

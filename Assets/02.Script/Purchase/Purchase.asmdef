@@ -1,0 +1,24 @@
+{
+    "name": "Purchase",
+    "rootNamespace": "",
+    "references": [
+        "GUID:78b91661590982649902888d656db98d",
+        "GUID:60bfecf5cb232594891bc622f40d6bed",
+        "GUID:5540e30183c82e84b954c033c388e06c",
+        "GUID:f220a277eefae4d3aa9e31c2b43bb307",
+        "GUID:20b20c657697e4f478d6b5b4c5837706",
+        "GUID:fe25561d224ed4743af4c60938a59d0b",
+        "GUID:61689c4e0b9d39d46afcb27de82ad45a",
+        "GUID:c1f3ac597cd61d64e994b094eaa1fa95",
+        "GUID:9d6c7830d9ab746a7a12f144bdeeee7c"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

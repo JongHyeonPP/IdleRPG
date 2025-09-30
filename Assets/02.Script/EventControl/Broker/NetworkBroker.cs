@@ -16,7 +16,4 @@ public static class NetworkBroker
     public static Action OnOfflineReward;
 
     public static Action LoadAd;
-
-    public static Action<string> PurchaseItem;
-    public static Action<string> OnPurchaseSuccess;
 }

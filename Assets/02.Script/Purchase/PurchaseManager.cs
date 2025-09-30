@@ -3,33 +3,35 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Purchasing;
-using Unity.Services.Core;
 using Unity.Services.Authentication;
 using Unity.Services.CloudCode;
+using Unity.Services.RemoteConfig;
+using EnumCollection;
 
 public class PurchaseManager : MonoBehaviour
 {
     private StoreController storeController;
     private bool isInitialized;
+
     private readonly List<ProductDefinition> productDefs = new()
     {
         new ProductDefinition(ProductIds.DIA_0, ProductType.Consumable),
         new ProductDefinition(ProductIds.DIA_1, ProductType.Consumable)
     };
 
+    private Action<PurchaseResult> currentCallback;
+
     private void Awake()
     {
-        // 외부 요청으로 구매 시작
-        NetworkBroker.PurchaseItem += OnPurchaseRequest;
         _ = InitializeIapAsync();
+        PlayerBroker.PurchaseCurrency += PurchaseAsync;
+        PlayerBroker.RequestGacha += CallGacha;
     }
 
     private async Task InitializeIapAsync()
     {
-        // 컨트롤러 생성
         storeController = UnityIAPServices.StoreController();
 
-        // 필수 이벤트 구독
         storeController.OnProductsFetched += OnProductsFetched;
         storeController.OnProductsFetchFailed += OnProductsFetchFailed;
         storeController.OnPurchasesFetched += OnPurchasesFetched;
@@ -37,62 +39,100 @@ public class PurchaseManager : MonoBehaviour
         storeController.OnPurchaseFailed += OnPurchaseFailed;
         storeController.OnPurchaseConfirmed += OnPurchaseConfirmed;
 
-        // 스토어 연결
         await storeController.Connect();
-
-        // 상품 정보 가져오기
         storeController.FetchProducts(productDefs);
     }
 
     private void OnProductsFetched(List<Product> products)
     {
         isInitialized = true;
-        Debug.Log($"IAP 초기화 완료, 상품 개수 {products.Count}");
-        // 보류 주문 복구 처리
+        Debug.Log($"[IAP] 초기화 완료, 상품 개수 {products.Count}");
         storeController.FetchPurchases();
     }
 
     private void OnProductsFetchFailed(ProductFetchFailed reason)
     {
-        Debug.LogError($"상품 정보 조회 실패, 코드 {reason.FailureReason}");
+        Debug.LogError($"[IAP] 상품 정보 조회 실패, 코드 {reason.FailureReason}");
     }
 
     private void OnPurchasesFetched(Orders orders)
     {
-        // 필요시 기존 확정 주문, 보류 주문, 지연 주문을 점검 가능
-        Debug.Log($"기존 주문 로드, 확정 {orders.ConfirmedOrders.Count}, 보류 {orders.PendingOrders.Count}");
+        Debug.Log($"[IAP] 기존 주문 로드, 확정 {orders.ConfirmedOrders.Count}, 보류 {orders.PendingOrders.Count}");
     }
 
-    private void OnPurchaseRequest(string productId)
+    private void PurchaseAsync(string productId)
     {
+#if UNITY_EDITOR
+        CurrencyResult mockResult = LoadCurrencyFromRc(productId);
+        PlayerBroker.OnPurchaseCurrency?.Invoke(new PurchaseResult
+        {
+            Success = mockResult.Resource != Resource.None && mockResult.Value > 0,
+            ProductId = productId,
+            Message = $"[EditorMock] {mockResult.Resource}+{mockResult.Value}",
+            Currency = mockResult
+        });
+        return;
+#endif
+
         if (!isInitialized)
         {
-            Debug.LogWarning("IAP 미초기화 상태, 나중에 다시 시도");
+            PlayerBroker.OnPurchaseCurrency?.Invoke(new PurchaseResult
+            {
+                Success = false,
+                ProductId = productId,
+                Message = "IAP not initialized"
+            });
             return;
         }
 
         Product product = storeController.GetProductById(productId);
         if (product == null || !product.availableToPurchase)
         {
-            Debug.LogError($"구매 불가 상품, id {productId}");
+            PlayerBroker.OnPurchaseCurrency?.Invoke(new PurchaseResult
+            {
+                Success = false,
+                ProductId = productId,
+                Message = "Product unavailable"
+            });
             return;
         }
 
-        storeController.PurchaseProduct(productId); // v5 방식
+        storeController.PurchaseProduct(productId);
     }
 
-    // 구매 보류 발생 시점, 여기서 서버 검증 후 확정
+
     private void OnPurchasePending(PendingOrder pending)
     {
-        Debug.Log($"구매 보류 수신, tx {pending.Info.TransactionID}");
+        Debug.Log($"[IAP] 보류 수신, tx {pending.Info.TransactionID}");
         _ = HandlePendingOrderAsync(pending);
     }
 
     private async Task HandlePendingOrderAsync(PendingOrder pending)
     {
         string receipt = pending.Info.Receipt;
-        string productId = TryGetProductId(pending);
         string playerId = AuthenticationService.Instance.PlayerId;
+
+        // receipt에서 productId 직접 파싱
+        string productId = "unknown_product";
+        try
+        {
+            var root = Newtonsoft.Json.Linq.JObject.Parse(receipt);
+            var payloadStr = root["Payload"]?.ToString();
+            if (!string.IsNullOrEmpty(payloadStr))
+            {
+                var payload = Newtonsoft.Json.Linq.JObject.Parse(payloadStr);
+                var innerJson = payload["json"]?.ToString();
+                if (!string.IsNullOrEmpty(innerJson))
+                {
+                    var inner = Newtonsoft.Json.Linq.JObject.Parse(innerJson);
+                    productId = inner["productId"]?.ToString() ?? "unknown_product";
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"[IAP] receipt 파싱 실패: {e.Message}");
+        }
 
         var args = new Dictionary<string, object>
     {
@@ -101,75 +141,180 @@ public class PurchaseManager : MonoBehaviour
         { "playerId", playerId }
     };
 
+        CurrencyResult result;
+
+#if UNITY_EDITOR
         try
         {
-            CurrencyResult result = await CloudCodeService.Instance.CallModuleEndpointAsync<CurrencyResult>(
-                "PurchaseProcessor",
-                "ProcessCurrency",
-                args
-            );
+            var catalogJson = RemoteConfigService.Instance.appConfig.GetJson("IAP_CATALOG");
+            if (string.IsNullOrEmpty(catalogJson))
+                throw new Exception("IAP_CATALOG is empty in RC");
 
-            //  반드시 체크
-            if (result == null)
+            var rootDict = Newtonsoft.Json.JsonConvert
+                .DeserializeObject<Dictionary<string, object>>(catalogJson);
+
+            var products = Newtonsoft.Json.JsonConvert
+                .DeserializeObject<Dictionary<string, object>>(rootDict["products"].ToString());
+
+            var productNode = Newtonsoft.Json.JsonConvert
+                .DeserializeObject<Dictionary<string, object>>(products[productId].ToString());
+
+            var grants = Newtonsoft.Json.JsonConvert
+                .DeserializeObject<List<Dictionary<string, object>>>(productNode["grants"].ToString());
+
+            var grant = grants[0];
+            string currencyStr = grant["currency"].ToString();
+            int amount = Convert.ToInt32(grant["amount"]);
+
+            if (!Enum.TryParse<Resource>(currencyStr, true, out var resEnum))
+                resEnum = Resource.None;
+
+            result = new CurrencyResult
             {
-                Debug.LogError("[IAP] 서버 검증 결과 null ? 보류 유지");
-                return;
-            }
-            if (!result.success)
-            {
-                Debug.LogError($"[IAP] 서버 검증 실패: {result.message} ? 보류 유지");
-                return;
-            }
+                Resource = resEnum,
+                Value = amount
+            };
 
-
-
-            // 여기서만 확정
-            storeController.ConfirmPurchase(pending);
-            Debug.Log($"구매 확정 완료, productId {productId}");
-            NetworkBroker.OnPurchaseSuccess(productId);
-
-
-
-
-        }
-        catch (CloudCodeException cce)
-        {
-            Debug.LogError($"[IAP] CloudCode 예외 {cce.Reason}, {cce.Message} ? 보류 유지");
-            return;
+            Debug.Log($"[IAP][EditorMock] {productId} → {resEnum}+{amount}");
         }
         catch (Exception e)
         {
-            Debug.LogError($"[IAP] 예외 {e.Message} ? 보류 유지");
+            Debug.LogError($"[IAP][EditorMock] RC load failed: {e.Message}");
+            result = new CurrencyResult
+            {
+                Resource = Resource.None,
+                Value = 0
+            };
+        }
+#else
+    result = await CloudCodeService.Instance
+        .CallModuleEndpointAsync<CurrencyResult>(
+            "PurchaseProcessor",
+            "ProcessCurrency",
+            args
+        );
+#endif
+
+        if (result == null || result.Value <= 0 || result.Resource == Resource.None)
+        {
+            PlayerBroker.OnPurchaseCurrency?.Invoke(new PurchaseResult
+            {
+                Success = false,
+                ProductId = productId,
+                Message = "Server verification failed",
+                Currency = result
+            });
             return;
         }
-    }
 
+#if !UNITY_EDITOR
+    storeController.ConfirmPurchase(pending);
+#endif
 
-    private static string TryGetProductId(PendingOrder pending)
-    {
-        // 1) v5 정식: Info.PurchasedProductInfo[0].productId 사용
-        try
+        Debug.Log($"[IAP] 구매 확정 완료, productId {productId}, {result.Resource}+{result.Value}");
+
+        PlayerBroker.OnPurchaseCurrency?.Invoke(new PurchaseResult
         {
-            var infos = pending?.Info?.PurchasedProductInfo;
-            if (infos != null && infos.Count > 0 && !string.IsNullOrEmpty(infos[0].productId))
-                return infos[0].productId;
-        }
-        catch { /* 무시하고 폴백 */ }
-
-        // 2) 최종 폴백
-        return "unknown_product";   // v5에는 pending.Product가 없음
+            Success = true,
+            ProductId = productId,
+            Message = $"Purchase confirmed: {result.Resource}+{result.Value}",
+            Currency = result
+        });
     }
 
 
 
     private void OnPurchaseFailed(FailedOrder failed)
     {
-        Debug.LogError($"구매 실패, 코드 {failed.FailureReason}");
+        Debug.LogError($"[IAP] 구매 실패, 코드 {failed.FailureReason}");
+        currentCallback?.Invoke(new PurchaseResult
+        {
+            Success = false,
+            ProductId = "unknown",
+            Message = failed.FailureReason.ToString()
+        });
     }
 
     private void OnPurchaseConfirmed(Order order)
     {
-        Debug.Log($"구매 확정 이벤트, tx {order.Info.TransactionID}");
-        // 필요시 영수증이나 트랜잭션 기록을 저장
+        Debug.Log($"[IAP] 구매 확정 이벤트, tx {order.Info.TransactionID}");
     }
+
+    public async void CallGacha(GachaType type, int num)
+    {
+        Dictionary<string, object> args = new()
+    {
+        { "gachaType", type.ToString() },
+        { "gachaNum",  num }
+    };
+
+        try
+        {
+            GachaResult result = await CloudCodeService.Instance
+                .CallModuleEndpointAsync<GachaResult>(
+                    "PurchaseProcessor",
+                    "ProcessGacha",
+                    args);
+
+            PlayerBroker.OnRequestGacha?.Invoke(result);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"[Gacha] 예외 발생: {e.Message}");
+            PlayerBroker.OnRequestGacha?.Invoke(new GachaResult
+            {
+                Success = false,
+                Message = e.Message,
+                Items = new List<string>()
+            });
+        }
+    }
+
+
+#if UNITY_EDITOR
+    private CurrencyResult LoadCurrencyFromRc(string productId)
+    {
+        try
+        {
+            var catalogJson = RemoteConfigService.Instance.appConfig.GetJson("IAP_CATALOG");
+
+            if (string.IsNullOrEmpty(catalogJson))
+                throw new Exception("IAP_CATALOG is empty in RC");
+
+            var rootDict = Newtonsoft.Json.JsonConvert
+                .DeserializeObject<Dictionary<string, object>>(catalogJson);
+
+            var productsDict = Newtonsoft.Json.JsonConvert
+                .DeserializeObject<Dictionary<string, object>>(rootDict["products"].ToString());
+
+            var productEntry = Newtonsoft.Json.JsonConvert
+                .DeserializeObject<Dictionary<string, object>>(productsDict[productId].ToString());
+
+            var grants = Newtonsoft.Json.JsonConvert
+                .DeserializeObject<List<Dictionary<string, object>>>(productEntry["grants"].ToString());
+
+            var grant = grants[0];
+            string currencyStr = grant["currency"].ToString();
+            int amount = Convert.ToInt32(grant["amount"]);
+
+            if (!Enum.TryParse<Resource>(currencyStr, true, out var resEnum))
+                resEnum = Resource.None;
+
+            return new CurrencyResult
+            {
+                Resource = resEnum,
+                Value = amount
+            };
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"[IAP][EditorMock] RC load failed: {e.Message}");
+            return new CurrencyResult
+            {
+                Resource = Resource.None,
+                Value = 0
+            };
+        }
+    }
+#endif
 }

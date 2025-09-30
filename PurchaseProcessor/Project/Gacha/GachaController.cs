@@ -49,9 +49,13 @@ namespace Purchase.Gacha
                         return new GachaResult
                         {
                             Success = false,
-                            Message = $"지원하지 않는 GachaType: {gachaType}"
+                            Message = $"지원하지 않는 GachaType: {gachaType}",
+                            Type = gachaType
                         };
                 }
+
+                // 요청 타입 기록
+                result.Type = gachaType;
 
                 return result;
             }
@@ -61,7 +65,8 @@ namespace Purchase.Gacha
                 return new GachaResult
                 {
                     Success = false,
-                    Message = $"예외 발생: {e.Message}"
+                    Message = $"예외 발생: {e.Message}",
+                    Type = gachaType
                 };
             }
         }
@@ -93,7 +98,8 @@ namespace Purchase.Gacha
                 {
                     Success = false,
                     Message = failMsg,
-                    RemainDia = data.dia
+                    RemainDia = data.dia,
+                    Type = GachaType.Weapon
                 };
             }
 
@@ -127,7 +133,8 @@ namespace Purchase.Gacha
                     {
                         Success = false,
                         Message = $"rarity {rarity}에 해당하는 무기가 없습니다.",
-                        RemainDia = data.dia
+                        RemainDia = data.dia,
+                        Type = GachaType.Weapon
                     };
 
                 string picked = pool[random.Next(pool.Count)];
@@ -139,7 +146,6 @@ namespace Purchase.Gacha
             data.gachaThreshold = threshold;
 
             ApplyWeaponResult(data, result);
-
 
             await gameApiClient.CloudSaveData.SetItemAsync(
                 context, context.ServiceToken, context.ProjectId, context.PlayerId,
@@ -153,7 +159,8 @@ namespace Purchase.Gacha
                 Success = true,
                 Message = "Weapon 가챠 성공",
                 Items = result,
-                RemainDia = data.dia
+                RemainDia = data.dia,
+                Type = GachaType.Weapon
             };
         }
 
@@ -184,7 +191,8 @@ namespace Purchase.Gacha
                 {
                     Success = false,
                     Message = failMsg,
-                    RemainDia = data.dia
+                    RemainDia = data.dia,
+                    Type = GachaType.Costume
                 };
             }
 
@@ -197,7 +205,8 @@ namespace Purchase.Gacha
                 {
                     Success = false,
                     Message = "ITEM_NAME_BUNDLE에 'costumes' 키가 없습니다.",
-                    RemainDia = data.dia
+                    RemainDia = data.dia,
+                    Type = GachaType.Costume
                 };
             }
 
@@ -216,7 +225,8 @@ namespace Purchase.Gacha
                 {
                     Success = false,
                     Message = "코스튬 풀 데이터가 비어 있습니다.",
-                    RemainDia = data.dia
+                    RemainDia = data.dia,
+                    Type = GachaType.Costume
                 };
             }
 
@@ -243,7 +253,8 @@ namespace Purchase.Gacha
                 Success = true,
                 Message = "Costume 가챠 성공",
                 Items = result,
-                RemainDia = data.dia
+                RemainDia = data.dia,
+                Type = GachaType.Costume
             };
         }
 
@@ -377,5 +388,6 @@ namespace Purchase.Gacha
         public string Message { get; set; }
         public List<string> Items { get; set; } = new();
         public int RemainDia { get; set; }
+        public GachaType Type { get; set; }   // 추가됨
     }
 }

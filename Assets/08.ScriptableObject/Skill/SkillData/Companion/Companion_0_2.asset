@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef5ab10e5d7b96f44883280afb1d6071, type: 3}
   m_Name: Companion_0_2
   m_EditorClassIdentifier: 
-  skillName: Companion_0_2
+  skillName: "\uAC15\uB825\uD55C \uD55C \uBC1C"
   uid: Companion_0_2
-  iconSprite: {fileID: 21300000, guid: fb2fb148430557941a676bf4cd5ad85e, type: 3}
+  iconSprite: {fileID: 21300000, guid: 148313e718cf5d149b3426266e755a0d, type: 3}
   simple: 
   complex: 
   rarity: 1
@@ -23,6 +23,9 @@ MonoBehaviour:
   cooltime: 0
   coolAttack: 3
   requireMp: 15
+  effectSpawnType: 1
+  projectileSpeed: 15
+  effectLifeTime: 5
   value:
   - 0
   - 0

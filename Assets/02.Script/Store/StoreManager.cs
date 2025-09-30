@@ -1,14 +1,12 @@
 using EnumCollection;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using Unity.Services.CloudCode;
 using Unity.Services.RemoteConfig;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
-using Newtonsoft.Json.Linq;
 
 
 public class StoreManager : MonoSingleton<StoreManager>
@@ -87,10 +85,15 @@ public class StoreManager : MonoSingleton<StoreManager>
     //Data
     private Dictionary<string, int> _weaponCount;
 
-    private void Start() {
+    private void Start()
+    {
         _gameData = StartBroker.GetGameData();
         InitPriceFromRc();
         InitStore();
+
+        // 결과 이벤트 구독
+        PlayerBroker.OnRequestGacha += OnGachaResult;
+        PlayerBroker.OnPurchaseCurrency += OnCurrencyResult;
     }
     public void InitPriceFromRc()
     {
@@ -770,66 +773,104 @@ public class StoreManager : MonoSingleton<StoreManager>
     {
         return -(Mathf.Cos(Mathf.PI * t) - 1) / 2;
     }
-    private async Task CallGacha(GachaType type, int num)
+    private void RequestGacha(GachaType type, int num)
     {
-        Dictionary<string, object> args = new()
+        // 요청만 보냄 (결과는 OnRequestGacha 이벤트에서 처리)
+        PlayerBroker.RequestGacha(type, num);
+    }
+    private void OnGachaResult(GachaResult result)
     {
-        { "gachaType", type.ToString() },
-        { "gachaNum",  num }
-    };
-
-        GachaResult result = await CloudCodeService.Instance
-            .CallModuleEndpointAsync<GachaResult>(
-                "PurchaseProcessor",
-                "ProcessGacha",
-                args);
-
         if (!result.Success)
         {
-            Debug.LogWarning($"[Gacha] 실패: {result.Message}");
-            // 여기서 팝업 띄우거나 UI 갱신 (예: 다이아 부족 안내)
+            Debug.LogWarning($"[Store] 뽑기 실패: {result.Message}");
             return;
         }
 
-        Debug.Log($"[Gacha] {type} x{num} => {string.Join(", ", result.Items)}");
+        Debug.Log($"[Store] {result.Type} 뽑기 성공 => {string.Join(", ", result.Items)}");
 
-        // 서버에서 이미 차감했지만, 클라이언트 로컬 GameData도 갱신
         _gameData.dia = result.RemainDia;
         PlayerBroker.OnDiaSet();
 
-        switch (type)
+        switch (result.Type)
         {
             case GachaType.Weapon:
-                foreach (var weaponId in result.Items)
-                {
-                    if (string.IsNullOrWhiteSpace(weaponId))
-                        continue;
-
-                    // 로컬 GameData 갱신
-                    if (_gameData.weaponCount.ContainsKey(weaponId))
-                        _gameData.weaponCount[weaponId]++;
-                    else
-                        _gameData.weaponCount[weaponId] = 1;
-
-                    // 브로커 이벤트 알림 (무기ID, 갱신된 수량)
-                    PlayerBroker.OnWeaponCountSet?.Invoke(weaponId, _gameData.weaponCount[weaponId]);
-                }
+                OnWeaponGacha(result);
                 break;
-
             case GachaType.Costume:
-                foreach (var costumeId in result.Items)
-                {
-                    if (string.IsNullOrWhiteSpace(costumeId))
-                        continue;
-
-                    if (!_gameData.ownedCostumes.Contains(costumeId))
-                        _gameData.ownedCostumes.Add(costumeId);
-
-                    // 필요하다면 OnCostumeOwnedSet 같은 이벤트도 동일한 방식으로 호출 가능
-                }
+                OnCostumeGacha(result);
                 break;
         }
+        NetworkBroker.SaveServerData();
+    }
+    private void OnCostumeGacha(GachaResult result)
+    {
+        if (result == null || result.Items == null) return;
 
+        foreach (var costumeId in result.Items)
+        {
+            if (string.IsNullOrWhiteSpace(costumeId))
+                continue;
+
+            if (!_gameData.ownedCostumes.Contains(costumeId))
+                _gameData.ownedCostumes.Add(costumeId);
+        }
+    }
+
+    private void OnWeaponGacha(GachaResult result)
+    {
+        foreach (var weaponId in result.Items)
+        {
+            if (string.IsNullOrWhiteSpace(weaponId))
+                continue;
+
+            if (_gameData.weaponCount.ContainsKey(weaponId))
+                _gameData.weaponCount[weaponId]++;
+            else
+                _gameData.weaponCount[weaponId] = 1;
+
+            PlayerBroker.OnWeaponCountSet?.Invoke(weaponId, _gameData.weaponCount[weaponId]);
+        }
+    }
+    private void RequestCurrency(string productId)
+    {
+        PlayerBroker.PurchaseCurrency(productId);//결재 로직은 PurchaseManager로 연결, 결과에 대한 콜백 OnurrencyReulst
+    }
+
+    private void OnCurrencyResult(PurchaseResult result)
+    {
+        if (!result.Success)
+        {
+            Debug.LogWarning($"[Store] 구매 실패: {result.Message}");
+            return;
+        }
+
+        // 서버에서 반환된 CurrencyResult
+        CurrencyResult currency = result.Currency;
+
+        if (currency == null || currency.Value <= 0 || currency.Resource == Resource.None)
+        {
+            Debug.LogWarning("[Store] 서버 응답이 올바르지 않습니다.");
+            return;
+        }
+
+        Debug.Log($"[Store] 구매 성공: {currency.Resource} +{currency.Value}");
+
+        // 로컬 GameData 반영
+        switch (currency.Resource)
+        {
+            case Resource.Dia:
+                _gameData.dia += currency.Value;
+                PlayerBroker.OnDiaSet();
+                break;
+            case Resource.Clover:
+                _gameData.clover += currency.Value;
+                PlayerBroker.OnCloverSet();
+                break;
+            default:
+                Debug.LogWarning($"[Store] 처리되지 않은 Resource 타입: {currency.Resource}");
+                break;
+        }
+        NetworkBroker.SaveServerData();
     }
 
 
@@ -837,17 +878,24 @@ public class StoreManager : MonoSingleton<StoreManager>
 #if UNITY_EDITOR
     // ---- Weapon 테스트 ----
     [ContextMenu("GachaTest/Weapon x1")]
-    public async void GachaTest_Weapon_1() => await CallGacha(GachaType.Weapon, 1);
+    public void GachaTest_Weapon_1() => RequestGacha(GachaType.Weapon, 1);
 
     [ContextMenu("GachaTest/Weapon x10")]
-    public async void GachaTest_Weapon_10() => await CallGacha(GachaType.Weapon, 10);
+    public void GachaTest_Weapon_10() => RequestGacha(GachaType.Weapon, 10);
 
     // ---- Costume 테스트 ----
     [ContextMenu("GachaTest/Costume x1")]
-    public async void GachaTest_Costume_1() => await CallGacha(GachaType.Costume, 1);
+    public void GachaTest_Costume_1() => RequestGacha(GachaType.Costume, 1);
 
     [ContextMenu("GachaTest/Costume x10")]
-    public async void GachaTest_Costume_10() => await CallGacha(GachaType.Costume, 10);
+    public void GachaTest_Costume_10() => RequestGacha(GachaType.Costume, 10);
+    // ---- Currency 구매 테스트 ----
+    [ContextMenu("CurrencyTest/Dia_0")]
+    public void CurrencyTest_Dia0() => RequestCurrency(ProductIds.DIA_0);
+
+    [ContextMenu("CurrencyTest/Dia_1")]
+    public void CurrencyTest_Dia1() => RequestCurrency(ProductIds.DIA_1);
 #endif
+
 
 }
