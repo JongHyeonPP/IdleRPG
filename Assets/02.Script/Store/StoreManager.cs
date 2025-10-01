@@ -85,6 +85,13 @@ public class StoreManager : MonoSingleton<StoreManager>
 
     #endregion
 
+    #region Money
+    // StoreManager
+    [SerializeField] private StoreMoneyListController _moneyList; // ScrollView 컨트롤러
+    [SerializeField] private Texture2D starterIconTex;
+    [SerializeField] private Texture2D proIconTex;
+    #endregion
+
     #region Unity Lifecycle
 
     private void Start()
@@ -92,6 +99,7 @@ public class StoreManager : MonoSingleton<StoreManager>
         _gameData = StartBroker.GetGameData();
         InitPriceFromRc();
         InitStore();
+        RefreshStore();
         BuildWeaponUidIndexIfNeeded();
     }
 
@@ -265,12 +273,12 @@ public class StoreManager : MonoSingleton<StoreManager>
     {
         _rarityOffsetMap.Clear();
 
-        _rarityOffsetMap[Rarity.Common] = new Vector2(-914f, 11f);
-        _rarityOffsetMap[Rarity.Uncommon] = new Vector2(-914f, 11f);
-        _rarityOffsetMap[Rarity.Rare] = new Vector2(-914f, 11f);
-        _rarityOffsetMap[Rarity.Unique] = new Vector2(-914f, 11f);
-        _rarityOffsetMap[Rarity.Legendary] = new Vector2(-914f, 11f);
-        _rarityOffsetMap[Rarity.Mythic] = new Vector2(-914f, 11f);
+        _rarityOffsetMap[Rarity.Common] = new Vector2(-214f, 329f);
+        _rarityOffsetMap[Rarity.Uncommon] = new Vector2(-214f, -2f);
+        _rarityOffsetMap[Rarity.Rare] = new Vector2(-214f, -334f);
+        _rarityOffsetMap[Rarity.Unique] = new Vector2(-564f, 329f);
+        _rarityOffsetMap[Rarity.Legendary] = new Vector2(-564f, -2f);
+        _rarityOffsetMap[Rarity.Mythic] = new Vector2(-564f, -334f);
     }
     private void BuildSlotPool()
     {
@@ -294,6 +302,35 @@ public class StoreManager : MonoSingleton<StoreManager>
         if (ve == null) return;
         ve.style.display = DisplayStyle.Flex;
         ParticleFxManager.Instance.Play("StoreOpen");
+    }
+
+    #endregion
+
+    #region Money
+    private void RefreshStore()
+    {
+        if (_moneyList == null) return;
+
+        var items = new List<StoreMoneyItemData>
+    {
+        new StoreMoneyItemData {
+            Gold = "3000",
+            GoldEx = "Clover",
+
+            Money = prices.TryGetValue((GachaType.Weapon, 1), out var pW1) ? pW1.num.ToString() : "-",
+            Icon = starterIconTex,
+            OnClick = () => _ = OnClickGacha(GachaType.Weapon, 1)
+        },
+        new StoreMoneyItemData {
+            Gold = "1000",
+            GoldEx = "Gold",
+            Money = prices.TryGetValue((GachaType.Weapon, 10), out var pW10) ? pW10.num.ToString() : "-",
+            Icon = proIconTex,
+            OnClick = () => _ = OnClickGacha(GachaType.Weapon, 10)
+        },
+    };
+
+        _moneyList.SetItems(items);
     }
 
     #endregion
@@ -552,12 +589,13 @@ public class StoreManager : MonoSingleton<StoreManager>
                 var weapon = weapons[i];
 
                 var icon = slot.Q<VisualElement>("WeaponIcon");
+                var iconparent = slot.Q<VisualElement>("WeaponIconParent");
                 if (icon != null && weapon.WeaponSprite != null)
                 {
                     icon.style.backgroundImage = new StyleBackground(weapon.WeaponSprite.texture);
                 }
 
-                ApplyRarityOffsetTo(icon, weapon.WeaponRarity);
+                ApplyRarityOffsetTo(iconparent, weapon.WeaponRarity);
 
                 var nameLabel = slot.Q<Label>("WeaponName");
                 if (nameLabel != null)
@@ -652,7 +690,8 @@ public class StoreManager : MonoSingleton<StoreManager>
         if (mover == null) return;
 
         Vector2 off = _rarityOffsetMap.TryGetValue(rarity, out var v) ? v : Vector2.zero;
-        mover.style.translate = new StyleTranslate(new Translate(off.x, off.y, 0));
+        mover.style.top = off.x;
+        mover.style.left = off.y;
     }
 
 
