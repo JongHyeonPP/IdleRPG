@@ -314,17 +314,23 @@ public class StoreManager : MonoSingleton<StoreManager>
         var items = new List<StoreMoneyItemData>
     {
         new StoreMoneyItemData {
-            Gold = "3000",
+            Gold = "1000",
             GoldEx = "Clover",
-
             Money = prices.TryGetValue((GachaType.Weapon, 1), out var pW1) ? pW1.num.ToString() : "-",
             Icon = starterIconTex,
             OnClick = () => _ = OnClickGacha(GachaType.Weapon, 1)
         },
         new StoreMoneyItemData {
-            Gold = "1000",
+            Gold = "3000",
             GoldEx = "Gold",
             Money = prices.TryGetValue((GachaType.Weapon, 10), out var pW10) ? pW10.num.ToString() : "-",
+            Icon = proIconTex,
+            OnClick = () => _ = OnClickGacha(GachaType.Weapon, 10)
+        },
+                new StoreMoneyItemData {
+            Gold = "5000",
+            GoldEx = "Gold",
+            Money = prices.TryGetValue((GachaType.Weapon, 10), out var pW30) ? pW30.num.ToString() : "-",
             Icon = proIconTex,
             OnClick = () => _ = OnClickGacha(GachaType.Weapon, 10)
         },

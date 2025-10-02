@@ -19,22 +19,41 @@ public class StoreMoneyListController : MonoBehaviour
         if (_ui == null) _ui = GetComponent<UIDocument>();
         if (_scrollView == null && _ui != null)
             _scrollView = _ui.rootVisualElement.Q<ScrollView>(_scrollViewId);
+
+        // 스크롤뷰 콘텐츠 컨테이너 레이아웃 
+        var content = _scrollView?.contentContainer;
+        if (content != null)
+        {
+            content.style.flexDirection = FlexDirection.Row;
+            content.style.flexWrap = Wrap.Wrap;       
+            content.style.justifyContent = Justify.FlexStart;
+            content.style.alignContent = Align.FlexStart;
+        }
     }
 
     public void SetItems(IList<StoreMoneyItemData> dataList)
     {
         if (_scrollView == null || _itemTemplate == null) return;
 
-        // 기존 항목 정리(이벤트 해제 및 UI 비움)
         foreach (var it in _items) it.Dispose();
         _items.Clear();
         _scrollView.Clear();
 
-        // 생성
+        const int perRow = 3;
+        float colPercent = 100f / perRow;
+
         for (int i = 0; i < dataList.Count; i++)
         {
-            var ve = _itemTemplate.Instantiate();    // 템플릿 인스턴스
-            ve.style.flexGrow = 0;                   // 필요시 레이아웃 조정
+            // 템플릿 인스턴스
+            var ve = _itemTemplate.Instantiate();
+            var itemRoot = ve;
+
+            itemRoot.style.flexGrow = 0;
+            itemRoot.style.flexShrink = 0;
+            itemRoot.style.width = new Length(colPercent, LengthUnit.Percent);
+            itemRoot.style.marginLeft = 0;
+            itemRoot.style.marginRight = 0;
+
             _scrollView.Add(ve);
 
             var view = new ItemView(ve);

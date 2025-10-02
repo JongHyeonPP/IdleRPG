@@ -1904,11 +1904,11 @@ PrefabInstance:
     - target: {fileID: 6407971641414001673, guid: 6078fdaccab6d1e4baa1eb3eea721bed, type: 3}
       propertyPath: proIconTex
       value: 
-      objectReference: {fileID: 2800000, guid: edcbd57032ccbd44e9f228cdd323ab50, type: 3}
+      objectReference: {fileID: 2800000, guid: 474703cb5227a6a40af37742e44944d0, type: 3}
     - target: {fileID: 6407971641414001673, guid: 6078fdaccab6d1e4baa1eb3eea721bed, type: 3}
       propertyPath: starterIconTex
       value: 
-      objectReference: {fileID: 2800000, guid: 3faa68d4e2f05f04786133598667ac36, type: 3}
+      objectReference: {fileID: 2800000, guid: a5296742881d4224f8946cdb636ed524, type: 3}
     - target: {fileID: 6407971641414001673, guid: 6078fdaccab6d1e4baa1eb3eea721bed, type: 3}
       propertyPath: _storeUIDocument
       value: 
