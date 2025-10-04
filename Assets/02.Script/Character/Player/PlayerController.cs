@@ -71,6 +71,7 @@ public class PlayerController : Attackable
         BattleBroker.SwitchToCompanionBattle += (arg0, arg1) => InitToBattle();
         BattleBroker.SwitchToAdventure += (arg0, arg1) => InitToBattle();
         BattleBroker.SwitchToDungeon += (arg0, arg1) => InitToBattle();
+        BattleBroker.SwitchToPromoteBattle += (arg0) => InitToBattle();
     }
 
     /// <summary>
@@ -187,6 +188,8 @@ public class PlayerController : Attackable
     /// </summary>
     protected override void OnDead()
     {
+        StopAttack();
+        BattleBroker.ControllCompanionMove(0);
         anim.ResetTrigger("Attack");
         anim.SetTrigger("Die");
         PlayerBroker.OnPlayerDead();
@@ -202,7 +205,8 @@ public class PlayerController : Attackable
     /// </summary>
     private IEnumerator DeadAfterWhile()
     {
-        yield return new WaitForSeconds(1f);
+        UIBroker.FadeInOut(2f, 0.5f, 1f);
+        yield return new WaitForSeconds(2f);
         BattleBroker.SwitchToBattle();  // 전투 재시작
         isDead = false;
         hp = _status.MaxHp;

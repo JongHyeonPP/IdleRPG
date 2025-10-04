@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d86c58796157b2c4cb71662e31cd283c, type: 3}
+  m_Name: 1_Bronze
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 9200354493972836640, guid: af9e347d0b1aa1e48a6581a0368a9ee4, type: 3}
+  isMonster: 0
+  enemyType: 1

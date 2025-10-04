@@ -35,28 +35,37 @@ public class AuthHandler : MonoBehaviour
         var options = new InitializationOptions();
         options.SetEnvironmentName("develop");
         await UnityServices.InitializeAsync(options);
+
         if (status == SignInStatus.Success)
         {
             // Google Play Games 인증 성공 시
             PlayGamesPlatform.Activate();
-            StartBroker.SetUserId(PlayGamesPlatform.Instance.GetUserId());
+            string gpgsId = PlayGamesPlatform.Instance.GetUserId();
+            Debug.Log("Google Play Games User ID: " + gpgsId);
+
+            StartBroker.SetUserId(gpgsId);
             PlayGamesPlatform.Instance.RequestServerSideAccess(true, async code =>
             {
                 await AuthenticationService.Instance.SignInWithGooglePlayGamesAsync(code);
+
+                Debug.Log("Unity Player ID (after GPGS SignIn): " + AuthenticationService.Instance.PlayerId);
+
                 StartBroker.OnAuthenticationComplete?.Invoke();
                 CheckOfflineReward();
             });
-            
         }
         else
         {
             // Google 인증 실패 시 익명 로그인
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
+            Debug.Log("Anonymous Unity Player ID: " + AuthenticationService.Instance.PlayerId);
+
             StartBroker.SetUserId(AuthenticationService.Instance.PlayerId);
             StartBroker.OnAuthenticationComplete?.Invoke();
             CheckOfflineReward();
         }
     }
+
 
 
     private void OnDestroy()

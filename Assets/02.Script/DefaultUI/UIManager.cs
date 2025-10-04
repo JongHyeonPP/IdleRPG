@@ -24,6 +24,7 @@ public class UIManager : MonoBehaviour
         BattleBroker.SwitchToCompanionBattle += (arg0, arg1) => OnBoss();
         BattleBroker.SwitchToAdventure += (arg0, arg1) => OnBoss();
         BattleBroker.SwitchToDungeon += (arg0, arg1) => OnBoss();
+        BattleBroker.SwitchToPromoteBattle += (arg0) => OnBoss();
     }
     void Start()
     {

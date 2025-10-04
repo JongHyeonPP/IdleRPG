@@ -54,6 +54,7 @@ public class EnemyController : Attackable, IMoveByPlayer
     /// </summary>
     protected override void OnDead()
     {
+        StopAttack();
         BattleBroker.OnEnemyDead?.Invoke(transform.position);
 
         isDead = true;
@@ -157,7 +158,9 @@ public class EnemyController : Attackable, IMoveByPlayer
         // 특정 전투 타입에서는 Boss HP UI 갱신
         var battleType = BattleBroker.GetBattleType();
         if (battleType == BattleType.Boss || battleType == BattleType.CompanionTech ||
-            battleType == BattleType.Adventure || battleType == BattleType.Dungeon)
+            battleType == BattleType.Adventure || battleType == BattleType.Dungeon
+            ||battleType == BattleType.Promote
+            )
         {
             BattleBroker.OnBossHpChanged(ratio);
         }

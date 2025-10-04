@@ -3,7 +3,8 @@
     "rootNamespace": "",
     "references": [
         "EventControl",
-        "UIInterface"
+        "UIInterface",
+        "Utility"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

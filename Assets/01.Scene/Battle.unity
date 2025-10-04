@@ -4731,14 +4731,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: SkillUI
       objectReference: {fileID: 0}
-    - target: {fileID: 4130507394480058446, guid: 7c8dccd560162984f9b649b393d4f0d1, type: 3}
-      propertyPath: m_SortingOrder
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 4488745040482298338, guid: 7c8dccd560162984f9b649b393d4f0d1, type: 3}
       propertyPath: notice
       value: 
       objectReference: {fileID: 1755066028}
+    - target: {fileID: 4488745040482298338, guid: 7c8dccd560162984f9b649b393d4f0d1, type: 3}
+      propertyPath: slotAsset
+      value: 
+      objectReference: {fileID: 9197481963319205126, guid: 6359217dfde1b6844aa949aeca525f07, type: 3}
     - target: {fileID: 4488745040482298338, guid: 7c8dccd560162984f9b649b393d4f0d1, type: 3}
       propertyPath: _skillInfoUI
       value: 
@@ -4747,10 +4747,6 @@ PrefabInstance:
       propertyPath: skillAcquireUI
       value: 
       objectReference: {fileID: 374194269}
-    - target: {fileID: 4649498370873403511, guid: 7c8dccd560162984f9b649b393d4f0d1, type: 3}
-      propertyPath: m_Name
-      value: Notice_SkillUI
-      objectReference: {fileID: 0}
     - target: {fileID: 8129201785741373427, guid: 7c8dccd560162984f9b649b393d4f0d1, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -4792,8 +4788,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 4649498370873403511, guid: 7c8dccd560162984f9b649b393d4f0d1, type: 3}
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7c8dccd560162984f9b649b393d4f0d1, type: 3}

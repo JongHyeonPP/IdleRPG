@@ -45,7 +45,8 @@ public class StageInfoManager : MonoBehaviour
     [SerializeField] StageInfo[] _dungeon_0;                // 던전 0 라인업
     [SerializeField] StageInfo[] _dungeon_1;                // 던전 1 라인업
     [SerializeField] StageInfo[] _dungeon_2;                // 던전 2 라인업
-
+    [Header("Promote")]
+    [SerializeField] StageInfo[] _promoteArr;                
     [Header("Region")]
     [SerializeField] StageRegion[] _stageRegionArr;         // 지역 정보 배열
 
@@ -352,5 +353,10 @@ public class StageInfoManager : MonoBehaviour
             case 2: return _dungeon_2;
             default: return null;
         }
+    }
+
+    public StageInfo GetPromoteStageInfo(Rank rank)
+    {
+        return _promoteArr[(int)rank];
     }
 }

@@ -28,7 +28,7 @@ public class StoryManager : MonoBehaviour
    
     private void OnEnable()
     {
-        BattleBroker.ChallengeRank += OnChallengeRank;
+        BattleBroker.SwitchToPromoteBattle += OnChallengeRank;
         BattleBroker.SwitchToBattle += ClearStoryPrefabs;
     }
     private void OnChallengeRank(Rank rank)

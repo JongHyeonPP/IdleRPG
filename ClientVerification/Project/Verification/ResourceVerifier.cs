@@ -155,6 +155,8 @@ namespace ClientVerification.Verification
                     return CompanionCase(report, out failReason);
                 case Source.Dungeon:
                     return DungeonCase(report, out failReason);
+                case Source.Advertise:
+                    return AdvertiseCase(report, out failReason);
                 default:
                     failReason = BuildFail(
                         "Verify.UnknownSource",
@@ -459,6 +461,11 @@ namespace ClientVerification.Verification
             return true;
         }
         private bool DungeonCase(ResourceReport report, out string failReason)
+        {
+            failReason = "";
+            return true;
+        }
+        private bool AdvertiseCase(ResourceReport report, out string failReason)
         {
             failReason = "";
             return true;

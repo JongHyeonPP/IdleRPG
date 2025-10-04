@@ -504,6 +504,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c39a805d95b1db045b8b9ea04dbfb83b, type: 2}
   - {fileID: 11400000, guid: 5693ea8a7b42db54781c7a0844a802e3, type: 2}
   - {fileID: 11400000, guid: 9c2d08a9360ea9544b8c44809186ad02, type: 2}
+  _promoteArr:
+  - {fileID: 11400000, guid: 3bcbedbd86f010e48ba671eb8393ded5, type: 2}
+  - {fileID: 11400000, guid: b8a70868e396520418afa58c491a0935, type: 2}
+  - {fileID: 11400000, guid: bb47021065450584f8a5b81fec3b72f6, type: 2}
+  - {fileID: 11400000, guid: fd5ce27c2767af14e8d86c14cac846c2, type: 2}
+  - {fileID: 11400000, guid: 7da340631b6021e46bcfef191f27b6da, type: 2}
   _stageRegionArr:
   - {fileID: 11400000, guid: ac7ec89dbcb4da54aa2969c48c0b53b1, type: 2}
   - {fileID: 11400000, guid: a743ad552504a934c8763cb5cba55d55, type: 2}

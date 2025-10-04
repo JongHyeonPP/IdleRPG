@@ -58,4 +58,5 @@ public static class PlayerBroker
     public static Action<PurchaseResult> OnPurchaseCurrency;
     public static Action<GachaType, int> RequestGacha;
     public static Action<GachaResult> OnRequestGacha;
+    public static Action UpdatePromoteLockState;
 }
