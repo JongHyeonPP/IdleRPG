@@ -38,7 +38,8 @@ public enum Source
 {
     //재화 획득처
     Battle, Adventure, Companion,
-    Dungeon
+    Dungeon,
+    Advertise
 }
 public enum SpendType
 {

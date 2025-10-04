@@ -1,0 +1,37 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:Template name="NoticeDot" src="project://database/Assets/02.Script/NoticeDot/NoticeDot.uxml?fileID=9197481963319205126&amp;guid=373d7667e06f6d94db8dcfc732fc89f9&amp;type=3#NoticeDot" />
+    <engine:Template name="SoundSlider" src="project://database/Assets/02.Script/Setting/SoundSlider.uxml?fileID=9197481963319205126&amp;guid=6d67e02cffeeefd4390004d0f5bfcd05&amp;type=3#SoundSlider" />
+    <engine:Template name="ExitButton" src="project://database/Assets/02.Script/DefaultUI/ExitButton.uxml?fileID=9197481963319205126&amp;guid=56c49e16b4a3e0641931b48714473123&amp;type=3#ExitButton" />
+    <Style src="project://database/Assets/02.Script/Setting/SettingUI.uss?fileID=7433441132597879392&amp;guid=a73aff44d9527494b8898339ff534a00&amp;type=3#SettingUI" />
+    <engine:VisualElement name="AdventureInfoUI" style="flex-grow: 0; position: absolute; background-color: rgba(152, 97, 6, 0); align-self: center; width: 946px; height: 1143px; font-size: 35px; color: rgb(255, 255, 255); background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/Window.png?fileID=21300000&amp;guid=63655f4cc96936340989153c4eccea19&amp;type=3#Window&quot;); -unity-background-image-tint-color: rgb(115, 75, 30); align-items: center; justify-content: center; -unity-font-definition: url(&quot;project://database/Assets/05.Font/Maplestory%20Light.ttf?fileID=12800000&amp;guid=b7853b5ad26567e41a3c4210e64c5419&amp;type=3#Maplestory Light&quot;); text-shadow: 2px 2px 0 rgb(0, 0, 0); bottom: 682px;">
+        <engine:VisualElement name="Frame" picking-mode="Ignore" style="flex-grow: 1; position: absolute; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/WindowStroke.png?fileID=21300000&amp;guid=8a7a753f989769c4ebd7f236420af813&amp;type=3#WindowStroke&quot;); width: 102%; height: 102%;" />
+        <engine:VisualElement name="MainPanel" picking-mode="Ignore" style="flex-grow: 0; width: 92%; height: 96%; flex-shrink: 0;">
+            <engine:VisualElement name="TitlePanel" style="flex-grow: 0; height: 115px; background-color: rgba(0, 0, 0, 0); flex-direction: row; justify-content: center; align-items: center; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/TitleBar.png?fileID=2800000&amp;guid=a331d5e1dd3208d4ab0085903c241b8a&amp;type=3#TitleBar&quot;); padding-bottom: 29px; font-size: 45px; -unity-text-outline-color: rgb(0, 0, 0); letter-spacing: 23px; -unity-background-image-tint-color: rgb(63, 63, 63);">
+                <engine:Label text="환경 설정" style="color: rgb(255, 255, 255); margin-top: 19px; font-size: 60px;" />
+            </engine:VisualElement>
+            <engine:VisualElement name="MainPanel" style="flex-grow: 1; align-items: center; margin-top: 40px;">
+                <engine:Button name="AttendenceCheckButton" focusable="false" text="출석 체크" style="position: relative; width: 400px; height: 124px; display: flex; margin: 0; border: 0; padding: 0; -unity-background-image-tint-color: rgb(255, 136, 49); background-color: rgba(188, 188, 188, 0); background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel3.png?fileID=21300000&amp;guid=77a6dcc512971ab419243a3716436257&amp;type=3#UniversalPanel3&quot;); color: rgb(255, 255, 255); align-items: center; font-size: 58px; justify-content: center; flex-direction: row;">
+                    <engine:VisualElement name="Detail" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; display: flex;">
+                        <engine:VisualElement picking-mode="Ignore" name="DetailTop" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel3TBevel.png?fileID=21300000&amp;guid=4fd1298263d8b1248802bb6b7d0e559c&amp;type=3#UniversalPanel3TBevel&quot;); -unity-background-image-tint-color: rgb(255, 172, 112);" />
+                        <engine:VisualElement picking-mode="Ignore" name="DetailBottom" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/UniversalPanel3BBevel.png?fileID=21300000&amp;guid=5d2da8262ca5ec742b0c111d6548a1d3&amp;type=3#UniversalPanel3BBevel&quot;); -unity-background-image-tint-color: rgb(195, 102, 34);" />
+                    </engine:VisualElement>
+                    <engine:Instance template="NoticeDot" style="position: absolute; top: 2px; right: 13px;" />
+                </engine:Button>
+                <engine:VisualElement name="Separator" style="flex-grow: 0; margin-top: 50px; width: 90%; height: 6px; background-color: rgba(0, 0, 0, 0.23);" />
+                <engine:VisualElement name="SoundPanel" style="flex-grow: 0; align-items: center;">
+                    <engine:Label text="음향" style="font-size: 58px; margin-top: 20px;" />
+                    <engine:Instance template="SoundSlider" name="BgmSlider" />
+                    <engine:Instance template="SoundSlider" name="SfxSlider" />
+                </engine:VisualElement>
+                <engine:VisualElement name="Separator" style="flex-grow: 0; margin-top: 50px; width: 90%; height: 6px; background-color: rgba(0, 0, 0, 0.23);" />
+                <engine:VisualElement name="OptionPanel" style="flex-grow: 0; align-items: center; font-size: 47px;">
+                    <engine:Label text="옵션" style="font-size: 58px; margin-top: 20px;" />
+                    <engine:Toggle label="대미지 텍스트 표시" name="DamageTextToggle" focusable="false" toggle-on-label-click="true" style="margin-top: 17px;" />
+                    <engine:Toggle label="스킬 이펙트 표시" name="SkillEffectToggle" focusable="false" style="margin-top: 20px;" />
+                    <engine:Toggle label="자동 절전 모드" name="PowerSavingToggle" focusable="false" style="margin-top: 20px;" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+        </engine:VisualElement>
+        <engine:Instance template="ExitButton" name="ExitButton" style="position: absolute; bottom: -160px;" />
+    </engine:VisualElement>
+</engine:UXML>

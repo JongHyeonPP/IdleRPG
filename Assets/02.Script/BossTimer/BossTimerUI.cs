@@ -27,6 +27,7 @@ public class BossTimerUI : MonoBehaviour, IGeneralUI
         root.Q<Button>("RunButton").RegisterCallback<ClickEvent>(evt => 
         {
             StopTimer();
+            UIBroker.FadeInOut(0f, 0.5f, 2f);
             BattleBroker.SwitchToBattle();
         });
     }

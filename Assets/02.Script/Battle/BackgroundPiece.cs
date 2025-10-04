@@ -41,7 +41,7 @@ public class BackgroundPiece : MonoBehaviour, IMoveByPlayer
         // 배경 Dictionary 초기화
         backgroundDict = new Dictionary<Background, GameObject>
         {
-            { Background.Beach, beachObject },
+            { Background.Riverside, beachObject },
             { Background.Cave, caveObject },
             { Background.Desert, desertObject },
             { Background.DesertRuins, desertRuinsObject },

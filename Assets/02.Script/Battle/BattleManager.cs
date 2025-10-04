@@ -32,7 +32,7 @@ public class BattleManager : MonoBehaviour
     private bool _isMove = true;
     private bool _isBattleActive = true;
     private bool _isBattleRunning = true;
-    private BattleType battleType;
+    private BattleType _battleType;
     private BattleType _nextBattleType = BattleType.Default;
 
     private readonly float _speed = 2.5f;
@@ -98,7 +98,7 @@ public class BattleManager : MonoBehaviour
     private void HandleTargetCase()
     {
         float dist = _controller.target.transform.position.x - _controller.transform.position.x;
-        float range = (battleType == BattleType.Default) ? _enemyPlayerDistance : _bossPlayerDistance;
+        float range = (_battleType == BattleType.Default) ? _enemyPlayerDistance : _bossPlayerDistance;
         bool withinRange = dist < range;
 
         if (withinRange && _isMove)
@@ -107,7 +107,7 @@ public class BattleManager : MonoBehaviour
             _controller.StartAttack();
             BattleBroker.ControllCompanionMove?.Invoke(2);
 
-            if (battleType is BattleType.Boss or BattleType.CompanionTech or BattleType.Adventure or BattleType.Dungeon)
+            if (_battleType is BattleType.Boss or BattleType.CompanionTech or BattleType.Adventure or BattleType.Dungeon or BattleType.Promote)
                 _controller.target.StartAttack();
 
             _isMove = false;
@@ -124,10 +124,10 @@ public class BattleManager : MonoBehaviour
     {
         if (_enemies == null || _currentTargetIndex >= _lastEnemyIndex)
         {
-            _enemies = battleType switch
+            _enemies = _battleType switch
             {
                 BattleType.Default => MakeDefaultEnemies(),
-                BattleType.Boss or BattleType.CompanionTech or BattleType.Adventure or BattleType.Dungeon => MakeBoss(),
+                BattleType.Boss or BattleType.CompanionTech or BattleType.Adventure or BattleType.Dungeon or BattleType.Promote => MakeBoss(),
                 _ => _enemies
             };
             _currentTargetIndex = 0;
@@ -159,10 +159,11 @@ public class BattleManager : MonoBehaviour
         BattleBroker.SwitchToCompanionBattle += SwitchToCompanionBattle;
         BattleBroker.SwitchToAdventure += SwitchToAdventure;
         BattleBroker.SwitchToDungeon += SwitchToDungeon;
+        BattleBroker.SwitchToPromoteBattle += SwitchToPromoteBattle;
         BattleBroker.OnEnemyDead += OnEnemyDead;
-        PlayerBroker.OnPlayerDead += () => _isBattleActive = false;
+        PlayerBroker.OnPlayerDead +=  OnPlayerDead;
 
-        BattleBroker.GetBattleType += () => battleType;
+        BattleBroker.GetBattleType += () => _battleType;
         BattleBroker.IsCanAttack += () => !_isMove && _controller.target != null;
 
         PlayerBroker.OnCompanionPromoteTechSet += SetPromoteTech;
@@ -199,7 +200,16 @@ public class BattleManager : MonoBehaviour
         BattleBroker.GetEnemyArray += () => _enemies;
     }
 
-
+    private void OnPlayerDead()
+    {
+        _isBattleActive = false;
+        switch (_battleType)
+        {
+            case BattleType.Dungeon:
+                
+                break;
+        }
+    }
 
     private void OnStageChange()
     {
@@ -235,39 +245,55 @@ public class BattleManager : MonoBehaviour
                 BattleBroker.SwitchToBattle?.Invoke();
                 break;
         }
+        _nextBattleType = BattleType.None;
     }
 
     private void SwitchToBattle()
     {
         _currentStageInfo = StageInfoManager.instance.GetNormalStageInfo(_gameData.currentStageNum);
-        battleType = BattleType.Default;
+        _battleType = BattleType.Default;
         StartBattle(_currentStageInfo);
     }
 
     private void SwitchToBoss()
     {
-        battleType = BattleType.Boss;
         UIBroker.FadeInOut(0f, 0.5f, 2f);
+        _battleType = BattleType.Boss;
         StartBattle(_currentStageInfo, true);
     }
 
     private void SwitchToCompanionBattle(int idx, (int, int) tech)
     {
+        UIBroker.FadeInOut(0f, 0.5f, 2f);
         _currentStageInfo = StageInfoManager.instance.GetCompanionTechStageInfo(idx, tech);
-        battleType = BattleType.CompanionTech;
+        _battleType = BattleType.CompanionTech;
         StartBattle(_currentStageInfo, true);
     }
 
     private void SwitchToAdventure(int index_0, int index_1)
     {
+        UIBroker.FadeInOut(0f, 0.5f, 2f);
         _currentStageInfo = StageInfoManager.instance.GetAdventureStageInfo(index_0)[index_1];
-        battleType = BattleType.Adventure;
+        _battleType = BattleType.Adventure;
         StartBattle(_currentStageInfo, true);
     }
     private void SwitchToDungeon(int index_0, int index_1)
     {
+        NetworkBroker.QueueResourceReport(0, null, Resource.None, Source.Dungeon);
+        _gameData.scroll -= StageInfoManager.instance.dungeonEntranceFee;
+        PlayerBroker.OnScrollSet();
+        NetworkBroker.SaveServerData();
+
+        UIBroker.FadeInOut(0f, 0.5f, 2f);
         _currentStageInfo = StageInfoManager.instance.GetDungeonStageInfo(index_0)[index_1];
-        battleType = BattleType.Dungeon;
+        _battleType = BattleType.Dungeon;
+        StartBattle(_currentStageInfo, true);
+    }
+    private void SwitchToPromoteBattle(Rank rank)
+    {
+        UIBroker.FadeInOut(0f, 0.5f, 2f);
+        _currentStageInfo = StageInfoManager.instance.GetPromoteStageInfo(rank);
+        _battleType = BattleType.Promote;
         StartBattle(_currentStageInfo, true);
     }
     private void StartBattle(StageInfo info, bool isBoss = false)
@@ -353,7 +379,7 @@ public class BattleManager : MonoBehaviour
     {
         DropItem(pos);
 
-        switch (battleType)
+        switch (_battleType)
         {
             case BattleType.Boss:
                 _gameData.currentStageNum++;
@@ -371,8 +397,7 @@ public class BattleManager : MonoBehaviour
                 _gameData.clover += companionReward.Item2;
                 PlayerBroker.OnDiaSet();
                 PlayerBroker.OnCloverSet();
-                NetworkBroker.QueueResourceReport(companionReward.Item1,null, Resource.Dia, Source.Companion);
-                NetworkBroker.QueueResourceReport(companionReward.Item2,null, Resource.Clover, Source.Companion);
+                NetworkBroker.QueueResourceReport(0, $"{techInfo.techIndex_0}_{techInfo.techIndex_1}", Resource.None, Source.Companion);
                 _currentStageInfo = StageInfoManager.instance.GetNormalStageInfo(_gameData.currentStageNum);
                 _nextBattleType = BattleType.Default;
                 DelayOnEnd();
@@ -384,17 +409,15 @@ public class BattleManager : MonoBehaviour
                 var reward = BattleBroker.GetAdventureReward(adventureInfo.adventureIndex_0, adventureInfo.adventureIndex_1);
                 _gameData.dia += reward.Item1;
                 _gameData.clover += reward.Item2;
-                _gameData.scroll -= StageInfoManager.instance.adventureEntranceFee;
+                
                 PlayerBroker.OnDiaSet();
                 PlayerBroker.OnCloverSet();
                 PlayerBroker.OnScrollSet();
-                //NetworkBroker.QueueResourceReport(adventureInfo.adventureIndex_0, null,Resource.None, Source.Adventure);
-
+                NetworkBroker.QueueResourceReport(0, $"{adventureInfo.adventureIndex_0}_{adventureInfo.adventureIndex_1}", Resource.Dia, Source.Adventure);
                 var stageInfoArr = StageInfoManager.instance.GetAdventureStageInfo(adventureInfo.adventureIndex_0);
                 if (BattleBroker.GetAdventureRetry() && stageInfoArr != null && stageInfoArr.Length - 1 > adventureInfo.adventureIndex_1)
                 {
                     _currentStageInfo = stageInfoArr[adventureInfo.adventureIndex_1 + 1];
-                    _nextBattleType = BattleType.Adventure;
                 }
                 else
                 {
@@ -418,13 +441,13 @@ public class BattleManager : MonoBehaviour
                             case Resource.Gold:
                                 _gameData.gold += dungeonReward.amount;
                                 PlayerBroker.OnGoldSet();
-                                NetworkBroker.QueueResourceReport(dungeonReward.amount, null, Resource.Gold, Source.Dungeon);
+                                NetworkBroker.QueueResourceReport(0, $"{dungeonIndex_0}_{dungeonIndex_1}", Resource.Gold, Source.Dungeon);
                                 break;
 
                             case Resource.Clover:
                                 _gameData.clover += dungeonReward.amount;
                                 PlayerBroker.OnCloverSet();
-                                NetworkBroker.QueueResourceReport(dungeonReward.amount, null, Resource.Clover, Source.Dungeon);
+                                NetworkBroker.QueueResourceReport(0, $"{dungeonIndex_0}_{dungeonIndex_1}", Resource.Clover, Source.Dungeon);
                                 break;
 
                             case Resource.Fragment:
@@ -436,7 +459,7 @@ public class BattleManager : MonoBehaviour
 
                                     _gameData.skillFragment[rarity] += dungeonReward.amount;
                                     PlayerBroker.OnFragmentSet();
-                                    NetworkBroker.QueueResourceReport(dungeonReward.amount, rarity.ToString(), Resource.Fragment, Source.Dungeon);
+                                    NetworkBroker.QueueResourceReport(0, $"{dungeonIndex_0}_{dungeonIndex_1}", Resource.Fragment, Source.Dungeon);
                                 }
                                 break;
                         }
@@ -447,13 +470,23 @@ public class BattleManager : MonoBehaviour
                     }
 
                     // 다음 전투 설정
+                    //if (BattleBroker.GetDungeonRetry())
+                    //{
+                    //    _nextBattleType = BattleType.Dungeon;
+                    //}
                     _currentStageInfo = StageInfoManager.instance.GetNormalStageInfo(_gameData.currentStageNum);
                     _nextBattleType = BattleType.Default;
 
                     DelayOnEnd();
                     break;
                 }
-
+            case BattleType.Promote:
+                _gameData.playerRankIndex = _currentStageInfo.stageNum + 1;
+                _currentStageInfo = StageInfoManager.instance.GetNormalStageInfo(_gameData.currentStageNum);
+                _nextBattleType = BattleType.Default;
+                PlayerBroker.UpdatePromoteLockState();
+                DelayOnEnd();
+                break;
         }
 
         NetworkBroker.SaveServerData();

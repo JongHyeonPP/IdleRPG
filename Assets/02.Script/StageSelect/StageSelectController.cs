@@ -1,29 +1,18 @@
-using UnityEngine.UIElements;
+ï»¿using UnityEngine.UIElements;
 using UnityEngine;
 using System;
+using System.Collections.Generic;
+using EnumCollection;
+using Newtonsoft.Json;
+using Unity.Services.RemoteConfig;
 
-/// <summary>
-/// ½ºÅ×ÀÌÁö ¸®½ºÆ®(UI Toolkit ±â¹İ)¿¡¼­ ¾ÆÀÌÅÛÀ» ¹ÙÀÎµù/¼±ÅÃ/ÀÌµ¿ Ã³¸®ÇÏ´Â ÄÁÆ®·Ñ·¯.
-/// - FlexibleListView¿¡ ¾ÆÀÌÅÛÀ» ¹ÙÀÎµùÇÏ¿© ÇöÀç ½ºÅ×ÀÌÁö ÇØ±İ ¿©ºÎ/Á¤º¸/¹öÆ° Ã³¸®
-/// - Ç×¸ñ Å¬¸¯ ¶Ç´Â Move ¹öÆ°À¸·Î ½ºÅ×ÀÌÁö ÀÌµ¿ Æ®¸®°Å
-/// - ½ºÅ©·Ñ µå·¡±× Áß¿¡´Â Å¬¸¯ ¹«½Ã(¿ÀÀÛµ¿ ¹æÁö)
-/// </summary>
 public class StageSelectController : MonoBehaviour, LVItemController
 {
     private GameData _gameData;
-
-    /// <summary>
-    /// ¿ÜºÎ¿¡¼­ ÁÖÀÔµÇ´Â ¸®½ºÆ® ºä(µå·¡±×/½ºÅ©·Ñ Áö¿ø)
-    /// </summary>
     public FlexibleListView draggableLV { get; set; }
-
-    // ÇöÀç ¼±ÅÃµÈ ½½·ÔÀÇ VisualElement (¼±ÅÃ Å×µÎ¸® Ç¥½Ã¸¦ À§ÇØ º¸°ü)
     private VisualElement selectedElement;
+    private Dictionary<string, float> _dropProbDict;
 
-    /// <summary>
-    /// ¾ÆÀÌÅÛ ÅÛÇÃ¸´ ³»¿¡¼­ ÀÚÁÖ ÂüÁ¶ÇÏ´Â UI ¿ä¼Ò Ä³½Ã
-    /// (Q() È£Ãâ ÃÖ¼ÒÈ­ + Äİ¹é¿¡¼­ ºü¸¥ Á¢±Ù)
-    /// </summary>
     private class ItemCache
     {
         public Button infoButton;
@@ -31,50 +20,38 @@ public class StageSelectController : MonoBehaviour, LVItemController
         public Label stageLabel;
         public Label titleLabel;
         public Label infoLabel;
-        public VisualElement lockGroup;    // Àá±İ ¿À¹ö·¹ÀÌ/±×·ì
-        public VisualElement selectBorder; // ¼±ÅÃ Ç¥½Ã¿ë Å×µÎ¸®
+        public VisualElement lockGroup;
+        public VisualElement selectBorder;
 
-        // µ¥ÀÌÅÍ/»óÅÂ
         public StageInfo stageInfo;
         public int stageNum;
         public bool isOpen;
-        public int index;                  // ¸®½ºÆ® ³» ÀÎµ¦½º(½ºÅ©·Ñ ÀÌµ¿¿¡ »ç¿ë)
+        public int index;
     }
 
-    /// <summary>
-    /// LVItemController ±¸Çö: ¸®½ºÆ® ¾ÆÀÌÅÛ ¹ÙÀÎµù ½Ã È£Ãâ
-    /// ¾ÆÀÌÅÛÀÇ ÅØ½ºÆ®/¹öÆ°/Àá±İ »óÅÂ/¼±ÅÃ »óÅÂ/½ºÅ©·Ñ À§Ä¡¸¦ ¼³Á¤ÇÑ´Ù.
-    /// </summary>
+    private void Awake()
+    {
+        // Remote Configì˜ DROP_PROBABILITY ë¡œë“œ
+        string probJson = RemoteConfigService.Instance.appConfig.GetJson("DROP_PROBABILITY", "None");
+        if (!string.IsNullOrEmpty(probJson) && probJson != "None")
+            _dropProbDict = JsonConvert.DeserializeObject<Dictionary<string, float>>(probJson);
+        else
+            _dropProbDict = new() { { "Gold", 0f }, { "Exp", 0f }, { "Weapon", 0f }, { "Fragment", 0f } };
+    }
+
     public void BindItem(VisualElement element, int index)
     {
-        // °ÔÀÓ µ¥ÀÌÅÍ Áö¿¬ ·Îµù
         if (_gameData == null)
             _gameData = StartBroker.GetGameData();
-        if (_gameData == null)
-        {
-            Debug.LogError("GameData is null");
-            return;
-        }
 
-        // ¸®½ºÆ®/ÀÎµ¦½º À¯È¿¼º
         if (draggableLV == null || draggableLV.items == null || index < 0 || index >= draggableLV.items.Count)
-        {
-            Debug.LogError("draggableLV not ready");
             return;
-        }
 
-        // µ¥ÀÌÅÍ Ä³½ºÆÃ
-        IListViewItem item = draggableLV.items[index];
-        StageInfo stageInfo = item as StageInfo;
-        if (stageInfo == null)
-        {
-            Debug.LogError("StageInfo cast failed");
+        if (draggableLV.items[index] is not StageInfo stageInfo)
             return;
-        }
 
         int stageNum = stageInfo.stageNum;
 
-        // ÅÛÇÃ¸´ ³» UI ¿ä¼Ò Á¶È¸ + Ä³½Ã ±¸¼º
         var cache = new ItemCache
         {
             infoButton = element.Q<Button>("InfoButton"),
@@ -84,140 +61,120 @@ public class StageSelectController : MonoBehaviour, LVItemController
             infoLabel = element.Q<Label>("InfoLabel"),
             lockGroup = element.Q<VisualElement>("LockGroup"),
             selectBorder = element.Q<VisualElement>("SelectBorder"),
-
             stageInfo = stageInfo,
             stageNum = stageNum,
             index = index
         };
-        element.userData = cache; // ÀÌÈÄ Äİ¹é¿¡¼­ element.userData·Î Á¢±Ù
+        element.userData = cache;
 
-        // Á¦¸ñ/ÇØ±İ »óÅÂ ¹ÙÀÎµù
         cache.titleLabel.text = stageInfo.stageName;
         BindOpenState(cache, stageInfo);
 
-        // ¹öÆ° Äİ¹é Áßº¹ µî·Ï ¹æÁö ÈÄ Àçµî·Ï
         cache.moveButton?.UnregisterCallback<ClickEvent>(OnMoveButtonClick);
         if (cache.moveButton != null)
         {
-            cache.moveButton.userData = stageNum; // Å¬¸¯ ½Ã ¾î¶² ½ºÅ×ÀÌÁö·Î ÀÌµ¿ÇÒÁö
+            cache.moveButton.userData = stageNum;
             cache.moveButton.RegisterCallback<ClickEvent>(OnMoveButtonClick);
         }
 
         cache.infoButton?.UnregisterCallback<ClickEvent>(OnInfoButtonClick);
         if (cache.infoButton != null)
         {
-            cache.infoButton.userData = stageNum; // Å¬¸¯ ½Ã ¾î¶² ½ºÅ×ÀÌÁöÀÇ »ó¼¼¸¦ ¿­Áö
+            cache.infoButton.userData = stageNum;
             cache.infoButton.RegisterCallback<ClickEvent>(OnInfoButtonClick);
         }
 
-        // ¿ä¼Ò ÀüÃ¼ Å¬¸¯À¸·Îµµ ¼±ÅÃµÇµµ·Ï Ã³¸®
+        // í´ë¦­ìœ¼ë¡œ ì„ íƒ ê¸°ëŠ¥ ì œê±°
         element.UnregisterCallback<ClickEvent>(OnElementClick);
-        element.RegisterCallback<ClickEvent>(OnElementClick);
 
-        // ÇöÀç ½ºÅ×ÀÌÁö ¼±ÅÃ Ç¥½Ã
-        bool isSelected = _gameData.currentStageNum == stageNum;
-        SetSelected(cache.selectBorder, isSelected);
-
-        // ÃÖÃÊ ¹ÙÀÎµù ½Ã ÇöÀç ¼±ÅÃµÈ Ç×¸ñÀ» ½ºÅ©·Ñ ÀÎµ¦½º·Î ¸ÂÃçÁØ´Ù
-        if (isSelected)
-        {
-            selectedElement = element;
-            draggableLV?.ScrollToIndex(cache.index);
-        }
+        // âœ… í˜„ì¬ ìŠ¤í…Œì´ì§€ì¼ ë•Œë§Œ í…Œë‘ë¦¬ í‘œì‹œ
+        bool isCurrentStage = _gameData.currentStageNum == stageNum;
+        SetSelected(cache.selectBorder, isCurrentStage);
     }
 
-    /// <summary>
-    /// ¸®½ºÆ® ¾ÆÀÌÅÛ ÀÚ½ÅÀ» Å¬¸¯ÇßÀ» ¶§ (µå·¡±×°¡ ¾Æ´Ñ °æ¿ì) ¼±ÅÃ Ã³¸®
-    /// </summary>
-    private void OnElementClick(ClickEvent evt)
-    {
-        // ½ºÅ©·Ñ µå·¡±× ÁßÀÌ°Å³ª Á÷ÈÄ¸é Å¬¸¯ ¹«½Ã(µå·¡±×-Å¬¸¯ Ãæµ¹ ¹æÁö)
-        if (draggableLV != null && draggableLV.ShouldBlockClick())
-        {
-            evt.StopImmediatePropagation();
-            return;
-        }
+    private void OnElementClick(ClickEvent evt) => evt.StopImmediatePropagation();
 
-        var element = evt.currentTarget as VisualElement;
-        if (element == null) return;
-
-        var cache = element.userData as ItemCache;
-        if (cache == null) return;
-
-        // ¹ÌÇØ±İ(Àá±è) »óÅÂ´Â ¼±ÅÃ ºÒ°¡
-        if (!cache.isOpen) return;
-
-        // ÀÌÀü ¼±ÅÃ Ç×¸ñÀÇ Å×µÎ¸® ¼û±è
-        if (selectedElement != null && selectedElement != element)
-        {
-            var prev = selectedElement.userData as ItemCache;
-            if (prev?.selectBorder != null)
-                prev.selectBorder.style.display = DisplayStyle.None;
-        }
-
-        // ÇöÀç Ç×¸ñ ¼±ÅÃ + »óÅÂ °»½Å
-        SetSelected(cache.selectBorder, true);
-        selectedElement = element;
-        _gameData.currentStageNum = cache.stageNum;
-
-        // ¼±ÅÃ Ç×¸ñÀ¸·Î ½ºÅ©·Ñ Á¤·Ä
-        draggableLV?.ScrollToIndex(cache.index);
-    }
-
-    /// <summary>
-    /// ½ºÅ×ÀÌÁö ÇØ±İ »óÅÂ¿¡ µû¶ó UI Ç¥½Ã Á¦¾î
-    /// - ÇØ±İ: ·¹ÀÌºí/¹öÆ°/Á¤º¸ Ç¥½Ã
-    /// - Àá±è: LockGroup¸¸ Ç¥½Ã
-    /// </summary>
     private void BindOpenState(ItemCache cache, StageInfo stageInfo)
     {
         int stageNum = stageInfo.stageNum;
         bool isOpen = _gameData.maxStageNum >= stageNum;
         cache.isOpen = isOpen;
 
-        if (isOpen)
-        {
-            SetVisible(cache.stageLabel, true);
-            SetVisible(cache.infoButton, true);
-            SetVisible(cache.infoLabel, true);
-            SetVisible(cache.moveButton, true);
-            SetVisible(cache.lockGroup, false);
-
-            cache.stageLabel.text = $"STAGE {stageNum}";
-            cache.infoLabel.text = stageInfo.GetDropInfo(); // µå·Ó °³¿ä(¼³¸í) Ç¥½Ã
-        }
-        else
+        if (!isOpen)
         {
             SetVisible(cache.stageLabel, false);
             SetVisible(cache.infoButton, false);
             SetVisible(cache.infoLabel, false);
             SetVisible(cache.moveButton, false);
             SetVisible(cache.lockGroup, true);
+            return;
         }
+
+        SetVisible(cache.stageLabel, true);
+        SetVisible(cache.infoButton, true);
+        SetVisible(cache.infoLabel, true);
+        SetVisible(cache.moveButton, true);
+        SetVisible(cache.lockGroup, false);
+
+        cache.stageLabel.text = $"STAGE {stageNum}";
+
+        // --- â–¼ ë³´ìƒ ë° í™•ë¥  í‘œì‹œ â–¼ ---
+        var cm = CurrencyManager.instance;
+        var sm = StageInfoManager.instance;
+
+        // ë³´ë„ˆìŠ¤ ì •ë³´ ê°€ì ¸ì˜¤ê¸°
+        (float goldBonus, float expBonus) = sm.GetBonusInfo(stageNum);
+
+        // ì¡°ê°, ë¬´ê¸° ì •ë³´ ê°€ì ¸ì˜¤ê¸°
+        (Rarity rarity, int count) fragVal = cm.GetBaseFragmentValue(stageNum);
+        string weaponVal = cm.GetWeaponValue(stageNum);
+
+        List<string> infoList = new();
+
+        // --- ê³¨ë“œ / ê²½í—˜ì¹˜ ë³´ë„ˆìŠ¤ ---
+        if (goldBonus > 0f)
+            infoList.Add($"ê³¨ë“œ ë³´ë„ˆìŠ¤ +{goldBonus * 100f:F0}%");
+        if (expBonus > 0f)
+            infoList.Add($"ê²½í—˜ì¹˜ ë³´ë„ˆìŠ¤ +{expBonus * 100f:F0}%");
+
+        // --- ë“œë í™•ë¥  (ë¬´ê¸° / ì¡°ê°ë§Œ í‘œì‹œ) ---
+        float totalWeight = 0f;
+        foreach (var kvp in _dropProbDict)
+        {
+            if (kvp.Value > 0f)
+                totalWeight += kvp.Value;
+        }
+
+        if (!string.IsNullOrEmpty(weaponVal))
+            infoList.Add($"ë¬´ê¸° ë“œë í™•ë¥  {GetDropPercent("Weapon", totalWeight):F1}%");
+
+        if (fragVal.count > 0)
+            infoList.Add($"{fragVal.rarity} ì¡°ê° ë“œë í™•ë¥  {GetDropPercent("Fragment", totalWeight):F1}%");
+
+        cache.infoLabel.text = infoList.Count > 0
+            ? string.Join("\n", infoList)
+            : "ë³´ìƒ ì—†ìŒ";
     }
 
-    /// <summary>
-    /// ¼±ÅÃ Å×µÎ¸® Ç¥½Ã/¼û±è
-    /// </summary>
+    private float GetDropPercent(string key, float totalWeight)
+    {
+        if (_dropProbDict.TryGetValue(key, out float value) && totalWeight > 0f)
+            return (value / totalWeight) * 100f;
+        return 0f;
+    }
+
     private void SetSelected(VisualElement selectBorder, bool selected)
     {
         if (selectBorder == null) return;
         selectBorder.style.display = selected ? DisplayStyle.Flex : DisplayStyle.None;
     }
 
-    /// <summary>
-    /// °øÅë °¡½Ã¼º Åä±Û
-    /// </summary>
     private void SetVisible(VisualElement ve, bool visible)
     {
         if (ve == null) return;
         ve.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
     }
 
-    /// <summary>
-    /// Move ¹öÆ°: ÇØ´ç ½ºÅ×ÀÌÁö·Î ÀÌµ¿ Æ®¸®°Å
-    /// - currentStageNum °»½Å ¡æ ÀüÅõ º¯°æ ¡æ ¼¼ÀÌºê ¡æ ÇöÀç UI ´İ±â
-    /// </summary>
     private void OnMoveButtonClick(ClickEvent evt)
     {
         var button = evt.currentTarget as Button;
@@ -230,9 +187,6 @@ public class StageSelectController : MonoBehaviour, LVItemController
         }
     }
 
-    /// <summary>
-    /// Info ¹öÆ°: ÇØ´ç ½ºÅ×ÀÌÁö »ó¼¼ Á¤º¸ UI ¿­±â
-    /// </summary>
     private void OnInfoButtonClick(ClickEvent evt)
     {
         var button = evt.currentTarget as Button;

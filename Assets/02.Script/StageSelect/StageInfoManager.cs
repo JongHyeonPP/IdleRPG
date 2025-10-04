@@ -1,4 +1,4 @@
-using EnumCollection;
+ï»¿using EnumCollection;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -7,9 +7,9 @@ using UnityEditor;
 using UnityEngine;
 
 /// <summary>
-/// ½ºÅ×ÀÌÁö µ¥ÀÌÅÍÀÇ ´ÜÀÏ ÁøÀÔÁ¡
-/// ³ë¸» ½ºÅ×ÀÌÁö¿Í µ¿·á ½Â±Ş ½ºÅ×ÀÌÁö¿Í ¾îµåº¥Ã³¿Í ´øÀü ½ºÅ×ÀÌÁö Á¤º¸¸¦ Á¦°øÇÏ°í
-/// ¿ø°İ ¼³Á¤¿¡¼­ º¸»ó Å×ÀÌºíÀ» ÀĞ¾î Ä³½ÃÇÑ µÚ ºê·ÎÄ¿¿¡ ÁúÀÇ ÇÔ¼ö¸¦ ³ëÃâÇÑ´Ù
+/// ìŠ¤í…Œì´ì§€ ë°ì´í„°ì˜ ë‹¨ì¼ ì§„ì…ì 
+/// ë…¸ë§ ìŠ¤í…Œì´ì§€ì™€ ë™ë£Œ ìŠ¹ê¸‰ ìŠ¤í…Œì´ì§€ì™€ ì–´ë“œë²¤ì²˜ì™€ ë˜ì „ ìŠ¤í…Œì´ì§€ ì •ë³´ë¥¼ ì œê³µí•˜ê³ 
+/// ì›ê²© ì„¤ì •ì—ì„œ ë³´ìƒ í…Œì´ë¸”ì„ ì½ì–´ ìºì‹œí•œ ë’¤ ë¸Œë¡œì»¤ì— ì§ˆì˜ í•¨ìˆ˜ë¥¼ ë…¸ì¶œí•œë‹¤
 /// </summary>
 public class StageInfoManager : MonoBehaviour
 {
@@ -17,21 +17,21 @@ public class StageInfoManager : MonoBehaviour
 
     #region Stage Datas in Inspector
     [Header("Normal Stage")]
-    [SerializeField] StageInfo[] _normalStageInfoArr;       // 1 ±â¹İ ÀÎµ¦½º·Î Á¢±Ù
+    [SerializeField] StageInfo[] _normalStageInfoArr;       // 1 ê¸°ë°˜ ì¸ë±ìŠ¤ë¡œ ì ‘ê·¼
 
     [Header("Companion Tech Stage")]
-    [SerializeField] StageInfo[] _companion_0_1;            // µ¿·á 0ÀÇ Å×Å© 1 ¶óÀÎ
-    [SerializeField] StageInfo[] _companion_0_2;            // µ¿·á 0ÀÇ Å×Å© 2 ¶óÀÎ
-    [SerializeField] StageInfo[] _companion_0_3;            // µ¿·á 0ÀÇ Å×Å© 3 ¶óÀÎ
-    [SerializeField] StageInfo[] _companion_1_1;            // µ¿·á 1ÀÇ Å×Å© 1 ¶óÀÎ
-    [SerializeField] StageInfo[] _companion_1_2;            // µ¿·á 1ÀÇ Å×Å© 2 ¶óÀÎ
-    [SerializeField] StageInfo[] _companion_1_3;            // µ¿·á 1ÀÇ Å×Å© 3 ¶óÀÎ
-    [SerializeField] StageInfo[] _companion_2_1;            // µ¿·á 2ÀÇ Å×Å© 1 ¶óÀÎ
-    [SerializeField] StageInfo[] _companion_2_2;            // µ¿·á 2ÀÇ Å×Å© 2 ¶óÀÎ
-    [SerializeField] StageInfo[] _companion_2_3;            // µ¿·á 2ÀÇ Å×Å© 3 ¶óÀÎ
+    [SerializeField] StageInfo[] _companion_0_1;            // ë™ë£Œ 0ì˜ í…Œí¬ 1 ë¼ì¸
+    [SerializeField] StageInfo[] _companion_0_2;            // ë™ë£Œ 0ì˜ í…Œí¬ 2 ë¼ì¸
+    [SerializeField] StageInfo[] _companion_0_3;            // ë™ë£Œ 0ì˜ í…Œí¬ 3 ë¼ì¸
+    [SerializeField] StageInfo[] _companion_1_1;            // ë™ë£Œ 1ì˜ í…Œí¬ 1 ë¼ì¸
+    [SerializeField] StageInfo[] _companion_1_2;            // ë™ë£Œ 1ì˜ í…Œí¬ 2 ë¼ì¸
+    [SerializeField] StageInfo[] _companion_1_3;            // ë™ë£Œ 1ì˜ í…Œí¬ 3 ë¼ì¸
+    [SerializeField] StageInfo[] _companion_2_1;            // ë™ë£Œ 2ì˜ í…Œí¬ 1 ë¼ì¸
+    [SerializeField] StageInfo[] _companion_2_2;            // ë™ë£Œ 2ì˜ í…Œí¬ 2 ë¼ì¸
+    [SerializeField] StageInfo[] _companion_2_3;            // ë™ë£Œ 2ì˜ í…Œí¬ 3 ë¼ì¸
 
     [Header("Adventure Stage")]
-    [SerializeField] StageInfo[] _adventure_0;              // ¾îµåº¥Ã³ Ã©ÅÍ 0
+    [SerializeField] StageInfo[] _adventure_0;              // ì–´ë“œë²¤ì²˜ ì±•í„° 0
     [SerializeField] StageInfo[] _adventure_1;
     [SerializeField] StageInfo[] _adventure_2;
     [SerializeField] StageInfo[] _adventure_3;
@@ -42,56 +42,63 @@ public class StageInfoManager : MonoBehaviour
     [SerializeField] StageInfo[] _adventure_8;
 
     [Header("Dungeon")]
-    [SerializeField] StageInfo[] _dungeon_0;                // ´øÀü 0 ¶óÀÎ¾÷
-    [SerializeField] StageInfo[] _dungeon_1;                // ´øÀü 1 ¶óÀÎ¾÷
-    [SerializeField] StageInfo[] _dungeon_2;                // ´øÀü 2 ¶óÀÎ¾÷
-
+    [SerializeField] StageInfo[] _dungeon_0;                // ë˜ì „ 0 ë¼ì¸ì—…
+    [SerializeField] StageInfo[] _dungeon_1;                // ë˜ì „ 1 ë¼ì¸ì—…
+    [SerializeField] StageInfo[] _dungeon_2;                // ë˜ì „ 2 ë¼ì¸ì—…
+    [Header("Promote")]
+    [SerializeField] StageInfo[] _promoteArr;
     [Header("Region")]
-    [SerializeField] StageRegion[] _stageRegionArr;         // Áö¿ª Á¤º¸ ¹è¿­
+    [SerializeField] StageRegion[] _stageRegionArr;         // ì§€ì—­ ì •ë³´ ë°°ì—´
 
     [Header("AdventureReward")]
-    public int adventureDiaIncrease;                        // ¾îµåº¥Ã³ ´Ü°èº° ´ÙÀÌ¾Æ Áõ°¡·®
-    public int adventureCloverIncrease;                     // ¾îµåº¥Ã³ ´Ü°èº° Å¬·Î¹ö Áõ°¡·®
-    public List<(int, int)> adventureRewardList = new();    // °¢ Ã©ÅÍÀÇ ±âº» º¸»ó ´ÙÀÌ¾Æ¿Í Å¬·Î¹ö
+    public int adventureDiaIncrease;                        // ì–´ë“œë²¤ì²˜ ë‹¨ê³„ë³„ ë‹¤ì´ì•„ ì¦ê°€ëŸ‰
+    public int adventureCloverIncrease;                     // ì–´ë“œë²¤ì²˜ ë‹¨ê³„ë³„ í´ë¡œë²„ ì¦ê°€ëŸ‰
+    public List<(int, int)> adventureRewardList = new();    // ê° ì±•í„°ì˜ ê¸°ë³¸ ë³´ìƒ ë‹¤ì´ì•„ì™€ í´ë¡œë²„
 
-    // ´øÀü º¸»ó Ä³½Ã
-    // ÀÎµ¦½º 0Àº °ñµå
-    // ÀÎµ¦½º 1Àº ½ºÅ³ Á¶°¢
-    // ÀÎµ¦½º 2´Â Å¬·Î¹ö
+    // ë˜ì „ ë³´ìƒ ìºì‹œ
+    // ì¸ë±ìŠ¤ 0ì€ ê³¨ë“œ
+    // ì¸ë±ìŠ¤ 1ì€ ìŠ¤í‚¬ ì¡°ê°
+    // ì¸ë±ìŠ¤ 2ëŠ” í´ë¡œë²„
     private Dictionary<int, DungeonReward>[] dungeonRewards = new Dictionary<int, DungeonReward>[3];
 
-    public int adventureEntranceFee;                        // ¾îµåº¥Ã³ ÀÔÀå·á
+    public int adventureEntranceFee;                        // ì–´ë“œë²¤ì²˜ ì…ì¥ë£Œ
+    public int dungeonEntranceFee;                        // ì–´ë“œë²¤ì²˜ ì…ì¥ë£Œ
 
     [Header("CompanionReward")]
-    public List<(int, int, int, int)> companionRewardList = new(); // ±âº» º¸»ó ´ÙÀÌ¾Æ¿Í Å¬·Î¹ö¿Í ´Ü°è Áõ°¡·® µÑ
+    public List<(int, int, int, int)> companionRewardList = new(); // ê¸°ë³¸ ë³´ìƒ ë‹¤ì´ì•„ì™€ í´ë¡œë²„ì™€ ë‹¨ê³„ ì¦ê°€ëŸ‰ ë‘˜
     #endregion
     /// <summary>
-    /// Áö¿ª Á¤º¸ Á¶È¸
+    /// ì§€ì—­ ì •ë³´ ì¡°íšŒ
     /// </summary>
     public StageRegion GetRegionInfo(int index) => _stageRegionArr[index];
 
     private void Awake()
     {
-        // ½Ì±ÛÅæ º¸Àå
+        // ì‹±ê¸€í†¤ ë³´ì¥
         if (!instance) instance = this;
         else { Destroy(gameObject); return; }
 
-        // ¿ø°İ ¼³Á¤ ±â¹İ º¸»ó Å×ÀÌºí ·Îµù°ú Ä³½Ã
+        // ì›ê²© ì„¤ì • ê¸°ë°˜ ë³´ìƒ í…Œì´ë¸” ë¡œë”©ê³¼ ìºì‹œ
         SetAdventureReward();
         SetCompanionReward();
         SetDungeonReward();
 
-        // ºê·ÎÄ¿¿¡ º¸»ó ÁúÀÇ ÇÚµé·¯ ¿¬°á
+        // ë¸Œë¡œì»¤ì— ë³´ìƒ ì§ˆì˜ í•¸ë“¤ëŸ¬ ì—°ê²°
         BattleBroker.GetCompanionReward += GetCompanionReward;
         BattleBroker.GetAdventureReward += GetAdventureReward;
         BattleBroker.GetDungeonReward += GetDungeonReward;
-    }
 
+        
+    }
+    private void Start()
+    {
+        SetDropInfo();
+    }
     /// <summary>
-    /// µ¿·á ½Â±Ş ÀüÅõ º¸»ó °è»ê
-    /// index_0´Â µ¿·á ÀÎµ¦½º
-    /// index_1´Â Á÷Àü±îÁöÀÇ ´Ü°è ¼ö
-    /// ±âº» º¸»ó¿¡ ´Ü°è Áõ°¡·®À» °öÇØ ´©Àû
+    /// ë™ë£Œ ìŠ¹ê¸‰ ì „íˆ¬ ë³´ìƒ ê³„ì‚°
+    /// index_0ëŠ” ë™ë£Œ ì¸ë±ìŠ¤
+    /// index_1ëŠ” ì§ì „ê¹Œì§€ì˜ ë‹¨ê³„ ìˆ˜
+    /// ê¸°ë³¸ ë³´ìƒì— ë‹¨ê³„ ì¦ê°€ëŸ‰ì„ ê³±í•´ ëˆ„ì 
     /// </summary>
     private (int, int) GetCompanionReward(int index_0, int index_1)
     {
@@ -101,10 +108,10 @@ public class StageInfoManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ¾îµåº¥Ã³ º¸»ó °è»ê
-    /// index_0´Â Ã©ÅÍ ÀÎµ¦½º
-    /// index_1´Â ½ºÅ×ÀÌÁö ´Ü°è
-    /// Ã©ÅÍ ±âº» º¸»ó¿¡ ´Ü°è Áõ°¡·®À» ´©Àû
+    /// ì–´ë“œë²¤ì²˜ ë³´ìƒ ê³„ì‚°
+    /// index_0ëŠ” ì±•í„° ì¸ë±ìŠ¤
+    /// index_1ëŠ” ìŠ¤í…Œì´ì§€ ë‹¨ê³„
+    /// ì±•í„° ê¸°ë³¸ ë³´ìƒì— ë‹¨ê³„ ì¦ê°€ëŸ‰ì„ ëˆ„ì 
     /// </summary>
     private (int, int) GetAdventureReward(int index_0, int index_1)
     {
@@ -114,8 +121,8 @@ public class StageInfoManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ´øÀü º¸»ó Á¶È¸
-    /// ´øÀü ÀÎµ¦½º¿Í ½ºÅ×ÀÌÁö ÀÎµ¦½º·Î Ä³½Ã¿¡¼­ Ã£¾Æ ¹İÈ¯
+    /// ë˜ì „ ë³´ìƒ ì¡°íšŒ
+    /// ë˜ì „ ì¸ë±ìŠ¤ì™€ ìŠ¤í…Œì´ì§€ ì¸ë±ìŠ¤ë¡œ ìºì‹œì—ì„œ ì°¾ì•„ ë°˜í™˜
     /// </summary>
     public DungeonReward GetDungeonReward(int dungeonIndex, int stageIndex)
     {
@@ -135,9 +142,9 @@ public class StageInfoManager : MonoBehaviour
     }
 
     /// <summary>
-    /// µ¿·á ½Â±Ş º¸»ó Å×ÀÌºí ·Îµå
-    /// Remote Config Å° COMPANION_REWARD
-    /// Companion_i µñ¼Å³Ê¸®¸¦ ÀĞ¾î ±âº» º¸»ó°ú ´Ü°è Áõ°¡·®À» ±â·Ï
+    /// ë™ë£Œ ìŠ¹ê¸‰ ë³´ìƒ í…Œì´ë¸” ë¡œë“œ
+    /// Remote Config í‚¤ COMPANION_REWARD
+    /// Companion_i ë”•ì…”ë„ˆë¦¬ë¥¼ ì½ì–´ ê¸°ë³¸ ë³´ìƒê³¼ ë‹¨ê³„ ì¦ê°€ëŸ‰ì„ ê¸°ë¡
     /// </summary>
     private void SetCompanionReward()
     {
@@ -156,9 +163,9 @@ public class StageInfoManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ¾îµåº¥Ã³ º¸»ó Å×ÀÌºí ·Îµå
-    /// Remote Config Å° ADVENTURE_REWARD
-    /// Ã©ÅÍº° ±âº» º¸»ó°ú Àü¿ª Áõ°¡·® µÎ °³ ±×¸®°í ÀÔÀå·á¸¦ ±â·Ï
+    /// ì–´ë“œë²¤ì²˜ ë³´ìƒ í…Œì´ë¸” ë¡œë“œ
+    /// Remote Config í‚¤ ADVENTURE_REWARD
+    /// ì±•í„°ë³„ ê¸°ë³¸ ë³´ìƒê³¼ ì „ì—­ ì¦ê°€ëŸ‰ ë‘ ê°œ ê·¸ë¦¬ê³  ì…ì¥ë£Œë¥¼ ê¸°ë¡
     /// </summary>
     private void SetAdventureReward()
     {
@@ -180,11 +187,12 @@ public class StageInfoManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ´øÀü º¸»ó Å×ÀÌºí ·Îµå
-    /// Remote Config Å° DUNGEON_REWARD
-    /// Dungeon_0Àº °ñµå Á¤¼ö
-    /// Dungeon_1Àº Á¶°¢ µî±Ş°ú ¼ö·®À» ÄŞ¸¶·Î ±¸ºĞÇÑ ¹®ÀÚ¿­
-    /// Dungeon_2´Â Å¬·Î¹ö Á¤¼ö
+    /// ë˜ì „ ë³´ìƒ í…Œì´ë¸” ë¡œë“œ
+    /// Remote Config í‚¤ DUNGEON_REWARD
+    /// Dungeon_0ì€ ê³¨ë“œ ì •ìˆ˜
+    /// Dungeon_1ì€ ì¡°ê° ë“±ê¸‰ê³¼ ìˆ˜ëŸ‰ì„ ì½¤ë§ˆë¡œ êµ¬ë¶„í•œ ë¬¸ìì—´
+    /// Dungeon_2ëŠ” í´ë¡œë²„ ì •ìˆ˜
+    /// EntranceFeeëŠ” ë˜ì „ ì…ì¥ë£Œë¡œ ì €ì¥
     /// </summary>
     private void SetDungeonReward()
     {
@@ -197,6 +205,13 @@ public class StageInfoManager : MonoBehaviour
 
         var rewardDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(rewardJson);
 
+        // ===== ì…ì¥ë£Œ(EntranceFee) ì„¤ì • =====
+        if (rewardDict.TryGetValue("EntranceFee", out var feeObj))
+            dungeonEntranceFee = Convert.ToInt32(feeObj);
+        else
+            dungeonEntranceFee = 0; // ì—†ìœ¼ë©´ 0ìœ¼ë¡œ ì²˜ë¦¬
+
+        // ===== ë˜ì „ë³„ ë³´ìƒ ì„¤ì • =====
         for (int dungeonIdx = 0; dungeonIdx < 3; dungeonIdx++)
         {
             string key = $"Dungeon_{dungeonIdx}";
@@ -207,41 +222,35 @@ public class StageInfoManager : MonoBehaviour
 
             foreach (var pair in dungeonData)
             {
-                // »óÀ§ ¼Ó¼ºÀº °Ç³Ê¶Ü
+                // ìƒìœ„ ì†ì„±ì€ ê±´ë„ˆëœ€
                 if (pair.Key == "RewardType") continue;
 
                 int stageIndex = int.Parse(pair.Key);
 
                 switch (dungeonIdx)
                 {
-                    // °ñµå
+                    // ê³¨ë“œ
                     case 0:
                         dict[stageIndex] = new DungeonReward(Resource.Gold, Convert.ToInt32(pair.Value));
                         break;
 
-                    // Á¶°¢
+                    // ì¡°ê°
                     case 1:
-                        // °ª ¿¹½Ã Rare, 25
+                        // ê°’ ì˜ˆì‹œ Rare, 25
                         string[] parts = pair.Value.ToString().Split(',');
                         if (parts.Length == 2)
                         {
                             string rarityStr = parts[0].Trim();
                             int amount = int.Parse(parts[1].Trim());
 
-                            // ÇöÀç ±¸Á¶¿¡¼­´Â DungeonReward°¡ µî±ŞÀ» Á÷Á¢ º¸°üÇÏÁö ¾ÊÀ½
-                            // µî±ŞÀÌ ÇÊ¿äÇÑ ½Ã½ºÅÛÀº º°µµ °æ·Î·Î Àü´ŞÇØ¾ß ÇÔ
                             if (Enum.TryParse(rarityStr, true, out Rarity rarity))
-                            {
                                 dict[stageIndex] = new DungeonReward(Resource.Fragment, amount, rarity);
-                            }
                             else
-                            {
                                 Debug.LogError($"Invalid rarity: {rarityStr}");
-                            }
                         }
                         break;
 
-                    // Å¬·Î¹ö
+                    // í´ë¡œë²„
                     case 2:
                         dict[stageIndex] = new DungeonReward(Resource.Clover, Convert.ToInt32(pair.Value));
                         break;
@@ -250,11 +259,14 @@ public class StageInfoManager : MonoBehaviour
 
             dungeonRewards[dungeonIdx] = dict;
         }
+
+        Debug.Log($"[StageInfoManager] Dungeon rewards loaded. EntranceFee: {dungeonEntranceFee}");
     }
 
+
     /// <summary>
-    /// ½ºÅ×ÀÌÁö ¼¿ ·»´õ¿ë °£´Ü ¸®½ºÆ® º¯È¯
-    /// ½ÃÀÛ ÀÎµ¦½º¿Í °³¼ö·Î Àß¶ó¼­ IListViewItem ¸ñ·ÏÀ» ¸¸µç´Ù
+    /// ìŠ¤í…Œì´ì§€ ì…€ ë Œë”ìš© ê°„ë‹¨ ë¦¬ìŠ¤íŠ¸ ë³€í™˜
+    /// ì‹œì‘ ì¸ë±ìŠ¤ì™€ ê°œìˆ˜ë¡œ ì˜ë¼ì„œ IListViewItem ëª©ë¡ì„ ë§Œë“ ë‹¤
     /// </summary>
     public List<IListViewItem> GetStageInfosAsItem(int start, int count)
     {
@@ -271,15 +283,15 @@ public class StageInfoManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ³ë¸» ½ºÅ×ÀÌÁö Á¤º¸ Á¶È¸
-    /// ½ºÅ×ÀÌÁö ¹øÈ£´Â 1 ±â¹İ
+    /// ë…¸ë§ ìŠ¤í…Œì´ì§€ ì •ë³´ ì¡°íšŒ
+    /// ìŠ¤í…Œì´ì§€ ë²ˆí˜¸ëŠ” 1 ê¸°ë°˜
     /// </summary>
     public StageInfo GetNormalStageInfo(int stageNum) => _normalStageInfoArr[stageNum - 1];
 
     /// <summary>
-    /// µ¿·á ½Â±Ş ½ºÅ×ÀÌÁö Á¤º¸ Á¶È¸
-    /// companionIndex´Â µ¿·á ÀÎµ¦½º
-    /// companionTech´Â Å×Å© ¶óÀÎ°ú ±× ¶óÀÎ ¾ÈÀÇ ÀÎµ¦½º
+    /// ë™ë£Œ ìŠ¹ê¸‰ ìŠ¤í…Œì´ì§€ ì •ë³´ ì¡°íšŒ
+    /// companionIndexëŠ” ë™ë£Œ ì¸ë±ìŠ¤
+    /// companionTechëŠ” í…Œí¬ ë¼ì¸ê³¼ ê·¸ ë¼ì¸ ì•ˆì˜ ì¸ë±ìŠ¤
     /// </summary>
     public StageInfo GetCompanionTechStageInfo(int companionIndex, (int, int) companionTech)
     {
@@ -319,8 +331,8 @@ public class StageInfoManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ¾îµåº¥Ã³ ½ºÅ×ÀÌÁö ¹è¿­ Á¶È¸
-    /// index´Â Ã©ÅÍ ÀÎµ¦½º
+    /// ì–´ë“œë²¤ì²˜ ìŠ¤í…Œì´ì§€ ë°°ì—´ ì¡°íšŒ
+    /// indexëŠ” ì±•í„° ì¸ë±ìŠ¤
     /// </summary>
     public StageInfo[] GetAdventureStageInfo(int index)
     {
@@ -340,8 +352,8 @@ public class StageInfoManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ´øÀü ½ºÅ×ÀÌÁö ¹è¿­ Á¶È¸
-    /// index´Â ´øÀü ÀÎµ¦½º
+    /// ë˜ì „ ìŠ¤í…Œì´ì§€ ë°°ì—´ ì¡°íšŒ
+    /// indexëŠ” ë˜ì „ ì¸ë±ìŠ¤
     /// </summary>
     public StageInfo[] GetDungeonStageInfo(int index)
     {
@@ -353,4 +365,138 @@ public class StageInfoManager : MonoBehaviour
             default: return null;
         }
     }
+
+    public StageInfo GetPromoteStageInfo(Rank rank)
+    {
+        return _promoteArr[(int)rank];
+    }
+
+    public (float goldBonusValue, float expBonusValue)GetBonusInfo(int stageNum)
+    {
+        if (stageNum <= 0 || stageNum > _normalStageInfoArr.Length)
+            return (0f, 0f);
+
+        var stage = _normalStageInfoArr[stageNum - 1];
+        if (stage == null)
+            return (0f, 0f);
+
+        return (stage.goldBonusValue, stage.expBonusValue);
+    }
+    private void SetDropInfo()
+    {
+        // GOLD FORMULA
+        string goldJson = Unity.Services.RemoteConfig.RemoteConfigService.Instance.appConfig.GetJson("GOLD_DROP_FORMULA", "None");
+        if (string.IsNullOrEmpty(goldJson) || goldJson == "None")
+        {
+            Debug.LogError("GOLD_DROP_FORMULA not found in Remote Config.");
+            return;
+        }
+
+        var goldDict = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(goldJson);
+        string goldFormula = goldDict["Formula"].ToString();
+        float goldRange = Convert.ToSingle(goldDict["Range"]);
+
+        List<int> goldBonusStages = new();
+        float goldBonusValue = 0f;
+        if (goldDict.TryGetValue("Bonus", out var bonusObj))
+        {
+            var arr = Newtonsoft.Json.JsonConvert.DeserializeObject<List<object>>(bonusObj.ToString());
+            foreach (var item in arr)
+                goldBonusStages.Add(Convert.ToInt32(item));
+        }
+        if (goldDict.TryGetValue("BonusValue", out var bv))
+            goldBonusValue = Convert.ToSingle(bv);
+
+        // EXP FORMULA
+        string expJson = Unity.Services.RemoteConfig.RemoteConfigService.Instance.appConfig.GetJson("EXP_DROP_FORMULA", "None");
+        if (string.IsNullOrEmpty(expJson) || expJson == "None")
+        {
+            Debug.LogError("EXP_DROP_FORMULA not found in Remote Config.");
+            return;
+        }
+
+        var expDict = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(expJson);
+        string expFormula = expDict["Formula"].ToString();
+        float expRange = Convert.ToSingle(expDict["Range"]);
+
+        List<int> expBonusStages = new();
+        float expBonusValue = 0f;
+        if (expDict.TryGetValue("Bonus", out var expBonusObj))
+        {
+            var arr = Newtonsoft.Json.JsonConvert.DeserializeObject<List<object>>(expBonusObj.ToString());
+            foreach (var item in arr)
+                expBonusStages.Add(Convert.ToInt32(item));
+        }
+        if (expDict.TryGetValue("BonusValue", out var ev))
+            expBonusValue = Convert.ToSingle(ev);
+
+        // === Stageë³„ë¡œ ì„¤ì • ===
+        foreach (var stage in _normalStageInfoArr)
+        {
+            if (stage == null) continue;
+            int num = stage.stageNum;
+
+            // âœ… ë³´ë„ˆìŠ¤ ì„¸íŒ…
+            stage.goldBonusValue = goldBonusStages.Contains(num) ? goldBonusValue : 0f;
+            stage.expBonusValue = expBonusStages.Contains(num) ? expBonusValue : 0f;
+
+            // âœ… ê¸°ë³¸ ë“œë ë°ì´í„°ëŠ” CurrencyManager ê³„ì‚° ë°©ì‹ê³¼ ë™ì¼
+            int baseGold = EvaluateFormula(goldFormula, num);
+            int baseExp = EvaluateFormula(expFormula, num);
+            var frag = CurrencyManager.instance.GetBaseFragmentValue(num);
+            string weaponId = CurrencyManager.instance.GetWeaponValue(num);
+
+            stage.fragmentDropInfo = frag.count > 0 ? frag : (Rarity.Common, 0);
+            stage.weaponDropId = string.IsNullOrEmpty(weaponId) ? null : weaponId;
+        }
+
+        Debug.Log("[StageInfoManager] Drop info fully initialized from Remote Config (no reflection).");
+    }
+
+
+
+    /// <summary>
+    /// ìˆ˜ì‹ ê³„ì‚° (DataTable.Compute)
+    /// </summary>
+    private int EvaluateFormula(string formula, int stageNum)
+    {
+        var table = new System.Data.DataTable();
+        object result = table.Compute(formula.Replace("{stageNum}", stageNum.ToString()), null);
+        return Convert.ToInt32(result);
+    }
+
+    /// <summary>
+    /// í”„ë˜ê·¸ë¨¼íŠ¸ ê³„ì‚° ë¡œì§ (forceAssign, interval, rarityAdjust ë°˜ì˜)
+    /// </summary>
+    private (Rarity rarity, int count)? CalculateFragmentDrop(
+        string formula,
+        float range,
+        int dropInterval,
+        Dictionary<string, float> rarityAdjust,
+        Dictionary<string, string> forceAssign,
+        int stageNum)
+    {
+        // ê°•ì œ ì§€ì • ìš°ì„ 
+        if (forceAssign.TryGetValue(stageNum.ToString(), out string forced))
+        {
+            Rarity rarity = Enum.Parse<Rarity>(forced);
+            int baseVal = EvaluateFormula(formula, stageNum);
+            float adj = rarityAdjust.ContainsKey(forced) ? rarityAdjust[forced] : 1f;
+            return (rarity, Mathf.Max(1, Mathf.RoundToInt(baseVal * adj)));
+        }
+
+        // ë“œë ì£¼ê¸° ì•„ë‹Œ ìŠ¤í…Œì´ì§€ë©´ ì—†ìŒ
+        if (stageNum % dropInterval != 0)
+            return (Rarity.Common, 0);
+
+        // ê¸°ë³¸ ê³„ì‚° (Common ê¸°ì¤€)
+        Rarity defaultRarity = Rarity.Common;
+        int baseValue = EvaluateFormula(formula, stageNum);
+        float adjust = rarityAdjust.ContainsKey(defaultRarity.ToString()) ? rarityAdjust[defaultRarity.ToString()] : 1f;
+        int finalValue = Mathf.Max(1, Mathf.RoundToInt(baseValue * adjust));
+        return (defaultRarity, finalValue);
+    }
+
+
 }
+

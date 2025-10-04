@@ -32,7 +32,7 @@ public static class BattleBroker
     public static Action<int> ControllCompanionMove;//0 : ¸ØÃã, 1 : ¿òÁ÷ÀÓ, 2 : °ø°Ý
     
     //½Â±Þ
-    public static Action<Rank> ChallengeRank;
+    public static Action<Rank> SwitchToPromoteBattle;
 
     public static Func<BigInteger> GetNeedExp;
     public static Action<DropType, int, string> OnDrop;
@@ -46,6 +46,7 @@ public static class BattleBroker
     public static Func<int, int, (int, int)> GetAdventureReward;//index_0, index_1, (dia, clover)
 
     public static Func<bool> GetAdventureRetry;
+    //public static Func<bool> GetDungeonRetry;
 
     public static Action<int> ActiveStageInfoUI;
 

@@ -40,7 +40,7 @@ public static class PlayerBroker
     public static Action OnMaxStageSet;
     public static Action<int> OnCompanionExpSet;
 
-    public static Action<int> OnPromoteRank;//½Â±Þ
+    public static Action OnPromoteRankSet;//½Â±Þ
     public static Action<StatusType, float> OnPromoteStatusSet;//½Â±ÞÀ¸·Î ´É·ÂÄ¡ Àû¿ë
     public static Action<int, int, (StatusType, Rarity)?> OnCompanionPromoteEffectSet;// CompanionIndex, EffectIndex, Value
     public static Action<int, int, int> OnCompanionPromoteTechSet;//CompanionIndex, TechIndex, Value
@@ -58,4 +58,7 @@ public static class PlayerBroker
     public static Action<PurchaseResult> OnPurchaseCurrency;
     public static Action<GachaType, int> RequestGacha;
     public static Action<GachaResult> OnRequestGacha;
+    public static Action UpdatePromoteLockState;
+
+    public static Action StartScrollTimer;
 }

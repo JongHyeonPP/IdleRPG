@@ -15,19 +15,17 @@ namespace ClientVerification.Verification
         private readonly List<ResourceReport> reports;
         private readonly GameData serverData;
         private readonly ILogger logger;
+        private readonly DataTable table = new();
 
-        private readonly DataTable dataTable;
-
-        private readonly string levelUpRequireExp;
-        private readonly Dictionary<string, string> goldDropFormula;
-        private readonly Dictionary<string, string> expDropFormula;
-
-        private readonly FragmentDropConfig fragmentDropConfig;
-        private readonly WeaponDropConfig weaponDropConfig;
-
+        private readonly Dictionary<string, object> goldFormula;
+        private readonly Dictionary<string, object> expFormula;
+        private readonly Dictionary<string, object> fragmentFormula;
+        private readonly Dictionary<string, object> weaponFormula;
         private readonly Dictionary<string, object> adventureReward;
+        private readonly Dictionary<string, object> dungeonReward;
+        private readonly Dictionary<string, object> companionReward;
+        private readonly string levelExpFormula;
 
-        // 운영에서 Remote Config로 바꾸고 싶으면 주입하면 됨
         private readonly int maxLevel = 9999;
 
         public ResourceVerifier(
@@ -42,774 +40,512 @@ namespace ClientVerification.Verification
             this.serverData = serverData;
             this.logger = logger;
 
-            dataTable = new DataTable();
-
-            goldDropFormula = verificationSystem.GetRemoteConfig<Dictionary<string, string>>(context, gameApiClient, "GOLD_DROP_FORMULA");
-            expDropFormula = verificationSystem.GetRemoteConfig<Dictionary<string, string>>(context, gameApiClient, "EXP_DROP_FORMULA");
-
-            var fragRaw = verificationSystem.GetRemoteConfig<Dictionary<string, object>>(context, gameApiClient, "FRAGMENT_DROP_FORMULA");
-            var weaponRaw = verificationSystem.GetRemoteConfig<Dictionary<string, object>>(context, gameApiClient, "WEAPON_DROP_FORMULA");
-
-            fragmentDropConfig = ParseFragmentConfigOrThrow(fragRaw);
-            weaponDropConfig = ParseWeaponConfigOrThrow(weaponRaw);
-
+            goldFormula = verificationSystem.GetRemoteConfig<Dictionary<string, object>>(context, gameApiClient, "GOLD_DROP_FORMULA");
+            expFormula = verificationSystem.GetRemoteConfig<Dictionary<string, object>>(context, gameApiClient, "EXP_DROP_FORMULA");
+            fragmentFormula = verificationSystem.GetRemoteConfig<Dictionary<string, object>>(context, gameApiClient, "FRAGMENT_DROP_FORMULA");
+            weaponFormula = verificationSystem.GetRemoteConfig<Dictionary<string, object>>(context, gameApiClient, "WEAPON_DROP_FORMULA");
             adventureReward = verificationSystem.GetRemoteConfig<Dictionary<string, object>>(context, gameApiClient, "ADVENTURE_REWARD");
-            levelUpRequireExp = verificationSystem.GetRemoteConfig<string>(context, gameApiClient, "LEVEL_UP_REQUIRE_EXP");
+            dungeonReward = verificationSystem.GetRemoteConfig<Dictionary<string, object>>(context, gameApiClient, "DUNGEON_REWARD");
+            companionReward = verificationSystem.GetRemoteConfig<Dictionary<string, object>>(context, gameApiClient, "COMPANION_REWARD");
+            levelExpFormula = verificationSystem.GetRemoteConfig<string>(context, gameApiClient, "LEVEL_UP_REQUIRE_EXP");
         }
 
-        public bool Verify(out string failReason)
+        public bool Verify(out string reason)
         {
-            failReason = "";
+            reason = "";
 
-            BigInteger goldDelta = 0;
-            BigInteger expDelta = 0;
-            int diaDelta = 0;
-            int cloverDelta = 0;
-            int scrollDelta = 0;
-
-            var fragDelta = new Dictionary<Rarity, int>();
-            var weaponDelta = new Dictionary<string, int>();
-
-            foreach (var report in reports)
+            foreach (var r in reports)
             {
-                if (!VerifySingle(report, out var localFail))
-                {
-                    failReason = localFail;
+                if (!VerifySingle(r, out reason))
                     return false;
-                }
-
-                switch (report.Resource)
-                {
-                    case Resource.Gold:
-                        goldDelta += report.Value;
-                        break;
-
-                    case Resource.Exp:
-                        expDelta += report.Value;
-                        break;
-
-                    case Resource.Dia:
-                        diaDelta += report.Value;
-                        break;
-
-                    case Resource.Clover:
-                        cloverDelta += report.Value;
-                        break;
-
-                    case Resource.Scroll:
-                        scrollDelta += report.Value;
-                        break;
-
-                    case Resource.Fragment:
-                        {
-                            if (!TryGetFragmentRarity(report, out var rarity, out failReason))
-                                return false;
-                            AddOrIncrease(fragDelta, rarity, report.Value);
-                            break;
-                        }
-
-                    case Resource.Weapon:
-                        {
-                            if (!TryGetReportId(report, out var weaponId, out failReason))
-                                return false;
-                            AddOrIncrease(weaponDelta, weaponId, report.Value == 0 ? 1 : report.Value);
-                            break;
-                        }
-
-                    default:
-                        failReason = BuildFail(
-                            "Resource.Apply.UnknownResource",
-                            "Unsupported resource when applying verified value",
-                            new { resource = report.Resource.ToString(), reportedValue = report.Value }
-                        );
-                        return false;
-                }
             }
 
-            serverData.gold += goldDelta;
-            serverData.exp += expDelta;
-            serverData.dia += diaDelta;
-            serverData.clover += cloverDelta;
-            serverData.scroll += scrollDelta;
-
-            foreach (var kv in fragDelta) AddOrIncrease(serverData.skillFragment, kv.Key, kv.Value);
-            foreach (var kv in weaponDelta) AddOrIncrease(serverData.weaponCount, kv.Key, kv.Value);
-
-            // 저장 직전 최종 정규화로 불변식 강제
             NormalizeLevelAndExp();
-
             return true;
         }
 
-        private bool VerifySingle(ResourceReport report, out string failReason)
+        private bool VerifySingle(ResourceReport r, out string reason)
         {
-            switch (report.Source)
+            switch (r.Source)
             {
-                case Source.Battle:
-                    return BattleCase(report, out failReason);
-
-                case Source.Adventure:
-                    return AdventureCase(report, out failReason);
-
-                case Source.Companion:
-                    return CompanionCase(report, out failReason);
-                case Source.Dungeon:
-                    return DungeonCase(report, out failReason);
+                case Source.Battle: return BattleCase(r, out reason);
+                case Source.Adventure: return AdventureCase(r, out reason);
+                case Source.Dungeon: return DungeonCase(r, out reason);
+                case Source.Companion: return CompanionCase(r, out reason);
+                case Source.Advertise:
+                    return SimpleApply(r, out reason);
                 default:
-                    failReason = BuildFail(
-                        "Verify.UnknownSource",
-                        "Unknown source",
-                        new { source = report.Source.ToString(), resource = report.Resource.ToString(), reportedValue = report.Value }
-                    );
+                    reason = $"Unknown source: {r.Source}";
                     return false;
             }
         }
 
-        private bool BattleCase(ResourceReport report, out string failReason)
+        // =========================================================
+        // BattleCase (공식 기반 검증)
+        // =========================================================
+        private bool BattleCase(ResourceReport r, out string reason)
         {
-            failReason = "";
+            reason = "";
 
-            if (report.Value < 0)
+            if (r.Value < 0)
             {
-                failReason = BuildFail(
-                    "Battle.NegativeValue",
-                    "Reported value must be non-negative",
-                    new { resource = report.Resource.ToString(), reportedValue = report.Value }
-                );
+                reason = "Battle negative value";
                 return false;
             }
 
-            switch (report.Resource)
+            switch (r.Resource)
             {
                 case Resource.Gold:
-                    return ValidateGoldExp(goldDropFormula, "GOLD_DROP_FORMULA", report, out failReason);
+                    return ValidateFormula(goldFormula, "GOLD", r, out reason);
 
                 case Resource.Exp:
                     {
-                        var ok = ValidateGoldExp(expDropFormula, "EXP_DROP_FORMULA", report, out failReason);
-                        if (!ok) return false;
-                        // 리포트 단위 레벨업은 선택 사항
-                        // 최종 저장 직전 NormalizeLevelAndExp에서 다시 보정
-                        ProcessLevelUp();
-                        return true;
+                        var ok = ValidateFormula(expFormula, "EXP", r, out reason);
+                        if (ok) ProcessLevelUp();
+                        return ok;
                     }
 
                 case Resource.Fragment:
-                    return ValidateFragmentReport(report, out failReason);
+                    return ValidateFragment(r, out reason);
 
                 case Resource.Weapon:
-                    return ValidateWeaponReport(report, out failReason);
+                    return ValidateWeapon(r, out reason);
+
+                case Resource.Dia:
+                case Resource.Clover:
+                case Resource.Scroll:
+                    return SimpleApply(r, out reason);
 
                 default:
-                    failReason = BuildFail(
-                        "Battle.Resource.Unsupported",
-                        "Unsupported resource in battle case",
-                        new { resource = report.Resource.ToString() }
-                    );
+                    reason = $"Unsupported battle resource {r.Resource}";
                     return false;
             }
         }
 
-        private bool ValidateGoldExp(Dictionary<string, string> cfg, string cfgName, ResourceReport report, out string failReason)
+        // =========================================================
+        // AdventureCase (RC 기반 보상 지급 + scroll 부족 시 즉시 fail)
+        // =========================================================
+        private bool AdventureCase(ResourceReport r, out string reason)
         {
-            failReason = "";
+            reason = "";
 
-            if (cfg == null)
+            if (r.Id == null)
             {
-                failReason = BuildFail(
-                    "Battle.Config.Missing",
-                    "Drop config is null",
-                    new { resource = report.Resource.ToString(), configKey = cfgName }
-                );
+                reason = "Adventure report missing Id";
                 return false;
             }
 
-            if (!cfg.TryGetValue("Formula", out var formulaString) || string.IsNullOrWhiteSpace(formulaString))
+            var parts = r.Id.Split('_');
+            if (parts.Length != 2 ||
+                !int.TryParse(parts[0], out int advIndex) ||
+                !int.TryParse(parts[1], out int incIndex))
             {
-                failReason = BuildFail(
-                    "Battle.Config.MissingFormula",
-                    "Drop formula missing or empty",
-                    new { resource = report.Resource.ToString(), configKey = cfgName }
-                );
+                reason = $"Invalid Adventure Id format: {r.Id}";
                 return false;
             }
 
-            if (!cfg.TryGetValue("Range", out var rangeString) || string.IsNullOrWhiteSpace(rangeString))
+            if (adventureReward == null)
             {
-                failReason = BuildFail(
-                    "Battle.Config.MissingRange",
-                    "Drop range missing or empty",
-                    new { resource = report.Resource.ToString(), configKey = cfgName }
-                );
+                reason = "Adventure reward config missing";
                 return false;
             }
 
-            if (!float.TryParse(rangeString, NumberStyles.Float, CultureInfo.InvariantCulture, out var valueRange))
+            int fee = Convert.ToInt32(adventureReward["EntranceFee"]);
+            if (serverData.scroll < fee)
             {
-                failReason = BuildFail(
-                    "Battle.Config.InvalidRange",
-                    "Drop range is not a valid float",
-                    new { resource = report.Resource.ToString(), range = rangeString }
-                );
+                reason = $"Not enough scroll to enter adventure (need {fee}, have {serverData.scroll})";
                 return false;
             }
 
-            var stageNum = serverData.currentStageNum;
-            var expr = formulaString.Replace("{stageNum}", stageNum.ToString(CultureInfo.InvariantCulture));
-
-            if (!TryComputeInt(expr, out var standardValue, out var computeErr))
+            if (!adventureReward.TryGetValue($"Adventure_{advIndex}", out var advObj))
             {
-                failReason = BuildFail(
-                    "Battle.Formula.ComputeError",
-                    "Failed to compute drop formula",
-                    new { resource = report.Resource.ToString(), stageNum, formula = expr, error = computeErr }
-                );
+                reason = $"Adventure_{advIndex} not found in ADVENTURE_REWARD";
                 return false;
             }
 
-            var allowedMax = (int)Math.Ceiling(standardValue * (1 + valueRange));
-            if (report.Value > allowedMax)
-            {
-                var anomaly = new
-                {
-                    type = $"{report.Resource}Gain",
-                    expectedMax = allowedMax,
-                    reported = report.Value,
-                    stageNum,
-                    standardValue,
-                    range = valueRange
-                };
-                logger.LogError($"Unexpected {report.Resource}: {System.Text.Json.JsonSerializer.Serialize(anomaly)}");
+            var advDict = JsonConvert.DeserializeObject<Dictionary<string, int>>(advObj.ToString());
+            int baseDia = advDict["Dia"];
+            int baseClover = advDict["Clover"];
 
-                failReason = BuildFail("Battle.Value.OutOfRange", "Reported value exceeds allowed maximum", anomaly);
-                return false;
-            }
+            int diaInc = Convert.ToInt32(adventureReward["DiaIncrease"]);
+            int cloverInc = Convert.ToInt32(adventureReward["CloverIncrease"]);
 
+            int totalDia = baseDia + diaInc * incIndex;
+            int totalClover = baseClover + cloverInc * incIndex;
+
+            serverData.scroll -= fee;
+            serverData.dia += totalDia;
+            serverData.clover += totalClover;
+
+            logger.LogInformation($"Adventure_{advIndex} Clear x{incIndex} → Dia +{totalDia}, Clover +{totalClover}, Fee -{fee}");
             return true;
         }
 
-        private bool ValidateFragmentReport(ResourceReport report, out string failReason)
+        // =========================================================
+        // DungeonCase (RC 기반 보상 지급 + 실패 시 scroll만 차감)
+        // =========================================================
+        private bool DungeonCase(ResourceReport r, out string reason)
         {
-            failReason = "";
+            reason = "";
 
-            if (fragmentDropConfig == null)
+            if (dungeonReward == null)
             {
-                failReason = BuildFail("Fragment.Config.Missing", "FRAGMENT_DROP_FORMULA is null", new { });
+                reason = "Dungeon reward config missing";
                 return false;
             }
 
-            if (fragmentDropConfig.dropInterval <= 0)
+            int fee = dungeonReward.TryGetValue("EntranceFee", out var feeObj)
+                ? Convert.ToInt32(feeObj)
+                : 0;
+
+            if (serverData.scroll < fee)
             {
-                failReason = BuildFail(
-                    "Fragment.Config.InvalidDropInterval",
-                    "DropInterval must be positive",
-                    new { dropInterval = fragmentDropConfig.dropInterval }
-                );
+                reason = $"Not enough scroll to enter dungeon (need {fee}, have {serverData.scroll})";
+                logger.LogInformation($"Dungeon fail → scroll -{fee}");
                 return false;
             }
 
-            if (!TryGetFragmentRarity(report, out var reportedRarity, out failReason))
-                return false;
-
-            var stageNum = serverData.currentStageNum;
-
-            if (fragmentDropConfig.forceAssign != null &&
-                fragmentDropConfig.forceAssign.TryGetValue(stageNum, out var forcedRarityStr))
+            if (r.Id == null)
             {
-                if (!string.Equals(forcedRarityStr, reportedRarity.ToString(), StringComparison.OrdinalIgnoreCase))
-                {
-                    failReason = BuildFail(
-                        "Fragment.Rarity.ForceMismatch",
-                        "Rarity must match ForceAssign for this stage",
-                        new { stageNum, expected = forcedRarityStr, reported = reportedRarity.ToString() }
-                    );
-                    return false;
-                }
-            }
-            else
-            {
-                if (stageNum % fragmentDropConfig.dropInterval != 0)
-                {
-                    if (report.Value == 0) return true;
-
-                    failReason = BuildFail(
-                        "Fragment.Interval.Violation",
-                        "Fragment drop not allowed on this stage by DropInterval rule",
-                        new { stageNum, dropInterval = fragmentDropConfig.dropInterval, reported = report.Value }
-                    );
-                    return false;
-                }
-
-                var allowed = GetAllowedRaritiesForStage(stageNum);
-                if (allowed == null || allowed.Count == 0)
-                {
-                    failReason = BuildFail("Fragment.Range.Missing", "No allowed rarities defined for this stage", new { stageNum });
-                    return false;
-                }
-
-                var ok = allowed.Exists(r => string.Equals(r, reportedRarity.ToString(), StringComparison.OrdinalIgnoreCase));
-                if (!ok)
-                {
-                    failReason = BuildFail(
-                        "Fragment.Rarity.NotAllowed",
-                        "Reported rarity is not allowed for this stage",
-                        new { stageNum, reported = reportedRarity.ToString(), allowed }
-                    );
-                    return false;
-                }
+                serverData.scroll -= fee;
+                serverData.lastScrollTime = DateTime.UtcNow.ToString("O"); // 최근 사용 시간 갱신
+                logger.LogInformation($"Dungeon enter (fail) → scroll -{fee}, lastScrollTime updated");
+                return true;
             }
 
-            var expr = fragmentDropConfig.formula.Replace("{stageNum}", stageNum.ToString(CultureInfo.InvariantCulture));
-            if (!TryComputeDouble(expr, out var baseCount, out var compErr))
+            // ===== 성공 케이스 =====
+            var parts = r.Id.Split('_');
+            if (parts.Length != 2 ||
+                !int.TryParse(parts[0], out int dungeonIndex) ||
+                !int.TryParse(parts[1], out int rewardIndex))
             {
-                failReason = BuildFail(
-                    "Fragment.Formula.ComputeError",
-                    "Failed to compute fragment base count",
-                    new { stageNum, formula = expr, error = compErr }
-                );
+                reason = $"Invalid Dungeon Id format: {r.Id}";
                 return false;
             }
 
-            var rarityKey = reportedRarity.ToString();
-            var adj = 1f;
-            if (fragmentDropConfig.rarityAdjust != null &&
-                fragmentDropConfig.rarityAdjust.TryGetValue(rarityKey, out var found))
-                adj = found;
-
-            var adjusted = baseCount * adj;
-            var allowedMax = Math.Max(0, (int)Math.Ceiling(adjusted * (1 + fragmentDropConfig.range)));
-
-            if (report.Value > allowedMax)
+            if (!dungeonReward.TryGetValue($"Dungeon_{dungeonIndex}", out var dungeonObj))
             {
-                failReason = BuildFail(
-                    "Fragment.Value.OutOfRange",
-                    "Reported fragment count exceeds allowed maximum",
-                    new
+                reason = $"Dungeon_{dungeonIndex} not found in DUNGEON_REWARD";
+                return false;
+            }
+
+            var dungeonDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(dungeonObj.ToString());
+            string rewardType = dungeonDict["RewardType"].ToString();
+            string key = rewardIndex.ToString();
+
+            if (!dungeonDict.TryGetValue(key, out var rewardValue))
+            {
+                reason = $"Reward index {key} not found in Dungeon_{dungeonIndex}";
+                return false;
+            }
+
+            if (serverData.scroll < fee)
+            {
+                reason = $"Not enough scroll to enter dungeon (need {fee}, have {serverData.scroll})";
+                return false;
+            }
+
+            serverData.lastScrollTime = DateTime.UtcNow.ToString("O"); // 스크롤 사용 시점 기록
+
+            switch (rewardType)
+            {
+                case "Gold":
+                    serverData.gold += Convert.ToInt32(rewardValue);
+                    break;
+
+                case "Clover":
+                    serverData.clover += Convert.ToInt32(rewardValue);
+                    break;
+
+                case "Fragment":
+                    var data = rewardValue.ToString().Split(',');
+                    if (data.Length != 2)
                     {
-                        stageNum,
-                        reported = report.Value,
-                        baseCount,
-                        rarityAdjust = adj,
-                        range = fragmentDropConfig.range,
-                        allowedMax
+                        reason = $"Invalid fragment reward format in Dungeon_{dungeonIndex}, index {key}";
+                        return false;
                     }
-                );
-                return false;
+
+                    if (!Enum.TryParse<Rarity>(data[0].Trim(), true, out var rarity))
+                    {
+                        reason = $"Invalid fragment rarity '{data[0]}'";
+                        return false;
+                    }
+
+                    if (!int.TryParse(data[1].Trim(), out int fragAmount))
+                    {
+                        reason = $"Invalid fragment amount '{data[1]}'";
+                        return false;
+                    }
+
+                    serverData.skillFragment[rarity] = serverData.skillFragment.GetValueOrDefault(rarity) + fragAmount;
+                    break;
+
+                default:
+                    reason = $"Unknown RewardType '{rewardType}' in Dungeon_{dungeonIndex}";
+                    return false;
             }
 
+            logger.LogInformation($"Dungeon_{dungeonIndex} Clear [{key}] → {rewardType} rewarded, Fee -{fee}, lastScrollTime updated");
             return true;
         }
 
-        private bool ValidateWeaponReport(ResourceReport report, out string failReason)
-        {
-            failReason = "";
 
-            if (weaponDropConfig == null || weaponDropConfig.weaponByStage == null)
+        // =========================================================
+        // CompanionCase (RC 기반 보상 지급)
+        // =========================================================
+        private bool CompanionCase(ResourceReport r, out string reason)
+        {
+            reason = "";
+
+            if (r.Id == null)
             {
-                failReason = BuildFail("Weapon.Config.Missing", "WEAPON_DROP_FORMULA is null or invalid", new { });
+                reason = "Companion report missing Id";
                 return false;
             }
 
-            var stageNum = serverData.currentStageNum;
-
-            if (!weaponDropConfig.weaponByStage.TryGetValue(stageNum, out var expectedWeaponId))
+            var parts = r.Id.Split('_');
+            if (parts.Length != 2 ||
+                !int.TryParse(parts[0], out int compIndex) ||
+                !int.TryParse(parts[1], out int incIndex))
             {
-                failReason = BuildFail(
-                    "Weapon.Stage.NotAllowed",
-                    "Weapon drop is not allowed at this stage",
-                    new { stageNum, reportedValue = report.Value }
-                );
+                reason = $"Invalid Companion Id format: {r.Id}";
                 return false;
             }
 
-            if (!TryGetReportId(report, out var id, out failReason))
-                return false;
-
-            if (!string.Equals(expectedWeaponId, id, StringComparison.Ordinal))
+            if (companionReward == null)
             {
-                failReason = BuildFail(
-                    "Weapon.Id.Mismatch",
-                    "Reported Id does not match stage mapping",
-                    new { stageNum, expectedWeaponId, reportedId = id }
-                );
+                reason = "Companion reward config missing";
                 return false;
             }
 
-            if (report.Value <= 0)
+            if (!companionReward.TryGetValue($"Companion_{compIndex}", out var compObj))
             {
-                failReason = BuildFail(
-                    "Weapon.Value.Invalid",
-                    "Weapon report value must be positive",
-                    new { stageNum, value = report.Value }
-                );
+                reason = $"Companion_{compIndex} not found in COMPANION_REWARD";
                 return false;
+            }
+
+            var compDict = JsonConvert.DeserializeObject<Dictionary<string, int>>(compObj.ToString());
+
+            int baseDia = compDict["Dia"];
+            int baseClover = compDict["Clover"];
+            int diaInc = compDict["DiaIncrease"];
+            int cloverInc = compDict["CloverIncrease"];
+
+            int totalDia = baseDia + diaInc * incIndex;
+            int totalClover = baseClover + cloverInc * incIndex;
+
+            serverData.dia += totalDia;
+            serverData.clover += totalClover;
+
+            logger.LogInformation($"Companion_{compIndex} Clear x{incIndex} → Dia +{totalDia}, Clover +{totalClover}");
+            return true;
+        }
+
+        // =========================================================
+        // Formula 기반 검증
+        // =========================================================
+        private bool ValidateFormula(Dictionary<string, object> cfg, string key, ResourceReport r, out string reason)
+        {
+            reason = "";
+
+            if (cfg == null || !cfg.ContainsKey("Formula"))
+            {
+                reason = $"{key} formula missing";
+                return false;
+            }
+
+            int stage = serverData.currentStageNum;
+            string formula = cfg["Formula"].ToString().Replace("{stageNum}", stage.ToString(CultureInfo.InvariantCulture));
+            int baseVal = Convert.ToInt32(table.Compute(formula, null));
+
+            float range = cfg.ContainsKey("Range")
+                ? Convert.ToSingle(cfg["Range"], CultureInfo.InvariantCulture)
+                : 0f;
+
+            double allowedMax = baseVal * (1 + range);
+
+            // Bonus 스테이지 적용
+            if (cfg.TryGetValue("Bonus", out var bonusObj) && bonusObj is IList<object> bonusList)
+            {
+                foreach (var b in bonusList)
+                {
+                    if (int.TryParse(b.ToString(), out int bonusStage) && bonusStage == stage)
+                    {
+                        double bonusValue = cfg.ContainsKey("BonusValue")
+                            ? Convert.ToDouble(cfg["BonusValue"], CultureInfo.InvariantCulture)
+                            : 0;
+                        allowedMax = baseVal * (1 + range + bonusValue);
+                        logger.LogInformation($"[{key}] Bonus stage {stage} applied (+{bonusValue * 100}%)");
+                        break;
+                    }
+                }
+            }
+
+            if (r.Value > allowedMax)
+            {
+                logger.LogWarning($"[{key}] exceeded limit: stage {stage}, reported {r.Value}, max {allowedMax}");
+                reason = $"{key} value out of range";
+                return false;
+            }
+
+            if (key == "GOLD") serverData.gold += r.Value;
+            else if (key == "EXP") serverData.exp += r.Value;
+
+            return true;
+        }
+
+
+        // =========================================================
+        // Fragment Drop 검증
+        // =========================================================
+        private bool ValidateFragment(ResourceReport r, out string reason)
+        {
+            reason = "";
+
+            if (!TryGetFragmentRarity(r, out var rarity, out reason))
+                return false;
+
+            int stage = serverData.currentStageNum;
+            string formula = fragmentFormula["Formula"].ToString().Replace("{stageNum}", stage.ToString());
+            double baseVal = Convert.ToDouble(table.Compute(formula, null));
+            double range = Convert.ToDouble(fragmentFormula["Range"], CultureInfo.InvariantCulture);
+            double allowed = baseVal * (1 + range);
+
+            if (r.Value > allowed)
+            {
+                reason = "Fragment value out of range";
+                return false;
+            }
+
+            serverData.skillFragment[rarity] = serverData.skillFragment.GetValueOrDefault(rarity) + r.Value;
+            return true;
+        }
+
+        // =========================================================
+        // Weapon Drop 검증
+        // =========================================================
+        private bool ValidateWeapon(ResourceReport r, out string reason)
+        {
+            reason = "";
+
+            var mapJson = weaponFormula["WeaponByStage"].ToString();
+            var weaponMap = JsonConvert.DeserializeObject<Dictionary<string, string>>(mapJson);
+            int stage = serverData.currentStageNum;
+
+            if (!weaponMap.TryGetValue(stage.ToString(), out var expected))
+            {
+                reason = $"Weapon not allowed in stage {stage}";
+                return false;
+            }
+
+            if (!TryGetReportId(r, out var wid, out reason))
+                return false;
+
+            if (wid != expected)
+            {
+                reason = $"Weapon id mismatch: expected {expected}, got {wid}";
+                return false;
+            }
+
+            serverData.weaponCount[wid] = serverData.weaponCount.GetValueOrDefault(wid) + (r.Value == 0 ? 1 : r.Value);
+            return true;
+        }
+
+        // =========================================================
+        // SimpleApply (기본 자원 누적)
+        // =========================================================
+        private bool SimpleApply(ResourceReport r, out string reason)
+        {
+            reason = "";
+
+            switch (r.Resource)
+            {
+                case Resource.Gold: serverData.gold += r.Value; break;
+                case Resource.Exp:
+                    serverData.exp += r.Value;
+                    ProcessLevelUp();
+                    break;
+                case Resource.Dia: serverData.dia += r.Value; break;
+                case Resource.Clover: serverData.clover += r.Value; break;
+                case Resource.Scroll: serverData.scroll += r.Value; break;
+                case Resource.Fragment:
+                    if (!TryGetFragmentRarity(r, out var rarity, out reason))
+                        return false;
+                    serverData.skillFragment[rarity] = serverData.skillFragment.GetValueOrDefault(rarity) + r.Value;
+                    break;
+                case Resource.Weapon:
+                    if (!TryGetReportId(r, out var wid, out reason))
+                        return false;
+                    serverData.weaponCount[wid] = serverData.weaponCount.GetValueOrDefault(wid) + (r.Value == 0 ? 1 : r.Value);
+                    break;
+                default:
+                    reason = $"Unknown resource: {r.Resource}";
+                    return false;
             }
 
             return true;
         }
 
-        private bool AdventureCase(ResourceReport report, out string failReason)
-        {
-            failReason = "";
-            return true;
-        }
-        private bool CompanionCase(ResourceReport report, out string failReason)
-        {
-            failReason = "";
-            return true;
-        }
-        private bool DungeonCase(ResourceReport report, out string failReason)
-        {
-            failReason = "";
-            return true;
-        }
+        // =========================================================
+        // Level & Exp 정규화
+        // =========================================================
+        private void ProcessLevelUp() => NormalizeLevelAndExp();
 
-        // 기존 자리 유지. 내부에서는 정규화만 호출
-        private void ProcessLevelUp()
-        {
-            NormalizeLevelAndExp();
-        }
-
-        // 요구 경험치 계산 안전 래퍼
-        private bool TryGetRequiredExpForLevel(int level, out BigInteger required)
-        {
-            required = BigInteger.Zero;
-
-            if (string.IsNullOrWhiteSpace(levelUpRequireExp))
-                return false;
-
-            if (level < 1)
-                return false;
-
-            var expr = levelUpRequireExp.Replace("{level}", level.ToString(CultureInfo.InvariantCulture));
-            if (!TryComputeBigInt(expr, out var val, out _))
-                return false;
-
-            if (val <= BigInteger.Zero)
-                return false;
-
-            required = val;
-            return true;
-        }
-
-        // 저장 직전 불변식 강제
         private void NormalizeLevelAndExp()
         {
-            var level = serverData.level;
-            var exp = serverData.exp;
+            int level = serverData.level;
+            BigInteger exp = serverData.exp;
 
-            if (level < 1) level = 1;
-
-            if (level >= maxLevel)
+            for (int i = 0; i < 1000; i++)
             {
-                level = maxLevel;
-
-                if (TryGetRequiredExpForLevel(level, out var cap))
-                {
-                    var capMinusOne = cap - BigInteger.One;
-                    if (capMinusOne < BigInteger.Zero) capMinusOne = BigInteger.Zero;
-                    if (exp > capMinusOne) exp = capMinusOne;
-                }
-                else
-                {
-                    exp = BigInteger.Zero;
-                }
-
-                serverData.level = level;
-                serverData.exp = exp;
-                return;
-            }
-
-            int guard = 0;
-            while (guard++ <= maxLevel)
-            {
-                if (!TryGetRequiredExpForLevel(level, out var required))
+                if (!TryGetRequiredExp(level, out var req) || exp < req)
                     break;
-
-                if (exp < required)
-                    break;
-
-                exp -= required;
+                exp -= req;
                 level++;
-
                 if (level >= maxLevel)
-                {
-                    if (TryGetRequiredExpForLevel(level, out var cap))
-                    {
-                        var capMinusOne = cap - BigInteger.One;
-                        if (capMinusOne < BigInteger.Zero) capMinusOne = BigInteger.Zero;
-                        if (exp > capMinusOne) exp = capMinusOne;
-                    }
-                    else
-                    {
-                        exp = BigInteger.Zero;
-                    }
                     break;
-                }
             }
 
-            serverData.level = level;
+            serverData.level = Math.Min(level, maxLevel);
             serverData.exp = exp;
-
-            // 마지막 방어 한 번 더
-            if (level < maxLevel && TryGetRequiredExpForLevel(level, out var req) && exp >= req)
-            {
-                guard = 0;
-                while (guard++ <= maxLevel && TryGetRequiredExpForLevel(level, out req) && exp >= req)
-                {
-                    exp -= req;
-                    level++;
-                    if (level >= maxLevel) break;
-                }
-                serverData.level = level;
-                serverData.exp = exp;
-            }
         }
 
-        private bool TryGetReportId(object report, out string id, out string failReason)
+        private bool TryGetRequiredExp(int level, out BigInteger required)
         {
-            id = null;
-            failReason = "";
+            required = BigInteger.Zero;
+            if (string.IsNullOrEmpty(levelExpFormula)) return false;
 
-            var t = report.GetType();
-
-            var prop = t.GetProperty("Id") ?? t.GetProperty("id");
-            if (prop != null)
-            {
-                var v = prop.GetValue(report)?.ToString();
-                if (!string.IsNullOrEmpty(v)) { id = v; return true; }
-            }
-
-            var field = t.GetField("Id") ?? t.GetField("id");
-            if (field != null)
-            {
-                var v = field.GetValue(report)?.ToString();
-                if (!string.IsNullOrEmpty(v)) { id = v; return true; }
-            }
-
-            if (report is Dictionary<string, object> d)
-            {
-                if (d.TryGetValue("Id", out var v1) && v1 != null && !string.IsNullOrEmpty(v1.ToString())) { id = v1.ToString(); return true; }
-                if (d.TryGetValue("id", out var v2) && v2 != null && !string.IsNullOrEmpty(v2.ToString())) { id = v2.ToString(); return true; }
-            }
-
-            if (report is string s && !string.IsNullOrWhiteSpace(s))
-            {
-                try
-                {
-                    var m = JsonConvert.DeserializeObject<Dictionary<string, object>>(s);
-                    if (m != null)
-                    {
-                        if (m.TryGetValue("Id", out var v3) && v3 != null && !string.IsNullOrEmpty(v3.ToString())) { id = v3.ToString(); return true; }
-                        if (m.TryGetValue("id", out var v4) && v4 != null && !string.IsNullOrEmpty(v4.ToString())) { id = v4.ToString(); return true; }
-                    }
-                }
-                catch { }
-            }
-
-            failReason = BuildFail("Report.Id.Missing", "Required top-level Id missing", new { required = "Id" });
-            return false;
+            string expr = levelExpFormula.Replace("{level}", level.ToString(CultureInfo.InvariantCulture));
+            required = new BigInteger(Convert.ToDouble(table.Compute(expr, null)));
+            return required > 0;
         }
 
-        private bool TryGetFragmentRarity(ResourceReport report, out Rarity rarity, out string failReason)
+        // =========================================================
+        // 공용 메서드
+        // =========================================================
+        private bool TryGetFragmentRarity(ResourceReport r, out Rarity rarity, out string reason)
         {
             rarity = default;
-            if (!TryGetMetaString(report, "rarity", out var rarityStr, out failReason))
-                return false;
+            reason = "";
 
-            if (!Enum.TryParse<Rarity>(rarityStr, true, out rarity))
+            if (r.Id == null || !Enum.TryParse<Rarity>(r.Id, true, out rarity))
             {
-                failReason = BuildFail(
-                    "Fragment.Meta.InvalidRarity",
-                    "Invalid rarity in report meta",
-                    new { rarity = rarityStr }
-                );
+                reason = "Invalid rarity info";
                 return false;
             }
             return true;
         }
 
-        private bool TryGetMetaString(ResourceReport report, string key, out string value, out string failReason)
+        private bool TryGetReportId(ResourceReport r, out string id, out string reason)
         {
-            value = null;
-            failReason = "";
-
-            object metaObj = null;
-
-            var metaProp = report.GetType().GetProperty("Meta") ??
-                           report.GetType().GetProperty("Extra") ??
-                           report.GetType().GetProperty("Payload");
-
-            if (metaProp != null)
-                metaObj = metaProp.GetValue(report);
-
-            Dictionary<string, object> dict = null;
-
-            if (metaObj is Dictionary<string, object> d)
-                dict = d;
-            else if (metaObj is string s && !string.IsNullOrWhiteSpace(s))
+            id = r.Id;
+            reason = "";
+            if (string.IsNullOrWhiteSpace(id))
             {
-                try { dict = JsonConvert.DeserializeObject<Dictionary<string, object>>(s); }
-                catch (Exception ex)
-                {
-                    failReason = BuildFail(
-                        "Report.Meta.ParseError",
-                        "Failed to parse meta JSON",
-                        new { error = ex.Message, raw = s }
-                    );
-                    return false;
-                }
-            }
-
-            if (dict == null || !dict.TryGetValue(key, out var v) || v == null)
-            {
-                failReason = BuildFail(
-                    "Report.Meta.MissingKey",
-                    "Required meta key missing",
-                    new { key }
-                );
+                reason = "Missing weapon Id";
                 return false;
             }
-
-            value = v.ToString();
             return true;
         }
-
-        private List<string> GetAllowedRaritiesForStage(int stageNum)
-        {
-            foreach (var rng in fragmentDropConfig.valueDistribute)
-            {
-                if (stageNum >= rng.min && stageNum <= rng.max)
-                    return rng.rarities;
-            }
-            return null;
-        }
-
-        private bool TryComputeInt(string expression, out int value, out string error)
-        {
-            try
-            {
-                var obj = dataTable.Compute(expression, null);
-                var d = Convert.ToDouble(obj, CultureInfo.InvariantCulture);
-                value = Convert.ToInt32(Math.Round(d));
-                error = "";
-                return true;
-            }
-            catch (Exception ex) { value = 0; error = ex.Message; return false; }
-        }
-
-        private bool TryComputeDouble(string expression, out double value, out string error)
-        {
-            try
-            {
-                var obj = dataTable.Compute(expression, null);
-                value = Convert.ToDouble(obj, CultureInfo.InvariantCulture);
-                error = "";
-                return true;
-            }
-            catch (Exception ex) { value = 0; error = ex.Message; return false; }
-        }
-
-        private bool TryComputeBigInt(string expression, out BigInteger value, out string error)
-        {
-            try
-            {
-                var obj = dataTable.Compute(expression, null);
-                if (obj == null) { value = BigInteger.Zero; error = "Compute returned null"; return false; }
-                if (obj is string s)
-                {
-                    if (BigInteger.TryParse(s, NumberStyles.Integer, CultureInfo.InvariantCulture, out value)) { error = ""; return true; }
-                    value = BigInteger.Zero; error = "Cannot parse string to BigInteger"; return false;
-                }
-                var dec = Convert.ToDecimal(obj, CultureInfo.InvariantCulture);
-                value = new BigInteger(dec);
-                error = "";
-                return true;
-            }
-            catch (Exception ex) { value = BigInteger.Zero; error = ex.Message; return false; }
-        }
-
-        private static void AddOrIncrease<TKey>(Dictionary<TKey, int> dict, TKey key, int delta)
-        {
-            if (delta == 0) return;
-            if (dict.TryGetValue(key, out var cur)) dict[key] = cur + delta;
-            else dict[key] = delta;
-        }
-
-        private static string BuildFail(string code, string message, object extra)
-        {
-            return JsonConvert.SerializeObject(new { code, message, extra });
-        }
-
-        private static FragmentDropConfig ParseFragmentConfigOrThrow(Dictionary<string, object> raw)
-        {
-            if (raw == null) throw new Exception("FRAGMENT_DROP_FORMULA is null");
-
-            var cfg = new FragmentDropConfig
-            {
-                dropInterval = Convert.ToInt32(raw["DropInterval"], CultureInfo.InvariantCulture),
-                formula = raw["Formula"].ToString(),
-                range = Convert.ToSingle(raw["Range"], CultureInfo.InvariantCulture),
-                rarityAdjust = JsonConvert.DeserializeObject<Dictionary<string, float>>(raw["RarityAdjust"].ToString()),
-                valueDistribute = new List<StageRarityDistribute>(),
-                forceAssign = new Dictionary<int, string>()
-            };
-
-            var rangesDict = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(raw["ValueDistribute"].ToString());
-            foreach (var kv in rangesDict)
-            {
-                var sp = kv.Key.Split('-');
-                var min = int.Parse(sp[0], CultureInfo.InvariantCulture);
-                var max = int.Parse(sp[1], CultureInfo.InvariantCulture);
-                cfg.valueDistribute.Add(new StageRarityDistribute { min = min, max = max, rarities = kv.Value });
-            }
-
-            if (raw.TryGetValue("ForceAssign", out var fa) && fa != null)
-            {
-                var faDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(fa.ToString());
-                foreach (var kv in faDict)
-                    if (int.TryParse(kv.Key, NumberStyles.Integer, CultureInfo.InvariantCulture, out var st))
-                        cfg.forceAssign[st] = kv.Value;
-            }
-
-            return cfg;
-        }
-
-        private static WeaponDropConfig ParseWeaponConfigOrThrow(Dictionary<string, object> raw)
-        {
-            if (raw == null) throw new Exception("WEAPON_DROP_FORMULA is null");
-            if (!raw.TryGetValue("WeaponByStage", out var mapObj) || mapObj == null)
-                throw new Exception("WEAPON_DROP_FORMULA.WeaponByStage missing");
-
-            var strDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(mapObj.ToString());
-            var dict = new Dictionary<int, string>();
-            foreach (var kv in strDict)
-                if (int.TryParse(kv.Key, NumberStyles.Integer, CultureInfo.InvariantCulture, out var k))
-                    dict[k] = kv.Value;
-
-            return new WeaponDropConfig { weaponByStage = dict };
-        }
-    }
-
-    public sealed class FragmentDropConfig
-    {
-        public int dropInterval;
-        public string formula;
-        public float range;
-        public Dictionary<string, float> rarityAdjust;
-        public List<StageRarityDistribute> valueDistribute;
-        public Dictionary<int, string> forceAssign;
-    }
-
-    public sealed class StageRarityDistribute
-    {
-        public int min;
-        public int max;
-        public List<string> rarities;
-    }
-
-    public sealed class WeaponDropConfig
-    {
-        public Dictionary<int, string> weaponByStage;
     }
 }

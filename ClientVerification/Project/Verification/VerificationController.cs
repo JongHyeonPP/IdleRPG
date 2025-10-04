@@ -88,7 +88,7 @@ namespace ClientVerification.Verification
                 context, context.ServiceToken, context.ProjectId, context.PlayerId, new() { "GameData" });
 
             if (res.Data.Results.Count == 0)
-                return new GameData { level = 1, maxStageNum = 1, currentStageNum = 1 };
+                return new GameData { level = 1, maxStageNum = 1, currentStageNum = 1, lastScrollTime = DateTime.UtcNow.ToString("O") };
 
             return JsonConvert.DeserializeObject<GameData>(res.Data.Results[0].Value.ToString());
         }
@@ -118,8 +118,6 @@ namespace ClientVerification.Verification
 
         private void ApplyUsualFieldsOnly(GameData server, GameData client)
         {
-            server.level = client.level;
-            server.statLevel_StatPoint = new(client.statLevel_StatPoint);
             server.stat_Promote = new(client.stat_Promote);
             server.skillLevel = new(client.skillLevel);
             server.skillFragment = new(client.skillFragment);

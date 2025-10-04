@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 public class AdventureInfoUI : MonoBehaviour, IGeneralUI
 {
-    //UI
+    // UI
     public VisualElement root { get; private set; }
     private Label _titleLabel;
     private VisualElement _regionImage;
@@ -20,7 +20,9 @@ public class AdventureInfoUI : MonoBehaviour, IGeneralUI
     private VisualElement _activePanel;
     private Label _stateLabel;
     private Toggle _retryToggle;
-    //Ref
+    private Button _startButton;
+
+    // Ref
     private GameData _gameData;
     private AdventureSlot _currentSlot;
     private int _currentSlotIndex;
@@ -28,12 +30,16 @@ public class AdventureInfoUI : MonoBehaviour, IGeneralUI
     private StageInfo _currentStage;
     private int _currentProgress;
 
+    // New
+    private bool _isStageUnlocked; // 선택된 슬롯의 해금 여부
+
     private void Awake()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
         _gameData = StartBroker.GetGameData();
         BattleBroker.GetAdventureRetry += () => _retryToggle.value;
     }
+
     private void Start()
     {
         _titleLabel = root.Q<Label>("TitleLabel");
@@ -48,6 +54,7 @@ public class AdventureInfoUI : MonoBehaviour, IGeneralUI
         _stateLabel = root.Q<Label>("StateLabel");
         _retryToggle = root.Q<Toggle>("RetryToggle");
         _retryToggle.value = false;
+        _startButton = root.Q<Button>("StartButton");
         root.Q<Button>("ExitButton").RegisterCallback<ClickEvent>(evt => UIBroker.InactiveCurrentUI());
 
         for (int i = 0; i < 2; i++)
@@ -58,22 +65,31 @@ public class AdventureInfoUI : MonoBehaviour, IGeneralUI
             {
                 int currentIndex = i * 5 + j;
                 VisualElement slotElement = slots[j];
-                slotElement.RegisterCallback<ClickEvent>(evt=>OnInfoSlotSelect(currentIndex));
+                slotElement.RegisterCallback<ClickEvent>(evt => OnInfoSlotSelect(currentIndex));
                 _slotArr.Add(new(slotElement, currentIndex));
             }
         }
-        root.Q<Button>("StartButton").RegisterCallback<ClickEvent>(evt => OnStartButtonClick());
+
+        _startButton.RegisterCallback<ClickEvent>(evt => OnStartButtonClick());
     }
 
     private void OnStartButtonClick()
     {
+        if (!_isStageUnlocked)
+        {
+            UIBroker.ShowPopUpInBattle("아직 해금되지 않은 스테이지입니다.");
+            return;
+        }
+
         int fee = StageInfoManager.instance.adventureEntranceFee;
-        UIBroker.InactiveCurrentUI();
-        if (_gameData.scroll<fee)
+
+        if (_gameData.scroll < fee)
         {
             UIBroker.ShowPopUpInBattle("입장 비용이 부족합니다.");
             return;
         }
+
+        UIBroker.InactiveCurrentUI();
         UIBroker.ChangeMenu(0);
         UIBroker.FadeInOut(0f, 0.5f, 2f);
         BattleBroker.SwitchToAdventure(_currentSlotIndex, _currentProgress);
@@ -93,69 +109,55 @@ public class AdventureInfoUI : MonoBehaviour, IGeneralUI
         _currentStageInfoArr = StageInfoManager.instance.GetAdventureStageInfo(_currentSlotIndex);
 
         int currentProgress = _gameData.adventureProgess[_currentSlotIndex];
+        _currentProgress = currentProgress;
+
         for (int i = 0; i < _slotArr.Count; i++)
         {
             if (i < currentProgress)
-            {
                 _slotArr[i].SetSlotState(1);
-            }
             else if (i > currentProgress)
-            {
                 _slotArr[i].SetSlotState(2);
-            }
             else
-            {
                 _slotArr[i].SetSlotState(0);
-            }
         }
+
         _listLable.text = $"퀘스트 리스트[{currentProgress}/10]";
         OnInfoSlotSelect(currentProgress);
     }
+
     private void OnInfoSlotSelect(int index)
     {
-        index = Mathf.Min(index, _currentStageInfoArr.Length-1);
+        index = Mathf.Min(index, _currentStageInfoArr.Length - 1);
         (int, int) reward = BattleBroker.GetAdventureReward(_currentSlotIndex, index);
         _currentStage = _currentStageInfoArr[index];
-        
+
         _diaLable.text = reward.Item1.ToString("N0");
         _cloverLable.text = reward.Item2.ToString("N0");
         _titleLabel.text = _currentStage.stageName;
 
         _bossImage.style.backgroundImage = new(_currentStage.boss.prefab.GetComponentInChildren<SpriteRenderer>().sprite);
         _bossImage.style.left = _currentStage.adventrueInfo.imageLeft;
-        _bossImage.style.scale = new Vector2( _currentStage.adventrueInfo.imageScale, _currentStage.adventrueInfo.imageScale);
+        _bossImage.style.scale = new Vector2(_currentStage.adventrueInfo.imageScale, _currentStage.adventrueInfo.imageScale);
 
+        _isStageUnlocked = index <= _currentProgress;
+        _startButton.SetEnabled(_isStageUnlocked);
 
-        _currentProgress = index;
-        //if (index < currentProgress)
-        //{
-        //    _activePanel.style.display = DisplayStyle.None;
-        //    _stateLabel.style.display = DisplayStyle.Flex;
-        //    _stateLabel.text = "보상 수령 완료";
-        //}
-        //else if (index > currentProgress)
-        //{
-        //    _activePanel.style.display = DisplayStyle.None;
-        //    _stateLabel.style.display = DisplayStyle.Flex;
-        //    _stateLabel.text = "잠금";
-        //}
-        //else
+        if (_isStageUnlocked)
         {
             _activePanel.style.display = DisplayStyle.Flex;
             _stateLabel.style.display = DisplayStyle.None;
         }
+        else
+        {
+            _activePanel.style.display = DisplayStyle.None;
+            _stateLabel.style.display = DisplayStyle.Flex;
+            _stateLabel.text = "잠금";
+        }
+
         for (int i = 0; i < _slotArr.Count; i++)
         {
-            if (i == index)
-            {
-                _slotArr[i].ActiveBorder(true);
-            }
-            else
-            {
-                _slotArr[i].ActiveBorder(false);
-            }
+            _slotArr[i].ActiveBorder(i == index);
         }
-        
     }
 
     public void OnBattle()
@@ -170,8 +172,8 @@ public class AdventureInfoUI : MonoBehaviour, IGeneralUI
 
     public void OnBoss()
     {
-
     }
+
     private class AdventureInfoSlot
     {
         private Label _numLabel;
@@ -182,12 +184,14 @@ public class AdventureInfoUI : MonoBehaviour, IGeneralUI
         private static Color textColor = new(0.286f, 0.231f, 0.157f);
         private static Color imageColor = new(1f, 1f, 1f);
         private static float inactiveRatio = 0.7f;
+
         public AdventureInfoSlot(VisualElement slotRoot, int index)
         {
             _numLabel = slotRoot.Q<Label>("NumLabel");
             _textImage = slotRoot.Q<VisualElement>("TextImage");
             _scrollImage = slotRoot.Q<VisualElement>("ScrollImage");
             _border = slotRoot.Q<VisualElement>("Border");
+
             int romanIndex = index + 1;
             _numLabel.text = (romanIndex switch
             {
@@ -204,32 +208,34 @@ public class AdventureInfoUI : MonoBehaviour, IGeneralUI
                 _ => '?',
             }).ToString();
         }
+
         public void SetSlotState(int index)
         {
             _slotState = index;
             switch (_slotState)
             {
-                case 0://입장 가능
+                case 0: // 입장 가능
                     _numLabel.style.display = DisplayStyle.Flex;
                     _numLabel.style.color = textColor;
                     _textImage.style.display = DisplayStyle.Flex;
                     _textImage.style.unityBackgroundImageTintColor = imageColor;
                     _scrollImage.style.unityBackgroundImageTintColor = imageColor;
                     break;
-                case 1://클리어 완료
+                case 1: // 클리어 완료
                     _numLabel.style.display = DisplayStyle.Flex;
-                    _numLabel.style.color = textColor*inactiveRatio;
+                    _numLabel.style.color = textColor * inactiveRatio;
                     _textImage.style.display = DisplayStyle.Flex;
-                    _textImage.style.unityBackgroundImageTintColor = imageColor* inactiveRatio;
-                    _scrollImage.style.unityBackgroundImageTintColor = imageColor* inactiveRatio;
+                    _textImage.style.unityBackgroundImageTintColor = imageColor * inactiveRatio;
+                    _scrollImage.style.unityBackgroundImageTintColor = imageColor * inactiveRatio;
                     break;
-                case 2://해금 안 됨
+                case 2: // 해금 안 됨
                     _numLabel.style.display = DisplayStyle.None;
                     _textImage.style.display = DisplayStyle.None;
                     _scrollImage.style.unityBackgroundImageTintColor = imageColor * inactiveRatio;
                     break;
             }
         }
+
         public void ActiveBorder(bool isActive)
         {
             _border.style.display = isActive ? DisplayStyle.Flex : DisplayStyle.None;

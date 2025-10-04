@@ -15,7 +15,8 @@ public class CurrencyBarUI : MonoBehaviour, IGeneralUI
     Label _diaLabel;
     [SerializeField] TotalStatusUI _totalStatusUI;
     public VisualElement root { get;private set; }
-
+    [SerializeField] SettingUI _settingUI;
+    [SerializeField] PowerSavePanel _powerSavePanel;
     private void Awake()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
@@ -47,6 +48,8 @@ public class CurrencyBarUI : MonoBehaviour, IGeneralUI
         {
             _totalStatusUI.ActiveTotalStatusUI();
         });
+        root.Q<Button>("SettingButton").RegisterCallback<ClickEvent>(evt => _settingUI.ActiveUI());
+        root.Q<Button>("PowerSaveButton").RegisterCallback<ClickEvent>(evt => _powerSavePanel.ActivePowerSavePanel());
     }
     private void SetLevelExp()
     {

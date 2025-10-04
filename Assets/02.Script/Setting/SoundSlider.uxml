@@ -1,0 +1,6 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/02.Script/Setting/SoundSlider.uss?fileID=7433441132597879392&amp;guid=06ffbb2eac2aa2b4ca96b39bfbd601ee&amp;type=3#SoundSlider" />
+    <ui:VisualElement name="SoundSlider" style="flex-grow: 0; flex-shrink: 0; flex-direction: row; width: 679px;">
+        <ui:Slider label="앙" value="0.55" high-value="1" fill="true" inverted="false" show-input-field="false" focusable="false" name="Slider" style="flex-grow: 1; color: rgb(255, 255, 255); -unity-font-definition: url(&quot;project://database/Assets/05.Font/Maplestory%20Bold.ttf?fileID=12800000&amp;guid=cb734c07d35dbf549a5a6fce9ebf42b1&amp;type=3#Maplestory Bold&quot;); -unity-text-outline-width: 4px; font-size: 55px;" />
+    </ui:VisualElement>
+</ui:UXML>

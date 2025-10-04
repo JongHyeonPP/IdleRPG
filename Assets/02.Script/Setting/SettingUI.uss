@@ -1,0 +1,10 @@
+.unity-toggle__checkmark {
+    width: 55px;
+    height: 55px;
+    margin-left: 23px;
+}
+
+.unity-toggle__label {
+    width: 393px;
+    text-overflow: clip;
+}

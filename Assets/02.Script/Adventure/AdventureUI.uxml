@@ -17,15 +17,22 @@
                         <engine:Label text="던전" name="Label" style="position: absolute; width: 100%; height: 100%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
                     </engine:Button>
                 </engine:VisualElement>
-                <engine:VisualElement name="ScrollPanel" style="flex-grow: 0; flex-direction: row; align-items: center; position: absolute; right: 38px; background-color: rgba(0, 0, 0, 0.45); height: 80px; border-top-left-radius: 18px; border-top-right-radius: 18px; border-bottom-right-radius: 18px; border-bottom-left-radius: 18px; width: 224px; justify-content: center;">
-                    <engine:VisualElement name="IconVe" style="flex-grow: 0; flex-shrink: 0; width: 50px; height: 50px; background-color: rgba(255, 255, 255, 0); background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Icons/32/ScrollRoll.png?fileID=2800000&amp;guid=a0a8f252a8253a54292d25824d74f625&amp;type=3#ScrollRoll&quot;); margin-left: 10px;" />
-                    <engine:Label text="0&#10;" name="ScrollLabel" style="align-items: flex-start; justify-content: center; -unity-text-align: upper-center; margin-left: 15px; font-size: 40px; flex-grow: 1;" />
+                <engine:VisualElement style="flex-grow: 1; flex-direction: row; height: 100px; align-items: center; justify-content: flex-end;">
+                    <engine:Label text="3:00" name="ScrollTimeLabel" style="margin-right: 21px;" />
+                    <engine:VisualElement name="ScrollPanel" style="flex-grow: 0; flex-direction: row; align-items: center; position: relative; background-color: rgba(0, 0, 0, 0.45); height: 80px; border-top-left-radius: 18px; border-top-right-radius: 18px; border-bottom-right-radius: 18px; border-bottom-left-radius: 18px; width: 261px; justify-content: flex-start; margin-right: 30px;">
+                        <engine:VisualElement name="IconVe" style="flex-grow: 0; flex-shrink: 0; width: 50px; height: 50px; background-color: rgba(255, 255, 255, 0); background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Icons/32/ScrollRoll.png?fileID=2800000&amp;guid=a0a8f252a8253a54292d25824d74f625&amp;type=3#ScrollRoll&quot;); margin-left: 10px;" />
+                        <engine:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: center;">
+                            <engine:Label text="100" name="ScrollLabel" style="align-items: flex-start; justify-content: center; -unity-text-align: upper-center; margin-left: 15px; flex-grow: 0; margin-right: 5px; padding-right: 0;" />
+                            <engine:Label text="/" name="ScrollLabel" style="align-items: flex-start; justify-content: center; -unity-text-align: upper-center; margin-left: 0; flex-grow: 0; padding-left: 0;" />
+                            <engine:Label text="100" name="ScrollLabel" style="align-items: flex-start; justify-content: center; -unity-text-align: upper-center; margin-left: 0; flex-grow: 0; padding-left: 0;" />
+                        </engine:VisualElement>
+                    </engine:VisualElement>
                 </engine:VisualElement>
             </engine:VisualElement>
             <engine:VisualElement name="Separator" style="flex-grow: 0; width: 100%; align-self: center; height: 20px; background-color: rgba(180, 130, 83, 0); margin-top: 0; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/Separator.png?fileID=2800000&amp;guid=6905ee83a67947e4cb1e8e775a2e9794&amp;type=3#Separator&quot;);" />
             <engine:VisualElement name="MainPanel" style="flex-grow: 1; align-items: center; overflow: hidden;">
-                <engine:Instance template="AdventurePanel" name="AdventurePanel" style="width: 100%; height: 100%; display: none;" />
-                <engine:Instance template="DungeonPanel" name="DungeonPanel" style="width: 100%; height: 100%;" />
+                <engine:Instance template="AdventurePanel" name="AdventurePanel" style="width: 100%; height: 100%; display: flex;" />
+                <engine:Instance template="DungeonPanel" name="DungeonPanel" style="width: 100%; height: 100%; display: none;" />
             </engine:VisualElement>
         </engine:VisualElement>
         <engine:VisualElement name="Frame" picking-mode="Ignore" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/WindowStroke2.png?fileID=21300000&amp;guid=f1ad16e66091e1344a57f36d05134015&amp;type=3#WindowStroke2&quot;);" />

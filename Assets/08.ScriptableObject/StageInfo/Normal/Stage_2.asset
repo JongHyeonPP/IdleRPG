@@ -13,9 +13,12 @@ MonoBehaviour:
   m_Name: Stage_2
   m_EditorClassIdentifier: 
   stageNum: 2
-  stageName: Unset Stage
+  stageName: "\uC2DC\uC791\uC758 \uD3C9\uC6D0\u2161"
   background: 0
   recommendLevel: 0
+  goldBonusValue: 0
+  expBonusValue: 0
+  weaponDropId: 
   enemy_0: {fileID: 11400000, guid: 6071fbb2f6628724e97e0a3d7a9f9fb0, type: 2}
   enemy_1: {fileID: 0}
   boss: {fileID: 11400000, guid: 36a0074aa544b9e408e43031d4e36e32, type: 2}

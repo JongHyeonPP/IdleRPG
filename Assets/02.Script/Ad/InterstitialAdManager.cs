@@ -1,3 +1,4 @@
+using EnumCollection;
 using UnityEngine;
 using UnityEngine.Advertisements;
 
@@ -14,8 +15,11 @@ public class InterstitialAdManager : MonoBehaviour, IUnityAdsInitializationListe
     [SerializeField] string _iOsAdUnitId;
     private string _adUnitId;
 
+    (Resource, int)? currentAdReward;
     void Awake()
     {
+
+        
         // AdsInitializer 내용
 #if UNITY_IOS
         _gameId = _iOSGameId;
@@ -46,7 +50,7 @@ public class InterstitialAdManager : MonoBehaviour, IUnityAdsInitializationListe
     // AdsInitializer 인터페이스
     public void OnInitializationComplete()
     {
-        Debug.Log("Unity Ads initialization complete.");
+        //Debug.Log("Unity Ads initialization complete.");
     }
 
     public void OnInitializationFailed(UnityAdsInitializationError error, string message)
@@ -55,21 +59,20 @@ public class InterstitialAdManager : MonoBehaviour, IUnityAdsInitializationListe
     }
 
     // InterstitialAdManager 원본 메서드들
-    public void LoadAd()
+    public void LoadAd((Resource, int) reward)
     {
         Debug.Log("Loading Ad: " + _adUnitId);
+        currentAdReward = reward;
         Advertisement.Load(_adUnitId, this);
     }
-
+    //광고 띄우는 메서드
     public void ShowAd()
     {
-        Debug.Log("Showing Ad: " + _adUnitId);
         Advertisement.Show(_adUnitId, this);
     }
 
     public void OnUnityAdsAdLoaded(string adUnitId)
     {
-        Debug.Log("OnUnityAdsAdLoaded");
         ShowAd();
     }
 
@@ -92,9 +95,24 @@ public class InterstitialAdManager : MonoBehaviour, IUnityAdsInitializationListe
     {
         Debug.Log("OnUnityAdsShowClick");
     }
-
+    //광고 끝나면 뜨는 메서드
     public void OnUnityAdsShowComplete(string _adUnitId, UnityAdsShowCompletionState showCompletionState)
     {
         Debug.Log("OnUnityAdsShowComplete");
+        NetworkBroker.QueueResourceReport(currentAdReward.Value.Item2, null, currentAdReward.Value.Item1, Source.Advertise);
+        GameData gameData = StartBroker.GetGameData();
+        switch (currentAdReward.Value.Item1)
+        {
+            case Resource.Dia:
+                gameData.dia += currentAdReward.Value.Item2;
+                PlayerBroker.OnDiaSet();
+                break;
+            case Resource.Clover:
+                gameData.clover += currentAdReward.Value.Item2;
+                PlayerBroker.OnCloverSet();
+                break;
+        }
+        currentAdReward = null;
+        NetworkBroker.SaveServerData();
     }
 }

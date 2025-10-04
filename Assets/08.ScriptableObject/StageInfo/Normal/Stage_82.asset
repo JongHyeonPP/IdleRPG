@@ -13,9 +13,12 @@ MonoBehaviour:
   m_Name: Stage_82
   m_EditorClassIdentifier: 
   stageNum: 82
-  stageName: "\uC218\uC0C1\uD55C \uBC00\uB9BC\uC232 \u2161"
+  stageName: "\uC548\uAC1C\uC232\u2161"
   background: 4
   recommendLevel: 0
+  goldBonusValue: 0
+  expBonusValue: 0
+  weaponDropId: 
   enemy_0: {fileID: 11400000, guid: e09dd5ab96c905748a2e670e09ac5c2c, type: 2}
   enemy_1: {fileID: 0}
   boss: {fileID: 11400000, guid: b5c0135b75e18444bb805446fdd00629, type: 2}

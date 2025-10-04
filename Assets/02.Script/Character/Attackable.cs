@@ -4,10 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using System.Runtime.ConstrainedExecution;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 using Vector3 = UnityEngine.Vector3;
 
 public abstract class Attackable : MonoBehaviour
@@ -235,6 +232,8 @@ public abstract class Attackable : MonoBehaviour
 
     private IEnumerator TargetKill()
     {
+        if (attackCoroutine == null)
+            yield break;
         StopCoroutine(attackCoroutine);
         yield return new WaitForSeconds(0.5f);
         target = null;
@@ -251,14 +250,19 @@ public abstract class Attackable : MonoBehaviour
 
 
 
-                if (this is EnemyController)
+                if (this is EnemyController enemy)
                 {
-                    anim.SetTrigger("Hit");
+                    var status = (EnemyStatus)enemy.GetStatus();
+                    if (status.isMonster)
+                        anim.SetTrigger("Hit");
+                    else
+                        StartCoroutine(FlashRed());
                 }
                 else
                 {
                     StartCoroutine(FlashRed());
                 }
+
 
                 Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
                 BattleBroker.ShowDamageText(screenPos, calcedValue.ToString("N0"));

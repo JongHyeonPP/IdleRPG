@@ -2,7 +2,7 @@ namespace EnumCollection
 {
     public enum Background
     {
-        Plains, Forest, Beach, Ruins, MysteriousForest,
+        Plains, Forest, Riverside, Ruins, MysteriousForest,
         VineForest, Swamp, Cave, WinterForest, ElfCity,
         DesertRuins, IceField, RedRock, Desert, Lava
     }
@@ -52,9 +52,10 @@ namespace EnumCollection
     }
     public enum BattleType
     {
-        Default, Boss,CompanionTech, Story, None,
+        Default, Boss,CompanionTech, None,
         Adventure,
-        Dungeon
+        Dungeon,
+        Promote
     }
     public enum EnemyType
     {
@@ -83,7 +84,8 @@ namespace EnumCollection
     public enum Source
     {
         //¿Á»≠ »πµÊ√≥
-        Battle, Adventure, Companion, Dungeon
+        Battle, Adventure, Companion, Dungeon,
+        Advertise
     }
     public enum SpendType
     {

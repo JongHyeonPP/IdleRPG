@@ -26,7 +26,8 @@ public class DungeonInfoUI : MonoBehaviour, IGeneralUI
     private VisualElement _regionImage;
     private Label _regionLabel;
     private Label _titleLabel;
-
+    private Toggle _retryToggle;
+    private Label _priceLabel;
     // 데이터/컨트롤러 참조
     private GameData _gameData;
     private FlexibleListView _fListView;
@@ -57,8 +58,18 @@ public class DungeonInfoUI : MonoBehaviour, IGeneralUI
         _regionImage = root.Q<VisualElement>("RegionImage");
         _regionLabel = root.Q<Label>("RegionLabel");
         _titleLabel = root.Q<Label>("TitleLabel");
+        _priceLabel = root.Q<Label>("PriceLabel");
+
+        //BattleBroker.GetDungeonRetry += () => _retryToggle.value;
+
+        _retryToggle = root.Q<Toggle>("RetryToggle");
+        _retryToggle.value = false;
     }
 
+    private void Start()
+    {
+        _priceLabel.text = StageInfoManager.instance.dungeonEntranceFee.ToString();
+    }
     /// <summary>
     /// 시작 버튼: 선택된 스테이지로 던전 전투 진입.
     /// </summary>
@@ -71,7 +82,7 @@ public class DungeonInfoUI : MonoBehaviour, IGeneralUI
             return;
         }
 
-        int fee = StageInfoManager.instance.adventureEntranceFee;
+        int fee = StageInfoManager.instance.dungeonEntranceFee;
 
         // UI 닫고, 비용 체크. (UI를 닫은 뒤 부족 안내 팝업을 띄우는 플로우)
         
@@ -84,7 +95,6 @@ public class DungeonInfoUI : MonoBehaviour, IGeneralUI
         // 전투 전환 연출 및 씬 상태 변경
         UIBroker.ChangeMenu(0);
         UIBroker.FadeInOut(0f, 0.5f, 2f);
-        _gameData.scroll -= fee;
         // 현재 선택된 스테이지의 어드벤처 인덱스 정보를 사용해 던전 진입
         BattleBroker.SwitchToDungeon(
             _currentStageInfo.adventrueInfo.adventureIndex_0,

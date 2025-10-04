@@ -13,9 +13,12 @@ MonoBehaviour:
   m_Name: Stage_141
   m_EditorClassIdentifier: 
   stageNum: 141
-  stageName: Unset Stage
+  stageName: "\uC5B4\uB460\uC758 \uB3D9\uAD74\u2160"
   background: 7
-  dropProb: 0
+  recommendLevel: 0
+  goldBonusValue: 0
+  expBonusValue: 0
+  weaponDropId: 
   enemy_0: {fileID: 11400000, guid: 15b3d07ca7834d248aeb2110d51c95a2, type: 2}
   enemy_1: {fileID: 0}
   boss: {fileID: 11400000, guid: 97861084f6a902046903561444af05aa, type: 2}
@@ -23,22 +26,21 @@ MonoBehaviour:
   enemyStatusFromStage:
     maxHp: 100
     resist: 0
-    gold: 1410
-    exp: 1410
   bossStatusFromStage:
     maxHp: 100
     resist: 0
     power: 10
     penetration: 0
-    gold: 14100
-    exp: 14100
   chestStatusFromStage:
     maxHp: 
     resist: 0
-    gold: 0
-    exp: 0
   companionTechInfo:
     companionNum: 0
     techIndex_0: 0
     techIndex_1: 0
     recommendLevel: 0
+  adventrueInfo:
+    adventureIndex_0: 0
+    adventureIndex_1: 0
+    imageLeft: 0
+    imageScale: 1

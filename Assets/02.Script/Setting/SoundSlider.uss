@@ -1,0 +1,16 @@
+.unity-slider__label {
+    min-width: 196px;
+}
+
+.unity-base-slider__tracker {
+    height: 29px;
+}
+
+.unity-base-slider__dragger {
+    height: 48px;
+    width: 20px;
+}
+
+.unity-slider__input {
+    height: 54px;
+}

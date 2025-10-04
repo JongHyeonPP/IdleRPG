@@ -132,6 +132,7 @@ public class MenuControlUI : MonoBehaviour, IGeneralUI
                 case BattleType.CompanionTech:
                 case BattleType.Adventure:
                 case BattleType.Dungeon:
+                case BattleType.Promote:
                     if (index == 3 || index == 4 || index ==5) // 동료 or 모험
                     {
                         UIBroker.ShowPopUpInBattle("전투중에는 이용이 불가합니다");

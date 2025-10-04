@@ -40,7 +40,7 @@ public class DataManager : MonoBehaviour
                     var jsonStr = data["GameData"].Value.GetAs<string>();
                     var loadedData = JsonConvert.DeserializeObject<T>(jsonStr);
                     result[key] = loadedData;
-                    Debug.Log($"Data loaded from cloud successfully: {key}");
+                    //Debug.Log($"Data loaded from cloud successfully: {key}");
                 }
                 else
                 {

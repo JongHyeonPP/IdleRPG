@@ -11,6 +11,13 @@ public class StageInfo : ScriptableObject, IListViewItem
     public string stageName;
     public Background background;
     public int recommendLevel;
+
+    [Header("Drop Info")]
+    public float goldBonusValue;    // 예: 0.2f → +20%
+    public float expBonusValue;     // 예: 0.15f → +15%
+    public (Rarity rarity, int count)? fragmentDropInfo;
+    public string weaponDropId; // null이면 무기 드롭 없음
+
     [Header("Enemy Info")]
     public EnemyStatus enemy_0;
     public EnemyStatus enemy_1;
@@ -19,12 +26,10 @@ public class StageInfo : ScriptableObject, IListViewItem
     public EnemyStatusFromStage enemyStatusFromStage;
     public BossStatusFromStage bossStatusFromStage;
     public ChestStatusFromStage chestStatusFromStage;
+
     public CompanionTechInfo companionTechInfo;
     public AdventureInfo adventrueInfo;
-    public string GetDropInfo()
-    {
-        return "";
-    }
+
     [Serializable]
     public class EnemyStatusFromStage
     {
@@ -79,4 +84,5 @@ public class StageInfo : ScriptableObject, IListViewItem
         adventrueInfo.adventureIndex_0 = index_0;
         adventrueInfo.adventureIndex_1 = index_1;
     }
+
 }
