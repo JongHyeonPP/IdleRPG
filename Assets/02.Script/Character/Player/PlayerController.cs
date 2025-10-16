@@ -15,23 +15,27 @@ public class PlayerController : Attackable
     [SerializeField] private PlayerStatus _status;   // 플레이어의 능력치 정보
     private CapsuleCollider2D _collider;            // 충돌 감지용 캡슐 콜라이더
     private float _mp;                              // 현재 MP (float 사용: 지속적 회복 계산 편리)
-    private GameData _gameData;                     // 게임 데이터 참조
-
+    private GameData _playergameData;                     // 게임 데이터 참조
+   
     private void Awake()
     {
         InitEvent();                                // 각종 이벤트 연결
         StartCoroutine(MpGainRoop());               // MP 자동 회복 코루틴 실행
+        
+        PlayerBroker.OnEquipWeapon += OnEquipAncientWeapon;
+        PlayerBroker.OnUnequipAncientWeapon += OnUnequipAncientWeapon;
     }
 
     private void Start()
     {
-        _gameData = StartBroker.GetGameData();      // 게임 데이터 초기화
+        _playergameData = StartBroker.GetGameData();      // 게임 데이터 초기화
         SetSkillSkillsInBattle();                   // 장착 스킬 세팅
         PlayerBroker.OnSkillChanged += OnSkillChanged;
         SetDefaultAttack();                         // Attackable 기본 공격 세팅
         SetGoldStatus();                            // 골드 강화 스탯 적용
         SetStatPointStatus();                       // 스탯포인트 강화 스탯 적용
         mainCamera = Camera.main;                   // 메인 카메라 참조
+
     }
 
     /// <summary>
@@ -39,7 +43,7 @@ public class PlayerController : Attackable
     /// </summary>
     private void SetSkillSkillsInBattle()
     {
-        string[] skillIdArr = _gameData.equipedSkillArr;
+        string[] skillIdArr = _playergameData.equipedSkillArr;
         for (int i = 0; i < skillIdArr.Length; i++)
         {
             string skillId = skillIdArr[i];
@@ -72,8 +76,12 @@ public class PlayerController : Attackable
         BattleBroker.SwitchToAdventure += (arg0, arg1) => InitToBattle();
         BattleBroker.SwitchToDungeon += (arg0, arg1) => InitToBattle();
         BattleBroker.SwitchToPromoteBattle += (arg0) => InitToBattle();
+<<<<<<< HEAD
+=======
+        BattleBroker.SwitchToBoss += OnEnterBossBattle;
+>>>>>>> main
     }
-
+   
     /// <summary>
     /// 전투 시작 시 초기화 (HP/MP 리셋, 공격 중지)
     /// </summary>
@@ -162,7 +170,7 @@ public class PlayerController : Attackable
     /// </summary>
     public void SetGoldStatus()
     {
-        Dictionary<StatusType, int> statLevelDict = _gameData.statLevel_Gold;
+        Dictionary<StatusType, int> statLevelDict = _playergameData.statLevel_Gold;
         _status._maxHp_Gold = ReinForceManager.instance.GetGoldStatus(GetStatValueOrDefault(statLevelDict, StatusType.MaxHp), StatusType.MaxHp);
         _status._power_Gold = ReinForceManager.instance.GetGoldStatus(GetStatValueOrDefault(statLevelDict, StatusType.Power), StatusType.Power);
         _status._hpRecover_Gold = ReinForceManager.instance.GetGoldStatus(GetStatValueOrDefault(statLevelDict, StatusType.HpRecover), StatusType.HpRecover);
@@ -175,7 +183,7 @@ public class PlayerController : Attackable
     /// </summary>
     public void SetStatPointStatus()
     {
-        Dictionary<StatusType, int> statLevelDict = _gameData.statLevel_StatPoint;
+        Dictionary<StatusType, int> statLevelDict = _playergameData.statLevel_StatPoint;
         _status._criticalDamage_StatPoint = ReinForceManager.instance.GetStatPointStatus(GetStatValueOrDefault(statLevelDict, StatusType.CriticalDamage), StatusType.CriticalDamage);
         _status._goldAscend_StatPoint = ReinForceManager.instance.GetStatPointStatus(GetStatValueOrDefault(statLevelDict, StatusType.GoldAscend), StatusType.GoldAscend);
         _status._hpRecover_StatPoint = ReinForceManager.instance.GetStatPointStatus(GetStatValueOrDefault(statLevelDict, StatusType.HpRecover), StatusType.HpRecover);
@@ -188,6 +196,24 @@ public class PlayerController : Attackable
     /// </summary>
     protected override void OnDead()
     {
+
+        if (_weaponEffectManager != null &&
+        _weaponEffectManager.IsMelee600Active &&
+        _weaponEffectManager.IsRevivePossible)
+        {
+            Debug.Log("부활");
+            hp = _status.MaxHp;
+            _weaponEffectManager.ConsumeRevive();
+            _isReviving = true;
+            isDead = false;
+            double logValue1 = BigInteger.Log(hp);
+            double logValue2 = BigInteger.Log(_status.MaxHp);
+            double logDifference = logValue1 - logValue2;
+            float ratio = (float)Math.Exp(logDifference);
+            PlayerBroker.OnPlayerHpChanged(ratio);
+           
+            return;
+        }
         StopAttack();
         BattleBroker.ControllCompanionMove(0);
         anim.ResetTrigger("Attack");
@@ -211,6 +237,7 @@ public class PlayerController : Attackable
         isDead = false;
         hp = _status.MaxHp;
         anim.SetTrigger("Revive");
+        _isReviving = false;
     }
 
     /// <summary>
@@ -270,5 +297,36 @@ public class PlayerController : Attackable
     public override BigInteger GetMaxHp()
     {
         return _status.MaxHp;
+    }
+    protected override bool UseMP(SkillData skill)
+    {
+        if (_mp < skill.requireMp)
+        {
+            return false;
+        }
+
+        _mp = Mathf.Max(0, _mp - skill.requireMp);
+        PlayerBroker.OnPlayerMpChanged?.Invoke(_mp / _status.MaxMp);
+        return true;
+    }
+
+    private void OnEnterBossBattle()
+    {
+        InitToBattle();
+
+        if (_weaponEffectManager != null)
+            _weaponEffectManager.ResetReviveIfMelee600Equipped();
+    }
+    private void OnEquipAncientWeapon(string uid, WeaponType type)
+    {
+        if (_weaponEffectManager == null)
+            _weaponEffectManager = gameObject.AddComponent<WeaponEffectManager>();
+        
+        _weaponEffectManager.ActivateAncientEffect(uid, type);
+    }
+    private void OnUnequipAncientWeapon(string uid, WeaponType type)
+    {
+        
+        _weaponEffectManager.DeactivateAncientEffect(uid, type);
     }
 }

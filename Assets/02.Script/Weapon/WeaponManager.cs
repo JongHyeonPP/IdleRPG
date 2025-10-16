@@ -96,6 +96,11 @@ public class WeaponManager : MonoBehaviour
                 critDamageIncrease = 5f * level;
                 critIncrease = 2f * level;
                 break;
+            case Rarity.Ancient:
+                powerIncrease = 20f * level;
+                critDamageIncrease = 10f * level;
+                critIncrease = 3f * level;
+                break;
         }
         weaponData.SetReinforcedStats(powerIncrease, critDamageIncrease, critIncrease);
     }

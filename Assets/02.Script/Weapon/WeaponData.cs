@@ -55,4 +55,14 @@ public class WeaponData : ScriptableObject, IGachaItems
         return (power, critDamage, crit);
     }
     public Rarity ItemRarity => WeaponRarity;
+    public bool IsAncientWeapon
+    {
+        get
+        {
+            if (int.TryParse(UID, out int id))
+                return id / 100 == 6; 
+            return true;
+        }
+    }
+
 }

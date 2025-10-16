@@ -61,4 +61,6 @@ public static class PlayerBroker
     public static Action UpdatePromoteLockState;
 
     public static Action StartScrollTimer;
+    public static Action<string, WeaponType> OnEquipAncientWeapon;
+    public static Action<string, WeaponType> OnUnequipAncientWeapon;
 }

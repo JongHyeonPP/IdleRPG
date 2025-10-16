@@ -10,15 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1f613b878f275b44d8fc49262ca519ac, type: 3}
-  m_Name: Melee_208
+  m_Name: Bow_401
   m_EditorClassIdentifier: 
-  _weaponType: 0
-  _weaponRarity: 2
+  _weaponType: 1
+  _weaponRarity: 4
   _power: 1
+  _maxHp: 0
   _criticalDamage: 1
   _critical: 1
-  _weaponSprite: {fileID: 21300000, guid: 30e47371660a44f038c174865e5af8d3, type: 3}
-  _textureSize: {x: 6, y: 15}
+  _resist: 0
+  _penetration: 0
+  _weaponSprite: {fileID: 21300000, guid: 9b10ebf041e94457c876bc36832bd105, type: 3}
+  _textureSize: {x: 1, y: 1}
   _textureScale: 1
-  _uID: Melee_208
-  _weaponName: "\uB9AC\uBE10\uC758 \uAC80"
+  _uID: Bow_401
+  _weaponName: "\uD638\uD06C\uC544\uC774"
+  _powerPerUpgrade: 0
+  _critDmgPerUpgrade: 0
+  _critPerUpgrade: 0

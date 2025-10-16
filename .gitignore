@@ -90,3 +90,5 @@ crashlytics-build.properties
 /user.keystore
 
 #주요미 추가
+Assets/Kamgam/UIToolkitBlurredBackground/Packages/UITKBlurredBackgroundHDRP.unitypackage.meta
+Assets/Kamgam/UIToolkitBlurredBackground/Packages/UITKBlurredBackgroundURP.unitypackage.meta

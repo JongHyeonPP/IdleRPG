@@ -75,12 +75,12 @@ public class PassiveSkill : MonoBehaviour
             _gd.skillLevel[healOnHit.uid] = 5;
 
         if (damagePlus != null)
-            _gd.skillLevel[damagePlus.uid] = 5;
+            _gd.skillLevel[damagePlus.uid] = 1;
 
         if (doubleHit != null)
-            _gd.skillLevel[doubleHit.uid] = 5;
+            _gd.skillLevel[doubleHit.uid] = 1;
         if (expPlus != null)
-            _gd.skillLevel[expPlus.uid] = 5;
+            _gd.skillLevel[expPlus.uid] = 1;
 
         Debug.Log("5레벨설정");
     }

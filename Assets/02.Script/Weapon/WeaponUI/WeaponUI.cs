@@ -251,6 +251,9 @@ public class WeaponUI : MonoBehaviour, IMenuUI
             case Rarity.Mythic:
                 weaponBackground.style.unityBackgroundImageTintColor = new StyleColor(new Color(0f, 0f, 0.5f));
                 break;
+            case Rarity.Ancient:
+                weaponBackground.style.unityBackgroundImageTintColor = new StyleColor(Color.red);
+                break;
             default:
                 weaponBackground.style.unityBackgroundImageTintColor = new StyleColor(Color.white);
                 break;

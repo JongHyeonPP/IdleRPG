@@ -108,6 +108,7 @@ public class BattleManager : MonoBehaviour
             BattleBroker.ControllCompanionMove?.Invoke(2);
 
             if (_battleType is BattleType.Boss or BattleType.CompanionTech or BattleType.Adventure or BattleType.Dungeon or BattleType.Promote)
+
                 _controller.target.StartAttack();
 
             _isMove = false;
@@ -283,7 +284,6 @@ public class BattleManager : MonoBehaviour
         _gameData.scroll -= StageInfoManager.instance.dungeonEntranceFee;
         PlayerBroker.OnScrollSet();
         NetworkBroker.SaveServerData();
-
         UIBroker.FadeInOut(0f, 0.5f, 2f);
         _currentStageInfo = StageInfoManager.instance.GetDungeonStageInfo(index_0)[index_1];
         _battleType = BattleType.Dungeon;
@@ -398,6 +398,7 @@ public class BattleManager : MonoBehaviour
                 PlayerBroker.OnDiaSet();
                 PlayerBroker.OnCloverSet();
                 NetworkBroker.QueueResourceReport(0, $"{techInfo.techIndex_0}_{techInfo.techIndex_1}", Resource.None, Source.Companion);
+
                 _currentStageInfo = StageInfoManager.instance.GetNormalStageInfo(_gameData.currentStageNum);
                 _nextBattleType = BattleType.Default;
                 DelayOnEnd();
