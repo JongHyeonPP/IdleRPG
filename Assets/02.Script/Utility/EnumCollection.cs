@@ -42,6 +42,7 @@ namespace EnumCollection
         Unique,
         Legendary,
         Mythic,
+        Ancient
     }
     public enum WeaponType
     {

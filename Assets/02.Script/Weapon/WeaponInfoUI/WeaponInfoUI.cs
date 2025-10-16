@@ -23,6 +23,24 @@ public class WeaponInfoUI : MonoBehaviour, IGeneralUI
     public GameObject _sucessEffect;
     public GameObject _spot;
     public Camera _renderCamera;
+    private static readonly Dictionary<WeaponType, string> WeaponTypeNames = new()
+{
+    { WeaponType.Melee, "근접무기" },
+    { WeaponType.Bow, "활" },
+    { WeaponType.Staff, "지팡이" },
+    { WeaponType.Shield, "방패" }
+};
+    private static readonly Dictionary<Rarity, string> WeaponRarityNames = new()
+{
+    { Rarity.Common,"커먼" },
+     { Rarity.Uncommon,"언커먼" },
+        {Rarity.Rare,"레어" },
+        {Rarity.Unique,"유니크" },
+        {Rarity.Legendary,"전설" },
+        {Rarity.Mythic,"신화" },
+         {Rarity.Ancient,"고대" }
+
+};
     private void Awake()
     {
         _gameData = StartBroker.GetGameData();
@@ -92,7 +110,8 @@ public class WeaponInfoUI : MonoBehaviour, IGeneralUI
         var weaponImageTexture = weaponData.WeaponSprite.texture;
         var weaponImageStyle = new StyleBackground(weaponImageTexture);
         _weaponImage.style.backgroundImage = weaponImageStyle;
-        _weaponRarity.text = $"[{weaponData.WeaponType}]";
+        //  _weaponRarity.text = $"[{weaponData.WeaponType}]";
+        _weaponRarity.text = $"[{WeaponTypeNames[weaponData.WeaponType]}]/[{WeaponRarityNames[weaponData.WeaponRarity]}]";
         _weaponName.text = $"{weaponData.WeaponName}";
         switch (weaponData.WeaponRarity)
         {
@@ -119,6 +138,10 @@ public class WeaponInfoUI : MonoBehaviour, IGeneralUI
             case Rarity.Mythic:
                 _weaponRarity.style.color = new StyleColor(new Color(0f, 0f, 0.5f));
                 _weaponName.style.color = new StyleColor(new Color(0f, 0f, 0.5f));
+                break;
+            case Rarity.Ancient:
+                _weaponRarity.style.color = new StyleColor(Color.red);
+                _weaponName.style.color = new StyleColor(Color.red);
                 break;
             default:
                 _weaponRarity.style.color = new StyleColor(Color.white);

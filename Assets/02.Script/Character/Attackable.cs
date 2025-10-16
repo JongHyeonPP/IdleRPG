@@ -22,8 +22,8 @@ public abstract class Attackable : MonoBehaviour
     private GameData _gameData;
     private float _tempSpeedPercent = 0f;
     private PassiveSkill _passive;
-
-
+    protected WeaponEffectManager _weaponEffectManager;
+    protected bool _isReviving = false;
     private void OnEnable()
     {
         if (_passive == null)
@@ -33,6 +33,9 @@ public abstract class Attackable : MonoBehaviour
     private void Awake()
     {
         _gameData = StartBroker.GetGameData();
+        //PlayerBroker.OnEquipAncientWeapon += OnEquipAncientWeapon;
+        //PlayerBroker.OnUnequipAncientWeapon += OnUnequipAncientWeapon;
+       
     }
 
     protected void SetDefaultAttack()
@@ -58,6 +61,11 @@ public abstract class Attackable : MonoBehaviour
 
             var (preDelay, postDelay) = GetAttackDelays(currentSkill);
             SkillData skilldata = currentSkill.skillData;
+            if (!UseMP(skilldata))
+            {
+                yield return null;
+                continue;
+            }
             ApplySpeedBuff(skilldata);
 
             yield return WaitWithAttackSpeed(preDelay);
@@ -70,7 +78,8 @@ public abstract class Attackable : MonoBehaviour
             {
                 BigInteger baseDamage = CalculateBaseDamage(currentSkill);
                 BigInteger finalDamage = ApplyPassives(baseDamage, currentSkill.skillData.type, tgt);
-
+                if (_weaponEffectManager != null && _weaponEffectManager.IsMelee601Active)
+                    finalDamage = (finalDamage * 110) / 100;
                 tgt.ReceiveSkill(finalDamage, currentSkill.skillData.type);
 
                 if (target.hp <= 0)
@@ -241,15 +250,13 @@ public abstract class Attackable : MonoBehaviour
 
     private void ReceiveSkill(BigInteger calcedValue, SkillType skillType)
     {
+        if (_isReviving) return;
         switch (skillType)
         {
             case SkillType.Damage:
                 hp -= calcedValue;
                 if (hp < 0)
                     hp = 0;
-
-
-
                 if (this is EnemyController enemy)
                 {
                     var status = (EnemyStatus)enemy.GetStatus();
@@ -394,9 +401,12 @@ public abstract class Attackable : MonoBehaviour
             return new List<Attackable> { (Attackable)player };
         }
     }
-
+    #region WeaponEffcet
+  
+ 
+    #endregion
     public abstract BigInteger GetMaxHp();
-
+    protected virtual bool UseMP(SkillData skill) { return true; }
     #region passive
     protected virtual BigInteger CalculateBaseDamage(EquipedSkill skill)
     {

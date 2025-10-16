@@ -59,4 +59,6 @@ public static class PlayerBroker
     public static Action<GachaType, int> RequestGacha;
     public static Action<GachaResult> OnRequestGacha;
     public static Action UpdatePromoteLockState;
+    public static Action<string, WeaponType> OnEquipAncientWeapon;
+    public static Action<string, WeaponType> OnUnequipAncientWeapon;
 }
