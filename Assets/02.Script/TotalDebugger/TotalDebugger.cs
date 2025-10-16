@@ -999,6 +999,8 @@ public class TotalDebugger : EditorWindow
         Rarity[] rarityArr = (Rarity[])Enum.GetValues(typeof(Rarity));
         foreach (Rarity rarity in rarityArr)
         {
+            if (rarity == Rarity.Ancient)
+                continue;
             // str을 Rarity enum으로 변환
             if (!_gameData.skillFragment.TryGetValue(rarity, out int value))
             {

@@ -2,6 +2,7 @@ using UnityEngine;
 using EnumCollection;
 using System.Numerics;
 using Vector2 = UnityEngine.Vector2;
+using System;
 public interface IGachaItems
 {
     Rarity ItemRarity { get; }
@@ -26,6 +27,7 @@ public class WeaponData : ScriptableObject, IGachaItems
     [SerializeField] private int _powerPerUpgrade;
     [SerializeField] private int _critDmgPerUpgrade;
     [SerializeField] private int _critPerUpgrade;
+    public WeaponEffect[] _weaponEffects;
     public WeaponType WeaponType => _weaponType;
     public Rarity WeaponRarity => _weaponRarity;
     public int Power => _power;
@@ -64,5 +66,14 @@ public class WeaponData : ScriptableObject, IGachaItems
             return true;
         }
     }
-
+    [Serializable]
+    public class WeaponEffect
+    {
+        public WeaponEffectType type;
+        public float value;
+    }
+    public enum WeaponEffectType
+    { 
+        Revive, Reflect
+    }
 }

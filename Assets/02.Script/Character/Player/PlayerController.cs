@@ -16,7 +16,7 @@ public class PlayerController : Attackable
     private CapsuleCollider2D _collider;            // 충돌 감지용 캡슐 콜라이더
     private float _mp;                              // 현재 MP (float 사용: 지속적 회복 계산 편리)
     private GameData _playergameData;                     // 게임 데이터 참조
-   
+    private WeaponData _weaponData;
     private void Awake()
     {
         InitEvent();                                // 각종 이벤트 연결
@@ -193,6 +193,15 @@ public class PlayerController : Attackable
     /// </summary>
     protected override void OnDead()
     {
+        foreach (var x in _weaponData._weaponEffects)
+        {
+            if (x.type == WeaponData.WeaponEffectType.Revive)
+            {
+                Debug.Log("부활");
+                break;
+            }
+        }
+
 
         if (_weaponEffectManager != null &&
         _weaponEffectManager.IsMelee600Active &&

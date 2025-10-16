@@ -223,6 +223,8 @@ public class SkillUI : MonoBehaviour, IMenuUI
 
         foreach (Rarity rarity in rarityArr)
         {
+            if (rarity == Rarity.Ancient)
+                continue;
             InitFragment(rarity);
         }
 

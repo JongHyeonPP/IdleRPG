@@ -20,7 +20,7 @@ public class WeaponInfoUI : MonoBehaviour, IGeneralUI
     public VisualElement root { get; private set; }
     Dictionary<string, int> _weaponCount;
     Dictionary<string, int> _weaponLevel;
-    public GameObject _sucessEffect;
+    public GameObject _successEffect;
     public GameObject _spot;
     public Camera _renderCamera;
     private static readonly Dictionary<WeaponType, string> WeaponTypeNames = new()
@@ -64,6 +64,7 @@ public class WeaponInfoUI : MonoBehaviour, IGeneralUI
         _reinforceButton = root.Q<Button>("ReinforceButton");
         _reinforceButton.clickable.clicked += () => Reinforce(_currentWeapon.UID);
         _insufficientPanel= root.Q<Button>("InsufficientPanel");
+        _insufficientPanel.style.display = DisplayStyle.None;
         _insufficientPanel.RegisterCallback<ClickEvent>(evt =>
         {
             _insufficientPanel.style.display = DisplayStyle.None;
@@ -200,7 +201,7 @@ public class WeaponInfoUI : MonoBehaviour, IGeneralUI
     {
         Vector3 spotLocation= _spot.transform.position;
         
-        Instantiate(_sucessEffect, spotLocation, Quaternion.identity);
+        Instantiate(_successEffect, spotLocation, Quaternion.identity);
     }
     public int GetWeaponCount(string weaponID)
     {
