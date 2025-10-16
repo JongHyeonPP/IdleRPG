@@ -22,7 +22,7 @@ public class PlayerController : Attackable
         InitEvent();                                // 각종 이벤트 연결
         StartCoroutine(MpGainRoop());               // MP 자동 회복 코루틴 실행
         
-        PlayerBroker.OnEquipWeapon += OnEquipAncientWeapon;
+        PlayerBroker.OnEquipAncientWeapon += OnEquipAncientWeapon;
         PlayerBroker.OnUnequipAncientWeapon += OnUnequipAncientWeapon;
     }
 
@@ -76,10 +76,7 @@ public class PlayerController : Attackable
         BattleBroker.SwitchToAdventure += (arg0, arg1) => InitToBattle();
         BattleBroker.SwitchToDungeon += (arg0, arg1) => InitToBattle();
         BattleBroker.SwitchToPromoteBattle += (arg0) => InitToBattle();
-<<<<<<< HEAD
-=======
         BattleBroker.SwitchToBoss += OnEnterBossBattle;
->>>>>>> main
     }
    
     /// <summary>
