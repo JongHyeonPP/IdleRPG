@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotIcon: {fileID: 21300000, guid: badd12e8b34e6fe4885508c166890772, type: 3}
   stageRegion: {fileID: 11400000, guid: 8c8dd73f024a2864f83ce84350a3bede, type: 2}
+  slotName: "\uC78A\uD78C \uB369\uCFE8\uC232"

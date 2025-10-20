@@ -8,10 +8,6 @@ public class WeaponController : MonoBehaviour
     [SerializeField] SpriteRenderer weaponRenderer;
     [SerializeField] Sprite defaultWeaponSprite;//아무 무기도 안 꼈을 시 들고 있을 몽둥이
     public WeaponType weaponType;
-   
-    private string _currentAncientUID;
-    private WeaponType _currentAncientType;
-    private bool _hasAncientEffect;
     private void Awake()//Start보다 먼저여야 함
     {
         PlayerBroker.OnEquipWeapon += OnEquipWeapon;
@@ -28,40 +24,10 @@ public class WeaponController : MonoBehaviour
         if (weaponData == null)
         {
             weaponRenderer.sprite = defaultWeaponSprite;
-            ClearAncientEffect(); 
             return;
         }
 
         weaponRenderer.sprite = weaponData.WeaponSprite;
-
-        if (weaponData.IsAncientWeapon)
-        {
-            if (_hasAncientEffect &&
-                _currentAncientUID == weaponData.UID &&
-                _currentAncientType == weaponData.WeaponType)
-                return;
-
-            if (_hasAncientEffect)
-                ClearAncientEffect();
-
-            _hasAncientEffect = true;
-            _currentAncientUID = weaponData.UID;
-            _currentAncientType = weaponData.WeaponType;
-
-            PlayerBroker.OnEquipAncientWeapon?.Invoke(_currentAncientUID, _currentAncientType);
-        }
-        else
-        {
-            ClearAncientEffect();
-        }
-    }
-    private void ClearAncientEffect()
-    {
-        if (!_hasAncientEffect) return;
-        PlayerBroker.OnUnequipAncientWeapon?.Invoke(_currentAncientUID, _currentAncientType);
-
-        _hasAncientEffect = false;
-        _currentAncientUID = null;
     }
     //색깔이펙트 부여
     [ContextMenu("600")]

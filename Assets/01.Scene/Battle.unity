@@ -1534,7 +1534,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3afab028fb401d4196844501d8f37d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sucessEffect: {fileID: 536266750082647943, guid: 769ad0f79cd56154ba437d4701c28e8b, type: 3}
+  _successEffect: {fileID: 0}
   _spot: {fileID: 1409610171}
   _renderCamera: {fileID: 0}
 --- !u!1 &639850493
@@ -2401,7 +2401,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4162046143561258757, guid: 6b6898b6425569e4989ac61fa76b6bc9, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

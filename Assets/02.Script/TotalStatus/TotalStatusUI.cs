@@ -166,12 +166,6 @@ public class TotalStatusUI : MonoBehaviour
                 case StatusType.CriticalDamage:
                     typeLabel.text = "치명타 피해 증가";
                     break;
-                case StatusType.Resist:
-                    typeLabel.text = "저항력";
-                    break;
-                case StatusType.Penetration:
-                    typeLabel.text = "관통력";
-                    break;
                 case StatusType.GoldAscend:
                     typeLabel.text = "골드 추가 획득";
                     break;
@@ -228,6 +222,8 @@ public class TotalStatusUI : MonoBehaviour
     }
     private void SetContent()
     {
+        var playerController = (PlayerController)BattleBroker.GetPlayerController();
+
         _setDict[StatusType.Power].text = _status.Power.ToString("N0");
         _setDict[StatusType.MaxHp].text = _status.MaxHp.ToString("N0");
         _setDict[StatusType.HpRecover].text = _status.HpRecover.ToString("N0");
@@ -235,8 +231,8 @@ public class TotalStatusUI : MonoBehaviour
         _setDict[StatusType.CriticalDamage].text = _status.CriticalDamage.ToString("F1") + '%';
         _setDict[StatusType.MaxMp].text = _status.MaxMp.ToString("N0");
         _setDict[StatusType.MpRecover].text = _status.MpRecover.ToString("N0");
-        _setDict[StatusType.Resist].text = _status.Resist.ToString("N0");
-        _setDict[StatusType.Penetration].text = _status.Penetration.ToString("N0");
+        _setDict[StatusType.AttBuff].text = '+' + playerController.GetPWValue(SkillType.AttBuff).ToString("N0") +'%';
+        _setDict[StatusType.DefBuff].text = '+' +playerController.GetPWValue(SkillType.DefBuff).ToString("N0") + '%';
         _setDict[StatusType.GoldAscend].text = _status.GoldAscend.ToString("F1") + '%';
         _setDict[StatusType.ExpAscend].text = _status.ExpAscend.ToString("F1") + '%';
     }

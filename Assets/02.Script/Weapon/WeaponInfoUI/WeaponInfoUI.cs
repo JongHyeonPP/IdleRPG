@@ -86,6 +86,7 @@ public class WeaponInfoUI : MonoBehaviour, IGeneralUI
 
         UIBroker.InactiveCurrentUI();
         PlayerBroker.OnEquipWeapon?.Invoke(_currentWeapon, _currentWeapon.WeaponType);
+        BattleBroker.RefreshPlayerSpeed();
         switch (_currentWeapon.WeaponType)
         {
             case WeaponType.Melee:

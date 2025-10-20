@@ -27,7 +27,7 @@ public class EnemyPool : MonoBehaviour
         obj.transform.localScale = Vector3.one * 0.8f;
         EnemyController controller = obj.AddComponent<EnemyController>();
         obj.SetActive(false);
-        controller.SetEnemyInfo(this, _enemyStatus);
+        controller.InitEnemyInfo(this, _enemyStatus);
         return controller;
     }
     //풀에서 오브젝트 하나 반환한다.

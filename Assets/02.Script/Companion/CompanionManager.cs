@@ -24,6 +24,7 @@ public class CompanionManager : MonoBehaviour
         // 간단한 싱글턴 (필요 시 중복 처리/영속화는 외부에서 보장)
         instance = this;
         _gameData = StartBroker.GetGameData();
+        BattleBroker.GetCompanionControllerArr += () => companionArr;
     }
 
     /// <summary>
@@ -77,10 +78,6 @@ public class CompanionManager : MonoBehaviour
                 result = $"추가 마나 회복량 {value * 100f}%"; break;
             case StatusType.GoldAscend:
                 result = $"추가 골드 획득량 {value * 100f}%"; break;
-            case StatusType.Resist:
-                result = $"추가 저항력 {value}"; break;
-            case StatusType.Penetration:
-                result = $"추가 관통력 {value}"; break;
             case StatusType.ExpAscend:
                 result = $"추가 경험치 획득량 {value * 100f}%"; break;
         }
@@ -112,10 +109,6 @@ public class CompanionManager : MonoBehaviour
                 result = companionPromoteData.mpRecover[rarityIndex]; break;
             case StatusType.GoldAscend:
                 result = companionPromoteData.goldAscend[rarityIndex]; break;
-            case StatusType.Resist:
-                result = companionPromoteData.resist[rarityIndex]; break;
-            case StatusType.Penetration:
-                result = companionPromoteData.penetration[rarityIndex]; break;
             case StatusType.ExpAscend:
                 result = companionPromoteData.expAscend[rarityIndex]; break;
         }

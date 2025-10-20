@@ -11,7 +11,7 @@ public static class PlayerBroker
     //스탯 포인트로 올린 스탯 적용
     public static Action<StatusType, int> OnStatPointStatusLevelSet;
     //무기장착
-    public static Action<object, WeaponType> OnEquipWeapon;//WeaponData가 null이어서 기본 무기 처리할 때도 WeaponType 정보는 필요함... TotalStatusUI
+    public static Action<object, WeaponType> OnEquipWeapon;//object = WeaponData
     //무기 레벨 변경
     public static Action<string, int> OnWeaponLevelSet;
     //무기 개수 변경
@@ -61,6 +61,4 @@ public static class PlayerBroker
     public static Action UpdatePromoteLockState;
 
     public static Action StartScrollTimer;
-    public static Action<string, WeaponType> OnEquipAncientWeapon;
-    public static Action<string, WeaponType> OnUnequipAncientWeapon;
 }

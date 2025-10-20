@@ -8,7 +8,6 @@ public class EquipedSkill
     public float currentCoolTime;
     public int currentCoolAttack;
     public int level;
-
     // IsSkillAble 프로퍼티로 변환
     public bool IsSkillAble
     {

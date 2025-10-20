@@ -54,7 +54,6 @@ public class StageInfo : ScriptableObject, IListViewItem
 
         //보스몹에게만 의미있는 스탯
         public string power;
-        public float penetration;
     }
     [Serializable]
     public class CompanionTechInfo

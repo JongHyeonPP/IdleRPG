@@ -17,8 +17,6 @@ public class WeaponData : ScriptableObject, IGachaItems
     [SerializeField] private int _maxHp;
     [SerializeField] private int _criticalDamage;
     [SerializeField] private int _critical;
-    [SerializeField] private int _resist;
-    [SerializeField] private int _penetration;
     [SerializeField] private Sprite _weaponSprite;
     [SerializeField] private Vector2 _textureSize = new(1, 1);
     [SerializeField] private float _textureScale;
@@ -33,8 +31,6 @@ public class WeaponData : ScriptableObject, IGachaItems
     public int Power => _power;
     public int CriticalDamage => _criticalDamage;
     public int Critical => _critical;
-    public int Resist => _critical;
-    public int Penetration => _critical;
     public Sprite WeaponSprite => _weaponSprite;
     public Vector2 TextureSize =>  _textureSize;
     public float TextureScale =>  _textureScale;
@@ -69,11 +65,7 @@ public class WeaponData : ScriptableObject, IGachaItems
     [Serializable]
     public class WeaponEffect
     {
-        public WeaponEffectType type;
+        public SkillType type;
         public float value;
-    }
-    public enum WeaponEffectType
-    { 
-        Revive, Reflect
     }
 }

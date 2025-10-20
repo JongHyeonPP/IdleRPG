@@ -292,12 +292,6 @@ public class CurrencyManager : MonoBehaviour
         return Convert.ToInt32(resultObj);
     }
 
-    public void PassiveOn(float expPercent)
-    {
-        _ExpPassiveOn = true;
-        _expPlusPercent = expPercent;
-    }
-
 
     // ======================================
     // [VALUE CALCULATION HELPERS]

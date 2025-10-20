@@ -10,39 +10,39 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef5ab10e5d7b96f44883280afb1d6071, type: 3}
-  m_Name: Player_000
+  m_Name: Active_202
   m_EditorClassIdentifier: 
-  skillName: Cut
-  uid: Player_000
-  iconSprite: {fileID: 8038727968482881496, guid: b4b2056f1aee906468287a50c45a2967, type: 3}
+  skillName: FlameSlash
+  uid: Player_202
+  iconSprite: {fileID: -5539754655295923675, guid: 02b3194e3a329ef4681e397747ad4a21, type: 3}
   simple: 
-  complex: "\uC801\uC744 \uAC08\uB77C <value*100>%\uC758 \uD53C\uD574\uB97C \uC785\uD799\uB2C8\uB2E4."
-  rarity: 0
+  complex: 
+  rarity: 2
   isPlayerSkill: 1
   skillCoolType: 0
   cooltime: 0
-  coolAttack: 2
+  coolAttack: 3
   requireMp: 15
-  effectSpawnType: 4
-  projectileSpeed: 5
-  effectLifeTime: 1
+  effectSpawnType: 1
+  projectileSpeed: 15
+  effectLifeTime: 5
   value:
-  - 1
-  - 2
-  - 10
-  - 1
-  - 1
-  - 1
-  - 1
-  - 1
-  - 1
-  - 1
-  - 1
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
   type: 0
   target: 1
-  targetNum: 5
+  targetNum: 1
   preDelay: 0.2
   postDelay: 1
   isAnim: 1
-  visualEffectPrefab: {fileID: 4243325162052384598, guid: 62bb45626bf7111489f07105ae86fb93, type: 3}
+  visualEffectPrefab: {fileID: 2064572389880906964, guid: 99e11596276c5ee468a4107aab3cbabe, type: 3}
   isActiveSkill: 1

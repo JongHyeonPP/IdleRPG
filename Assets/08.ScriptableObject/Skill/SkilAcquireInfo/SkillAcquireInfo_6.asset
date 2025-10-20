@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: SkillAcquireInfo_6
   m_EditorClassIdentifier: 
   acquireLevel: 40
-  SkillData: {fileID: 11400000, guid: ab729bdbf4dea64418775dd40f2fe521, type: 2}
+  activeSkill: {fileID: 11400000, guid: ab729bdbf4dea64418775dd40f2fe521, type: 2}
+  passiveSkill: {fileID: 0}

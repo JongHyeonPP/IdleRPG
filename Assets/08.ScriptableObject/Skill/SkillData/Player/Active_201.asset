@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef5ab10e5d7b96f44883280afb1d6071, type: 3}
-  m_Name: Player_102
+  m_Name: Active_201
   m_EditorClassIdentifier: 
-  skillName: FireSlash
-  uid: Player_102
-  iconSprite: {fileID: -1318599591115060820, guid: bcef0c6dfde22c34aa484e6f060e6114, type: 3}
+  skillName: DoomsDay
+  uid: Player_201
+  iconSprite: {fileID: -2983090718515566234, guid: 932096c7b2d57a64aa3cd37a719e2e3b, type: 3}
   simple: 
   complex: 
-  rarity: 1
+  rarity: 2
   isPlayerSkill: 1
   skillCoolType: 0
   cooltime: 0
@@ -44,5 +44,5 @@ MonoBehaviour:
   preDelay: 0.2
   postDelay: 1
   isAnim: 1
-  visualEffectPrefab: {fileID: 5021638172128956239, guid: 7aa5b373380bae0459711760bc459ca3, type: 3}
+  visualEffectPrefab: {fileID: 8330230751804916212, guid: 4fe166b0bb5266b4f9166edf91ffd1ce, type: 3}
   isActiveSkill: 1

@@ -29,26 +29,6 @@ public class PlayerStatus : MonoBehaviour, ICharacterStatus
     public BigInteger HpRecover { get => new(_hpRecover_Gold+_hpRecover_StatPoint); }
     public float Critical { get => _critical_Gold;  }
     public float CriticalDamage { get => _criticalDamage_Gold+_criticalDamage_StatPoint; }
-    public float Resist
-    {
-        get
-        {
-            if (playerWeapon == null)
-                return 0;
-            else
-                return playerWeapon.weaponData.Resist;
-        }
-    }
-    public float Penetration
-    {
-        get
-        {
-            if (playerWeapon == null)
-                return 0;
-            else
-                return playerWeapon.weaponData.Penetration;
-        }
-    }
     public float MaxMp { get => 100f;}
     public float MpRecover { get => 10f; }
     public float GoldAscend { get => _goldAscend_StatPoint;}

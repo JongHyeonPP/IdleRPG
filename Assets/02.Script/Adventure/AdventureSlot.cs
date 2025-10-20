@@ -7,6 +7,7 @@ public class AdventureSlot:ScriptableObject
     //Inspector
     public Sprite slotIcon;
     public StageRegion stageRegion;
+    public string slotName;
     //Run Time
     public VisualElement slotElement { get; set; }
     public NoticeDot noticeDot { get; set; }

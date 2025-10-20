@@ -131,7 +131,7 @@ public class ClientReportManager : MonoBehaviour
         _verificationElapsed = 0f;
     }
 
-    public async void ForceVerificationNow()
+    public void ForceVerificationNow()
     {
         _verificationElapsed = 0f;
         SendTotalReport();

@@ -5,6 +5,4 @@ public interface ICharacterStatus
 {
     BigInteger MaxHp { get; }
     BigInteger Power { get; }
-    float Resist { get; }
-    float Penetration { get; }
 }

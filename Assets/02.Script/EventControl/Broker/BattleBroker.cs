@@ -54,4 +54,7 @@ public static class BattleBroker
 
 	public static Func<object> GetPlayerController;//PlayerController
 	public static Func<object> GetEnemyArray;//EnemyController[]
+    public static Func<object> GetCompanionControllerArr;//object = CompanionController[]
+
+    public static Action RefreshPlayerSpeed;
 }

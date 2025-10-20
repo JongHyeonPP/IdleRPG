@@ -13,6 +13,7 @@ public class CurrencyBarUI : MonoBehaviour, IGeneralUI
     Label _nameLabel;
     Label _emeraldLabel;
     Label _diaLabel;
+    Button _powerSaveButton;
     [SerializeField] TotalStatusUI _totalStatusUI;
     public VisualElement root { get;private set; }
     [SerializeField] SettingUI _settingUI;
@@ -49,7 +50,8 @@ public class CurrencyBarUI : MonoBehaviour, IGeneralUI
             _totalStatusUI.ActiveTotalStatusUI();
         });
         root.Q<Button>("SettingButton").RegisterCallback<ClickEvent>(evt => _settingUI.ActiveUI());
-        root.Q<Button>("PowerSaveButton").RegisterCallback<ClickEvent>(evt => _powerSavePanel.ActivePowerSavePanel());
+        _powerSaveButton = root.Q<Button>("PowerSaveButton");
+        _powerSaveButton.RegisterCallback<ClickEvent>(evt => _powerSavePanel.ActivePowerSavePanel());
     }
     private void SetLevelExp()
     {
@@ -88,6 +90,8 @@ public class CurrencyBarUI : MonoBehaviour, IGeneralUI
     public void OnBattle()
     {
         root.style.display = DisplayStyle.Flex;
+        if (_powerSaveButton != null)
+            _powerSaveButton.style.display = DisplayStyle.Flex;
     }
 
     public void OnStory()
@@ -97,5 +101,7 @@ public class CurrencyBarUI : MonoBehaviour, IGeneralUI
 
     public void OnBoss()
     {
+        if (_powerSaveButton != null)
+            _powerSaveButton.style.display = DisplayStyle.None;
     }
 }

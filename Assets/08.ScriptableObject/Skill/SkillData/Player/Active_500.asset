@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef5ab10e5d7b96f44883280afb1d6071, type: 3}
-  m_Name: Player_302
+  m_Name: Active_500
   m_EditorClassIdentifier: 
-  skillName: ClawSlash
-  uid: Player_302
-  iconSprite: {fileID: -109910242830310983, guid: c577addea8a4d6e4090143e7b5c62c95, type: 3}
+  skillName: Burst
+  uid: Player_500
+  iconSprite: {fileID: -8976129629788330115, guid: 16603015e8f526342a7bf252a9b81bd0, type: 3}
   simple: 
   complex: 
-  rarity: 3
+  rarity: 5
   isPlayerSkill: 1
   skillCoolType: 0
   cooltime: 0
   coolAttack: 3
   requireMp: 15
-  effectSpawnType: 1
+  effectSpawnType: 2
   projectileSpeed: 15
   effectLifeTime: 5
   value:
@@ -44,5 +44,5 @@ MonoBehaviour:
   preDelay: 0.2
   postDelay: 1
   isAnim: 1
-  visualEffectPrefab: {fileID: 1028234515423213103, guid: dc41cfb45db98f043aebb3fd0bb419f9, type: 3}
+  visualEffectPrefab: {fileID: 3536965192658253738, guid: 8b89a09f8ca886d488854e87d2845365, type: 3}
   isActiveSkill: 1

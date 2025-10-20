@@ -8,10 +8,11 @@ namespace EnumCollection
     }
     public enum SkillType
     {
-        //To Enemy
+        //Active
         Damage,
-        //To Ally       
-        Heal, AttBuff, SpeedBuff,ReduceBuff 
+        //Passive
+        AttBuff, SpeedBuff,DefBuff,
+        healOnHit, DoubleHit, expPlus
     }
     public enum SkillTarget
     {
@@ -21,12 +22,11 @@ namespace EnumCollection
     {
         //°ñµå, ¹«±â·Î Âï´Â ½ºÅÈ
         MaxHp, Power, HpRecover, Critical, CriticalDamage,
-        //¹«±â·Î¸¸ ¾ò´Â ½ºÅÈ
-       Resist, Penetration,
        //ÄÚ½ºÆ¬ È¿°ú
        GoldAscend, ExpAscend,
        //µüÈ÷ ÂïÀ» ÀÏ ¾øÀ½
-        MaxMp, MpRecover
+        MaxMp, MpRecover,
+        AttBuff, DefBuff
     }
     public enum DropType
     {

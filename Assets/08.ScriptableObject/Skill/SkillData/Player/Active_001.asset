@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef5ab10e5d7b96f44883280afb1d6071, type: 3}
-  m_Name: Player_002
+  m_Name: Active_001
   m_EditorClassIdentifier: 
-  skillName: PowerSlash
-  uid: Player_002
-  iconSprite: {fileID: 6275201323515650913, guid: 6127843d056ede34da2fd9fc776a0290, type: 3}
+  skillName: Slash
+  uid: Player_001
+  iconSprite: {fileID: 6201252808942594478, guid: 366f286d02c1a344a8097139c386be8e, type: 3}
   simple: 
-  complex: "\uAC15\uD558\uAC8C \uC801\uC744 \uAC08\uB77C <value*100>%\uC758 \uD53C\uD574\uB97C
-    \uC785\uD799\uB2C8\uB2E4."
+  complex: "\uBB3C\uC758 \uD798\uC744 \uB2F4\uC544 \uC801\uC744 \uAC08\uB77C <value*100>%\uC758
+    \uD53C\uD574\uB97C \uC785\uD799\uB2C8\uB2E4."
   rarity: 0
   isPlayerSkill: 1
   skillCoolType: 0
@@ -41,9 +41,9 @@ MonoBehaviour:
   - 0
   type: 0
   target: 1
-  targetNum: 1
+  targetNum: 5
   preDelay: 0.2
   postDelay: 1
   isAnim: 1
-  visualEffectPrefab: {fileID: 3773831035383405738, guid: 9312922d16a655449945ee4637eafa20, type: 3}
+  visualEffectPrefab: {fileID: 7834458620227235833, guid: 044bf2cf72e5e5749a64fc84e3b639c6, type: 3}
   isActiveSkill: 1

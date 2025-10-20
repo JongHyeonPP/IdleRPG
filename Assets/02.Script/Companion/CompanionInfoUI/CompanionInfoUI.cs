@@ -180,10 +180,10 @@ public class CompanionInfoUI : MonoBehaviour, IGeneralUI
                 statusType = StatusType.GoldAscend;
                 break;
             case 7:
-                statusType = StatusType.Resist;
+                statusType = StatusType.AttBuff;
                 break;
             case 8:
-                statusType = StatusType.Penetration;
+                statusType = StatusType.DefBuff;
                 break;
             case 9:
                 statusType = StatusType.ExpAscend;

@@ -1,4 +1,4 @@
-using EnumCollection;
+Ôªøusing EnumCollection;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
@@ -42,8 +42,7 @@ public class AdventureUI : MonoBehaviour, IMenuUI
 
     private List<VisualElement> _dungeonSlotElements;
     private Coroutine _countdownCoroutine;
-
-    private int _maxScroll = 100; // º≠πˆø°º≠ πﬁµµ∑œ ∫Ø∞Êµ 
+    private int _maxScroll = 100; // ÏÑúÎ≤ÑÏóêÏÑú Î∞õÎèÑÎ°ù Î≥ÄÍ≤ΩÎê®
     private const int DefaultRegenIntervalSec = 180;
 
     private void Awake()
@@ -51,7 +50,6 @@ public class AdventureUI : MonoBehaviour, IMenuUI
         _gameData = StartBroker.GetGameData();
         root = GetComponent<UIDocument>().rootVisualElement;
         _rootChild = root.Q<VisualElement>("AdventureUI");
-
         _adventurePanel = root.Q<VisualElement>("AdventurePanel");
         _dungeonPanel = root.Q<VisualElement>("DungeonPanel");
 
@@ -63,7 +61,6 @@ public class AdventureUI : MonoBehaviour, IMenuUI
         _scrollTimeLabel = root.Q<Label>("ScrollTimeLabel");
 
         PlayerBroker.OnScrollSet += OnScrollSet;
-
         PlayerBroker.OnMaxStageSet += UpdateAdventureSlotProgress;
         PlayerBroker.OnPromoteRankSet += UpdateDungeonSlotStates;
     }
@@ -74,7 +71,7 @@ public class AdventureUI : MonoBehaviour, IMenuUI
     }
 
     // --------------------------------------------------------
-    // º≠πˆ∑Œ∫Œ≈Õ Ω∫≈©∑— √Ê¿¸ ¡§∫∏ ∫“∑Øø¿±‚
+    // ÏÑúÎ≤ÑÎ°úÎ∂ÄÌÑ∞ Ïä§ÌÅ¨Î°§ Ï∂©Ï†Ñ Ï†ïÎ≥¥ Î∂àÎü¨Ïò§Í∏∞
     // --------------------------------------------------------
     private async Task RefreshScrollFromServerAsync()
     {
@@ -88,16 +85,15 @@ public class AdventureUI : MonoBehaviour, IMenuUI
 
             var data = JObject.FromObject(result);
 
-            // º≠πˆ∞° ≥ª∑¡¡÷¥¬ µ•¿Ã≈Õ ±∏¡∂ øπΩ√:
+            // ÏÑúÎ≤ÑÍ∞Ä ÎÇ¥Î†§Ï£ºÎäî Îç∞Ïù¥ÌÑ∞ Íµ¨Ï°∞ ÏòàÏãú:
             // { "scroll": 54, "nextInSeconds": 125, "maxScroll": 100 }
+
             if (data.ContainsKey("scroll"))
                 _gameData.scroll = data["scroll"].Value<int>();
-
             if (data.ContainsKey("maxScroll"))
                 _maxScroll = data["maxScroll"].Value<int>();
 
             string nextStr = data["nextInSeconds"].ToString();
-
             _scrollLabel.text = _gameData.scroll.ToString("N0");
 
             if (_countdownCoroutine != null)
@@ -115,6 +111,7 @@ public class AdventureUI : MonoBehaviour, IMenuUI
             double nextInSeconds = double.Parse(nextStr);
             TimeSpan ts = TimeSpan.FromSeconds(nextInSeconds);
             _scrollTimeLabel.text = $"{ts.Minutes:D2}:{ts.Seconds:D2}";
+
             _countdownCoroutine = StartCoroutine(UpdateScrollTimer(nextInSeconds));
         }
         catch (Exception e)
@@ -124,12 +121,11 @@ public class AdventureUI : MonoBehaviour, IMenuUI
     }
 
     // --------------------------------------------------------
-    // ∑Œƒ√ ≈∏¿Ã∏” ∞ªΩ≈ (º≠πˆ »£√‚ æ¯¿Ã)
+    // Î°úÏª¨ ÌÉÄÏù¥Î®∏ Í∞±Ïã† (ÏÑúÎ≤Ñ Ìò∏Ï∂ú ÏóÜÏù¥)
     // --------------------------------------------------------
     private IEnumerator UpdateScrollTimer(double seconds)
     {
         double remaining = seconds;
-
         while (remaining > 0)
         {
             TimeSpan ts = TimeSpan.FromSeconds(remaining);
@@ -138,14 +134,14 @@ public class AdventureUI : MonoBehaviour, IMenuUI
             remaining -= 1;
         }
 
-        // ≈∏¿Ã∏” ¡æ∑· Ω√ Ω∫≈©∑— 1∞≥ √Ê¿¸
+        // ÌÉÄÏù¥Î®∏ Ï¢ÖÎ£å Ïãú Ïä§ÌÅ¨Î°§ 1Í∞ú Ï∂©Ï†Ñ
         if (_gameData.scroll < _maxScroll)
         {
             _gameData.scroll++;
             _scrollLabel.text = _gameData.scroll.ToString("N0");
         }
 
-        // æ∆¡˜ √÷¥Îƒ°∞° æ∆¥œ∏È ¥Ÿ¿Ω √Ê¿¸ ªÁ¿Ã≈¨ ¿ÁΩ√¿€
+        // ÏïÑÏßÅ ÏµúÎåÄÏπòÍ∞Ä ÏïÑÎãàÎ©¥ Îã§Ïùå Ï∂©Ï†Ñ ÏÇ¨Ïù¥ÌÅ¥ Ïû¨ÏãúÏûë
         if (_gameData.scroll < _maxScroll)
         {
             _countdownCoroutine = StartCoroutine(UpdateScrollTimer(DefaultRegenIntervalSec));
@@ -158,13 +154,13 @@ public class AdventureUI : MonoBehaviour, IMenuUI
     }
 
     // --------------------------------------------------------
-    // Ω∫≈©∑— ∞™ ∞ªΩ≈ Ω√ »£√‚ (ªÁøÎ/√Ê¿¸ »ƒ)
+    // Ïä§ÌÅ¨Î°§ Í∞í Í∞±Ïã† Ïãú Ìò∏Ï∂ú (ÏÇ¨Ïö©/Ï∂©Ï†Ñ ÌõÑ)
     // --------------------------------------------------------
     private void OnScrollSet()
     {
         _scrollLabel.text = _gameData.scroll.ToString("N0");
 
-        // 1. Ω∫≈©∑—¿Ã ∞°µÊ √°¿ª ∂ß °Ê ≈∏¿Ã∏” ¡ﬂ¥‹
+        // 1. Ïä§ÌÅ¨Î°§Ïù¥ Í∞ÄÎìù Ï∞ºÏùÑ Îïå ‚Üí ÌÉÄÏù¥Î®∏ Ï§ëÎã®
         if (_gameData.scroll >= _maxScroll)
         {
             if (_countdownCoroutine != null)
@@ -176,7 +172,7 @@ public class AdventureUI : MonoBehaviour, IMenuUI
             return;
         }
 
-        // 2. Ω∫≈©∑—¿Ã ¡Ÿæ˙∞Ì, ≈∏¿Ã∏”∞° æ¯¿ª ∂ß∏∏ ¿ÁΩ√¿€
+        // 2. Ïä§ÌÅ¨Î°§Ïù¥ Ï§ÑÏóàÍ≥†, ÌÉÄÏù¥Î®∏Í∞Ä ÏóÜÏùÑ ÎïåÎßå Ïû¨ÏãúÏûë
         if (_countdownCoroutine == null)
         {
             _countdownCoroutine = StartCoroutine(UpdateScrollTimer(DefaultRegenIntervalSec));
@@ -184,7 +180,7 @@ public class AdventureUI : MonoBehaviour, IMenuUI
     }
 
     // --------------------------------------------------------
-    // æÓµÂ∫•√≥ / ¥¯¿¸ √ ±‚»≠
+    // Ïñ¥ÎìúÎ≤§Ï≤ò / ÎçòÏ†Ñ Ï¥àÍ∏∞Ìôî
     // --------------------------------------------------------
     private void InitAdventureSlotPanel()
     {
@@ -196,11 +192,10 @@ public class AdventureUI : MonoBehaviour, IMenuUI
             int index = i;
             VisualElement slotElement = childrenList[i];
             AdventureSlot slot = _adventureSlotArr[i];
-
             slot.InitAtStart(slotElement, new(slotElement, this));
-            slotElement.Q<Label>("NameLabel").text = slot.stageRegion.regionName;
-            slotElement.Q<VisualElement>("SlotIcon").style.backgroundImage = new StyleBackground(slot.slotIcon);
 
+            slotElement.Q<Label>("NameLabel").text = slot.slotName;
+            slotElement.Q<VisualElement>("SlotIcon").style.backgroundImage = new StyleBackground(slot.slotIcon);
             slotElement.RegisterCallback<ClickEvent>(_ => OnAdventureSlotClicked(index));
         }
     }
@@ -215,9 +210,9 @@ public class AdventureUI : MonoBehaviour, IMenuUI
             int index = i;
             VisualElement slotElement = _dungeonSlotElements[i];
             DungeonSlot slot = _dungeonSlotArr[i];
-
             slot.InitAtStart(slotElement, new(slotElement, this));
-            slotElement.Q<Label>("NameLabel").text = slot.stageRegion.regionName;
+
+            slotElement.Q<Label>("NameLabel").text = slot.slotName;
             slotElement.Q<VisualElement>("SlotIcon").style.backgroundImage = new StyleBackground(slot.slotIcon);
             slotElement.RegisterCallback<ClickEvent>(_ => OnDungeonSlotClicked(index));
         }
@@ -228,7 +223,6 @@ public class AdventureUI : MonoBehaviour, IMenuUI
     private void UpdateAdventureSlotProgress()
     {
         int unlockedSlotCount = Mathf.CeilToInt(_gameData.maxStageNum / 20f);
-
         for (int i = 0; i < _adventureSlotArr.Length; i++)
         {
             AdventureSlot slot = _adventureSlotArr[i];
@@ -259,13 +253,10 @@ public class AdventureUI : MonoBehaviour, IMenuUI
             ApplyDungeonSlotVisualState(i, unlocked);
 
             DungeonSlot slot = _dungeonSlotArr[i];
-            if (unlocked)
-                slot.noticeDot.StartNotice();
-            else
-                slot.noticeDot.StopNotice();
+            if (unlocked) slot.noticeDot.StartNotice();
+            else slot.noticeDot.StopNotice();
         }
     }
-
 
     private bool IsDungeonSlotUnlocked(int index)
     {
@@ -283,21 +274,17 @@ public class AdventureUI : MonoBehaviour, IMenuUI
         VisualElement typeFrame = slotElement.Q<VisualElement>("TypeFrame");
         VisualElement typeIcon = slotElement.Q<VisualElement>("TypeIcon");
 
-        if (lockPanel != null)
-            lockPanel.style.display = unlocked ? DisplayStyle.None : DisplayStyle.Flex;
-        if (namePanel != null)
-            namePanel.style.opacity = new StyleFloat(unlocked ? 1f : 0.2f);
-        if (nameLabel != null)
-            nameLabel.style.display = unlocked ? DisplayStyle.Flex : DisplayStyle.None;
+        if (lockPanel != null) lockPanel.style.display = unlocked ? DisplayStyle.None : DisplayStyle.Flex;
+        if (namePanel != null) namePanel.style.opacity = new StyleFloat(unlocked ? 1f : 0.2f);
+        if (nameLabel != null) nameLabel.style.display = unlocked ? DisplayStyle.Flex : DisplayStyle.None;
         if (iconVe != null)
         {
             float tint = unlocked ? 1f : 0.6f;
             iconVe.style.unityBackgroundImageTintColor = new Color(tint, tint, tint, 1f);
         }
-        if (typeFrame != null)
-            typeFrame.style.display = unlocked ? DisplayStyle.Flex : DisplayStyle.None;
-        if (typeIcon != null)
-            typeIcon.style.display = unlocked ? DisplayStyle.Flex : DisplayStyle.None;
+        if (typeFrame != null) typeFrame.style.display = unlocked ? DisplayStyle.Flex : DisplayStyle.None;
+        if (typeIcon != null) typeIcon.style.display = unlocked ? DisplayStyle.Flex : DisplayStyle.None;
+
         slotElement.SetEnabled(true);
     }
 
@@ -307,7 +294,7 @@ public class AdventureUI : MonoBehaviour, IMenuUI
         if (index < unlockedSlotCount)
             _adventureInfoUI.ActiveUI(_adventureSlotArr[index], index);
         else
-            UIBroker.ShowPopUpInBattle("æ∆¡˜ ∞≥πÊµ«¡ˆ æ ¿∫ ¡ˆø™¿‘¥œ¥Ÿ.");
+            UIBroker.ShowPopUpInBattle("ÏïÑÏßÅ Í∞úÎ∞©ÎêòÏßÄ ÏïäÏùÄ ÏßÄÏó≠ÏûÖÎãàÎã§.");
     }
 
     private void OnDungeonSlotClicked(int index)
@@ -321,13 +308,13 @@ public class AdventureUI : MonoBehaviour, IMenuUI
             Rank requiredRank = (Rank)(index + 2);
             string rankName = requiredRank switch
             {
-                Rank.Bronze => "∫Í∑–¡Ó",
-                Rank.Iron => "æ∆¿Ãæ",
-                Rank.Silver => "Ω«πˆ",
-                Rank.Gold => "∞ÒµÂ",
+                Rank.Bronze => "Î∏åÎ°†Ï¶à",
+                Rank.Iron => "ÏïÑÏù¥Ïñ∏",
+                Rank.Silver => "Ïã§Î≤Ñ",
+                Rank.Gold => "Í≥®Îìú",
                 _ => requiredRank.ToString(),
             };
-            UIBroker.ShowPopUpInBattle($"{rankName} ∑©≈© ¥ﬁº∫ »ƒ ¿‘¿Â ∞°¥…");
+            UIBroker.ShowPopUpInBattle($"{rankName} Îû≠ÌÅ¨ Îã¨ÏÑ± ÌõÑ ÏûÖÏû• Í∞ÄÎä•");
         }
     }
 
@@ -355,8 +342,7 @@ public class AdventureUI : MonoBehaviour, IMenuUI
         hide.style.display = DisplayStyle.None;
         SetButtonStyle(activeBtn, activeColor, activeColor, activeColor, 0.1f);
         SetButtonStyle(inactiveBtn, inactiveColor, inactiveColor, inactiveColor, 0f);
-        if (show == _dungeonPanel)
-            UpdateDungeonSlotStates();
+        if (show == _dungeonPanel) UpdateDungeonSlotStates();
     }
 
     private void OnAdventureButtonClicked()
@@ -374,8 +360,7 @@ public class AdventureUI : MonoBehaviour, IMenuUI
         UpdateAdventureSlotProgress();
         UpdateDungeonSlotStates();
         root.style.display = DisplayStyle.Flex;
-        if (_animCoroutine != null)
-            StopCoroutine(_animCoroutine);
+        if (_animCoroutine != null) StopCoroutine(_animCoroutine);
         _animCoroutine = StartCoroutine(AnimateUI());
     }
 
@@ -399,9 +384,9 @@ public class AdventureUI : MonoBehaviour, IMenuUI
         }
 
         _rootChild.style.height = overshootHeight;
-
         elapsed = 0f;
         float startHeight = overshootHeight;
+
         while (elapsed < _shrinkDuration)
         {
             elapsed += Time.deltaTime;
@@ -413,4 +398,12 @@ public class AdventureUI : MonoBehaviour, IMenuUI
 
         _rootChild.style.height = _targetHeight;
     }
+    private void OnApplicationFocus(bool hasFocus)
+    {
+        if (hasFocus)
+        {
+            _ = RefreshScrollFromServerAsync();
+        }
+    }
+
 }

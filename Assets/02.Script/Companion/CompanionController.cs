@@ -21,10 +21,10 @@ public class CompanionController : MonoBehaviour
     [SerializeField] int _companionIndex;          // 이 컨트롤러가 담당하는 동료 인덱스(0~)
 
     private AppearanceController _appearanceController; // 외형 적용 컨트롤러
-
     private void Awake()
     {
         _gameData = StartBroker.GetGameData();
+        _weaponController = GetComponent<WeaponController>();
     }
 
     private void Start()
@@ -32,7 +32,7 @@ public class CompanionController : MonoBehaviour
         // 전투 매니저 → 동료 상태 제어 신호에 구독
         BattleBroker.ControllCompanionMove += ControllCompanionMove;
 
-        _weaponController = GetComponent<WeaponController>();
+        
         _appearanceController = GetComponent<AppearanceController>();
 
         // 무기 타입에 따라 애니메이터 파라미터 사전 세팅
@@ -169,5 +169,10 @@ public class CompanionController : MonoBehaviour
             StopCoroutine(_attackCoroutine);
             _attackCoroutine = null;
         }
+    }
+
+    public WeaponData GetWeapon()
+    {
+        return _weaponController.weaponData;
     }
 }

@@ -7,6 +7,7 @@ public class DungeonSlot:ScriptableObject
     //Inspector
     public Sprite slotIcon;
     public StageRegion stageRegion;
+    public string slotName;
     [SerializeField] Sprite typeSprite;
     //Run Time
     public VisualElement slotElement { get; set; }

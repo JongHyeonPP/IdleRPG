@@ -35,7 +35,7 @@ public class BattleManager : MonoBehaviour
     private BattleType _battleType;
     private BattleType _nextBattleType = BattleType.Default;
 
-    private readonly float _speed = 2.5f;
+    private readonly float _defaultSpeed = 2.5f;
     private readonly float _enemySpace = 1f;
     private readonly float _enemyPlayerDistance = 1.5f;
     private readonly float _bossPlayerDistance = 2f;
@@ -45,11 +45,15 @@ public class BattleManager : MonoBehaviour
     {
         instance ??= this;
         _gameData = StartBroker.GetGameData();
+        
+
+        
     }
 
     private void Start()
     {
-        _controller = GameObject.FindWithTag("Player")?.GetComponent<PlayerController>();
+        _controller = (PlayerController)BattleBroker.GetPlayerController();
+
         _ePool0.poolParent = _ePool1.poolParent = _poolParent;
 
         SetEvent();
@@ -57,22 +61,19 @@ public class BattleManager : MonoBehaviour
         _currentStageInfo = StageInfoManager.instance.GetNormalStageInfo(_gameData.currentStageNum);
         BattleBroker.OnStageChange();
         BattleBroker.RefreshStageSelectUI(_gameData.currentStageNum);
-        InitWeaponSprites();
-    }
 
-    private void InitWeaponSprites()
-    {
-        SetWeaponSprite(_gameData.playerWeaponId, WeaponType.Melee);
-        WeaponType[] types = { WeaponType.Bow, WeaponType.Shield, WeaponType.Staff };
-        for (int i = 0; i < 3; i++)
-            SetWeaponSprite(_gameData.companionWeaponIdArr[i], types[i]);
-    }
-
-    private void SetWeaponSprite(string id, WeaponType type)
-    {
-        if (string.IsNullOrEmpty(id))
-            return;
-        PlayerBroker.OnEquipWeapon(id != null ? WeaponManager.instance.weaponDict[id] : null, type);
+        //Awake에서 해당 이벤트들이 연결된 이후 Start에서 실행
+        if (!string.IsNullOrEmpty(_gameData.playerWeaponId))
+            PlayerBroker.OnEquipWeapon(WeaponManager.instance.weaponDict[_gameData.playerWeaponId], WeaponType.Melee);
+        if (_gameData.companionWeaponIdArr != null)
+        {
+            if (!string.IsNullOrEmpty(_gameData.companionWeaponIdArr[0]))
+                PlayerBroker.OnEquipWeapon(WeaponManager.instance.weaponDict[_gameData.companionWeaponIdArr[0]], WeaponType.Bow);
+            if (!string.IsNullOrEmpty(_gameData.companionWeaponIdArr[1]))
+                PlayerBroker.OnEquipWeapon(WeaponManager.instance.weaponDict[_gameData.companionWeaponIdArr[1]], WeaponType.Shield);
+            if (!string.IsNullOrEmpty(_gameData.companionWeaponIdArr[2]))
+                PlayerBroker.OnEquipWeapon(WeaponManager.instance.weaponDict[_gameData.companionWeaponIdArr[2]], WeaponType.Staff);
+        }
     }
 
     private void FixedUpdate()
@@ -148,8 +149,9 @@ public class BattleManager : MonoBehaviour
 
     private void MoveByPlayer()
     {
+        float playerSpeed = ((PlayerController)BattleBroker.GetPlayerController()).currentSpeed;
         foreach (var mover in MediatorManager<IMoveByPlayer>.GetRegisteredObjects())
-            mover.MoveByPlayer(_isMove ? _speed * Time.fixedDeltaTime * Vector2.left : Vector3.zero);
+            mover.MoveByPlayer(_isMove ? _defaultSpeed * playerSpeed * Time.fixedDeltaTime * Vector2.left : Vector3.zero);
     }
 
     private void SetEvent()
@@ -191,13 +193,7 @@ public class BattleManager : MonoBehaviour
             _ => 0
         };
 
-        EnemyBroker.GetEnemyPenetration = type => type switch
-        {
-            EnemyType.Boss => _currentStageInfo.bossStatusFromStage.penetration,
-            _ => 0f
-        };
-
-        BattleBroker.GetPlayerController += () => _controller;
+        
         BattleBroker.GetEnemyArray += () => _enemies;
     }
 

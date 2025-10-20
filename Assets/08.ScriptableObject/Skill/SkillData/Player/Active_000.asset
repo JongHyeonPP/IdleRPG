@@ -10,39 +10,39 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef5ab10e5d7b96f44883280afb1d6071, type: 3}
-  m_Name: Player_201
+  m_Name: Active_000
   m_EditorClassIdentifier: 
-  skillName: DoomsDay
-  uid: Player_201
-  iconSprite: {fileID: -2983090718515566234, guid: 932096c7b2d57a64aa3cd37a719e2e3b, type: 3}
+  skillName: Cut
+  uid: Player_000
+  iconSprite: {fileID: 8038727968482881496, guid: b4b2056f1aee906468287a50c45a2967, type: 3}
   simple: 
-  complex: 
-  rarity: 2
+  complex: "\uC801\uC744 \uAC08\uB77C <value*100>%\uC758 \uD53C\uD574\uB97C \uC785\uD799\uB2C8\uB2E4."
+  rarity: 0
   isPlayerSkill: 1
   skillCoolType: 0
   cooltime: 0
-  coolAttack: 3
+  coolAttack: 2
   requireMp: 15
-  effectSpawnType: 1
-  projectileSpeed: 15
-  effectLifeTime: 5
+  effectSpawnType: 4
+  projectileSpeed: 5
+  effectLifeTime: 1
   value:
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
+  - 1
+  - 2
+  - 10
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
   type: 0
   target: 1
-  targetNum: 1
+  targetNum: 5
   preDelay: 0.2
   postDelay: 1
   isAnim: 1
-  visualEffectPrefab: {fileID: 8330230751804916212, guid: 4fe166b0bb5266b4f9166edf91ffd1ce, type: 3}
+  visualEffectPrefab: {fileID: 4243325162052384598, guid: 62bb45626bf7111489f07105ae86fb93, type: 3}
   isActiveSkill: 1

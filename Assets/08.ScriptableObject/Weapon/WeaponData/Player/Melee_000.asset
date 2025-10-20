@@ -28,3 +28,4 @@ MonoBehaviour:
   _powerPerUpgrade: 5
   _critDmgPerUpgrade: 5
   _critPerUpgrade: 5
+  _weaponEffects: []

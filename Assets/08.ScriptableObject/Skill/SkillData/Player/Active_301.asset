@@ -10,21 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef5ab10e5d7b96f44883280afb1d6071, type: 3}
-  m_Name: Player_001
+  m_Name: Active_301
   m_EditorClassIdentifier: 
-  skillName: Slash
-  uid: Player_001
-  iconSprite: {fileID: 6201252808942594478, guid: 366f286d02c1a344a8097139c386be8e, type: 3}
+  skillName: Fury
+  uid: Player_301
+  iconSprite: {fileID: -7190773895159608945, guid: 5f38a4c68398b944aa8e7bdf6f04dd22, type: 3}
   simple: 
-  complex: "\uBB3C\uC758 \uD798\uC744 \uB2F4\uC544 \uC801\uC744 \uAC08\uB77C <value*100>%\uC758
-    \uD53C\uD574\uB97C \uC785\uD799\uB2C8\uB2E4."
-  rarity: 0
+  complex: 
+  rarity: 3
   isPlayerSkill: 1
   skillCoolType: 0
   cooltime: 0
   coolAttack: 3
   requireMp: 15
-  effectSpawnType: 1
+  effectSpawnType: 3
   projectileSpeed: 15
   effectLifeTime: 5
   value:
@@ -39,11 +38,11 @@ MonoBehaviour:
   - 0
   - 0
   - 0
-  type: 0
+  type: 2
   target: 1
-  targetNum: 5
+  targetNum: 1
   preDelay: 0.2
   postDelay: 1
   isAnim: 1
-  visualEffectPrefab: {fileID: 7834458620227235833, guid: 044bf2cf72e5e5749a64fc84e3b639c6, type: 3}
+  visualEffectPrefab: {fileID: 5520833425539985215, guid: 55071b11ce354fb4bbe55676790227d1, type: 3}
   isActiveSkill: 1

@@ -872,7 +872,7 @@ public class TotalDebugger : EditorWindow
             //StatDropdown
 
             statDropdown.label = "Stat";
-            List<string> statList = new() {"None", "Power", "CriticalDamage", "MaxHp", "HpRecover", "MaxMp", "MpRecover", "GoldAscend", "Resist", "Penetration", "ExpAscend"};
+            List<string> statList = new() {"None", "Power", "CriticalDamage", "MaxHp", "HpRecover", "MaxMp", "MpRecover", "GoldAscend", "ExpAscend"};
             statDropdown.choices = statList;
             
 

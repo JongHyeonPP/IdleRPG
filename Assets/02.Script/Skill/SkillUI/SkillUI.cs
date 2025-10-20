@@ -128,9 +128,6 @@ public class SkillUI : MonoBehaviour, IMenuUI
                 draggableScrollview.scrollView.Add(currentSlotSet);
             }
         }
-
-        if (dataArr.Length < 9)
-            draggableScrollview.scrollView.style.height = Length.Auto();
     }
 
 

@@ -20,6 +20,7 @@ public class EnemyController : Attackable, IMoveByPlayer
     private float deadDuration = 1f;               // 죽는데 걸리는 시간 (페이드아웃 포함)
 
     public EnemyHpBar enemyHpBar;                  // HP UI 바
+    private float attackTerm = 1f;
 
     private void Start()
     {
@@ -30,7 +31,6 @@ public class EnemyController : Attackable, IMoveByPlayer
         _bodyRendererArr = GetComponentsInChildren<SpriteRenderer>();
         SetDefaultAttack();
     }
-
     /// <summary>
     /// Attackable 추상 메서드 구현: 적의 스탯 반환
     /// </summary>
@@ -42,11 +42,10 @@ public class EnemyController : Attackable, IMoveByPlayer
     /// <summary>
     /// 적 정보 세팅 (풀, 스탯 등)
     /// </summary>
-    public void SetEnemyInfo(EnemyPool pool, EnemyStatus status)
+    public void InitEnemyInfo(EnemyPool pool, EnemyStatus status)
     {
         _enemyPool = pool;
         _status = status;
-        mainCamera = Camera.main;
     }
 
     /// <summary>
@@ -184,9 +183,9 @@ public class EnemyController : Attackable, IMoveByPlayer
     /// </summary>
     public void SetHpBarPosition()
     {
-        if (enemyHpBar != null && mainCamera != null)
+        if (enemyHpBar != null )
         {
-            Vector3 screenPos = mainCamera.WorldToScreenPoint(transform.position);
+            Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
             enemyHpBar.SetPosition(screenPos);
         }
     }

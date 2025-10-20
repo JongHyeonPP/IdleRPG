@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef5ab10e5d7b96f44883280afb1d6071, type: 3}
-  m_Name: Player_101
+  m_Name: Active_501
   m_EditorClassIdentifier: 
-  skillName: DarkSlash
-  uid: Player_101
-  iconSprite: {fileID: -4287362093729093706, guid: bc50bbdee2fd7cb4097d8d2081ef0481, type: 3}
+  skillName: Rune
+  uid: Player_501
+  iconSprite: {fileID: 6390494112633516482, guid: 43a6f050e8ed2a742a7eb7b6d5042cf7, type: 3}
   simple: 
   complex: 
-  rarity: 1
+  rarity: 5
   isPlayerSkill: 1
   skillCoolType: 0
   cooltime: 0
   coolAttack: 3
   requireMp: 15
-  effectSpawnType: 1
+  effectSpawnType: 3
   projectileSpeed: 15
   effectLifeTime: 5
   value:
@@ -38,11 +38,11 @@ MonoBehaviour:
   - 0
   - 0
   - 0
-  type: 0
+  type: 2
   target: 1
   targetNum: 1
   preDelay: 0.2
   postDelay: 1
   isAnim: 1
-  visualEffectPrefab: {fileID: 6497890677961494127, guid: c5527ae747f8677429e34d7efd804f24, type: 3}
+  visualEffectPrefab: {fileID: 6625223823742671288, guid: 77760127332613c49ab1d347877b632e, type: 3}
   isActiveSkill: 1
