@@ -16,16 +16,13 @@ MonoBehaviour:
   uid: 
   iconSprite: {fileID: 0}
   simple: 
-  complex: "\uB2E4\uB978 \uB3D9\uB8CC \uAE30\uBCF8 \uD6A8\uACFC +<value*100>%"
+  complex: "\uCD94\uAC00 \uACE8\uB4DC +<value*100>%"
   rarity: 0
   isPlayerSkill: 0
   skillCoolType: 2
   cooltime: 0
   coolAttack: 0
   requireMp: 0
-  effectSpawnType: 1
-  projectileSpeed: 15
-  effectLifeTime: 5
   value:
   - 0.05
   - 0.05

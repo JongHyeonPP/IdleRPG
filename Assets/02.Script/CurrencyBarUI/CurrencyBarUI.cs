@@ -76,7 +76,7 @@ public class CurrencyBarUI : MonoBehaviour, IGeneralUI
     }
     private void SetName(string name)
     {
-        //_nameLabel.text = _gameData.userName;
+        _nameLabel.text = _gameData.userName;
     }
     private void SetEmerald()
     {

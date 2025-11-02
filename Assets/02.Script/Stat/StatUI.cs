@@ -77,12 +77,12 @@ public class StatUI : MonoBehaviour, IMenuUI
     // ==============================
     private void InitStatInfo()
     {
-        _statInfoDict[StatusType.Power] = ("공격력", powerSprite);
-        _statInfoDict[StatusType.MaxHp] = ("체력", maxHpSprite);
-        _statInfoDict[StatusType.HpRecover] = ("체력 회복", hpRecoverSprite);
-        _statInfoDict[StatusType.Critical] = ("치명타 확률", criticalSprite);
-        _statInfoDict[StatusType.CriticalDamage] = ("치명타 피해량", criticalDamageSprite);
-        _statInfoDict[StatusType.GoldAscend] = ("골드 획득량", goldAscendSprite);
+        _statInfoDict[StatusType.Power] = ("STR", powerSprite);
+        _statInfoDict[StatusType.MaxHp] = ("HP", maxHpSprite);
+        _statInfoDict[StatusType.HpRecover] = ("VIT", hpRecoverSprite);
+        _statInfoDict[StatusType.Critical] = ("치명타", criticalSprite);
+        _statInfoDict[StatusType.CriticalDamage] = ("CRI", criticalDamageSprite);
+        _statInfoDict[StatusType.GoldAscend] = ("LUK", goldAscendSprite);
     }
 
     private void InitButton()

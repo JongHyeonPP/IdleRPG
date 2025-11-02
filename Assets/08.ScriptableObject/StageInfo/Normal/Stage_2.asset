@@ -27,7 +27,7 @@ MonoBehaviour:
     maxHp: 100
     resist: 0
   bossStatusFromStage:
-    maxHp: 1000
+    maxHp: 100000
     resist: 0
     power: 10
     penetration: 0
