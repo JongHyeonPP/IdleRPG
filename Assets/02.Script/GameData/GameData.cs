@@ -89,6 +89,8 @@ public class GameData
     public int[] dungeonProgress = new int[3];
 
     public int gachaThreshold;
+    public string lastAttendanceTime;
+    public int lastAttendanceNum;
     #region 서버에 없음
     public int statPoint;
     #endregion

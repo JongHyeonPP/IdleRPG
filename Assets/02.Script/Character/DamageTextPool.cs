@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using EnumCollection;
 
 public class DamageTextPool : MonoBehaviour
 {
@@ -16,9 +17,10 @@ public class DamageTextPool : MonoBehaviour
         BattleBroker.ShowDamageText += ShowDamageText;
     }
 
-    private void ShowDamageText(Vector3 screenPos, string text)
+    private void ShowDamageText(Vector3 screenPos, string text, DamageType type)
     {
         DamageText damageText = GetFromPool();
+        damageText.SetDamageType(type);
         damageText.StartShowText(screenPos, text);
     }
 
@@ -37,7 +39,6 @@ public class DamageTextPool : MonoBehaviour
     {
         GameObject obj = Instantiate(damageTextPrefab, _textParent);
         DamageText damageText = obj.GetComponent<DamageText>();
-        damageText.index = currentIndex++;
         damageText.returnAction = (damageText)=> ReturnToPool(damageText);
         damageText.SetActive(false);
         return obj.GetComponent<DamageText>();

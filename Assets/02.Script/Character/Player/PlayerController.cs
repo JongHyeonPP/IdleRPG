@@ -105,12 +105,12 @@ public class PlayerController : Attackable
     /// </summary>
     private void OnGoldStatusSet(StatusType type, int level)
     {
-        int value = ReinForceManager.instance.GetGoldStatus(level, type);
+        float value =  ReinForceManager.instance.GetGoldStatus(level, type);
         switch (type)
         {
-            case StatusType.MaxHp: _status._maxHp_Gold = value; break;
-            case StatusType.Power: _status._power_Gold = value; break;
-            case StatusType.HpRecover: _status._hpRecover_Gold = value; break;
+            case StatusType.MaxHp: _status._maxHp_Gold = Mathf.RoundToInt(value); break;
+            case StatusType.Power: _status._power_Gold = Mathf.RoundToInt(value); break;
+            case StatusType.HpRecover: _status._hpRecover_Gold = Mathf.RoundToInt(value); break;
             case StatusType.Critical: _status._critical_Gold = value; break;
             case StatusType.CriticalDamage: _status._criticalDamage_Gold = value; break;
             default: Debug.Log($"{type} is invalid type"); break;
@@ -122,12 +122,12 @@ public class PlayerController : Attackable
     /// </summary>
     private void OnStatPointStatusSet(StatusType type, int level)
     {
-        int value = ReinForceManager.instance.GetStatPointStatus(level, type);
+        float value = ReinForceManager.instance.GetStatPointStatus(level, type);
         switch (type)
         {
-            case StatusType.MaxHp: _status._maxHp_StatPoint = value; break;
-            case StatusType.Power: _status._power_StatPoint = value; break;
-            case StatusType.HpRecover: _status._hpRecover_StatPoint = value; break;
+            case StatusType.MaxHp: _status._maxHp_StatPoint = Mathf.RoundToInt(value); break;
+            case StatusType.Power: _status._power_StatPoint = Mathf.RoundToInt( value); break;
+            case StatusType.HpRecover: _status._hpRecover_StatPoint = Mathf.RoundToInt(value); break;
             case StatusType.CriticalDamage: _status._criticalDamage_StatPoint = value; break;
             case StatusType.GoldAscend: _status._goldAscend_StatPoint = value; break;
             default: Debug.Log($"{type} is invalid type"); break;
@@ -179,9 +179,9 @@ public class PlayerController : Attackable
     public void SetGoldStatus()
     {
         Dictionary<StatusType, int> statLevelDict = _gameData.statLevel_Gold;
-        _status._maxHp_Gold = ReinForceManager.instance.GetGoldStatus(GetStatValueOrDefault(statLevelDict, StatusType.MaxHp), StatusType.MaxHp);
-        _status._power_Gold = ReinForceManager.instance.GetGoldStatus(GetStatValueOrDefault(statLevelDict, StatusType.Power), StatusType.Power);
-        _status._hpRecover_Gold = ReinForceManager.instance.GetGoldStatus(GetStatValueOrDefault(statLevelDict, StatusType.HpRecover), StatusType.HpRecover);
+        _status._maxHp_Gold = Mathf.RoundToInt(ReinForceManager.instance.GetGoldStatus(GetStatValueOrDefault(statLevelDict, StatusType.MaxHp), StatusType.MaxHp));
+        _status._power_Gold = Mathf.RoundToInt(ReinForceManager.instance.GetGoldStatus(GetStatValueOrDefault(statLevelDict, StatusType.Power), StatusType.Power));
+        _status._hpRecover_Gold = Mathf.RoundToInt( ReinForceManager.instance.GetGoldStatus(GetStatValueOrDefault(statLevelDict, StatusType.HpRecover), StatusType.HpRecover));
         _status._critical_Gold = ReinForceManager.instance.GetGoldStatus(GetStatValueOrDefault(statLevelDict, StatusType.Critical), StatusType.Critical);
         _status._criticalDamage_Gold = ReinForceManager.instance.GetGoldStatus(GetStatValueOrDefault(statLevelDict, StatusType.CriticalDamage), StatusType.CriticalDamage);
     }
@@ -194,9 +194,9 @@ public class PlayerController : Attackable
         Dictionary<StatusType, int> statLevelDict = _gameData.statLevel_StatPoint;
         _status._criticalDamage_StatPoint = ReinForceManager.instance.GetStatPointStatus(GetStatValueOrDefault(statLevelDict, StatusType.CriticalDamage), StatusType.CriticalDamage);
         _status._goldAscend_StatPoint = ReinForceManager.instance.GetStatPointStatus(GetStatValueOrDefault(statLevelDict, StatusType.GoldAscend), StatusType.GoldAscend);
-        _status._hpRecover_StatPoint = ReinForceManager.instance.GetStatPointStatus(GetStatValueOrDefault(statLevelDict, StatusType.HpRecover), StatusType.HpRecover);
-        _status._maxHp_StatPoint = ReinForceManager.instance.GetStatPointStatus(GetStatValueOrDefault(statLevelDict, StatusType.MaxHp), StatusType.MaxHp);
-        _status._power_StatPoint = ReinForceManager.instance.GetStatPointStatus(GetStatValueOrDefault(statLevelDict, StatusType.Power), StatusType.Power);
+        _status._hpRecover_StatPoint =Mathf.RoundToInt(ReinForceManager.instance.GetStatPointStatus(GetStatValueOrDefault(statLevelDict, StatusType.HpRecover), StatusType.HpRecover));
+        _status._maxHp_StatPoint = Mathf.RoundToInt( ReinForceManager.instance.GetStatPointStatus(GetStatValueOrDefault(statLevelDict, StatusType.MaxHp), StatusType.MaxHp));
+        _status._power_StatPoint = Mathf.RoundToInt(ReinForceManager.instance.GetStatPointStatus(GetStatValueOrDefault(statLevelDict, StatusType.Power), StatusType.Power));
     }
 
     /// <summary>

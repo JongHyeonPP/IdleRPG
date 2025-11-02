@@ -43,7 +43,7 @@ public class SkillAcquireUI : MonoBehaviour, IGeneralUI
             VisualElement slot = kvp.Value;
 
             // 액티브 확인
-            if (info.activeSkill != null && info.activeSkill.uid == skillId)
+            if (info.activeSkill != null && info.activeSkill.name == skillId)
             {
                 VisualElement activePanel = slot.Q<VisualElement>("ActivePanel_1");
                 if (activePanel != null)
@@ -51,7 +51,7 @@ public class SkillAcquireUI : MonoBehaviour, IGeneralUI
             }
 
             // 패시브 확인
-            if (info.passiveSkill != null && info.passiveSkill.uid == skillId)
+            if (info.passiveSkill != null && info.passiveSkill.name == skillId)
             {
                 VisualElement passivePanel = slot.Q<VisualElement>("PassivePanel_1");
                 if (passivePanel != null)
@@ -91,7 +91,7 @@ public class SkillAcquireUI : MonoBehaviour, IGeneralUI
 
         iconVe.style.visibility = Visibility.Hidden;
 
-        string key = skillData.uid;
+        string key = skillData.name;
         if (!_gameData.skillLevel.ContainsKey(key) || _gameData.skillLevel[key] == 0)
         {
             _gameData.skillLevel[key] = 1;
@@ -118,8 +118,8 @@ public class SkillAcquireUI : MonoBehaviour, IGeneralUI
             iconVe.style.backgroundImage = new StyleBackground(info.activeSkill.iconSprite);
             iconVe.RegisterCallback<ClickEvent>(evt => OnSlotClicked(info.activeSkill, activePanel));
 
-            bool learned = _gameData.skillLevel.ContainsKey(info.activeSkill.uid) &&
-                           _gameData.skillLevel[info.activeSkill.uid] != 0;
+            bool learned = _gameData.skillLevel.ContainsKey(info.activeSkill.name) &&
+                           _gameData.skillLevel[info.activeSkill.name] != 0;
 
             activePanel.style.visibility = learned ? Visibility.Hidden : Visibility.Visible;
         }
@@ -135,8 +135,8 @@ public class SkillAcquireUI : MonoBehaviour, IGeneralUI
             iconVe.style.backgroundImage = new StyleBackground(info.passiveSkill.iconSprite);
             iconVe.RegisterCallback<ClickEvent>(evt => OnSlotClicked(info.passiveSkill, passivePanel));
 
-            bool learned = _gameData.skillLevel.ContainsKey(info.passiveSkill.uid) &&
-                           _gameData.skillLevel[info.passiveSkill.uid] != 0;
+            bool learned = _gameData.skillLevel.ContainsKey(info.passiveSkill.name) &&
+                           _gameData.skillLevel[info.passiveSkill.name] != 0;
 
             passivePanel.style.visibility = learned ? Visibility.Hidden : Visibility.Visible;
         }
@@ -158,12 +158,12 @@ public class SkillAcquireUI : MonoBehaviour, IGeneralUI
             if (info.acquireLevel > _gameData.level) continue;
 
             bool unacquiredActive = info.activeSkill != null &&
-                                    (!_gameData.skillLevel.ContainsKey(info.activeSkill.uid) ||
-                                     _gameData.skillLevel[info.activeSkill.uid] == 0);
+                                    (!_gameData.skillLevel.ContainsKey(info.activeSkill.name) ||
+                                     _gameData.skillLevel[info.activeSkill.name] == 0);
 
             bool unacquiredPassive = info.passiveSkill != null &&
-                                     (!_gameData.skillLevel.ContainsKey(info.passiveSkill.uid) ||
-                                      _gameData.skillLevel[info.passiveSkill.uid] == 0);
+                                     (!_gameData.skillLevel.ContainsKey(info.passiveSkill.name) ||
+                                      _gameData.skillLevel[info.passiveSkill.name] == 0);
 
             if (unacquiredActive || unacquiredPassive)
             {

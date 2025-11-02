@@ -2,56 +2,65 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using System.Collections;
 
-public class ClickReceiver: MonoBehaviour
+public class ClickReceiver : MonoBehaviour
 {
-    [SerializeField] StartManager _startManager;//StartManager는 싱글톤이 아니라 인스펙터를 통해 참조한다.
-    //시작 시 가운데에 떠있는 텍스트
+    [SerializeField] private StartManager _startManager;
     private Label _startLabel;
+    private VisualElement _root;
+
+    [Header("Blink Settings")]
+    [SerializeField] private float fadeDuration = 1f; // 흐려지거나 밝아지는 데 걸리는 시간
+    [SerializeField] private float holdDuration = 0.4f; // 완전히 밝거나 어두워졌을 때 멈추는 시간
+    [SerializeField] private float minAlpha = 0.35f;
+    [SerializeField] private float maxAlpha = 1f;
+
     private void Awake()
     {
-        // UI Element 설정
-        VisualElement _root = GetComponent<UIDocument>().rootVisualElement;
+        _root = GetComponent<UIDocument>().rootVisualElement;
         _startLabel = _root.Q<Label>("StartLabel");
-        // 클릭 리시버에 클릭 이벤트 연결
+
+        // 클릭 이벤트 등록
         _root.RegisterCallback<ClickEvent>(OnClickReceiver);
-        // Start Label 깜박이는 애니메이션 시작
-        StartCoroutine(BlinkStart());
+
+        // 초기 색상 설정
+            _startLabel.style.color = new StyleColor(Color.white);
+
+        StartCoroutine(SmoothBlinkWithPause());
     }
-    //StartBext의 알파값을 주기적으로 변경하도록 유도한다.
-    private IEnumerator BlinkStart()
+
+    private IEnumerator SmoothBlinkWithPause()
     {
-        yield return new WaitForSeconds(0.1f);
-        //레지스터 콜백을 이용한 무한루프 유도
-        _startLabel.RegisterCallback<TransitionEndEvent>(BlinkToggle);
-        BlinkOut();
-    }
-    //알파값이 줄어든다.
-    private void BlinkIn()
-    {
-        _startLabel.RemoveFromClassList("StartLabel-Blink");
-    }
-    //알파값이 늘어난다.
-    private void BlinkOut()
-    {
-        _startLabel.AddToClassList("StartLabel-Blink");
-    }
-    //상황에 맞춰 알파값이 늘어나거나 줄어들도록 한다.
-    private void BlinkToggle(TransitionEndEvent evt)
-    {
-        if (_startLabel.ClassListContains("StartLabel-Blink"))
+        while (true)
         {
-            BlinkIn();
-        }
-        else
-        {
-            BlinkOut();
+            yield return StartCoroutine(FadeText(maxAlpha, minAlpha, fadeDuration));
+            yield return new WaitForSeconds(holdDuration); // 어두운 상태 유지
+
+            yield return StartCoroutine(FadeText(minAlpha, maxAlpha, fadeDuration));
+            yield return new WaitForSeconds(holdDuration); // 밝은 상태 유지
         }
     }
-    //ClickReceiver를 클릭했을 때 일어날 일들을 정의
+
+    private IEnumerator FadeText(float startAlpha, float endAlpha, float duration)
+    {
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.SmoothStep(0f, 1f, elapsed / duration);
+
+            float alpha = Mathf.Lerp(startAlpha, endAlpha, t);
+            Color color = Color.white;
+            color.a = alpha;
+
+            _startLabel.style.color = new StyleColor(color);
+            yield return null;
+        }
+    }
+
     private void OnClickReceiver(ClickEvent evt)
     {
         _startManager.OnClickedStartImage();
-
         gameObject.SetActive(false);
     }
 }

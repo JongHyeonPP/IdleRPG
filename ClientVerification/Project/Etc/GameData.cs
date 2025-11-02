@@ -51,7 +51,7 @@ public class GameData
 
     #region 플레이어 정보
     public string userName;
-    
+
     #endregion
 
     #region 승급 효과 관련 (Player & Companion)
@@ -85,8 +85,13 @@ public class GameData
     public int[] dungeonProgress = new int[3];
 
     public int playerRankIndex;
+    public int lastAttendanceNum;
+    public string lastAttendanceTime;
     #region 서버에만
     public int invalidCount;
     public string lastScrollTime;
+
+
+
     #endregion
 }

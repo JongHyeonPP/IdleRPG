@@ -429,7 +429,7 @@ public class TotalDebugger : EditorWindow
                     CompanionController companion = CompanionManager.instance.companionArr[i];
                     foreach (SkillData skill in companion.companionStatus.companionSkillArr)
                     {
-                        if (skill.uid == dataName)
+                        if (skill.name == dataName)
                         {
                             PlayerBroker.OnCompanionExpSet?.Invoke(i);
                             return;
@@ -778,7 +778,7 @@ public class TotalDebugger : EditorWindow
         for (int i = 0; i < skillDataArr.Length; i++)
         {
             SkillData x = skillDataArr[i];
-            string uid = x.uid;
+            string uid = x.name;
             TemplateContainer skillDataPanel = dataPanel_0.CloneTree();
             if (!_gameData.skillLevel.TryGetValue(uid, out int level))
             {

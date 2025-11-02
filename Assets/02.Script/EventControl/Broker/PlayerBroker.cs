@@ -55,9 +55,7 @@ public static class PlayerBroker
     public static Func<Rarity, Sprite> GetFragmentSprite;
 
     public static Action<string> PurchaseCurrency;
-    public static Action<PurchaseResult> OnPurchaseCurrency;
     public static Action<GachaType, int> RequestGacha;
-    public static Action<GachaResult> OnRequestGacha;
     public static Action UpdatePromoteLockState;
 
     public static Action StartScrollTimer;

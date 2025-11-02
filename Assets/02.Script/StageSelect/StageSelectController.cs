@@ -10,8 +10,8 @@ public class StageSelectController : MonoBehaviour, LVItemController
 {
     private GameData _gameData;
     public FlexibleListView draggableLV { get; set; }
-    private VisualElement selectedElement;
     private Dictionary<string, float> _dropProbDict;
+    private bool _hasScrolledOnce = false; // 최초 한 번만 스크롤하기 위한 플래그
 
     private class ItemCache
     {
@@ -31,7 +31,6 @@ public class StageSelectController : MonoBehaviour, LVItemController
 
     private void Awake()
     {
-        // Remote Config의 DROP_PROBABILITY 로드
         string probJson = RemoteConfigService.Instance.appConfig.GetJson("DROP_PROBABILITY", "None");
         if (!string.IsNullOrEmpty(probJson) && probJson != "None")
             _dropProbDict = JsonConvert.DeserializeObject<Dictionary<string, float>>(probJson);
@@ -84,12 +83,31 @@ public class StageSelectController : MonoBehaviour, LVItemController
             cache.infoButton.RegisterCallback<ClickEvent>(OnInfoButtonClick);
         }
 
-        // 클릭으로 선택 기능 제거
         element.UnregisterCallback<ClickEvent>(OnElementClick);
 
-        // ✅ 현재 스테이지일 때만 테두리 표시
         bool isCurrentStage = _gameData.currentStageNum == stageNum;
         SetSelected(cache.selectBorder, isCurrentStage);
+
+        // 현재 스테이지 아이템으로 최초 한 번만 자동 스크롤
+        if (isCurrentStage && !_hasScrolledOnce)
+        {
+            _hasScrolledOnce = true;
+            element.schedule.Execute(() =>
+            {
+                element.schedule.Execute(() =>
+                {
+                    var scrollView = draggableLV.listView.Q<ScrollView>();
+                    if (scrollView == null) return;
+
+                    float itemHeight = element.layout.height > 0 ? element.layout.height : 200f;
+                    float visibleHeight = scrollView.layout.height;
+                    float targetPos = Mathf.Max(0, itemHeight * index - visibleHeight / 2f);
+
+                    scrollView.scrollOffset = new Vector2(0, targetPos);
+                    Debug.Log($"[StageSelectController] Auto-scroll applied once (index={index}, targetPos={targetPos})");
+                }).StartingIn(0);
+            }).StartingIn(0);
+        }
     }
 
     private void OnElementClick(ClickEvent evt) => evt.StopImmediatePropagation();
@@ -118,26 +136,20 @@ public class StageSelectController : MonoBehaviour, LVItemController
 
         cache.stageLabel.text = $"STAGE {stageNum}";
 
-        // --- ▼ 보상 및 확률 표시 ▼ ---
         var cm = CurrencyManager.instance;
         var sm = StageInfoManager.instance;
 
-        // 보너스 정보 가져오기
         (float goldBonus, float expBonus) = sm.GetBonusInfo(stageNum);
-
-        // 조각, 무기 정보 가져오기
         (Rarity rarity, int count) fragVal = cm.GetBaseFragmentValue(stageNum);
         string weaponVal = cm.GetWeaponValue(stageNum);
 
         List<string> infoList = new();
 
-        // --- 골드 / 경험치 보너스 ---
         if (goldBonus > 0f)
             infoList.Add($"골드 보너스 +{goldBonus * 100f:F0}%");
         if (expBonus > 0f)
             infoList.Add($"경험치 보너스 +{expBonus * 100f:F0}%");
 
-        // --- 드랍 확률 (무기 / 조각만 표시) ---
         float totalWeight = 0f;
         foreach (var kvp in _dropProbDict)
         {

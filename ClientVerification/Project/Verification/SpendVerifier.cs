@@ -3,20 +3,27 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Globalization;
 using Unity.Services.CloudCode.Apis;
 using Unity.Services.CloudCode.Core;
 
 namespace ClientVerification.Verification
 {
+    [Serializable]
+    public class ReinforceRule
+    {
+        public float baseInc;
+        public int step;
+        public float stepInc;
+        public float startValue;
+    }
+
     public class SpendVerifier : IDataVerifier
     {
         private readonly Dictionary<string, int> reportDict;
         private readonly GameData serverData;
         private readonly ILogger logger;
-        private readonly DataTable dataTable;
-        private readonly Dictionary<StatusType, string> reinforcePriceFormula;
+        private readonly Dictionary<StatusType, ReinforceRule> reinforcePriceRules;
 
         public SpendVerifier(
             Dictionary<string, int> reportDict,
@@ -29,8 +36,10 @@ namespace ClientVerification.Verification
             this.reportDict = reportDict ?? new Dictionary<string, int>();
             this.serverData = serverData;
             this.logger = logger;
-            dataTable = new DataTable();
-            reinforcePriceFormula = verificationSystem.GetRemoteConfig<Dictionary<StatusType, string>>(context, gameApiClient, "REINFORCE_PRICE_GOLD");
+
+            reinforcePriceRules = verificationSystem.GetRemoteConfig<Dictionary<StatusType, ReinforceRule>>(
+                context, gameApiClient, "REINFORCE_PRICE_GOLD"
+            );
         }
 
         public bool Verify(out string failReason)
@@ -42,24 +51,18 @@ namespace ClientVerification.Verification
                 var key = kvp.Key;
                 var value = kvp.Value;
 
+                logger.LogDebug($"Key : {key}, Value : {value}");
+
                 if (string.IsNullOrWhiteSpace(key))
                 {
-                    failReason = BuildFail(
-                        code: "Spend.Key.Empty",
-                        message: "Spend key is empty",
-                        extra: new { rawKey = key }
-                    );
+                    failReason = BuildFail("Spend.Key.Empty", "Spend key is empty", new { rawKey = key });
                     return false;
                 }
 
                 var parts = key.Split('_');
                 if (parts.Length < 2)
                 {
-                    failReason = BuildFail(
-                        code: "Spend.Key.Malformed",
-                        message: "Spend key must be Category_Target format",
-                        extra: new { rawKey = key }
-                    );
+                    failReason = BuildFail("Spend.Key.Malformed", "Spend key must be Category_Target format", new { rawKey = key });
                     return false;
                 }
 
@@ -68,31 +71,19 @@ namespace ClientVerification.Verification
 
                 if (category != "Status")
                 {
-                    failReason = BuildFail(
-                        code: "Spend.Category.Unsupported",
-                        message: "Unsupported spend category",
-                        extra: new { category, rawKey = key }
-                    );
+                    failReason = BuildFail("Spend.Category.Unsupported", "Unsupported spend category", new { category, rawKey = key });
                     return false;
                 }
 
                 if (!Enum.TryParse<StatusType>(target, true, out var statusType))
                 {
-                    failReason = BuildFail(
-                        code: "Spend.Status.InvalidType",
-                        message: "Invalid status type in spend key",
-                        extra: new { target, rawKey = key }
-                    );
+                    failReason = BuildFail("Spend.Status.InvalidType", "Invalid status type in spend key", new { target, rawKey = key });
                     return false;
                 }
 
                 if (value <= 0)
                 {
-                    failReason = BuildFail(
-                        code: "Spend.Value.NonPositive",
-                        message: "Spend value must be positive",
-                        extra: new { rawKey = key, value }
-                    );
+                    failReason = BuildFail("Spend.Value.NonPositive", "Spend value must be positive", new { rawKey = key, value });
                     return false;
                 }
 
@@ -107,130 +98,60 @@ namespace ClientVerification.Verification
         {
             failReason = "";
 
-            if (reinforcePriceFormula == null)
+            if (reinforcePriceRules == null)
             {
-                failReason = BuildFail(
-                    code: "Spend.Config.Missing",
-                    message: "REINFORCE_PRICE_GOLD config missing",
-                    extra: new { }
-                );
+                failReason = BuildFail("Spend.Config.Missing", "REINFORCE_PRICE_GOLD config missing", new { });
                 return false;
             }
 
-            if (!reinforcePriceFormula.TryGetValue(statusType, out var priceExpr))
+            if (!reinforcePriceRules.TryGetValue(statusType, out var rule))
             {
-                failReason = BuildFail(
-                    code: "Spend.Config.MissingFormula",
-                    message: "Price formula for status not found",
-                    extra: new { status = statusType.ToString() }
-                );
-                return false;
-            }
-
-            if (string.IsNullOrWhiteSpace(priceExpr))
-            {
-                failReason = BuildFail(
-                    code: "Spend.Config.EmptyFormula",
-                    message: "Price formula is empty",
-                    extra: new { status = statusType.ToString() }
-                );
+                failReason = BuildFail("Spend.Config.MissingRule", "Reinforce rule for status not found", new { status = statusType.ToString() });
                 return false;
             }
 
             if (!serverData.statLevel_Gold.TryGetValue(statusType, out var currentLevel))
                 currentLevel = 0;
 
-            var totalCost = 0;
-            var safety = increaseCount;
+            float totalCost = 0f;
 
-            for (int i = 0; i < increaseCount; i++)
+            for (int i = 1; i <= increaseCount; i++)
             {
-                if (safety-- <= 0)
-                {
-                    failReason = BuildFail(
-                        code: "Spend.Safety.Break",
-                        message: "Safety break while computing total cost",
-                        extra: new { status = statusType.ToString(), increaseCount }
-                    );
-                    return false;
-                }
-
-                var level = currentLevel + i;
-                var expr = priceExpr.Replace("{level}", level.ToString(CultureInfo.InvariantCulture));
-
-                if (!TryComputeInt(expr, out var stepCost, out var error))
-                {
-                    failReason = BuildFail(
-                        code: "Spend.Formula.ComputeError",
-                        message: "Failed to compute price formula",
-                        extra: new { status = statusType.ToString(), level, formula = expr, error }
-                    );
-                    return false;
-                }
-
-                if (stepCost < 0)
-                {
-                    failReason = BuildFail(
-                        code: "Spend.Formula.NegativeCost",
-                        message: "Computed negative cost from formula",
-                        extra: new { status = statusType.ToString(), level, stepCost }
-                    );
-                    return false;
-                }
-
-                try
-                {
-                    checked { totalCost += stepCost; }
-                }
-                catch (OverflowException)
-                {
-                    failReason = BuildFail(
-                        code: "Spend.Cost.Overflow",
-                        message: "Total cost overflow",
-                        extra: new { status = statusType.ToString(), partialCost = totalCost, stepCost }
-                    );
-                    return false;
-                }
+                int level = currentLevel + i;
+                float inc = rule.baseInc + (level / (float)rule.step) * rule.stepInc;
+                totalCost += inc;
             }
 
-            if (serverData.gold < totalCost)
+            totalCost += rule.startValue;
+
+            int finalCost = (int)Math.Round(totalCost);
+            if (finalCost < 0)
             {
-                failReason = BuildFail(
-                    code: "Spend.Gold.Insufficient",
-                    message: "Not enough gold to reinforce",
-                    extra: new { status = statusType.ToString(), required = totalCost, current = serverData.gold, increaseCount }
-                );
+                failReason = BuildFail("Spend.Cost.Negative", "Computed negative total cost", new { status = statusType.ToString(), totalCost });
                 return false;
             }
 
-            serverData.gold -= totalCost;
+            if (serverData.gold < finalCost)
+            {
+                failReason = BuildFail("Spend.Gold.Insufficient", "Not enough gold to reinforce", new
+                {
+                    status = statusType.ToString(),
+                    required = finalCost,
+                    current = serverData.gold,
+                    increaseCount
+                });
+                return false;
+            }
+
+            serverData.gold -= finalCost;
 
             if (serverData.statLevel_Gold.ContainsKey(statusType))
                 serverData.statLevel_Gold[statusType] += increaseCount;
             else
                 serverData.statLevel_Gold.Add(statusType, increaseCount);
 
-            logger?.LogDebug($"Reinforced {statusType} by {increaseCount}. Cost {totalCost}. Gold left {serverData.gold}");
-
+            logger?.LogDebug($"[SpendVerifier] Reinforced {statusType} +{increaseCount}, Cost {finalCost}, Gold Left {serverData.gold}");
             return true;
-        }
-
-        private bool TryComputeInt(string expression, out int value, out string error)
-        {
-            try
-            {
-                var obj = dataTable.Compute(expression, null);
-                var d = Convert.ToDouble(obj, CultureInfo.InvariantCulture);
-                value = Convert.ToInt32(Math.Round(d));
-                error = "";
-                return true;
-            }
-            catch (Exception ex)
-            {
-                value = 0;
-                error = ex.Message;
-                return false;
-            }
         }
 
         private static string BuildFail(string code, string message, object extra)

@@ -19,7 +19,7 @@ public static class BattleBroker
     public static Action<float> OnBossHpChanged;
 
     
-    public static Action<int> RefreshStageSelectUI;
+
     public static Func<bool> IsCanAttack;
 
     public static Action<int> SwitchToStory;
@@ -40,7 +40,7 @@ public static class BattleBroker
     public static Action SetCameraExpand;
     public static Action SetCameraShrink;
 
-    public static Action<Vector3, string> ShowDamageText;//Screen Pos
+    public static Action<Vector3, string, DamageType> ShowDamageText;//Screen Pos
 
     public static Func<int, int, (int, int)> GetCompanionReward;//index_0, index_1, (dia, clover)
     public static Func<int, int, (int, int)> GetAdventureReward;//index_0, index_1, (dia, clover)
