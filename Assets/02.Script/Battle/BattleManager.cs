@@ -495,7 +495,7 @@ public class BattleManager : MonoBehaviour
 
         // 드롭 확률 원본 (Remote Config에서 가져오기)
         string probJson = RemoteConfigService.Instance.appConfig.GetJson("DROP_PROBABILITY", "None");
-        var fullProbDict = JsonConvert.DeserializeObject<Dictionary<string, float>>(probJson);
+        Dictionary<string, float> fullProbDict = JsonConvert.DeserializeObject<Dictionary<string, float>>(probJson);
 
         // 드롭 대상 및 가중치 리스트 구성
         List<(string type, float weight)> dropCandidates = new()

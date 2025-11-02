@@ -35,14 +35,11 @@ namespace PurchaseProcessor.Currency
             IPurchaseSystem purchaseSystem
         )
         {
-            bool success = false;
-            string reason = "unknown";
             string orderId = null;
             int? purchaseState = null;
 
-            // 로그용 프리뷰/원문
-            string receiptPreview = null;   // 원문 receipt 일부(최대 220자)
-            string payloadRaw = null;       // Payload 또는 inner json 원문(최대 1000자)
+            string receiptPreview = null;
+            string payloadRaw = null;
 
             try
             {
@@ -50,7 +47,7 @@ namespace PurchaseProcessor.Currency
                 string pidFromReceipt = null;
 
                 if (string.IsNullOrWhiteSpace(receipt))
-                    return Fail("invalid receipt empty");
+                    return FailResult("invalid receipt empty");
 
                 receiptPreview = Short(receipt, 220);
 
@@ -62,19 +59,16 @@ namespace PurchaseProcessor.Currency
                         var payloadStr = payloadEl.GetString();
                         if (!string.IsNullOrEmpty(payloadStr))
                         {
-                            // 기본은 payload 문자열을 보관
                             payloadRaw = Short(payloadStr, 1000);
 
                             using var payloadDoc = JsonDocument.Parse(payloadStr);
                             var payloadRoot = payloadDoc.RootElement;
 
-                            // IAP v5 형태: Payload.json 안에 실제 내부 JSON 문자열이 들어있는 경우가 많음
                             if (payloadRoot.TryGetProperty("json", out var jsonEl))
                             {
                                 var innerJson = jsonEl.GetString();
                                 if (!string.IsNullOrEmpty(innerJson))
                                 {
-                                    // inner json을 최종 payload로 채택
                                     payloadRaw = Short(innerJson, 1000);
 
                                     using var innerDoc = JsonDocument.Parse(innerJson);
@@ -99,10 +93,10 @@ namespace PurchaseProcessor.Currency
                 }
 
                 if (string.IsNullOrEmpty(purchaseToken))
-                    return Fail("invalid receipt token missing");
+                    return FailResult("invalid receipt token missing");
 
                 if (!string.IsNullOrEmpty(pidFromReceipt) && pidFromReceipt != productId)
-                    return Fail($"productId mismatch receipt={pidFromReceipt} client={productId}");
+                    return FailResult($"productId mismatch receipt={pidFromReceipt} client={productId}");
 
                 Dictionary<string, string> tokenInfo;
                 string iapCatalogJson;
@@ -113,11 +107,11 @@ namespace PurchaseProcessor.Currency
                 }
                 catch (Exception e)
                 {
-                    return Fail($"RC fetch error {e.Message}");
+                    return FailResult($"RC fetch error {e.Message}");
                 }
 
                 if (tokenInfo == null || string.IsNullOrEmpty(iapCatalogJson))
-                    return Fail("RC missing TOKEN_INFO or IAP_CATALOG");
+                    return FailResult("RC missing TOKEN_INFO or IAP_CATALOG");
 
                 tokenInfo.TryGetValue("PackageName", out var packageName);
                 tokenInfo.TryGetValue("ServiceAccountEmail", out var serviceAccountEmail);
@@ -130,14 +124,14 @@ namespace PurchaseProcessor.Currency
                 }
                 catch (Exception e)
                 {
-                    return Fail($"SecretManager fetch error {e.Message}");
+                    return FailResult($"SecretManager fetch error {e.Message}");
                 }
 
                 if (string.IsNullOrWhiteSpace(packageName) ||
                     string.IsNullOrWhiteSpace(serviceAccountEmail) ||
                     string.IsNullOrWhiteSpace(privateKeyPem) ||
                     !privateKeyPem.Contains("BEGIN PRIVATE KEY"))
-                    return Fail("TOKEN_INFO fields invalid");
+                    return FailResult("TOKEN_INFO fields invalid");
 
                 string accessToken;
                 try
@@ -146,7 +140,7 @@ namespace PurchaseProcessor.Currency
                 }
                 catch (Exception e)
                 {
-                    return Fail($"google token error {e.Message}");
+                    return FailResult($"google token error {e.Message}");
                 }
 
                 var url =
@@ -159,7 +153,7 @@ namespace PurchaseProcessor.Currency
                 var body = await resp.Content.ReadAsStringAsync();
 
                 if (!resp.IsSuccessStatusCode)
-                    return Fail($"verify failed http {(int)resp.StatusCode} {body}");
+                    return FailResult($"verify failed http {(int)resp.StatusCode} {body}");
 
                 using (var vdoc = JsonDocument.Parse(body))
                 {
@@ -171,7 +165,7 @@ namespace PurchaseProcessor.Currency
                 }
 
                 if (purchaseState != 0)
-                    return Fail($"verify failed purchaseState={purchaseState}");
+                    return FailResult($"verify failed purchaseState={purchaseState}");
 
                 var grants = new List<(string currency, int amount)>();
                 try
@@ -194,19 +188,19 @@ namespace PurchaseProcessor.Currency
                 }
                 catch (Exception e)
                 {
-                    return Fail($"catalog parse error {e.Message}");
+                    return FailResult($"catalog parse error {e.Message}");
                 }
 
                 if (grants.Count == 0)
-                    return Fail("catalog has no grants");
+                    return FailResult("catalog has no grants");
 
                 var histKey = $"IAP_ORDER_{SanitizeKey(orderId ?? "noid")}";
                 if (await ExistsCloudSaveItem(context, gameApiClient, histKey))
-                    return Fail("duplicate order");
+                    return FailResult("duplicate order");
 
                 var applied = await ApplyGrantsToGameDataAsync(context, gameApiClient, grants, _logger);
                 if (!applied)
-                    return Fail("save error");
+                    return FailResult("save error");
 
                 var histObj = new JObject
                 {
@@ -219,50 +213,27 @@ namespace PurchaseProcessor.Currency
                     context, context.ServiceToken, context.ProjectId, context.PlayerId,
                     new(histKey, JsonConvert.SerializeObject(histObj)));
 
-                success = true;
-                reason = $"granted {grants.Count} grants orderId={orderId}";
-                return new CurrencyResult { Success = true, Message = reason };
+                // 첫 번째 grant만 반환
+                var first = grants[0];
+                return new CurrencyResult
+                {
+                    Resource = Enum.TryParse<Resource>(first.currency, true, out var res) ? res : Resource.None,
+                    Value = first.amount
+                };
             }
             catch (Exception e)
             {
-                reason = $"fatal error {e.Message}";
-                return new CurrencyResult { Success = false, Message = reason };
-            }
-            finally
-            {
-                // 단 한 줄 로그: 성공=Debug, 실패=Error. Payload/Receipt 포함.
-                if (success)
-                {
-                    _logger.LogDebug(
-                        "[IAP] productId={0} playerId={1} success=True reason=\"{2}\" orderId={3} state={4} receiptPrev={5} payload={6}",
-                        productId,
-                        playerId,
-                        reason,
-                        orderId ?? "null",
-                        purchaseState?.ToString() ?? "null",
-                        receiptPreview ?? "null",
-                        payloadRaw ?? "null"
-                    );
-                }
-                else
-                {
-                    _logger.LogError(
-                        "[IAP] productId={0} playerId={1} success=False reason=\"{2}\" orderId={3} state={4} receiptPrev={5} payload={6}",
-                        productId,
-                        playerId,
-                        reason,
-                        orderId ?? "null",
-                        purchaseState?.ToString() ?? "null",
-                        receiptPreview ?? "null",
-                        payloadRaw ?? "null"
-                    );
-                }
+                return FailResult($"fatal error {e.Message}");
             }
 
-            CurrencyResult Fail(string msg)
+            CurrencyResult FailResult(string msg)
             {
-                reason = msg;
-                return new CurrencyResult { Success = false, Message = msg };
+                _logger.LogError("[IAP] fail: {0}", msg);
+                return new CurrencyResult
+                {
+                    Resource = Resource.None,
+                    Value = 0
+                };
             }
 
             static string Short(string s, int max) =>
@@ -404,10 +375,10 @@ namespace PurchaseProcessor.Currency
 
     public class CurrencyResult
     {
-        [JsonProperty("success")]
-        public bool Success { get; set; }
+        [JsonProperty("resource")]
+        public Resource Resource { get; set; }   // enum Resource 사용
 
-        [JsonProperty("message")]
-        public string Message { get; set; }
+        [JsonProperty("value")]
+        public int Value { get; set; }
     }
 }

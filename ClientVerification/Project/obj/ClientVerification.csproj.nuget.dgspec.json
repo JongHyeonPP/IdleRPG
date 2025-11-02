@@ -52,11 +52,11 @@
           "dependencies": {
             "Com.Unity.Services.CloudCode.Apis": {
               "target": "Package",
-              "version": "[0.0.9, )"
+              "version": "[0.0.21, )"
             },
             "Com.Unity.Services.CloudCode.Core": {
               "target": "Package",
-              "version": "[0.0.1, )"
+              "version": "[0.0.2, )"
             },
             "Microsoft.Extensions.Logging.Abstractions": {
               "target": "Package",
@@ -79,7 +79,12 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.302\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305\\RuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "linux-x64": {
+          "#import": []
         }
       }
     }

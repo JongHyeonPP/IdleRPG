@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Purchasing;
 using UnityEngine.UIElements;
 using EnumCollection;
 
@@ -12,9 +13,9 @@ public class PurchaseAdTestUI : MonoBehaviour
     {
         VisualElement root = GetComponent<UIDocument>().rootVisualElement;
         Button dia_0_Button = root.Q<Button>("Dia_0_Button");
-        dia_0_Button.RegisterCallback<ClickEvent>(evt => NetworkBroker.PurchaseItem(ProductIds.DIA_0));
+        dia_0_Button.RegisterCallback<ClickEvent>(evt => PlayerBroker.PurchaseCurrency(ProductIds.DIA_0));
         Button dia_1_Button = root.Q<Button>("Dia_1_Button");
-        dia_1_Button.RegisterCallback<ClickEvent>(evt => NetworkBroker.PurchaseItem(ProductIds.DIA_1));
+        dia_1_Button.RegisterCallback<ClickEvent>(evt => PlayerBroker.PurchaseCurrency(ProductIds.DIA_1));
         Button adButton = root.Q<Button>("AdButton");
         adButton.RegisterCallback<ClickEvent>(evt => PlayerBroker.PurchaseCurrency("diaAd"));
     }

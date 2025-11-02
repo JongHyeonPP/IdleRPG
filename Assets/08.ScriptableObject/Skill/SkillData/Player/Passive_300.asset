@@ -42,6 +42,6 @@ MonoBehaviour:
   targetNum: 1
   preDelay: 0.2
   postDelay: 1
-  isAnim: 1
+  isAnim: 0
   visualEffectPrefab: {fileID: 0}
   isActiveSkill: 0

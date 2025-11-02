@@ -6,7 +6,7 @@
         <engine:VisualElement name="Frame" picking-mode="Ignore" style="flex-grow: 1; position: absolute; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/WindowStroke.png?fileID=21300000&amp;guid=8a7a753f989769c4ebd7f236420af813&amp;type=3#WindowStroke&quot;); width: 102%; height: 102%;" />
         <engine:VisualElement name="MainPanel" picking-mode="Ignore" style="flex-grow: 0; width: 92%; height: 96%; flex-shrink: 0;">
             <engine:VisualElement name="CategoriButtonParent" style="flex-grow: 0; height: 107px; background-color: rgba(0, 0, 0, 0); flex-direction: row; justify-content: center; align-items: center; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Panels/TitleBar.png?fileID=2800000&amp;guid=a331d5e1dd3208d4ab0085903c241b8a&amp;type=3#TitleBar&quot;); padding-bottom: 29px; font-size: 45px; -unity-text-outline-color: rgb(0, 0, 0); letter-spacing: 23px; -unity-background-image-tint-color: rgb(63, 63, 63);">
-                <engine:Label text="국립 모험가 조합" style="color: rgb(241, 205, 162); margin-top: 13px;" />
+                <engine:Label text="헌터 길드" style="color: rgb(241, 205, 162); margin-top: 13px;" />
             </engine:VisualElement>
             <engine:VisualElement name="VerticalParent" style="flex-grow: 1; margin-left: 50px; margin-top: 50px; margin-right: 50px; margin-bottom: 50px;">
                 <engine:VisualElement name="VerticalPanel_0" style="flex-grow: 0; flex-shrink: 0; height: 422px; flex-direction: row;">
@@ -16,7 +16,7 @@
                                 <engine:VisualElement style="flex-grow: 0; width: 50px; height: 50px; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Icons/32/ScrollRoll.png?fileID=2800000&amp;guid=a0a8f252a8253a54292d25824d74f625&amp;type=3#ScrollRoll&quot;); flex-shrink: 0;" />
                                 <engine:Label text="앵그리보어 처치" name="TitleLabel" style="margin-left: 23px;" />
                             </engine:VisualElement>
-                            <engine:Label text="몬스터 처리 의뢰입니다." style="margin-left: 20px;" />
+                            <engine:Label text="현상금 사냥 의뢰입니다." style="margin-left: 20px;" />
                         </engine:VisualElement>
                         <engine:VisualElement name="RegionPanel" style="flex-grow: 1;">
                             <engine:Label text="지역 정보" name="RegionInfoLabel" />
@@ -43,9 +43,9 @@
                     </engine:VisualElement>
                     <engine:VisualElement name="Padding" style="flex-grow: 0; width: 30px;" />
                     <engine:VisualElement name="VerticalPanel_1" style="flex-grow: 0; flex-shrink: 0; height: 120px; width: 466px; align-self: center; background-color: rgba(255, 255, 255, 0.06); margin-top: 0; flex-direction: row; align-items: center; justify-content: center; margin-right: 0; margin-bottom: 0; margin-left: 0;">
-                        <engine:Label text="탐험 보상" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-top: 0; padding-right: 45px; padding-bottom: 0; padding-left: 30px; font-size: 40px;" />
+                        <engine:Label text="탐험 보상" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-top: 0; padding-right: 26px; padding-bottom: 0; padding-left: 30px; font-size: 40px;" />
                         <engine:VisualElement name="RewardIcon" style="flex-grow: 0; width: 60px; flex-shrink: 0; height: 60px; background-image: url(&quot;project://database/Assets/Asset/Honeti/PixelArtGUI3/Textures/Icons/32/Gem01.png?fileID=2800000&amp;guid=486112d5a03a3ee41ac790455313a1ab&amp;type=3#Gem01&quot;);" />
-                        <engine:Label text="1,100" name="RewardLabel" style="width: 132px; -unity-text-align: upper-center; font-size: 40px; padding-left: 0; margin-left: 0;" />
+                        <engine:Label text="1,100" name="RewardLabel" style="width: 132px; -unity-text-align: upper-left; font-size: 40px; padding-left: 0; margin-left: 14px;" />
                     </engine:VisualElement>
                 </engine:VisualElement>
                 <engine:VisualElement name="VerticalPanel_2" style="flex-grow: 0; flex-shrink: 0; align-items: center;">

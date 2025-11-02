@@ -1,136 +1,135 @@
 using EnumCollection;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using Unity.Services.CloudCode;
 using Unity.Services.RemoteConfig;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
-using Newtonsoft.Json.Linq;
-using System.Linq;
+
 
 public class StoreManager : MonoSingleton<StoreManager>
 {
-    #region Fields â”€ Data/Refs/State
-
     [Header("Data")]
     private GameData _gameData;
 
-    // (ê°€ì±  ì¢…ë¥˜, íšŸìˆ˜) â†’ (ì¬í™”, ìˆ˜ëŸ‰)
-    private readonly Dictionary<(GachaType gachaType, int num), (Resource resource, int num)> prices = new();
 
-    [SerializeField] private WeaponData[] _weaponDatas;         // ë¬´ê¸° ë°ì´í„° (UID ë§¤í•‘ìš©)
-    [SerializeField] private List<WeaponData> _weaponSaveDatas; // ìµœê·¼ ë½‘ì€ ë¬´ê¸°(ì˜µì…˜)
-    public List<WeaponData> WeaponSaveDatas => _weaponSaveDatas;
+    //Å° = (¾î¶² °É, ¸î °³ »ÌÀ»Áö), °ª = (¹«½¼ ÀçÈ­°¡, ¸î °³ÀÎÁö)
+    //Ex) prices[(GachaType.Weapon, 1)] => (Resource.Dia, 10)
+    Dictionary<(GachaType gachaType, int num), (Resource resource, int num)> prices = new();
+
+
+    [SerializeField] private WeaponData[] _weaponDatas;             // ¹«±â µ¥ÀÌÅÍµé
+    [SerializeField] private List<WeaponData> _weaponSaveDatas;     // »ÌÈù ¹«±â µ¥ÀÌÅÍµé
+    //[SerializeField] private int _weapon1CoinPrice = 10;
+    //[SerializeField] private int _weapon10CoinPrice = 100;
+
+    //[SerializeField] private int _costume1CoinPrice = 10;
+    //[SerializeField] private int _costume10CoinPrice = 100;
+
+
+    public List<WeaponData> WeaponSaveDatas => _weaponSaveDatas;    // ÀÌ°Å °¡Á®´Ù ½á ÀÏ´Ü Á¤¿íÇÎ
 
     [Header("UI")]
-    [SerializeField] private UIDocument _storeUIDocument;       // ë©”ì¸ ìŠ¤í† ì–´ UI
-    [SerializeField] private UIDocument _storePopupDocument;    // ê²°ê³¼/ì—ëŸ¬ íŒì—… UI ë£¨íŠ¸
-    [SerializeField] private VisualTreeAsset _storeSlotItem;    // (í•„ìš” ì‹œ) ìŠ¬ë¡¯ í…œí”Œë¦¿
-    [SerializeField] private Sprite _hamsterSprite;
-    [SerializeField] private AudioClip _popupSound;
-    [SerializeField] private AudioClip _drawSound;
+    [SerializeField] private UIDocument _storeUIDocument;           // UI ¹®¼­
+    [SerializeField] private VisualTreeAsset _storeSlotItem;        // ½½·Ô¾ÆÀÌÅÛ
+    [SerializeField] private Sprite _hamsterSprite;                 // ÇÜ½ºÅÍ ½ºÇÁ¶óÀÌÆ®
+    [SerializeField] private AudioClip _popupSound;                 // ÆË¾÷ È¿°úÀ½
+    [SerializeField] private AudioClip _drawSound;                  // »Ì±â È¿°úÀ½
+
 
     private VisualElement _root;
 
-    // Buttons
-    private Button _weapon1Btn;
-    private Button _weapon10Btn;
-    private Button _costume1Btn;
-    private Button _costume10Btn;
+    // Weapon UI
+    private VisualElement _panel;                                   // »óÁ¡ ÆĞ³Î
+    private VisualElement _weaponGrid;                              // ¹«±â ±×¸®µå
+    private Button _weapon1Btn;                                     // ¹«±â 1È¸ »Ì±â ¹öÆ°
+    private Button _weapon10Btn;                                    // ¹«±â 10È¸ »Ì±â ¹öÆ°
 
-    // Result Popup
-    private VisualElement _popup;
-    private VisualElement _rowVE1;
-    private VisualElement _rowVE2;
-    private Button _popupCloseBtn;
+    // Popup UI
+    private VisualElement _popup;                                   // Popup VisualElement
+    private VisualElement _rowVE1;                                  // Popup ÁÙ Ã¹¹øÂ°
+    private VisualElement _rowVE2;                                  // Popup ÁÙ µÎ¹øÂ°
+    private Button _popupCloseBtn;                                  // Popup ´İ±â ¹öÆ°
+    private Button _openPopupBtn;                                   // Popup ¿­±â ¹öÆ°
 
-    // Error Popup
-    private VisualElement _errorPopup;
-    private Label _errorTxt;
-    private Button _errorCloseBtn;
+    // Hamster UI
+    private VisualElement _hamsterUI;                               // ÇÜ½ºÅÍ UI ¿ä¼Ò
+    private Label _hamsterText;                                     // ÇÜ½ºÅÍ ´ëÈ­ ÅØ½ºÆ®
+    private VisualElement _hamsterImage;                            // ÇÜ½ºÅÍ ÀÌ¹ÌÁö
 
-    // Hamster
-    private VisualElement _hamsterUI;
-    private Label _hamsterText;
-    private VisualElement _hamsterImage;
+    //ÆÄÆ¼Å¬
+    private VisualElement _storeFX;          // ÆÄÆ¼Å¬ À§Ä¡ ±âÁØ¿ë VE (Å¬¸¯ Åë°ú)
+    [SerializeField] private ParticleSystem _storeFxPS; // ¿­ ¶§ Àç»ıÇÒ ÆÄÆ¼Å¬
 
-    // FX
-    private VisualElement _storeFX;
+    // System
+    // Á¦³×¸¯ Gacha ½Ã½ºÅÛ (WeaponData°¡ IGachaItemÀ» ±¸ÇöÇÑ´Ù°í °¡Á¤)
+    private GachaSystem<WeaponData> _gachaSystem;
+    // ¿¹½Ã·Î ÄÚ½ºÆ¬ °ü·Ã °¡Â÷ ½Ã½ºÅÛ (ÄÚ½ºÆ¬ µ¥ÀÌÅÍ°¡ IGachaItemÀ» ±¸ÇöÇØ¾ß ÇÔ)
+    private GachaSystem<CostumeItem> __costumeGachaSystem;
 
-    // State
     private bool _isPopupVisible = false;
-    private bool _isErrorPopupVisible = false;
+    private const int STORE_ROW = 2;
+    private const int STORE_COLUMN = 5;
     private AudioSource _audioSource;
-    private bool _isProcessing;
-    private Dictionary<string, WeaponData> _weaponByUid;        // UID â†’ WeaponData
-    private readonly List<VisualElement> _slots = new();        // ê²°ê³¼ ìŠ¬ë¡¯ë“¤(Row1/2 í•˜ìœ„ ì¬ì‚¬ìš©)
 
-    private readonly string[] _hamsterMessages = { "ì–´ì„œì˜¤ì„¸ìš”!", "ì•—!", "ì¢‹ì€ ê±¸ ë½‘ì•„ë³´ì!", "ê°€ì~!" };
+    // ÇÜ½ºÅÍ ´ëÈ­ ¸Ş½ÃÁö
+    private readonly string[] _hamsterMessages = new string[] {
+        "¾î¼­¿À¼¼¿ä!",
+        "¿Í!",
+        "Çà¿îÀ» ºô¾î¿ä!",
+        "ÇìÇì~!",
+    };
 
-    // â”€â”€ Slot Appear/Bob FX params â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    [Header("Slot FX")]
-    [SerializeField] private float _appearDuration = 0.35f;   // ìŠ¬ë¡¯ ë“±ì¥ íŒ ì• ë‹ˆ ê¸¸ì´
-    [SerializeField] private float _appearStagger = 0.05f;   // ìŠ¬ë¡¯ ê°„ ì§€ì—°
-    [SerializeField] private float _bobAmplitude = 6f;      // ë³´ë¸Œ(ìƒí•˜) ì§„í­(px)
-    [SerializeField] private float _bobPeriod = 1.6f;     // ë³´ë¸Œ 1íšŒì „ ì‹œê°„(sec)
-    [SerializeField] private float _popScale = 1.08f;    // ì…ì¥ ì‹œ ì‚´ì§ í™•ëŒ€ ì •ë„
-    [SerializeField] private AnimationCurve _popEase = AnimationCurve.EaseInOut(0, 0, 1, 1);
-
-    private readonly Dictionary<VisualElement, Coroutine> _bobRoutines = new();
-
-    private readonly Dictionary<Rarity, Vector2> _rarityOffsetMap = new();
-
-    #endregion
-
-    #region Money
-    // StoreManager
-    [SerializeField] private StoreMoneyListController _moneyList; // ScrollView ì»¨íŠ¸ë¡¤ëŸ¬
-    [SerializeField] private Texture2D starterIconTex;
-    [SerializeField] private Texture2D proIconTex;
-    #endregion
-
-    #region Unity Lifecycle
+    //Data
+    private Dictionary<string, int> _weaponCount;
 
     private void Start()
     {
         _gameData = StartBroker.GetGameData();
         InitPriceFromRc();
         InitStore();
-        RefreshStore();
-        BuildWeaponUidIndexIfNeeded();
+
+        // °á°ú ÀÌº¥Æ® ±¸µ¶
+        PlayerBroker.OnRequestGacha += OnGachaResult;
+        PlayerBroker.OnPurchaseCurrency += OnCurrencyResult;
     }
-
-    #endregion
-
-    #region RemoteConfig (ê°€ê²© ì´ˆê¸°í™”)
-
     public void InitPriceFromRc()
     {
         try
         {
+            // RC¿¡¼­ GACHA_INFO ÀüÃ¼ JSON ¹®ÀÚ¿­ °¡Á®¿À±â (·ÎÄÃ Ä³½Ã¿¡¼­ ÀĞÀ½)
             var json = RemoteConfigService.Instance.appConfig.GetJson("GACHA_INFO");
-            if (string.IsNullOrEmpty(json)) throw new Exception("GACHA_INFOê°€ ë¹„ì–´ ìˆìŠµë‹ˆë‹¤.");
+            if (string.IsNullOrEmpty(json))
+                throw new Exception("GACHA_INFO°¡ ºñ¾î ÀÖ½À´Ï´Ù.");
 
             var root = JObject.Parse(json);
-            var cost = root["cost"] as JObject ?? throw new Exception("GACHA_INFO.cost ë…¸ë“œë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
+            var cost = root["cost"] as JObject;
+            if (cost == null)
+                throw new Exception("GACHA_INFO.cost ³ëµå¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù.");
 
             void SetPrice(GachaType gType, int n, JToken node)
             {
-                if (node == null) throw new Exception($"cost ë…¸ë“œê°€ ì—†ìŠµë‹ˆë‹¤: {gType} x{n}");
+                if (node == null) throw new Exception($"cost ³ëµå°¡ ¾ø½À´Ï´Ù: {gType} x{n}");
+
                 string resourceStr = node["resource"]?.ToString();
-                if (string.IsNullOrEmpty(resourceStr)) throw new Exception($"resourceê°€ ë¹„ì–´ ìˆìŒ: {gType} x{n}");
+                if (string.IsNullOrEmpty(resourceStr))
+                    throw new Exception($"resource°¡ ºñ¾î ÀÖ½À´Ï´Ù: {gType} x{n}");
+
                 if (!Enum.TryParse<Resource>(resourceStr, true, out var resEnum))
-                    throw new Exception($"ì•Œ ìˆ˜ ì—†ëŠ” ì¬í™” íƒ€ì…: {resourceStr} ({gType} x{n})");
+                    throw new Exception($"¾Ë ¼ö ¾ø´Â ÀçÈ­ Å¸ÀÔÀÔ´Ï´Ù: {resourceStr} ({gType} x{n})");
+
                 int amount = node["amount"]?.Value<int>() ?? 0;
-                if (amount <= 0) throw new Exception($"amountê°€ ìœ íš¨í•˜ì§€ ì•ŠìŒ: {amount} ({gType} x{n})");
+                if (amount <= 0)
+                    throw new Exception($"amount°¡ ¿Ã¹Ù¸£Áö ¾Ê½À´Ï´Ù: {amount} ({gType} x{n})");
+
                 prices[(gType, n)] = (resEnum, amount);
             }
 
             var weapon = cost["weapon"];
             var costume = cost["costume"];
+
             SetPrice(GachaType.Weapon, 1, weapon?["single"]);
             SetPrice(GachaType.Weapon, 10, weapon?["multi10"]);
             SetPrice(GachaType.Costume, 1, costume?["single"]);
@@ -138,29 +137,45 @@ public class StoreManager : MonoSingleton<StoreManager>
         }
         catch (Exception e)
         {
-            Debug.LogError($"InitPriceFromRc ì˜¤ë¥˜: {e.Message}");
-            ShowErrorPopup("ìƒì  ê°€ê²© ì •ë³´ë¥¼ ë¶ˆëŸ¬ì˜¤ì§€ ëª»í–ˆìŠµë‹ˆë‹¤.\nì ì‹œ í›„ ë‹¤ì‹œ ì‹œë„í•´ ì£¼ì„¸ìš”.");
+            Debug.LogError($"InitPriceFromRc ½ÇÆĞ: {e.Message}");
             throw;
         }
     }
 
-    #endregion
+    //private void OnEnable() => InitStore(); // ¼ø¼­ ²¿¿©¼­ ÁÖ¼® Ã³¸®ÇÔ
 
-    #region Init & UI Wiring
-
+    /// <summary>
+    /// ÃÊ¹İ ¼¼ÆÃ
+    /// </summary>
     private void InitStore()
     {
         if (_storeUIDocument == null) return;
 
-        // Audio
-        _audioSource = gameObject.GetComponent<AudioSource>() ?? gameObject.AddComponent<AudioSource>();
+        // ¿Àµğ¿À ¼Ò½º Ãß°¡
+        _audioSource = gameObject.GetComponent<AudioSource>();
+        if (_audioSource == null) _audioSource = gameObject.AddComponent<AudioSource>();
 
-        // Root & Panels
-        _root = _storeUIDocument.rootVisualElement;
+        // Á¦³×¸¯ GachaSystemÀ¸·Î º¯°æ (Å¸ÀÔ ÆÄ¶ó¹ÌÅÍ Ãß°¡)
+        _gachaSystem = new GachaSystem<WeaponData>(_weaponDatas);
+        // ¸¸¾à CostumeManager.instance.AllCostumeDatas°¡ CostumeData[] Å¸ÀÔÀÌ¶ó¸é...
+        //  __costumeGachaSystem = new GachaSystem<CostumeItem>(CostumeManager.Instance.AllCostumeDatas);
 
-        #region Weapon Panel (ë²„íŠ¼/ë¼ë²¨)
+        // ¼­¹ö µ¥ÀÌÅÍ ¹Ş¾Æ¼­? price°ª Á¶Á¤
+        //_weapon1CoinPrice = 1;
+        //_weapon1CoinPrice = 10;
 
+        var root = _storeUIDocument.rootVisualElement;
+        _root = root; // ÀúÀåÇÎ
+        _panel = root?.Q<VisualElement>("Panel");
+        _weaponGrid = root?.Q<VisualElement>("WeaponGrid");
+        _rowVE1 = root?.Q<VisualElement>("RowVE1");
+        _rowVE2 = root?.Q<VisualElement>("RowVE2");
+
+        #region ¹«±â ½½·Ô
+        // Itemslot0 ·çÆ®ºÎÅÍ °¡Á®¿À±â
         var itemSlot0 = _root?.Q<VisualElement>("ItemSlot0");
+
+        // StorePanel_0, StorePanel_1 Á¢±Ù
         var storePanel0 = itemSlot0?.Q<VisualElement>("StorePanel_0");
         var storePanel1 = itemSlot0?.Q<VisualElement>("StorePanel_1");
 
@@ -169,660 +184,718 @@ public class StoreManager : MonoSingleton<StoreManager>
 
         var priceLabel0 = storePanel0?.Q<Label>("PriceLabel");
         var infoLabel0 = storePanel0?.Q<Label>("InfoLabel");
+
         var priceLabel1 = storePanel1?.Q<Label>("PriceLabel");
         var infoLabel1 = storePanel1?.Q<Label>("InfoLabel");
 
-        if (priceLabel0 != null && prices.TryGetValue((GachaType.Weapon, 1), out var pW1)) priceLabel0.text = pW1.num.ToString();
-        if (infoLabel0 != null) infoLabel0.text = "1íšŒ ë½‘ê¸°";
-        if (priceLabel1 != null && prices.TryGetValue((GachaType.Weapon, 10), out var pW10)) priceLabel1.text = pW10.num.ToString();
-        if (infoLabel1 != null) infoLabel1.text = "10íšŒ ë½‘ê¸°";
+        // °ª ¹Ù²Ù±â
+        if (priceLabel0 != null) priceLabel0.text = prices[(GachaType.Weapon, 1)].num.ToString();//¹«±â 1°³ »Ì´Â °¡°İ
+        if (infoLabel0 != null) infoLabel0.text = "1È¸ »Ì±â";
 
+        if (priceLabel1 != null) priceLabel1.text = prices[(GachaType.Weapon, 10)].num.ToString();//¹«±â 10°³ »Ì´Â °¡°İ
+        if (infoLabel1 != null) infoLabel1.text = "10È¸ »Ì±â";
         #endregion
 
-        #region Costume Panel (ë²„íŠ¼/ë¼ë²¨)
-
+        #region ÄÚ½ºÆ¬ ½½·Ô
+        // Itemslot1  °¡Á®¿À±â
         var itemSlot1 = _root?.Q<VisualElement>("ItemSlot1");
+
+        // StorePanel_0, StorePanel_1 Á¢±Ù
         var storePanel0_1 = itemSlot1?.Q<VisualElement>("StorePanel_0");
         var storePanel1_1 = itemSlot1?.Q<VisualElement>("StorePanel_1");
 
-        _costume1Btn = storePanel0_1?.Q<Button>("StoreBtn");
-        _costume10Btn = storePanel1_1?.Q<Button>("StoreBtn");
+        _weapon1Btn = storePanel0?.Q<Button>("StoreBtn");
+        _weapon10Btn = storePanel1?.Q<Button>("StoreBtn");
 
         var priceLabel0_1 = storePanel0_1?.Q<Label>("PriceLabel");
         var infoLabel0_1 = storePanel0_1?.Q<Label>("InfoLabel");
+
         var priceLabel1_1 = storePanel1_1?.Q<Label>("PriceLabel");
         var infoLabel1_1 = storePanel1_1?.Q<Label>("InfoLabel");
 
-        if (priceLabel0_1 != null && prices.TryGetValue((GachaType.Costume, 1), out var pC1)) priceLabel0_1.text = pC1.num.ToString();
-        if (infoLabel0_1 != null) infoLabel0_1.text = "1íšŒ ë½‘ê¸°";
-        if (priceLabel1_1 != null && prices.TryGetValue((GachaType.Costume, 10), out var pC10)) priceLabel1_1.text = pC10.num.ToString();
-        if (infoLabel1_1 != null) infoLabel1_1.text = "10íšŒ ë½‘ê¸°";
+        // °ª ¹Ù²Ù±â
+        if (priceLabel0_1 != null) priceLabel0_1.text = prices[(GachaType.Costume, 1)].num.ToString();//¹«±â 1°³ »Ì´Â °¡°İ
+        if (infoLabel0_1 != null) infoLabel0_1.text = "1È¸ »Ì±â";
 
+        if (priceLabel1_1 != null) priceLabel1_1.text = prices[(GachaType.Costume, 10)].num.ToString();//ÄÚ½ºÆ¬ 10°³ »Ì´Â °¡°İ
+        if (infoLabel1_1 != null) infoLabel1_1.text = "10È¸ »Ì±â";
         #endregion
 
-        #region Button Callbacks (ì„œë²„ í˜¸ì¶œë§Œ)
+        // Popup ÃÊ±âÈ­
+        _popup = root?.Q<VisualElement>("Popup");
+        _popupCloseBtn = root?.Q<Button>("PopupCloseBtn");
+       // _openPopupBtn = root?.Q<Button>("OpenPopupBtn");
 
-        _weapon1Btn?.RegisterCallback<ClickEvent>(async _ => await OnClickGacha(GachaType.Weapon, 1));
-        _weapon10Btn?.RegisterCallback<ClickEvent>(async _ => await OnClickGacha(GachaType.Weapon, 10));
-        _costume1Btn?.RegisterCallback<ClickEvent>(async _ => await OnClickGacha(GachaType.Costume, 1));
-        _costume10Btn?.RegisterCallback<ClickEvent>(async _ => await OnClickGacha(GachaType.Costume, 10));
+        // ÇÜ½ºÅÍ UI ÃÊ±âÈ­
+        _hamsterUI = root?.Q<VisualElement>("HamsterUI");
+        _hamsterText = root?.Q<Label>("HamsterText");
+        _hamsterImage = root?.Q<VisualElement>("HamsterImage");
 
-        #endregion
-
-        #region Popups (Result + Error)
-
-        var popuproot = _storePopupDocument?.rootVisualElement;
-
-        // Result Popup
-        _popup = popuproot?.Q<VisualElement>("Popup");
-        _popupCloseBtn = popuproot?.Q<Button>("PopupCloseBtn");
-        _rowVE1 = popuproot?.Q<VisualElement>("RowVE1");
-        _rowVE2 = popuproot?.Q<VisualElement>("RowVE2");
-        if (_popup != null) _popup.style.display = DisplayStyle.None;
-        _popupCloseBtn?.RegisterCallback<ClickEvent>(_ => SetPopupVisibility(false));
-        _popup?.RegisterCallback<PointerDownEvent>(_ => ClosePopup());
-
-        // Error Popup
-        _errorPopup = popuproot?.Q<VisualElement>("ErrorPopup");
-        _errorTxt = popuproot?.Q<Label>("ErrorTxt");
-        _errorCloseBtn = popuproot?.Q<Button>("ErrorCloseBtn");
-        if (_errorPopup != null) _errorPopup.style.display = DisplayStyle.None;
-        _errorCloseBtn?.RegisterCallback<ClickEvent>(_ => SetErrorPopupVisibility(false));
-        _errorPopup?.RegisterCallback<PointerDownEvent>(_ => CloseErrorPopup());
-
-        #endregion
-
-        #region Hamster
-
-        _hamsterUI = _root?.Q<VisualElement>("HamsterUI");
-        _hamsterText = _root?.Q<Label>("HamsterText");
-        _hamsterImage = _root?.Q<VisualElement>("HamsterImage");
+/*        // ÇÜ½ºÅÍ ÀÌ¹ÌÁö ¼³Á¤
+        if (_hamsterImage != null && _hamsterSprite != null)
+        {
+            _hamsterImage.style.backgroundImage = new StyleBackground(_hamsterSprite);
+        }
+*/
+        // ÇÜ½ºÅÍ ÃÊ±â ÅØ½ºÆ® ¼³Á¤
         SetHamsterText(_hamsterMessages[0]);
+
+        // Popup ºñÈ°¼ºÈ­
         SetPopupVisibility(false);
-        SetErrorPopupVisibility(false);
 
-        #endregion
+        _weapon1Btn.RegisterCallback<ClickEvent>(evt => DrawMultipleWeapons(1));
+        _weapon10Btn.RegisterCallback<ClickEvent>(evt => DrawMultipleWeapons(10));
+        _popupCloseBtn.RegisterCallback<ClickEvent>(evt => SetPopupVisibility(false));
+        //_openPopupBtn.RegisterCallback<ClickEvent>(evt => SetPopupVisibility(true));
 
-        #region FX
+        // ·çÆ® ¿ä¼Ò¿¡ Å¬¸¯ ÀÌº¥Æ® Ãß°¡
+        _popup.RegisterCallback<PointerDownEvent>(evt => ClosePopup());
 
-        _storeFX = _root?.Q<VisualElement>("StoreFX");
-        if (_storeFX != null) _storeFX.pickingMode = PickingMode.Ignore;
-
-        #endregion
-
-        #region Slots Pool
-
-        BuildSlotPool();
-        HideAllSlots();
-        BuildRarityOffsetMap();
-        #endregion
+        _storeFX = root.Q<VisualElement>("StoreFX");
+        if (_storeFX != null)
+        {
+            _storeFX.pickingMode = PickingMode.Ignore; // Å¬¸¯/·¹ÀÌÄ³½ºÆ® Åë°ú
+        }
     }
 
-
-/*    public enum Rarity
+    public void OpenStore()
     {
-        Common,
-        Uncommon,
-        Rare,
-        Unique,
-        Legendary,
-        Mythic,
-    }*/
+        // »óÁ¡ ÆĞ³Î º¸¿©ÁÖ±â(ÇÁ·ÎÁ§Æ® ¹æ½Ä¿¡ ¸Â°Ô)
+        //if (_panel != null) _panel.style.display = DisplayStyle.Flex;
 
-    private void BuildRarityOffsetMap()
-    {
-        _rarityOffsetMap.Clear();
+        // ÇÊ¿äÇÏ¸é ÃÊ±â¿¡ ÆË¾÷/±×¸®µå Á¤¸®
+//        SetPopupVisibility(false);
+       // ClearGrid();
 
-        _rarityOffsetMap[Rarity.Common] = new Vector2(-214f, 329f);
-        _rarityOffsetMap[Rarity.Uncommon] = new Vector2(-214f, -2f);
-        _rarityOffsetMap[Rarity.Rare] = new Vector2(-214f, -334f);
-        _rarityOffsetMap[Rarity.Unique] = new Vector2(-564f, 329f);
-        _rarityOffsetMap[Rarity.Legendary] = new Vector2(-564f, -2f);
-        _rarityOffsetMap[Rarity.Mythic] = new Vector2(-564f, -334f);
+        // ÆÄÆ¼Å¬ Àç»ı
+        PlayStoreFxAt(_storeFX);
     }
-    private void BuildSlotPool()
-    {
-        if (_rowVE1 == null || _rowVE2 == null) return;
-        if (_slots.Count > 0) return;
-
-        foreach (var child in _rowVE1.Children()) _slots.Add(child);
-        foreach (var child in _rowVE2.Children()) _slots.Add(child);
-
-        Debug.Log($"[BuildSlotPool] ìŠ¬ë¡¯ ìˆ˜ì§‘ ì™„ë£Œ: {_slots.Count}ê°œ");
-    }
-
-    #endregion
-
-    #region FX Helpers
-
-    public void OpenStore() => PlayStoreFxAt(_storeFX);
 
     private void PlayStoreFxAt(VisualElement ve)
     {
-        if (ve == null) return;
         ve.style.display = DisplayStyle.Flex;
-        ParticleFxManager.Instance.Play("StoreOpen");
+        _storeFxPS.Play(true);
     }
 
-    #endregion
 
-    #region Money
-    private void RefreshStore()
-    {
-        if (_moneyList == null) return;
-
-        var items = new List<StoreMoneyItemData>
-    {
-        new StoreMoneyItemData {
-            Gold = "1000",
-            GoldEx = "Clover",
-            Money = prices.TryGetValue((GachaType.Weapon, 1), out var pW1) ? pW1.num.ToString() : "-",
-            Icon = starterIconTex,
-            OnClick = () => _ = OnClickGacha(GachaType.Weapon, 1)
-        },
-        new StoreMoneyItemData {
-            Gold = "3000",
-            GoldEx = "Gold",
-            Money = prices.TryGetValue((GachaType.Weapon, 10), out var pW10) ? pW10.num.ToString() : "-",
-            Icon = proIconTex,
-            OnClick = () => _ = OnClickGacha(GachaType.Weapon, 10)
-        },
-                new StoreMoneyItemData {
-            Gold = "5000",
-            GoldEx = "Gold",
-            Money = prices.TryGetValue((GachaType.Weapon, 10), out var pW30) ? pW30.num.ToString() : "-",
-            Icon = proIconTex,
-            OnClick = () => _ = OnClickGacha(GachaType.Weapon, 10)
-        },
-    };
-
-        _moneyList.SetItems(items);
-    }
-
-    #endregion
-
-    #region Hamster Helpers
-
+    /// <summary>
+    /// ÇÜ½ºÅÍ ÅØ½ºÆ® ¼³Á¤ ÇÔ¼ö
+    /// </summary>
+    /// <param name="text">Ç¥½ÃÇÒ ÅØ½ºÆ®</param>
     public void SetHamsterText(string text)
     {
         if (_hamsterText == null) return;
+
         _hamsterText.text = text;
+
+        // ÇÜ½ºÅÍ ÅØ½ºÆ® Ç¥½Ã ¾Ö´Ï¸ŞÀÌ¼Ç
         StartCoroutine(AnimateHamsterText(_hamsterText));
     }
 
+    /// <summary>
+    /// ÇÜ½ºÅÍ ÅØ½ºÆ® ¾Ö´Ï¸ŞÀÌ¼Ç
+    /// </summary>
     private IEnumerator AnimateHamsterText(Label textLabel)
     {
+        // ½ÃÀÛ »óÅÂ
         textLabel.style.opacity = 0;
         textLabel.style.translate = new StyleTranslate(new Translate(0, 10f, 0));
 
         float duration = 0.4f;
         float elapsed = 0f;
+
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
             float easedT = EaseInOutQuad(t);
+
             textLabel.style.opacity = easedT;
             textLabel.style.translate = new StyleTranslate(new Translate(0, 10f * (1 - easedT), 0));
+
             yield return null;
         }
+
+        // ÃÖÁ¾ »óÅÂ È®½ÇÈ÷ ¼³Á¤
         textLabel.style.opacity = 1;
         textLabel.style.translate = new StyleTranslate(new Translate(0, 0, 0));
     }
 
-    #endregion
+   
 
-    #region Result Popup Helpers
-
+    /// <summary>
+    /// Popup È°¼ºÈ­ ¼³Á¤
+    /// </summary>
     private void SetPopupVisibility(bool isVisible)
     {
         if (_popup == null || _isPopupVisible == isVisible) return;
 
-        // ì—ëŸ¬ íŒì—…ê³¼ ìƒí˜¸ë°°ì œ
-        if (isVisible) SetErrorPopupVisibility(false);
-
         _isPopupVisible = isVisible;
 
+        // ÆË¾÷ È¿°úÀ½ Àç»ı
         if (_popupSound != null && _audioSource != null)
+        {
             _audioSource.PlayOneShot(_popupSound);
+        }
 
-        SetHamsterText(isVisible ? _hamsterMessages[Random.Range(1, _hamsterMessages.Length)] : _hamsterMessages[0]);
-        _popup.style.display = isVisible ? DisplayStyle.Flex : DisplayStyle.None;
-
-        // ë‹«í ë•Œ ìŠ¬ë¡¯ ì• ë‹ˆ ì •ë¦¬
-        if (!isVisible)
-            StopAllSlotFx();
-    }
-
-    public void ClosePopup() => SetPopupVisibility(false);
-
-    #endregion
-
-    #region Error Popup Helpers
-
-    private void SetErrorPopupVisibility(bool isVisible)
-    {
-        if (_errorPopup == null || _isErrorPopupVisible == isVisible) return;
-
-        // ê²°ê³¼ íŒì—…ê³¼ ìƒí˜¸ë°°ì œ
-        if (isVisible) SetPopupVisibility(false);
-
-        _isErrorPopupVisible = isVisible;
-
-        if (_popupSound != null && _audioSource != null && isVisible)
-            _audioSource.PlayOneShot(_popupSound);
-
-        // í•´ì¹­í„° í…ìŠ¤íŠ¸ëŠ” ì—ëŸ¬ì¼ ë•ŒëŠ” ê³ ì • ë©˜íŠ¸ë¡œ ì „í™˜
-        if (isVisible) SetHamsterText("ë¬¸ì œê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤.");
-        else SetHamsterText(_hamsterMessages[0]);
-
-        _errorPopup.style.display = isVisible ? DisplayStyle.Flex : DisplayStyle.None;
-
-        // ì—ëŸ¬ íŒì—… í‘œì‹œ ì‹œì—ë„ ìŠ¬ë¡¯ ì• ë‹ˆ ì •ë¦¬
+        // ÆË¾÷ÀÌ º¸ÀÌ¸é ÇÜ½ºÅÍ ¸Ş½ÃÁö º¯°æ
         if (isVisible)
-            StopAllSlotFx();
-    }
-
-    public void ShowErrorPopup(string msg)
-    {
-        HideAllSlots();                  // ê²°ê³¼ ìŠ¬ë¡¯ ìˆ¨ê¹€
-        if (_errorTxt != null) _errorTxt.text = string.IsNullOrEmpty(msg) ? "ê°€ì± ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤." : msg;
-        SetErrorPopupVisibility(true);
-    }
-
-    public void CloseErrorPopup() => SetErrorPopupVisibility(false);
-
-    #endregion
-
-    #region CloudCode (CallGacha)
-
-    private async Task<GachaResult> CallGacha(GachaType type, int num)
-    {
-        try
         {
-            var args = new Dictionary<string, object> {
-                { "gachaType", type.ToString() },
-                { "gachaNum",  num }
-            };
-
-            var result = await CloudCodeService.Instance
-                .CallModuleEndpointAsync<GachaResult>("PurchaseProcessor", "ProcessGacha", args);
-
-            if (!result.Success)
-            {
-                Debug.LogWarning($"[Gacha] ì‹¤íŒ¨: {result.Message}");
-                return result;
-            }
-
-            // ì„±ê³µ ì‹œ ë¡œì»¬ ë°˜ì˜
-            _gameData.dia = result.RemainDia;
-            PlayerBroker.OnDiaSet();
-
-            if (type == GachaType.Weapon)
-            {
-                foreach (var id in result.Items)
-                {
-                    if (string.IsNullOrWhiteSpace(id)) continue;
-                    if (_gameData.weaponCount.ContainsKey(id)) _gameData.weaponCount[id]++;
-                    else _gameData.weaponCount[id] = 1;
-                    PlayerBroker.OnWeaponCountSet?.Invoke(id, _gameData.weaponCount[id]);
-                }
-            }
-            else if (type == GachaType.Costume)
-            {
-                foreach (var id in result.Items)
-                {
-                    if (string.IsNullOrWhiteSpace(id)) continue;
-                    if (!_gameData.ownedCostumes.Contains(id)) _gameData.ownedCostumes.Add(id);
-                }
-            }
-
-            return result;
+            SetHamsterText(_hamsterMessages[Random.Range(1, _hamsterMessages.Length)]);
         }
-        catch (Exception e)
+        else
         {
-            Debug.LogWarning($"[Gacha] ì˜ˆì™¸: {e.Message}");
-            return new GachaResult
-            {
-                Success = false,
-                Message = "ì„œë²„ í†µì‹ ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.",
-                Items = new List<string>(),
-                RemainDia = _gameData.dia
-            };
+            SetHamsterText(_hamsterMessages[0]);
         }
+
+        StartCoroutine(AniPopup(isVisible));  // ¾Ö´Ï¸ŞÀÌ¼Ç ½ÃÀÛ
     }
 
-    #endregion
-
-    #region Click Handler
-
-    private void BuildWeaponUidIndexIfNeeded()
+    /// <summary>
+    /// Å¬¸¯ÀÌ ÆË¾÷ ¿ÜºÎ¿¡¼­ ¹ß»ıÇßÀ» °æ¿ì ÆË¾÷À» ´İ´Â ÇÔ¼ö
+    /// </summary>
+    public void ClosePopup()
     {
-        if (_weaponByUid != null) return;
-        _weaponByUid = _weaponDatas?
-            .Where(w => w != null && !string.IsNullOrEmpty(w.UID))
-            .ToDictionary(w => w.UID, w => w) ?? new Dictionary<string, WeaponData>();
+        SetPopupVisibility(false);
     }
 
-    private async Task OnClickGacha(GachaType type, int num)
+    /// <summary>
+    /// ¹«±âµé »Ì¾Æ¼­ UI ±×¸®±â
+    /// </summary>
+    public void DrawMultipleWeapons(int count)
     {
-        if (_isProcessing) return;
-        _isProcessing = true;
-        SetButtonsEnabled(false);
-
-        try
+        // »Ì±â È¿°úÀ½ Àç»ı
+        if (_drawSound != null && _audioSource != null)
         {
-            if (_drawSound != null && _audioSource != null)
-                _audioSource.PlayOneShot(_drawSound);
+            _audioSource.PlayOneShot(_drawSound);
+        }
 
-            SetHamsterText("ëŒë¦¬ëŠ” ì¤‘...");
-            var result = await CallGacha(type, num);
+        // ÃÊ±âÈ­
+        ClearGrid();
 
-            if (result == null || !result.Success)
+        // »Ì±â
+        List<WeaponData> drawnWeapons = _gachaSystem.DrawItems(count);
+
+        // ÀúÀåµÈ ¹«±âµ¥ÀÌÅÍµé
+        // ÀÌ°Å °¡Á®´Ù°¡ Ãß°¡ÇØ¼­ ¾²¸é µÇ´Âµğ
+
+        //var gameData = StartBroker.GetGameData();
+        //var gameData = StartBroker.GetGameData();
+       // _weaponCount = gameData.weaponCount;
+        //PlayerBroker.OnWeaponCountSet += OnWeaponCountSet;
+
+        _weaponSaveDatas = drawnWeapons;
+
+        // ÇÜ½ºÅÍ ÅØ½ºÆ® ¾÷µ¥ÀÌÆ® - »Ì±â ÈÄ ¹İÀÀ
+        if (drawnWeapons.Count > 0)
+        {
+            bool hasRare = drawnWeapons.Exists(weapon => weapon.WeaponRarity >= Rarity.Rare);
+            if (hasRare)
             {
-                ShowErrorPopup(result?.Message ?? "ì•Œ ìˆ˜ ì—†ëŠ” ì˜¤ë¥˜ê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤.");
-                return;
+                SetHamsterText("¿Í¾Æ! ");
+
             }
-
-            if (type == GachaType.Weapon)
+            else
             {
-                BuildWeaponUidIndexIfNeeded();
-                var list = new List<WeaponData>();
-                foreach (var id in result.Items)
-                {
-                    if (!string.IsNullOrWhiteSpace(id) && _weaponByUid.TryGetValue(id, out var w))
-                        list.Add(w);
-                    else
-                        Debug.LogWarning($"[Gacha] UID ë§¤í•‘ ì‹¤íŒ¨: '{id}'");
-                }
-
-                _weaponSaveDatas = list;
-                SetPopupVisibility(true);
-                UpdateWeaponGridUI(list);
-                UpdateLog(list);
-            }
-            else // Costume
-            {
-                var list = result.Items
-                    .Select(id => CostumeManager.Instance.AllCostumeDatas.FirstOrDefault(c => c.Uid == id))
-                    .Where(c => c != null).ToList();
-
-                SetPopupVisibility(true);
-                UpdateCostumeGridUI(list);
+                SetHamsterText("¹«±â°¡ ³ª¿Ô¾î¿ä! ´ÙÀ½¿¡´Â ´õ ÁÁÀº ¹«±â°¡ ³ª¿Ã°Å¿¡¿ä!");
             }
         }
-        catch (Exception e)
-        {
-            Debug.LogError(e);
-            ShowErrorPopup("ì•Œ ìˆ˜ ì—†ëŠ” ì˜¤ë¥˜ê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤.");
-        }
-        finally
-        {
-            _isProcessing = false;
-            SetButtonsEnabled(true);
-        }
+
+        //±×¸®±â
+        UpdateWeaponGridUI(drawnWeapons);
+        UpdateLog(drawnWeapons);
     }
 
-#if UNITY_EDITOR
-    [ContextMenu("GachaTest/Weapon x1")] public async void GachaTest_Weapon_1() => await OnClickGacha(GachaType.Weapon, 1);
-    [ContextMenu("GachaTest/Weapon x10")] public async void GachaTest_Weapon_10() => await OnClickGacha(GachaType.Weapon, 10);
-    [ContextMenu("GachaTest/Costume x1")] public async void GachaTest_Costume_1() => await OnClickGacha(GachaType.Costume, 1);
-    [ContextMenu("GachaTest/Costume x10")] public async void GachaTest_Costume_10() => await OnClickGacha(GachaType.Costume, 10);
-#endif
+   
 
-    #endregion
+    //private void OnWeaponCountSet(object weaponDataObj, int count)
+    //{
+    //    WeaponData weaponData = (WeaponData)weaponDataObj;
+    //    VisualElement slot = _slotDict[weaponData.UID];
+    //    ProgressBar countProgressBar = slot.Q<ProgressBar>("CountProgressBar");
+    //    int level = _weaponLevel[weaponData.UID];
+    //    int price = PriceManager.instance.GetRequireWeaponCount(weaponData.WeaponRarity, level);
+    //    countProgressBar.title = $"{count}/{price}";
+    //    countProgressBar.value = count / (float)price;
+    //}
 
-    #region UI Update
-
-    private void SetButtonsEnabled(bool on)
-    {
-        _weapon1Btn?.SetEnabled(on);
-        _weapon10Btn?.SetEnabled(on);
-        _costume1Btn?.SetEnabled(on);
-        _costume10Btn?.SetEnabled(on);
-    }
-
+    /// <summary>
+    /// ¹«±âµé UI ±×¸®±â
+    /// </summary>
     private void UpdateWeaponGridUI(List<WeaponData> weapons)
     {
-        if (weapons == null || _slots.Count == 0) return;
+        if (weapons == null) return;
 
-        int n = Mathf.Min(weapons.Count, _slots.Count);
-        for (int i = 0; i < _slots.Count; i++)
+        SetPopupVisibility(true);
+
+        int cnt = 0;
+        float delayInterval = 0.2f;  // ½½·Ô °£ ÅÒ (ÃÊ) - ´õ ºü¸£°Ô Á¶Á¤
+
+        foreach (var weapon in weapons)
         {
-            var slot = _slots[i];
-            if (i < n)
+            // _storeSlotItemÀ» Å¬·Ğ
+            var slot = _storeSlotItem.CloneTree();
+
+            // ¾ÆÀÌÄÜ°ú ÀÌ¸§À» ¾÷µ¥ÀÌÆ®
+            var icon = slot.Q<VisualElement>("WeaponIcon");
+            var weaponImageTexture = weapon.WeaponSprite.texture;
+            var weaponImageStyle = new StyleBackground(weaponImageTexture);
+            icon.style.backgroundImage = weaponImageStyle;
+
+            var nameLabel = slot.Q<Label>("WeaponName");
+            if (nameLabel != null)
             {
-                var weapon = weapons[i];
-
-                var icon = slot.Q<VisualElement>("WeaponIcon");
-                var iconparent = slot.Q<VisualElement>("WeaponIconParent");
-                if (icon != null && weapon.WeaponSprite != null)
-                {
-                    icon.style.backgroundImage = new StyleBackground(weapon.WeaponSprite.texture);
-                }
-
-                ApplyRarityOffsetTo(iconparent, weapon.WeaponRarity);
-
-                var nameLabel = slot.Q<Label>("WeaponName");
-                if (nameLabel != null)
-                {
-                    nameLabel.text = WrapText(weapon.WeaponName, 7);
-                    nameLabel.style.height = 30;
-                }
-
-                slot.style.display = DisplayStyle.Flex;
+                nameLabel.text = $"{weapon.WeaponName}";
             }
+
+            // ¹«±â Èñ±Íµµ¿¡ µû¶ó ½½·Ô ½ºÅ¸ÀÏ º¯°æ
+            SetSlotRarityStyle(slot, weapon.WeaponRarity);
+
+            // ±×¸®µå¿¡ Ãß°¡
+            if (cnt >= STORE_COLUMN)
+                _rowVE2.Add(slot);
             else
-            {
-                slot.style.display = DisplayStyle.None;
-            }
+                _rowVE1.Add(slot);
+
+            // ½½·Ô ¾Ö´Ï¸ŞÀÌ¼Ç ½ÃÀÛ (½½·Ô¸¶´Ù Áö¿¬ ½Ã°£ Áõ°¡)
+            StartCoroutine(AniSlotDelay(slot, cnt * delayInterval));
+
+            cnt++;
+        }
+    }
+
+    /// <summary>
+    /// Èñ±Íµµ¿¡ µû¶ó ½½·Ô ½ºÅ¸ÀÏ ¼³Á¤
+    /// </summary>
+    private void SetSlotRarityStyle(VisualElement slot, Rarity rarity)
+    {
+        if (slot == null) return;
+
+        var background = slot.Q<VisualElement>("Background");
+        if (background == null) return;
+
+        // Èñ±Íµµ¿¡ µû¸¥ »ö»ó ¼³Á¤
+        Color rarityColor;
+
+        switch (rarity)
+        {
+            case Rarity.Common:
+                rarityColor = new Color(0.7f, 0.7f, 0.7f); // È¸»ö
+                break;
+            case Rarity.Uncommon:
+                rarityColor = new Color(0.2f, 0.8f, 0.2f); // ÃÊ·Ï»ö
+                break;
+            case Rarity.Rare:
+                rarityColor = new Color(0.2f, 0.4f, 1f); // ÆÄ¶õ»ö
+                break;
+            case Rarity.Unique:
+                rarityColor = new Color(0.8f, 0.2f, 0.8f); // º¸¶ó»ö
+                break;
+            case Rarity.Legendary:
+                rarityColor = new Color(1f, 0.8f, 0f); // ±İ»ö
+                break;
+            default:
+                rarityColor = Color.white;
+                break;
         }
 
-        // ë“±ì¥ FX ì‹¤í–‰
-        PlayAppearFxForVisibleSlots();
+        background.style.backgroundColor = rarityColor;
+
+        // Àü¼³ µî±ŞÀÏ °æ¿ì ºû³ª´Â È¿°ú Ãß°¡
+        if (rarity == Rarity.Legendary)
+        {
+            StartCoroutine(GlowingEffect(background));
+        }
     }
 
-    private void UpdateCostumeGridUI(List<CostumeItem> costumes)
+    /// <summary>
+    /// Àü¼³ µî±Ş ¾ÆÀÌÅÛ¿ë ºû³ª´Â È¿°ú
+    /// </summary>
+    private IEnumerator GlowingEffect(VisualElement element)
     {
-        HideAllSlots();
-        if (costumes == null || _slots.Count == 0) return;
+        if (element == null) yield break;
 
-        int n = Mathf.Min(costumes.Count, _slots.Count);
-        for (int i = 0; i < _slots.Count; i++)
+        float minOpacity = 0.7f;
+        float maxOpacity = 1f;
+        float glowDuration = 1.5f;
+
+        while (true)
         {
-            var slot = _slots[i];
-            if (i < n)
+            // ¹à¾ÆÁö±â
+            float elapsedTime = 0f;
+            while (elapsedTime < glowDuration / 2)
             {
-                var costume = costumes[i];
-                var icon = slot.Q<VisualElement>("WeaponIcon");
-                if (icon != null && costume.IconTexture != null)
-                {
+                elapsedTime += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsedTime / (glowDuration / 2));
+                float easedT = EaseInOutSine(t);
 
-                    icon.style.backgroundImage = new StyleBackground(costume.IconTexture);
+                element.style.opacity = Mathf.Lerp(minOpacity, maxOpacity, easedT);
 
-                }
-
-                var nameLabel = slot.Q<Label>("WeaponName");
-                if (nameLabel != null)
-                {
-                    nameLabel.text = WrapText(costume.Name, 7);
-                    nameLabel.style.height = 30;
-                }
-
-                slot.style.display = DisplayStyle.Flex;
+                yield return null;
             }
-            else
+
+            // ¾îµÎ¿öÁö±â
+            elapsedTime = 0f;
+            while (elapsedTime < glowDuration / 2)
             {
-                slot.style.display = DisplayStyle.None;
+                elapsedTime += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsedTime / (glowDuration / 2));
+                float easedT = EaseInOutSine(t);
+
+                element.style.opacity = Mathf.Lerp(maxOpacity, minOpacity, easedT);
+
+                yield return null;
             }
         }
-
-        // ë“±ì¥ FX ì‹¤í–‰
-        PlayAppearFxForVisibleSlots();
     }
 
-    private void HideAllSlots()
+    // ±×¸®µå ÃÊ±âÈ­
+    private void ClearGrid()
     {
-        StopAllSlotFx();
-        foreach (var s in _slots) s.style.display = DisplayStyle.None;
+        _rowVE1?.Clear();
+        _rowVE2?.Clear();
     }
 
+    // ·Î±×»Ì±â
     private void UpdateLog(List<WeaponData> weapons)
     {
-        string log = "ë½‘ê¸° ê²°ê³¼:\n";
-        foreach (var weapon in weapons) log += $"- {weapon.name} ({weapon.WeaponRarity})\n";
+        string log = "»Ì±â °á°ú:";
+        foreach (var weapon in weapons)
+        {
+            log += $"- {weapon.name} ({weapon.WeaponRarity})\n";
+        }
         Debug.Log(log);
     }
 
-    #endregion
-
-    #region Slot Appear/Bob FX
-
-    private IEnumerable<VisualElement> VisibleSlots()
-    {
-        foreach (var s in _slots)
-        {
-            if (s.resolvedStyle.display == DisplayStyle.Flex) yield return s;
-        }
-    }
-
-    // ë“±ê¸‰ë³„ offsetë‹¤ë¥´ê²Œ ì£¼ê¸°
-    private void ApplyRarityOffsetTo(VisualElement target, Rarity rarity, string moverName = "RT_SlotBg")
-    {
-
-        if (target == null) return;
-
-        var mover = target.Q<VisualElement>(moverName);
-        if (mover == null) return;
-
-        Vector2 off = _rarityOffsetMap.TryGetValue(rarity, out var v) ? v : Vector2.zero;
-        mover.style.top = off.x;
-        mover.style.left = off.y;
-    }
-
-
-    private void PlayAppearFxForVisibleSlots()
-    {
-        StopAllSlotFx(); // ì¤‘ë³µ ë°©ì§€
-        int idx = 0;
-        foreach (var slot in VisibleSlots())
-        {
-            float delay = _appearStagger * idx++;
-            StartCoroutine(Co_AppearThenBob(slot, delay));
-        }
-    }
-
-    private IEnumerator Co_AppearThenBob(VisualElement slot, float delay)
-    {
-        if (delay > 0f) yield return new WaitForSeconds(delay);
-
-        // ì´ˆê¸° ìƒíƒœ
-        slot.style.opacity = 0f;
-        slot.style.scale = new StyleScale(new Vector3(0.92f, 0.92f, 1f));
-        slot.style.translate = new StyleTranslate(new Translate(0, 8f, 0));
-
-        float t = 0f;
-        while (t < _appearDuration)
-        {
-            t += Time.deltaTime;
-            float e = _popEase.Evaluate(Mathf.Clamp01(t / _appearDuration));
-
-            float y = Mathf.Lerp(8f, 0f, e);
-            float s = Mathf.Lerp(0.92f, _popScale, e);
-            slot.style.opacity = e;
-            slot.style.scale = new StyleScale(new Vector3(s, s, 1f));
-            slot.style.translate = new StyleTranslate(new Translate(0, y, 0));
-            yield return null;
-        }
-
-        // ìŠ¤ëƒ…
-        slot.style.scale = new StyleScale(Vector3.one);
-        slot.style.translate = new StyleTranslate(new Translate(0, 0, 0));
-
-        // ë³´ë¸Œ ì‹œì‘
-        if (!_bobRoutines.ContainsKey(slot))
-        {
-            _bobRoutines[slot] = StartCoroutine(Co_Bob(slot, Random.Range(0f, 1f)));
-        }
-    }
-
-    private IEnumerator Co_Bob(VisualElement slot, float phaseOffset)
-    {
-        float t = phaseOffset * _bobPeriod;
-        while (true)
-        {
-            t += Time.deltaTime;
-            float phase = (t % _bobPeriod) / _bobPeriod;
-            float y = Mathf.Sin(phase * Mathf.PI * 2f) * _bobAmplitude;
-            slot.style.translate = new StyleTranslate(new Translate(0, y, 0));
-            yield return null;
-        }
-    }
-
-    private void StopAllSlotFx()
-    {
-        foreach (var kv in _bobRoutines.ToList())
-        {
-            if (kv.Value != null) StopCoroutine(kv.Value);
-        }
-        _bobRoutines.Clear();
-
-        foreach (var s in _slots)
-        {
-            s.style.opacity = 1f;
-            s.style.scale = new StyleScale(Vector3.one);
-            s.style.translate = new StyleTranslate(new Translate(0, 0, 0));
-        }
-    }
-
-    #endregion
-
-    #region Utils (í…ìŠ¤íŠ¸ ì¤„ë°”ê¿ˆ/ì• ë‹ˆ/ì´ì§•)
-
-    private string WrapText(string text, int maxCharsPerLine)
-    {
-        if (string.IsNullOrEmpty(text)) return text;
-        var words = text.Split(' ');
-        var sb = new System.Text.StringBuilder();
-        int current = 0;
-        foreach (var w in words)
-        {
-            if (current + w.Length <= maxCharsPerLine)
-            {
-                if (current > 0) { sb.Append(" "); current++; }
-                sb.Append(w); current += w.Length;
-            }
-            else
-            {
-                sb.Append("\n"); sb.Append(w); current = w.Length;
-            }
-        }
-        return sb.ToString();
-    }
-
-    // ê¸°ì¡´ ë‹¨ì¼ ìŠ¬ë¡¯ íŒ ì• ë‹ˆ(ë¯¸ì‚¬ìš© ê°€ëŠ¥). ìœ ì§€í•´ë‘ .
+    /// <summary>
+    /// ½½·Ô ¾Ö´Ï¸ŞÀÌ¼Ç
+    /// </summary>
+    /// <param name="slot"></param>
+    /// <returns></returns>
     private IEnumerator AnimateSlot(VisualElement slot)
     {
-        float duration = 0.5f, elapsed = 0f;
-        Vector3 start = new(0.5f, 0.5f, 1f), end = new(1f, 1f, 1f);
-        slot.style.scale = new StyleScale(start);
+        float duration = 0.5f;  // ¾Ö´Ï¸ŞÀÌ¼Ç ½Ã°£
+        float elapsed = 0f;
+
+        Vector3 startScale = new Vector3(0.5f, 0.5f, 1f);  // ÀÛ°Ô ½ÃÀÛ
+        Vector3 endScale = new Vector3(1f, 1f, 1f);         // ¿ø·¡ Å©±â
+
+        // ÃÊ±â »óÅÂ ¼³Á¤
+        slot.style.scale = new StyleScale(startScale);
         slot.style.opacity = 0f;
 
+        // ¾Ö´Ï¸ŞÀÌ¼Ç ·çÇÁ
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
-            float e = EaseInOutCubic(t);
-            slot.style.scale = new StyleScale(Vector3.Lerp(start, end, e));
-            slot.style.opacity = Mathf.Lerp(0f, 1f, e);
+            float easedT = EaseInOutCubic(t);
+
+            // ½ºÄÉÀÏ ¹× Åõ¸íµµ Á¶Á¤
+            slot.style.scale = new StyleScale(Vector3.Lerp(startScale, endScale, easedT));
+            slot.style.opacity = Mathf.Lerp(0f, 1f, easedT);
+
             yield return null;
         }
-        slot.style.scale = new StyleScale(end);
+
+        // ¾Ö´Ï¸ŞÀÌ¼Ç ¿Ï·á ÈÄ ÃÖÁ¾ »óÅÂ ¼³Á¤
+        slot.style.scale = new StyleScale(endScale);
         slot.style.opacity = 1f;
     }
 
-    private float EaseInOutCubic(float t) => t < 0.5f ? 4f * t * t * t : 1f - Mathf.Pow(-2f * t + 2f, 3f) / 2f;
-    private float EaseInOutQuad(float t) => t < 0.5f ? 2f * t * t : 1f - Mathf.Pow(-2f * t + 2f, 2f) / 2f;
+    /// <summary>
+    /// µô·¹ÀÌ ÁØ ¾Ö´Ï¸ŞÀÌ¼Ç
+    /// </summary>
+    private IEnumerator AniSlotDelay(VisualElement slot, float delay)
+    {
+        // ÅÒÀ» ¸ÕÀú ´ë±â
+        yield return new WaitForSeconds(delay);
 
-    #endregion
+        // ¾Ö´Ï¸ŞÀÌ¼Ç ½ÃÀÛ
+        float duration = 0.5f;
+        float elapsed = 0f;
+        Vector3 startScale = new Vector3(0.5f, 0.5f, 1f);
+        Vector3 endScale = new Vector3(1.1f, 1.1f, 1f);  // ¾à°£ ´õ Å©°Ô È®´ë
+        Vector3 finalScale = new Vector3(1f, 1f, 1f);    // ÃÖÁ¾ Å©±â
+
+        slot.style.scale = new StyleScale(startScale);
+        slot.style.opacity = 0f;
+        slot.style.rotate = new StyleRotate(new Rotate(-5f)); // »ìÂ¦ Æ²¾îÁø »óÅÂ·Î ½ÃÀÛ
+
+        // Ã¹ ¹øÂ° ´Ü°è: È®´ë + È¸Àü º¹±¸
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            float easedT = EaseOutBack(t); // Æ¨±â´Â È¿°ú
+
+            // ½ºÄÉÀÏ ¹× Åõ¸íµµ Á¶Á¤
+            slot.style.scale = new StyleScale(Vector3.Lerp(startScale, endScale, easedT));
+            slot.style.opacity = Mathf.Lerp(0f, 1f, easedT);
+            slot.style.rotate = new StyleRotate(new Rotate(Mathf.Lerp(-5f, 0f, easedT)));
+
+            yield return null;
+        }
+
+        // µÎ ¹øÂ° ´Ü°è: Á¤»ó Å©±â·Î µ¹¾Æ°¡±â
+        elapsed = 0f;
+        float secondDuration = 0.2f;
+
+        while (elapsed < secondDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / secondDuration);
+            float easedT = EaseInOutCubic(t);
+
+            // ½ºÄÉÀÏ Á¶Á¤
+            slot.style.scale = new StyleScale(Vector3.Lerp(endScale, finalScale, easedT));
+
+            yield return null;
+        }
+
+        // ÃÖÁ¾ »óÅÂ ¼³Á¤
+        slot.style.scale = new StyleScale(finalScale);
+        slot.style.opacity = 1f;
+        slot.style.rotate = new StyleRotate(new Rotate(0f));
+    }
+
+
+    /// <summary>
+    /// ÆË¾÷¿¡ ¾Ö´Ï¸ŞÀÌ¼Ç È¿°ú Àû¿ë
+    /// </summary>
+    private IEnumerator AniPopup(bool isVisible)
+    {
+        float duration = 0.4f;  // ¾Ö´Ï¸ŞÀÌ¼Ç ½Ã°£ (ÃÊ)
+        float elapsed = 0f;
+
+        // ÃÊ±â°ª°ú ¸ñÇ¥°ª ¼³Á¤
+        Vector3 startScale = isVisible ? new Vector3(0.7f, 0.7f, 1f) : new Vector3(1f, 1f, 1f);
+        Vector3 endScale = isVisible ? new Vector3(1f, 1f, 1f) : new Vector3(0.7f, 0.7f, 1f);
+        float startY = isVisible ? 30f : 0f;
+        float endY = isVisible ? 0f : 30f;
+
+        // ÆË¾÷ Ç¥½Ã ½ºÅ¸ÀÏ º¯°æ
+        if (isVisible) _popup.style.display = DisplayStyle.Flex;
+
+        // ¾Ö´Ï¸ŞÀÌ¼Ç ·çÇÁ
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            float easedT = isVisible ? EaseOutBack(t) : EaseInCubic(t); // ³ªÅ¸³¯ ¶§´Â Æ¨±â´Â È¿°ú, »ç¶óÁú ¶§´Â ºÎµå·´°Ô
+
+            // ½ºÄÉÀÏ Á¶Á¤
+            _popup.style.scale = new StyleScale(Vector3.Lerp(startScale, endScale, easedT));
+
+            // YÃà ÀÌµ¿ (À§¿¡¼­ ¾Æ·¡·Î ³»·Á¿À´Â È¿°ú)
+            _popup.style.translate = new StyleTranslate(new Translate(0, Mathf.Lerp(startY, endY, easedT), 0));
+
+            // Åõ¸íµµ Á¶Á¤
+            _popup.style.opacity = Mathf.Lerp(isVisible ? 0f : 1f, isVisible ? 1f : 0f, easedT);
+
+            yield return null;
+        }
+
+        // ¾Ö´Ï¸ŞÀÌ¼Ç ¿Ï·á ÈÄ Ã³¸®
+        if (!isVisible) _popup.style.display = DisplayStyle.None;
+
+        // ÃÖÁ¾ »óÅÂ È®½ÇÈ÷ ¼³Á¤
+        if (isVisible)
+        {
+            _popup.style.scale = new StyleScale(endScale);
+            _popup.style.translate = new StyleTranslate(new Translate(0, 0, 0));
+            _popup.style.opacity = 1f;
+        }
+    }
+
+    /// <summary>
+    /// ÀÌÂ¡ ÇÔ¼ö (ºÎµå·¯¿î ¾Ö´Ï¸ŞÀÌ¼Ç °î¼±)
+    /// </summary>
+    private float EaseInOutCubic(float t)
+    {
+        return t < 0.5f ? 4f * t * t * t : 1f - Mathf.Pow(-2f * t + 2f, 3f) / 2f;
+    }
+
+    /// <summary>
+    /// Ease In Cubic - Ã³À½¿¡´Â ÃµÃµÈ÷, ³ªÁß¿¡´Â ºü¸£°Ô
+    /// </summary>
+    private float EaseInCubic(float t)
+    {
+        return t * t * t;
+    }
+
+    /// <summary>
+    /// Ease Out Cubic - Ã³À½¿¡´Â ºü¸£°Ô, ³ªÁß¿¡´Â ÃµÃµÈ÷
+    /// </summary>
+    private float EaseOutCubic(float t)
+    {
+        return 1 - Mathf.Pow(1 - t, 3);
+    }
+
+    /// <summary>
+    /// Ease Out Back - ¾à°£ Áö³ªÄ¡´Ù°¡ µ¹¾Æ¿À´Â È¿°ú
+    /// </summary>
+    private float EaseOutBack(float t)
+    {
+        float c1 = 1.70158f;
+        float c3 = c1 + 1;
+        return 1 + c3 * Mathf.Pow(t - 1, 3) + c1 * Mathf.Pow(t - 1, 2);
+    }
+
+    /// <summary>
+    /// Ease In Out Quad - 2Â÷ °î¼±À¸·Î ºÎµå·´°Ô
+    /// </summary>
+    private float EaseInOutQuad(float t)
+    {
+        return t < 0.5f ? 2f * t * t : 1f - Mathf.Pow(-2f * t + 2f, 2f) / 2f;
+    }
+
+    /// <summary>
+    /// Ease Out Quad - 2Â÷ °î¼±À¸·Î »¡¸® ÁÙ¾îµå´Â
+    /// </summary>
+    private float EaseOutQuad(float t)
+    {
+        return 1 - (1 - t) * (1 - t);
+    }
+
+    /// <summary>
+    /// Ease In Quad - 2Â÷ °î¼±À¸·Î ÃµÃµÈ÷ ½ÃÀÛÇÏ´Â
+    /// </summary>
+    private float EaseInQuad(float t)
+    {
+        return t * t;
+    }
+
+    /// <summary>
+    /// Ease In Out Sine - »çÀÎ ÇÔ¼ö º£ÀÌ½º ºÎµå·¯¿î ÀüÈ¯
+    /// </summary>
+    private float EaseInOutSine(float t)
+    {
+        return -(Mathf.Cos(Mathf.PI * t) - 1) / 2;
+    }
+    private void RequestGacha(GachaType type, int num)
+    {
+        // ¿äÃ»¸¸ º¸³¿ (°á°ú´Â OnRequestGacha ÀÌº¥Æ®¿¡¼­ Ã³¸®)
+        PlayerBroker.RequestGacha(type, num);
+    }
+    private void OnGachaResult(GachaResult result)
+    {
+        if (!result.Success)
+        {
+            Debug.LogWarning($"[Store] »Ì±â ½ÇÆĞ: {result.Message}");
+            return;
+        }
+
+        Debug.Log($"[Store] {result.Type} »Ì±â ¼º°ø => {string.Join(", ", result.Items)}");
+
+        _gameData.dia = result.RemainDia;
+        PlayerBroker.OnDiaSet();
+
+        switch (result.Type)
+        {
+            case GachaType.Weapon:
+                OnWeaponGacha(result);
+                break;
+            case GachaType.Costume:
+                OnCostumeGacha(result);
+                break;
+        }
+        NetworkBroker.SaveServerData();
+    }
+    private void OnCostumeGacha(GachaResult result)
+    {
+        if (result == null || result.Items == null) return;
+
+        foreach (var costumeId in result.Items)
+        {
+            if (string.IsNullOrWhiteSpace(costumeId))
+                continue;
+
+            if (!_gameData.ownedCostumes.Contains(costumeId))
+                _gameData.ownedCostumes.Add(costumeId);
+        }
+    }
+
+    private void OnWeaponGacha(GachaResult result)
+    {
+        foreach (var weaponId in result.Items)
+        {
+            if (string.IsNullOrWhiteSpace(weaponId))
+                continue;
+
+            if (_gameData.weaponCount.ContainsKey(weaponId))
+                _gameData.weaponCount[weaponId]++;
+            else
+                _gameData.weaponCount[weaponId] = 1;
+
+            PlayerBroker.OnWeaponCountSet?.Invoke(weaponId, _gameData.weaponCount[weaponId]);
+        }
+    }
+    private void RequestCurrency(string productId)
+    {
+        PlayerBroker.PurchaseCurrency(productId);//°áÀç ·ÎÁ÷Àº PurchaseManager·Î ¿¬°á, °á°ú¿¡ ´ëÇÑ Äİ¹é OnurrencyReulst
+    }
+
+    private void OnCurrencyResult(PurchaseResult result)
+    {
+        if (!result.Success)
+        {
+            Debug.LogWarning($"[Store] ±¸¸Å ½ÇÆĞ: {result.Message}");
+            return;
+        }
+
+        // ¼­¹ö¿¡¼­ ¹İÈ¯µÈ CurrencyResult
+        CurrencyResult currency = result.Currency;
+
+        if (currency == null || currency.Value <= 0 || currency.Resource == Resource.None)
+        {
+            Debug.LogWarning("[Store] ¼­¹ö ÀÀ´äÀÌ ¿Ã¹Ù¸£Áö ¾Ê½À´Ï´Ù.");
+            return;
+        }
+
+        Debug.Log($"[Store] ±¸¸Å ¼º°ø: {currency.Resource} +{currency.Value}");
+
+        // ·ÎÄÃ GameData ¹İ¿µ
+        switch (currency.Resource)
+        {
+            case Resource.Dia:
+                _gameData.dia += currency.Value;
+                PlayerBroker.OnDiaSet();
+                break;
+            case Resource.Clover:
+                _gameData.clover += currency.Value;
+                PlayerBroker.OnCloverSet();
+                break;
+            default:
+                Debug.LogWarning($"[Store] Ã³¸®µÇÁö ¾ÊÀº Resource Å¸ÀÔ: {currency.Resource}");
+                break;
+        }
+        NetworkBroker.SaveServerData();
+    }
+
+
+
+#if UNITY_EDITOR
+    // ---- Weapon Å×½ºÆ® ----
+    [ContextMenu("GachaTest/Weapon x1")]
+    public void GachaTest_Weapon_1() => RequestGacha(GachaType.Weapon, 1);
+
+    [ContextMenu("GachaTest/Weapon x10")]
+    public void GachaTest_Weapon_10() => RequestGacha(GachaType.Weapon, 10);
+
+    // ---- Costume Å×½ºÆ® ----
+    [ContextMenu("GachaTest/Costume x1")]
+    public void GachaTest_Costume_1() => RequestGacha(GachaType.Costume, 1);
+
+    [ContextMenu("GachaTest/Costume x10")]
+    public void GachaTest_Costume_10() => RequestGacha(GachaType.Costume, 10);
+    // ---- Currency ±¸¸Å Å×½ºÆ® ----
+    [ContextMenu("CurrencyTest/Dia_0")]
+    public void CurrencyTest_Dia0() => RequestCurrency(ProductIds.DIA_0);
+
+    [ContextMenu("CurrencyTest/Dia_1")]
+    public void CurrencyTest_Dia1() => RequestCurrency(ProductIds.DIA_1);
+#endif
+
+
 }

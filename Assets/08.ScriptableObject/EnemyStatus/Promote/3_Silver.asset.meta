@@ -1,12 +1,8 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/08.ScriptableObject/EnemyStatus/Promote/3_Silver.asset.meta
 guid: 1d14cfc55b7af1543aa9748e0a7933d8
 NativeFormatImporter:
-========
-guid: 2f5fdd06c58c1664eab35027ca8e3a05
-AssemblyDefinitionImporter:
->>>>>>>> yumi:Assets/02.Script/Particle/Particle.asmdef.meta
   externalObjects: {}
+  mainObjectFileID: 11400000
   userData: 
   assetBundleName: 
   assetBundleVariant: 

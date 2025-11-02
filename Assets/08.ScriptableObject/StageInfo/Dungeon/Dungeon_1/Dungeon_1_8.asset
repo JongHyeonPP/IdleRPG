@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: Dungeon_1_8
   m_EditorClassIdentifier: 
   stageNum: 0
-  stageName: "\uAC80\uC740 \uACF0 \uCC98\uCE58"
-  background: 1
+  stageName: "\uB300\uC9C0 \uACE8\uB7A8 \uCC98\uCE58 \uC758\uB8B0 \u2160"
+  background: 10
+  recommendLevel: 0
   enemy_0: {fileID: 0}
   enemy_1: {fileID: 0}
-  boss: {fileID: 11400000, guid: 50c8b070b2a6c784e8ed23837b63c5fb, type: 2}
+  boss: {fileID: 11400000, guid: 96b05b9d4337f134ba929c82a87f4854, type: 2}
   enemyNum: 0
   enemyStatusFromStage:
     maxHp: 10
@@ -38,3 +39,5 @@ MonoBehaviour:
   adventrueInfo:
     adventureIndex_0: 1
     adventureIndex_1: 8
+    imageLeft: -15
+    imageScale: 1.5
