@@ -30,9 +30,8 @@ public class PlayerBarUI : MonoBehaviour, IGeneralUI
     private void SetBarPosition()
     {
         VisualElement vertical = GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("Vertical");
-        MonoBehaviour controller = (MonoBehaviour)BattleBroker.GetPlayerController?.Invoke();
-        if (controller == null)
-            return;
+        MonoBehaviour controller = (MonoBehaviour)BattleBroker.GetPlayerController();
+
         // 월드 좌표를 스크린 좌표로 변환
         Vector3 screenPoint = Camera.main.WorldToScreenPoint(controller.transform.position);
 
@@ -66,10 +65,10 @@ public class PlayerBarUI : MonoBehaviour, IGeneralUI
     {
         _hpBar.value = ratio;
         _delayedBar.value = ratio;
-        if (_delayedHpCoroutine != null)
-            StopCoroutine(_delayedHpCoroutine);
+        //if (_delayedHpCoroutine != null)
+        //    StopCoroutine(_delayedHpCoroutine);
 
-        _delayedHpCoroutine = StartCoroutine(AnimateDelayedHpBar(ratio));
+        //_delayedHpCoroutine = StartCoroutine(AnimateDelayedHpBar(ratio));
     }
 
     private IEnumerator AnimateDelayedHpBar(float targetRatio)

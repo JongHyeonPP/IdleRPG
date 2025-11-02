@@ -13,8 +13,7 @@ MonoBehaviour:
   m_Name: Dungeon_0_6
   m_EditorClassIdentifier: 
   stageNum: 0
-  stageName: "\uC0C8\uB1CC\uB2F9\uD55C \uD638\uC704\uBCD1 \uCC98\uCE58 \uC758\uB8B0
-    \u2160"
+  stageName: "\uAC08\uC0C9 \uB3FC\uC9C0 \uCC98\uCE58"
   background: 9
   recommendLevel: 0
   enemy_0: {fileID: 0}
