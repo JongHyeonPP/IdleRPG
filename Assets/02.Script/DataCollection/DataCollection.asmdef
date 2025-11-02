@@ -1,11 +1,8 @@
 {
-    "name": "EventControl",
+    "name": "DataCollection",
     "rootNamespace": "",
     "references": [
-        "GUID:61689c4e0b9d39d46afcb27de82ad45a",
-        "GUID:c1f3ac597cd61d64e994b094eaa1fa95",
-        "GUID:b8a73df1859a4ac40b858c9405b3375c",
-        "GUID:78b91661590982649902888d656db98d"
+        "GUID:c1f3ac597cd61d64e994b094eaa1fa95"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

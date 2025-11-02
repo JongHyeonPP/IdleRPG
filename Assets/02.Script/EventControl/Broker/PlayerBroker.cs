@@ -5,7 +5,7 @@ using UnityEngine;
 public static class PlayerBroker
 {
     //PlayerController에서 능력치 얻어옴 - PlayerController
-    
+
     //골드로 올린 스탯 적용
     public static Action<StatusType, int> OnGoldStatusLevelSet;
     //스탯 포인트로 올린 스탯 적용
@@ -45,7 +45,7 @@ public static class PlayerBroker
     public static Action<int, int, (StatusType, Rarity)?> OnCompanionPromoteEffectSet;// CompanionIndex, EffectIndex, Value
     public static Action<int, int, int> OnCompanionPromoteTechSet;//CompanionIndex, TechIndex, Value
     public static Action<int> CompanionTechRenderSet;
-    public static Action<float, (int,int)> CompanionTechRgbSet;//Value, (Row, Column)
+    public static Action<float, (int, int)> CompanionTechRgbSet;//Value, (Row, Column)
 
     public static Action<AppearanceData> OnPlayerAppearanceChange;
     public static Action<int, AppearanceData> OnCompanionAppearanceChange;//int : CompanionIndex
@@ -55,7 +55,9 @@ public static class PlayerBroker
     public static Func<Rarity, Sprite> GetFragmentSprite;
 
     public static Action<string> PurchaseCurrency;
+    public static Action<PurchaseResult> OnPurchaseCurrency;
     public static Action<GachaType, int> RequestGacha;
+    public static Action<GachaResult> OnRequestGacha;
     public static Action UpdatePromoteLockState;
 
     public static Action StartScrollTimer;
