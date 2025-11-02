@@ -68,17 +68,17 @@ public class EquipedSkillUI : MonoBehaviour, IGeneralUI
 
             for (int i = 0; i < equipedSkillArr.Length; i++)
             {
-                if (equipedSkillArr[i] == currentSkillData.uid)
+                if (equipedSkillArr[i] == currentSkillData.name)
                 {
                     IconArr[i].style.display = DisplayStyle.None;
                     equipedSkillArr[i] = null;
                 }
             }
 
-            PlayerBroker.OnSkillChanged(currentSkillData.uid, index);
+            PlayerBroker.OnSkillChanged(currentSkillData.name, index);
             IconArr[index].style.display = DisplayStyle.Flex;
-            IconArr[index].style.backgroundImage = new(SkillManager.instance.GetSkillData(currentSkillData.uid).iconSprite);
-            equipedSkillArr[index] = currentSkillData.uid;
+            IconArr[index].style.backgroundImage = new(SkillManager.instance.GetSkillData(currentSkillData.name).iconSprite);
+            equipedSkillArr[index] = currentSkillData.name;
 
             _skillUI.ToggleEquipBackground(false);
             isEquipActive = false;

@@ -1,175 +1,276 @@
-using EnumCollection;
+ï»¿using EnumCollection;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
 using Unity.Services.RemoteConfig;
 using System.Data;
-public class ReinForceManager: MonoBehaviour
+
+[Serializable]
+public class ReinforceRule
 {
-    private Dictionary<StatusType, string> reinforcePriceGold;
-    private Dictionary<StatusType, string> reinforceValueGold;
-    private Dictionary<StatusType, string> reinforceValueStatus;
+    public float baseInc;
+    public int step;
+    public float stepInc;
+    public float startValue;
+}
+
+public class ReinForceManager : MonoBehaviour
+{
+    private Dictionary<StatusType, ReinforceRule> reinforcePriceGold;
+    private Dictionary<StatusType, ReinforceRule> reinforceValueGold;
+    private Dictionary<StatusType, ReinforceRule> reinforceValueStatus;
 
     private GameData _gameData;
     public static ReinForceManager instance;
-
 
     private void Awake()
     {
         instance = this;
     }
+
     private void Start()
     {
         _gameData = StartBroker.GetGameData();
         LoadFormulas();
     }
-    public int GetGoldStatus(int level, StatusType statusType)
+
+    // --------------------------------------------------------
+    // ìŠ¤íƒ¯ ê³„ì‚°
+    // --------------------------------------------------------
+    public float GetGoldStatus(int level, StatusType statusType)
     {
-        //½ºÅÈ¸¶´Ù ¹ë·ù°¡ ´Þ¶ó¾ßÇÔ.
         switch (statusType)
         {
             case StatusType.MaxHp:
-                return 100;
-            case StatusType.Power:
-                if (level <= 1000)
                 {
-                    return level + 10;
+                    int baseInc = 4;
+                    int step = 100;
+                    int total = 100;
+                    for (int i = 1; i <= level; i++)
+                    {
+                        int inc = baseInc + (i / step);
+                        total += inc;
+                    }
+                    return total;
                 }
-                else if (level <= 5000)
-                {
-                    return 1000 + (level - 1000) * 2 + 10;
-                }
-                else
-                {
-                    return 1000 + (5000 - 1000) * 2 + (level - 5000) * 3 + 10;
-                }
-            case StatusType.HpRecover:
-                return 0;
-            case StatusType.Critical:
-                return 0;
-            case StatusType.CriticalDamage:
-                return 0;
-        }
-        return 0;
-    }
-    public int GetStatPointStatus(int level, StatusType statusType)
-    {
-        //½ºÅÈ¸¶´Ù ¹ë·ù°¡ ´Þ¶ó¾ßÇÔ.
-        switch (statusType)
-        {
-            case StatusType.MaxHp:
-                return 0;
-            case StatusType.Power:
-                if (level <= 1000)
-                {
-                    return level;
-                }
-                else if (level <= 5000)
-                {
-                    return 1000 + (level - 1000) * 2;
-                }
-                else
-                {
-                    return 1000 + (5000 - 1000) * 2 + (level - 5000) * 3;
-                }
-            case StatusType.HpRecover:
-                return 0;
-            case StatusType.Critical:
-                return 0;
-            case StatusType.CriticalDamage:
-                return 0;
-            case StatusType.GoldAscend:
-                return 0;
-        }
-        return 0;
-    }
-    public string GetGoldStatRiseText(int currentValue, int nextValue, StatusType stat)
-    {
-        //ÅØ½ºÆ®¸¦ ¾ò´Â ±â´É ¼öÇà
-        switch (stat)
-        {
-            case StatusType.Power:
-            case StatusType.MaxHp:
-            case StatusType.HpRecover:
-                return $"{currentValue} -> {nextValue}";
-            case StatusType.CriticalDamage:
-                return $"{currentValue * 100f}% -> {nextValue * 100f}%";
-            case StatusType.Critical:
-                return $"{currentValue * 100f:F1}% -> {nextValue * 100f:F1}%";
-            default:
-                return "N/A";
-        }
-    }
-    public string GetStatPointStatRiseText(int currentValue, int nextValue, StatusType stat)
-    {
-        //ÅØ½ºÆ®¸¦ ¾ò´Â ±â´É ¼öÇà
-        switch (stat)
-        {
-            case StatusType.Power:
-                return $"°ø°Ý·Â +{currentValue} -> +{nextValue}";
-            case StatusType.MaxHp:
-                return $"Ã¼·Â +{currentValue} -> +{nextValue}";
-            case StatusType.HpRecover:
-                return $"Ã¼·Â È¸º¹·® +{currentValue} -> +{nextValue}";
-            case StatusType.CriticalDamage:
-                return $"Ä¡¸íÅ¸ °ø°Ý·Â +{currentValue * 100f}% -> +{nextValue * 100f}%";
-            case StatusType.GoldAscend:
-                return $"°ñµå È¹µæ·® +{currentValue * 100f:F1}% -> +{nextValue * 100f:F1}%";
-            default:
-                return "N/A";
-        }
-    }
 
-    public int GetReinforcePriceGold(StatusType type, int level)
-    => (int)Math.Round(GetValueFromFormulaDict(reinforcePriceGold, type, level, "ReinforcePriceGold"));
-    public float GetReinforceValueGold(StatusType type, int level)
-        => GetValueFromFormulaDict(reinforceValueGold, type, level, "ReinforceValueGold");
+            case StatusType.Power:
+                {
+                    int baseInc = 1;
+                    int step = 100;
+                    int total = 10;
+                    for (int i = 1; i <= level; i++)
+                    {
+                        int inc = baseInc + (i / step);
+                        total += inc;
+                    }
+                    return total;
+                }
 
-    public float GetReinforceValueStatus(StatusType type, int level)
-        => GetValueFromFormulaDict(reinforceValueStatus, type, level, "ReinforceValueStatus");
+            case StatusType.HpRecover:
+                {
+                    float baseInc = 0.2f;
+                    int step = 200;
+                    float total = 1f;
+                    for (int i = 1; i <= level; i++)
+                    {
+                        float inc = baseInc + ((i / step) * 0.1f);
+                        total += inc;
+                    }
+                    return total;
+                }
 
-    private void LoadFormulas()
-    {
-        string reinforcePriceGoldStr = RemoteConfigService.Instance.appConfig.GetJson("REINFORCE_PRICE_GOLD", "None");
-        string reinforceValueGoldStr = RemoteConfigService.Instance.appConfig.GetJson("REINFORCE_VALUE_GOLD", "None");
-        string reinforceValueStatusStr = RemoteConfigService.Instance.appConfig.GetJson("REINFORCE_VALUE_STATUS", "None");
-        reinforcePriceGold = UtilityManager.GetParsedFormularDict<StatusType>(reinforcePriceGoldStr);
-        reinforceValueGold = UtilityManager.GetParsedFormularDict<StatusType>(reinforceValueGoldStr);
-        reinforceValueStatus = UtilityManager.GetParsedFormularDict<StatusType>(reinforceValueStatusStr);
-    }
-    private float GetValueFromFormulaDict(Dictionary<StatusType, string> dict, StatusType type, int level, string context)
-    {
-        if (dict.TryGetValue(type, out var formula))
-        {
-            string replaced = formula.Replace("{level}", level.ToString());
-            return Evaluate(replaced);
+            case StatusType.Critical:
+                {
+                    float baseInc = 0.001f;
+                    float total = 0f;
+                    for (int i = 1; i <= level; i++)
+                    {
+                        total += baseInc;
+                    }
+                    return total;
+                }
+
+            case StatusType.CriticalDamage:
+                {
+                    float baseInc = 0.01f;
+                    int step = 100;
+                    float total = 1.2f;
+                    for (int i = 1; i <= level; i++)
+                    {
+                        float inc = baseInc + ((i / step) * 0.01f);
+                        total += inc;
+                    }
+                    return total;
+                }
         }
-        Debug.LogWarning($"[{context}] °ø½Ä ¾øÀ½: {type}");
+
         return 0f;
     }
 
-
-
-    private float Evaluate(string expression)
+    // --------------------------------------------------------
+    // ìŠ¤íƒ¯ í¬ì¸íŠ¸ ê¸°ë°˜ ì„±ìž¥ ê³„ì‚°
+    // --------------------------------------------------------
+    public float GetStatPointStatus(int level, StatusType statusType)
     {
-        try
+        switch (statusType)
         {
-            var table = new DataTable();
-            var result = table.Compute(expression, null);
-            return Convert.ToSingle(result);
+            case StatusType.MaxHp:
+                {
+                    int baseInc = 5;
+                    int step = 200;
+                    int stepInc = 2;
+                    int total = 0;
+                    for (int i = 1; i <= level; i++)
+                    {
+                        int inc = baseInc + (i / step) * stepInc;
+                        total += inc;
+                    }
+                    return total;
+                }
+
+            case StatusType.Power:
+                {
+                    int baseInc = 1;
+                    int step = 100;
+                    int stepInc = 1;
+                    int total = 0;
+                    for (int i = 1; i <= level; i++)
+                    {
+                        int inc = baseInc + (i / step) * stepInc;
+                        total += inc;
+                    }
+                    return total;
+                }
+
+            case StatusType.HpRecover:
+                {
+                    int baseInc = 1;
+                    int step = 300;
+                    int stepInc = 1;
+                    int total = 0;
+                    for (int i = 1; i <= level; i++)
+                    {
+                        int inc = baseInc + (i / step) * stepInc;
+                        total += inc;
+                    }
+                    return total;
+                }
+
+            case StatusType.Critical:
+                {
+                    int baseInc = 1;
+                    return baseInc * level;
+                }
+
+            case StatusType.CriticalDamage:
+                {
+                    float baseInc = 0.01f;
+                    int step = 100;
+                    float total = 0f;
+                    for (int i = 1; i <= level; i++)
+                    {
+                        float inc = baseInc + ((i / step) * 0.01f);
+                        total += inc;
+                    }
+                    return total;
+                }
+
+            case StatusType.GoldAscend:
+                {
+                    float baseInc = 0.01f;
+                    float total = 0f;
+                    for (int i = 1; i <= level; i++)
+                    {
+                        total += baseInc;
+                    }
+                    return total;
+                }
         }
-        catch (Exception e)
-        {
-            Debug.LogError($"¼ö½Ä °è»ê ¿À·ù: {expression}, ¿¹¿Ü: {e.Message}");
-            return 0f;
-        }
+
+        return 0;
     }
+
+    // --------------------------------------------------------
+    // ê°•í™” ê°€ê²© / ê°•í™” ìˆ˜ì¹˜ ê³„ì‚°
+    // --------------------------------------------------------
+    public int GetReinforcePriceGold(StatusType type, int level)
+    {
+        if (!reinforcePriceGold.TryGetValue(type, out var rule))
+        {
+            Debug.LogWarning($"[ReinforcePriceGold] {type} ë°ì´í„° ì—†ìŒ");
+            return 0;
+        }
+
+        float total = rule.startValue;
+        for (int i = 1; i <= level; i++)
+        {
+            float inc = rule.baseInc + (i / (float)rule.step) * rule.stepInc;
+            total += inc;
+        }
+        return Mathf.RoundToInt(total);
+    }
+
+    public float GetReinforceValueGold(StatusType type, int level)
+    {
+        if (!reinforceValueGold.TryGetValue(type, out var rule))
+        {
+            Debug.LogWarning($"[ReinforceValueGold] {type} ë°ì´í„° ì—†ìŒ");
+            return 0;
+        }
+
+        float total = rule.startValue;
+        for (int i = 1; i <= level; i++)
+        {
+            float inc = rule.baseInc + (i / (float)rule.step) * rule.stepInc;
+            total += inc;
+        }
+        return total;
+    }
+
+    public float GetReinforceValueStatus(StatusType type, int level)
+    {
+        if (!reinforceValueStatus.TryGetValue(type, out var rule))
+        {
+            Debug.LogWarning($"[ReinforceValueStatus] {type} ë°ì´í„° ì—†ìŒ");
+            return 0;
+        }
+
+        float total = rule.startValue;
+        for (int i = 1; i <= level; i++)
+        {
+            float inc = rule.baseInc + (i / (float)rule.step) * rule.stepInc;
+            total += inc;
+        }
+        return total;
+    }
+
+    // --------------------------------------------------------
+    // âœ… Remote Configì—ì„œ JSON ë¡œë“œ
+    // --------------------------------------------------------
+    private void LoadFormulas()
+    {
+        string priceStr = RemoteConfigService.Instance.appConfig.GetJson("REINFORCE_PRICE_GOLD", "None");
+        string valueGoldStr = RemoteConfigService.Instance.appConfig.GetJson("REINFORCE_VALUE_GOLD", "None");
+        string valueStatusStr = RemoteConfigService.Instance.appConfig.GetJson("REINFORCE_VALUE_STATUS", "None");
+
+        reinforcePriceGold = JsonConvert.DeserializeObject<Dictionary<StatusType, ReinforceRule>>(priceStr);
+        reinforceValueGold = JsonConvert.DeserializeObject<Dictionary<StatusType, ReinforceRule>>(valueGoldStr);
+        reinforceValueStatus = JsonConvert.DeserializeObject<Dictionary<StatusType, ReinforceRule>>(valueStatusStr);
+    }
+
+    // --------------------------------------------------------
+    // âœ… í…ŒìŠ¤íŠ¸
+    // --------------------------------------------------------
     public StatusType testStatusType;
     public int testValue;
+
     [ContextMenu("Test")]
     public void Test()
     {
-       Debug.Log("Power : " + GetReinforceValueStatus(testStatusType, testValue));
+        float price = GetReinforcePriceGold(testStatusType, testValue);
+        float value = GetReinforceValueStatus(testStatusType, testValue);
+        Debug.Log($"[{testStatusType}] Lv.{testValue} â†’ ê°€ê²©: {price}, ìˆ˜ì¹˜: {value}");
     }
 }

@@ -401,6 +401,8 @@ MonoBehaviour:
     adventureProgess: 000000000000000000000000000000000000000000000000000000000000000000000000
     dungeonProgress: 000000000000000000000000
     gachaThreshold: 0
+    lastAttendanceTime: 
+    lastAttendanceNum: 0
     statPoint: 0
 --- !u!4 &1048825963
 Transform:
@@ -668,6 +670,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _startManager: {fileID: 1624992623}
+  fadeDuration: 1
+  holdDuration: 0.4
+  minAlpha: 0
+  maxAlpha: 1
 --- !u!1 &1473486413
 GameObject:
   m_ObjectHideFlags: 0

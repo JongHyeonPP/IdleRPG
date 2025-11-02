@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("OfflineTimer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+57c7bec04eec7fe530f1833a7ee1f34e14d1848b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cb6c7d19cd50a4c09f0757b1d16c9ad4c938c4f9")]
 [assembly: System.Reflection.AssemblyProductAttribute("OfflineTimer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("OfflineTimer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

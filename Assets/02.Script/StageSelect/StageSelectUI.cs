@@ -17,8 +17,10 @@ public class StageSelectUI : MonoBehaviour, IGeneralUI
     private VisualElement backgroundImage;
 
     //[SerializeField] private Sprite[] backgroundSprites;
+    private GameData _gameData;
     private void Awake()
     {
+        _gameData = StartBroker.GetGameData();
         // Background 배열 초기화
         _draggableLV = GetComponent<FlexibleListView>();
         backgrounds = (Background[])Enum.GetValues(typeof(Background));
@@ -32,7 +34,7 @@ public class StageSelectUI : MonoBehaviour, IGeneralUI
         exitButton.RegisterCallback<ClickEvent>(evt=>OnExitButtonClick());
         leftButton.RegisterCallback<ClickEvent>(evt=>OnLeftButtonClick());
         rightButton.RegisterCallback<ClickEvent>(evt=>OnRightButtonClick());
-        BattleBroker.RefreshStageSelectUI += OnNextStage;
+        UIBroker.RefreshStageSelectUI += OnNextStage;
         BattleBroker.OnStageChange += ()=>_draggableLV.listView.Rebuild();
     }
 
@@ -125,9 +127,9 @@ public class StageSelectUI : MonoBehaviour, IGeneralUI
 
         _draggableLV.ChangeItems(items);
     }
-    public void OnNextStage(int stage)
+    public void OnNextStage()
     {
-        ChangePage((stage - 1) / NUMINPAGE);
+        ChangePage(( _gameData.currentStageNum - 1) / NUMINPAGE);
     }
     public void OnBattle()
     {

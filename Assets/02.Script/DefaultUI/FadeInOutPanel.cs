@@ -16,6 +16,7 @@ public class FadeInOutPanel : MonoBehaviour
         // 초기값: 완전 투명한 검정
         _background.style.backgroundColor = new StyleColor(new Color(0, 0, 0, 0));
         _background.style.display = DisplayStyle.None;
+        FadeInOut(0f,0f,1f);
     }
 
     private void FadeInOut(float fadeInDuration, float stayDuration, float fadeOutDuration)

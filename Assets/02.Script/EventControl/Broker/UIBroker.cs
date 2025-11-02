@@ -22,4 +22,8 @@ public static class UIBroker
     public static Action<bool, float> ActiveBlurredBackground;
 
     public static Action<int> ChangeMenu;//Index
+
+    public static Action<bool> ActivePowerSaveCount;
+
+    public static Action RefreshStageSelectUI;
 }

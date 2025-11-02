@@ -43,7 +43,7 @@ public class CompanionManager : MonoBehaviour
         foreach (SkillData skillData in companionArr[companionIndex].companionStatus.companionSkillArr)
         {
             // 스킬 레벨이 없으면 0으로 취급
-            if (!_gameData.skillLevel.TryGetValue(skillData.uid, out int currentLevel))
+            if (!_gameData.skillLevel.TryGetValue(skillData.name, out int currentLevel))
                 currentLevel = 0;
 
             skillLevelSum += currentLevel;
