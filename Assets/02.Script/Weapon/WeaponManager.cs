@@ -63,7 +63,7 @@ public class WeaponManager : MonoBehaviour
         float powerIncrease = 0f;
         float critDamageIncrease = 0f;
         float critIncrease = 0f;
-
+        float attackSpeed =0f;
         switch (weaponData.WeaponRarity)
         {
             case Rarity.Common:
@@ -102,7 +102,7 @@ public class WeaponManager : MonoBehaviour
                 critIncrease = 3f * level;
                 break;
         }
-        weaponData.SetReinforcedStats(powerIncrease, critDamageIncrease, critIncrease);
+        weaponData.SetReinforcedStats(powerIncrease, critDamageIncrease, critIncrease, attackSpeed);
     }
     
 }

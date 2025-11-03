@@ -40,7 +40,10 @@ public class BattleManager : MonoBehaviour
     private readonly float _enemyPlayerDistance = 1.5f;
     private readonly float _bossPlayerDistance = 2f;
     private readonly int _enemyBundleNum = 10;
-
+    private bool _isKnockback=false;
+    private float _knockbackTimer = 0f;
+    private float _knockbackDuration = 0.25f;
+    private float _knockbackForce = 5f;
     private void Awake()
     {
         instance ??= this;
@@ -90,12 +93,71 @@ public class BattleManager : MonoBehaviour
 
     private void BattleLoop()
     {
+        var player = (PlayerController)BattleBroker.GetPlayerController();
+        if (player.playerKnockback || _isKnockback)
+            return;
+
         if (_controller.target != null)
             HandleTargetCase();
         else
             HandleNoTargetCase();
     }
+    //private void HandleTargetCase()
+    //{
+    //    float dist = Mathf.Abs(_controller.target.transform.position.x - _controller.transform.position.x);
+    //    float range = (_battleType == BattleType.Default) ? _enemyPlayerDistance : _bossPlayerDistance;
+    //    bool withinRange = dist < range;
 
+    //    if (withinRange && _isMove)
+    //    {
+    //        _controller.MoveState(false);
+    //        _controller.StartAttack();
+    //        BattleBroker.ControllCompanionMove?.Invoke(2);
+
+    //        float targetDist = Mathf.Abs(_controller.target.transform.position.x - _controller.transform.position.x);
+    //        if (targetDist < range)
+    //            _controller.target.StartAttack();
+
+    //        _isMove = false;
+    //    }
+    //    else if (!withinRange)
+    //    {
+    //        _controller.MoveState(true);
+    //        _isMove = true;
+    //        BattleBroker.ControllCompanionMove?.Invoke(1);
+    //    }
+    //}
+
+    //private void HandleNoTargetCase()
+    //{
+    //    if (_enemies == null || _currentTargetIndex >= _lastEnemyIndex)
+    //    {
+    //        _enemies = _battleType switch
+    //        {
+    //            BattleType.Default => MakeDefaultEnemies(),
+    //            BattleType.Boss or BattleType.CompanionTech or BattleType.Adventure or BattleType.Dungeon or BattleType.Promote => MakeBoss(),
+    //            _ => _enemies
+    //        };
+    //        _currentTargetIndex = 0;
+    //    }
+
+    //    while (_currentTargetIndex < _enemies.Length)
+    //    {
+    //        var target = _enemies[_currentTargetIndex];
+    //        if (target != null && !target.isDead)
+    //        {
+    //            _controller.target = target;
+    //            break;
+    //        }
+    //        _currentTargetIndex++;
+    //    }
+    //}
+    //private void MoveByPlayer()
+    //{
+    //    float playerSpeed = ((PlayerController)BattleBroker.GetPlayerController()).currentSpeed;
+    //    foreach (var mover in MediatorManager<IMoveByPlayer>.GetRegisteredObjects())
+    //        mover.MoveByPlayer(_isMove ? _defaultSpeed * playerSpeed * Time.fixedDeltaTime * Vector2.left : Vector3.zero);
+    //}
     private void HandleTargetCase()
     {
         float dist = _controller.target.transform.position.x - _controller.transform.position.x;
@@ -146,13 +208,43 @@ public class BattleManager : MonoBehaviour
             _currentTargetIndex++;
         }
     }
-
+    
     private void MoveByPlayer()
     {
-        float playerSpeed = ((PlayerController)BattleBroker.GetPlayerController()).currentSpeed;
+        var player = (PlayerController)BattleBroker.GetPlayerController();
+
+        if (player.playerKnockback && !_isKnockback)
+        {
+            _isKnockback = true;
+            _knockbackTimer = 0f;
+            player.playerKnockback = false;
+            _isMove = false;
+
+            if (_controller.target != null)
+                _controller.target = null;
+        }
+
+        if (_isKnockback)
+        {
+            _knockbackTimer += Time.fixedDeltaTime;
+            
+            foreach (var mover in MediatorManager<IMoveByPlayer>.GetRegisteredObjects())
+                mover.MoveByPlayer(Vector2.right * _knockbackForce * Time.fixedDeltaTime);
+
+            if (_knockbackTimer >= _knockbackDuration)
+            {
+                _isKnockback = false;
+                _knockbackTimer = 0f;
+                _isMove = true; 
+            }
+            return;
+        }
+
+        float playerSpeed = player.currentSpeed;
         foreach (var mover in MediatorManager<IMoveByPlayer>.GetRegisteredObjects())
             mover.MoveByPlayer(_isMove ? _defaultSpeed * playerSpeed * Time.fixedDeltaTime * Vector2.left : Vector3.zero);
     }
+   
 
     private void SetEvent()
     {

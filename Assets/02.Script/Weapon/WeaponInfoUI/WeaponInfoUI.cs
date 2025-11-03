@@ -1,6 +1,7 @@
 using EnumCollection;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static UnityEngine.GraphicsBuffer;
@@ -14,6 +15,8 @@ public class WeaponInfoUI : MonoBehaviour, IGeneralUI
     private Label _powerLabel;
     private Label _criticalDamageLabel;
     private Label _criticalLabel;
+    private Label _attackSpeedLabel;
+    private Label _effectLabel;
     private WeaponData _currentWeapon;
     private Button _reinforceButton;
     private Button _insufficientPanel;
@@ -41,6 +44,16 @@ public class WeaponInfoUI : MonoBehaviour, IGeneralUI
          {Rarity.Ancient,"고대" }
 
 };
+    private static readonly Dictionary<SkillType, string> WeaponEffect = new()
+{
+        {SkillType.AttBuff,"공격력 버프" },
+        {SkillType.DefBuff,"받는피해 10% 감소 버프" },
+        {SkillType.SpeedBuff,"공격속도 버프" },
+        {SkillType.Revive,"부활(보스 전투중 한번 죽으면 체력100%회복)" },
+        {SkillType.Invincible,"무적(3초지속,10초쿨타임)" },
+        {SkillType.Paralyzation,"무력화(보스 2초동안 무력화,5초 쿨타임" }
+};
+
     private void Awake()
     {
         _gameData = StartBroker.GetGameData();
@@ -59,6 +72,8 @@ public class WeaponInfoUI : MonoBehaviour, IGeneralUI
         _powerLabel = root.Q<Label>("Power");
         _criticalDamageLabel = root.Q<Label>("CriticalDamage");
         _criticalLabel = root.Q<Label>("Critical");
+        _attackSpeedLabel = root.Q<Label>("AttackSpeed");
+        _effectLabel = root.Q<Label>("Effect");
         var equipButton = root.Q<Button>("EquipButton");
         equipButton.clickable.clicked += () => OnEquipClick();
         _reinforceButton = root.Q<Button>("ReinforceButton");
@@ -151,11 +166,24 @@ public class WeaponInfoUI : MonoBehaviour, IGeneralUI
                 break;
         }
         int currentLevel = GetWeaponLevel(weaponData.UID);
-        var (currentPower, currentCritDmg, currentCrit) = weaponData.GetStats(currentLevel);
-        var (nextPower, nextCritDmg, nextCrit) = weaponData.GetStats(currentLevel + 1);
+        var (currentPower, currentCritDmg, currentCrit,currentAttackSpeed) = weaponData.GetStats(currentLevel);
+        var (nextPower, nextCritDmg, nextCrit,nextAttackSpeed) = weaponData.GetStats(currentLevel + 1);
         _powerLabel.text = $"공격력: {currentPower} → {nextPower}";
         _criticalDamageLabel.text = $"치명타 공격력: {currentCritDmg} → {nextCritDmg}";
         _criticalLabel.text = $"치명타 확률: {currentCrit} → {nextCrit}%";
+        _attackSpeedLabel.text = $"공격속도: {currentAttackSpeed} → {nextAttackSpeed}%";
+        if (weaponData._weaponEffects != null && weaponData._weaponEffects.Length > 0)
+        {
+            var effectStrings = weaponData._weaponEffects
+                .Where(e => WeaponEffect.ContainsKey(e.type)) 
+                .Select(e => WeaponEffect[e.type]); 
+
+            _effectLabel.text = "효과:\n" + string.Join("\n", effectStrings);
+        }
+        else
+        {
+            _effectLabel.text = "";
+        }
         WeaponManager.instance.SetWeaponIconToVe(weaponData, _weaponImage);
         _currentWeapon = weaponData;
     }
@@ -169,7 +197,7 @@ public class WeaponInfoUI : MonoBehaviour, IGeneralUI
             ShowInsufficientPanel();
             return;
         }
-        
+
         CreateSuccessEffect();
 
         _weaponCount[weaponID] -= requiredCount;
@@ -180,7 +208,7 @@ public class WeaponInfoUI : MonoBehaviour, IGeneralUI
         NetworkBroker.SaveServerData();
 
         ShowWeaponInfo(_currentWeapon);
-       
+        BattleBroker.OnWeaponLevelChanged?.Invoke(weaponID);
     }
     private IEnumerator HideInsufficientPanel(float delaySeconds)
     {

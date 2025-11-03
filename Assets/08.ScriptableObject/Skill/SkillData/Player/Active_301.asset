@@ -16,7 +16,8 @@ MonoBehaviour:
   uid: Player_301
   iconSprite: {fileID: -7190773895159608945, guid: 5f38a4c68398b944aa8e7bdf6f04dd22, type: 3}
   simple: 
-  complex: 
+  complex: "\uBC88\uAC1C\uC758 \uD798\uC744 \uC774\uC6A9\uD574 <value*2>%\uC758 \uACF5\uACA9\uB825\uC744
+    \uC99D\uAC00\uC2DC\uD0A8\uB2E4."
   rarity: 3
   isPlayerSkill: 1
   skillCoolType: 0

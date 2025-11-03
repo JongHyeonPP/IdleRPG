@@ -194,13 +194,47 @@ public class EnemyController : Attackable, IMoveByPlayer
     /// Attackable 기본 공격 루프를 오버라이드하여
     /// 간단히 주기적으로 데미지를 주는 형태로 구현
     /// </summary>
+    //protected override IEnumerator AttackLoop()
+    //{
+    //    if (target == null)
+    //        yield break;
+
+    //    while (true)
+    //    {
+    //        yield return new WaitForSeconds(attackTerm);
+
+    //        if (target == null || target.isDead)
+    //            yield break;
+
+    //        if (anim != null)
+    //            anim.SetTrigger("Attack");
+
+    //        BigInteger dmg = _status.Power;
+    //        target.ReceiveDamage(dmg);
+    //    }
+    //}
     protected override IEnumerator AttackLoop()
     {
         if (target == null)
             yield break;
 
+       
         while (true)
         {
+            if (target == null || target.isDead)
+                yield break;
+         
+            if (target is PlayerController p && p.playerKnockback)
+            {
+                yield break;
+            }
+
+            if (target.skillActive.TryGetValue(SkillType.Paralyzation, out bool isActive) && isActive)
+            {
+                yield return null;
+                continue;
+            }
+
             yield return new WaitForSeconds(attackTerm);
 
             if (target == null || target.isDead)
@@ -213,6 +247,7 @@ public class EnemyController : Attackable, IMoveByPlayer
             target.ReceiveDamage(dmg);
         }
     }
+   
     public override BigInteger GetMaxHp()
     {
         return _status != null ? _status.MaxHp : hp;

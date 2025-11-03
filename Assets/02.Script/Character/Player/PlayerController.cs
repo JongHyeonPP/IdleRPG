@@ -4,6 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
 using UnityEngine;
+using Vector2 = UnityEngine.Vector2;
+using Vector3 = UnityEngine.Vector3;
 
 /// <summary>
 /// 플레이어 캐릭터 컨트롤러
@@ -18,7 +20,8 @@ public class PlayerController : Attackable
     private GameData _gameData;                     // 게임 데이터 참조
     private WeaponController weaponController;
 
-    private bool _isAbleRevive = false;
+    private bool _isAbleRevive = true;
+    public bool playerKnockback = false;
     private void Awake()
     {
         _gameData = StartBroker.GetGameData();      // 게임 데이터 초기화
@@ -98,6 +101,7 @@ public class PlayerController : Attackable
         hp = _status.MaxHp;
         _mp = 0;
         StopAttack();
+        _isAbleRevive = GetPWValue(SkillType.Revive) > 0;
     }
 
     /// <summary>
@@ -204,13 +208,14 @@ public class PlayerController : Attackable
     /// </summary>
     protected override void OnDead()
     {
-        if (false)
+        if (GetPWValue(SkillType.Revive)>0&&_isAbleRevive)
         {
             Debug.Log("부활");
             hp = _status.MaxHp;
             isDead = false;
             PlayerBroker.OnPlayerHpChanged(1f);
-           
+            _isAbleRevive = false;
+            anim.SetTrigger("Revive");
             return;
         }
         StopAttack();
@@ -317,4 +322,5 @@ public class PlayerController : Attackable
     {
         return weaponController.weaponData;
     }
+    
 }
