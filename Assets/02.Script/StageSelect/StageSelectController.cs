@@ -104,7 +104,6 @@ public class StageSelectController : MonoBehaviour, LVItemController
                     float targetPos = Mathf.Max(0, itemHeight * index - visibleHeight / 2f);
 
                     scrollView.scrollOffset = new Vector2(0, targetPos);
-                    Debug.Log($"[StageSelectController] Auto-scroll applied once (index={index}, targetPos={targetPos})");
                 }).StartingIn(0);
             }).StartingIn(0);
         }

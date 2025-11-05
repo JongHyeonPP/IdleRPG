@@ -12,7 +12,8 @@ namespace EnumCollection
         Damage,
         //Passive
         AttBuff, SpeedBuff,DefBuff,
-        healOnHit, DoubleHit, expPlus
+        HealOnHit, DoubleHit, ExpPlus,
+        GoldPlus
     }
     public enum SkillTarget
     {

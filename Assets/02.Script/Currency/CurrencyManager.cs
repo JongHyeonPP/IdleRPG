@@ -232,6 +232,7 @@ public class CurrencyManager : MonoBehaviour
 
     private void GetGoldByDrop(int value)
     {
+        
         _gameData.gold += value;
         PlayerBroker.OnGoldSet();
         NetworkBroker.QueueResourceReport(value, null, Resource.Gold, Source.Battle);

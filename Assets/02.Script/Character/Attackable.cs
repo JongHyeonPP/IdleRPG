@@ -367,6 +367,12 @@ public abstract class Attackable : MonoBehaviour
                     }
                 }
             }
+            switch (type)
+            {
+                case SkillType.GoldPlus:
+                    sum += ((PlayerStatus)pc.GetStatus()).GoldAscend;
+                    break;
+            }
         }
         return sum;
     }

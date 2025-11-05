@@ -19,32 +19,35 @@ namespace ClientVerification.Verification
                 return false;
             }
 
+            float goldAscendBonus = 0f;
+            if (serverData.statLevel_StatPoint.TryGetValue(StatusType.GoldAscend, out int goldAscendLevel))
+            {
+                goldAscendBonus = ServerReinforceCalculator.GetReinforceValueGold(StatusType.GoldAscend, goldAscendLevel, reinforceValueStatus);
+            }
+
             switch (r.Resource)
             {
                 case Resource.Gold:
-                    return ValidateFormula(goldFormula, "GOLD", r, out reason);
+                    var valid = ValidateFormula(goldFormula, "GOLD", r, out reason);
+                    if (valid && goldAscendBonus > 0)
+                    {
+                        var expected = Convert.ToInt32(r.Value / (1 + goldAscendBonus));
+                        if (expected > r.Value)
+                        {
+                            reason = $"Gold gain too high (expected ≤ {expected}, got {r.Value})";
+                            return false;
+                        }
+                    }
+                    return valid;
 
                 case Resource.Exp:
-                    var ok = ValidateFormula(expFormula, "EXP", r, out reason);
-                    if (ok) ProcessLevelUp();
-                    return ok;
-
-                case Resource.Fragment:
-                    return ValidateFragment(r, out reason);
-
-                case Resource.Weapon:
-                    return ValidateWeapon(r, out reason);
-
-                case Resource.Dia:
-                case Resource.Clover:
-                case Resource.Scroll:
-                    return SimpleApply(r, out reason);
+                    return ValidateFormula(expFormula, "EXP", r, out reason);
 
                 default:
-                    reason = $"Unsupported battle resource {r.Resource}";
-                    return false;
+                    return SimpleApply(r, out reason);
             }
         }
+
 
         private bool AdventureCase(ResourceReport r, out string reason)
         {

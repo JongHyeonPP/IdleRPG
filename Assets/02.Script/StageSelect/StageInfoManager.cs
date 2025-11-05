@@ -436,11 +436,11 @@ public class StageInfoManager : MonoBehaviour
             if (stage == null) continue;
             int num = stage.stageNum;
 
-            // ✅ 보너스 세팅
+            // 보너스 세팅
             stage.goldBonusValue = goldBonusStages.Contains(num) ? goldBonusValue : 0f;
             stage.expBonusValue = expBonusStages.Contains(num) ? expBonusValue : 0f;
 
-            // ✅ 기본 드랍 데이터는 CurrencyManager 계산 방식과 동일
+            // 기본 드랍 데이터는 CurrencyManager 계산 방식과 동일
             int baseGold = EvaluateFormula(goldFormula, num);
             int baseExp = EvaluateFormula(expFormula, num);
             var frag = CurrencyManager.instance.GetBaseFragmentValue(num);
@@ -449,8 +449,6 @@ public class StageInfoManager : MonoBehaviour
             stage.fragmentDropInfo = frag.count > 0 ? frag : (Rarity.Common, 0);
             stage.weaponDropId = string.IsNullOrEmpty(weaponId) ? null : weaponId;
         }
-
-        Debug.Log("[StageInfoManager] Drop info fully initialized from Remote Config (no reflection).");
     }
 
 

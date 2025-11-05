@@ -66,7 +66,6 @@ public class GameManager : MonoBehaviour
             _gameData = new()
             {
                 currentStageNum = 1,
-                maxStageNum = 1,//스토리 복구되면 없애야함.
                 level = 1
             };
         }

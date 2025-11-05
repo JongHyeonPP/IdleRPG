@@ -108,7 +108,10 @@ public class DungeonInfoUI : MonoBehaviour, IGeneralUI
         root.style.display = DisplayStyle.None;
     }
 
-    public void OnStory() { }
+    public void OnStory() 
+    {
+        root.style.display = DisplayStyle.None;
+    }
     public void OnBoss() { }
 
     /// <summary>
