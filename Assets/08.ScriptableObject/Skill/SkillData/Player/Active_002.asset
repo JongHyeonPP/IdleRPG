@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: Active_002
   m_EditorClassIdentifier: 
   skillName: PowerSlash
-  uid: Player_002
   iconSprite: {fileID: 6275201323515650913, guid: 6127843d056ede34da2fd9fc776a0290, type: 3}
   simple: 
   complex: "\uAC15\uD558\uAC8C \uC801\uC744 \uAC08\uB77C <value*100>%\uC758 \uD53C\uD574\uB97C
@@ -47,3 +46,7 @@ MonoBehaviour:
   isAnim: 1
   visualEffectPrefab: {fileID: 3773831035383405738, guid: 9312922d16a655449945ee4637eafa20, type: 3}
   isActiveSkill: 1
+  castClip: {fileID: 8300000, guid: 5fab616e1701bd74f9ad26b0a416ae8a, type: 3}
+  travelClip: {fileID: 0}
+  hitClip: {fileID: 0}
+  loopClip: {fileID: 0}

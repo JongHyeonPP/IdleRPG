@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: Active_100
   m_EditorClassIdentifier: 
   skillName: ReverseSlash
-  uid: Player_100
   iconSprite: {fileID: -7552014040095215850, guid: 23d096d614b92b9458b83db52d77dca8, type: 3}
   simple: 
   complex: 
@@ -46,3 +45,7 @@ MonoBehaviour:
   isAnim: 1
   visualEffectPrefab: {fileID: 5848734712332883381, guid: 091e37949a59db445920a6171cbb0ab6, type: 3}
   isActiveSkill: 1
+  castClip: {fileID: 8300000, guid: 5fab616e1701bd74f9ad26b0a416ae8a, type: 3}
+  travelClip: {fileID: 0}
+  hitClip: {fileID: 0}
+  loopClip: {fileID: 0}

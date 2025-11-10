@@ -13,7 +13,7 @@ public class SettingUI : MonoBehaviour
     private Toggle skillEffectToggle;
     private Toggle powerSavingToggle;
 
-    [SerializeField] AttendanceUI _attendanceUI;
+    [SerializeField] private AttendanceUI _attendanceUI;
 
     private Button attendanceButton;
 
@@ -21,6 +21,7 @@ public class SettingUI : MonoBehaviour
     {
         root = GetComponent<UIDocument>().rootVisualElement;
         root.style.display = DisplayStyle.None;
+
         InitElement();
         LoadFromSettingManager();
         RegisterEvents();
@@ -40,15 +41,17 @@ public class SettingUI : MonoBehaviour
         attendenceDot = new(root, this);
         attendenceDot.StartNotice();
 
-        root.Q<Button>("ExitButton").RegisterCallback<ClickEvent>(evt => UIBroker.InactiveCurrentUI());
+        root.Q<Button>("ExitButton").RegisterCallback<ClickEvent>(_ =>
+        {
+            UIBroker.InactiveCurrentUI();
+        });
 
-        // 토글 요소 가져오기
         damageTextToggle = root.Q<Toggle>("DamageTextToggle");
         skillEffectToggle = root.Q<Toggle>("SkillEffectToggle");
         powerSavingToggle = root.Q<Toggle>("PowerSavingToggle");
 
         attendanceButton = root.Q<Button>("AttendanceButton");
-        attendanceButton.RegisterCallback<ClickEvent>(evt => _attendanceUI.ActiveUI());
+        attendanceButton.RegisterCallback<ClickEvent>(_ => _attendanceUI.ActiveUI());
     }
 
     private void LoadFromSettingManager()
@@ -72,12 +75,17 @@ public class SettingUI : MonoBehaviour
         {
             sm.bgmValue = evt.newValue;
             sm.SaveSettings();
+
+            // SettingManager → SoundManager 단방향 참조만 허용
+            SoundManager.instance?.SetBGMVolume(evt.newValue);
         });
 
         sfxSlider.RegisterValueChangedCallback(evt =>
         {
             sm.sfxValue = evt.newValue;
             sm.SaveSettings();
+
+            SoundManager.instance?.SetSFXVolume(evt.newValue);
         });
 
         damageTextToggle.RegisterValueChangedCallback(evt =>

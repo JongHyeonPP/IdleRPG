@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: Active_501
   m_EditorClassIdentifier: 
   skillName: Rune
-  uid: Player_501
   iconSprite: {fileID: 6390494112633516482, guid: 43a6f050e8ed2a742a7eb7b6d5042cf7, type: 3}
   simple: 
   complex: 
@@ -46,3 +45,7 @@ MonoBehaviour:
   isAnim: 1
   visualEffectPrefab: {fileID: 6625223823742671288, guid: 77760127332613c49ab1d347877b632e, type: 3}
   isActiveSkill: 1
+  castClip: {fileID: 8300000, guid: 5fab616e1701bd74f9ad26b0a416ae8a, type: 3}
+  travelClip: {fileID: 0}
+  hitClip: {fileID: 0}
+  loopClip: {fileID: 0}

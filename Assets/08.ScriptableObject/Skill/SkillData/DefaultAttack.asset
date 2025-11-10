@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: DefaultAttack
   m_EditorClassIdentifier: 
   skillName: 
-  uid: 
   iconSprite: {fileID: 0}
   simple: 
   complex: 
@@ -23,6 +22,9 @@ MonoBehaviour:
   cooltime: 0
   coolAttack: 0
   requireMp: 0
+  effectSpawnType: 1
+  projectileSpeed: 15
+  effectLifeTime: 5
   value:
   - 1
   type: 0
@@ -30,3 +32,8 @@ MonoBehaviour:
   targetNum: 1
   preDelay: 0.2
   postDelay: 1
+  isAnim: 1
+  visualEffectPrefab: {fileID: 0}
+  isActiveSkill: 0
+  castClip: {fileID: 8300000, guid: d3d3f4d550817a54e8a2ea4743c22282, type: 3}
+  hitClip: {fileID: 8300000, guid: 477290ef8fc1dd94a8626131a7a616de, type: 3}

@@ -1,5 +1,14 @@
 namespace EnumCollection
 {
+    public enum StoryAction
+    {
+        None,
+        Dialogue,
+        Move,
+        Fade,
+        Camera,
+    }
+
     public enum Background
     {
         Plains, Forest, Riverside, Ruins, MysteriousForest,
@@ -11,7 +20,7 @@ namespace EnumCollection
         //Active
         Damage,
         //Passive
-        AttBuff, SpeedBuff,DefBuff,
+        AttBuff, SpeedBuff, DefBuff,
         HealOnHit, DoubleHit, ExpPlus,
         GoldPlus
     }
@@ -23,9 +32,9 @@ namespace EnumCollection
     {
         //°ñµå, ¹«±â·Î Âï´Â ½ºÅÈ
         MaxHp, Power, HpRecover, Critical, CriticalDamage,
-       //ÄÚ½ºÆ¬ È¿°ú
-       GoldAscend, ExpAscend,
-       //µüÈ÷ ÂïÀ» ÀÏ ¾øÀ½
+        //ÄÚ½ºÆ¬ È¿°ú
+        GoldAscend, ExpAscend,
+        //µüÈ÷ ÂïÀ» ÀÏ ¾øÀ½
         MaxMp, MpRecover,
         AttBuff, DefBuff
     }
@@ -54,7 +63,7 @@ namespace EnumCollection
     }
     public enum BattleType
     {
-        Default, Boss,CompanionTech, None,
+        Default, Boss, CompanionTech, None,
         Adventure,
         Dungeon,
         Promote
@@ -101,5 +110,10 @@ namespace EnumCollection
     public enum DamageType
     {
         Normal, Critical
+    }
+    public enum SoundType
+    {
+        BGM,
+        SFX
     }
 }
