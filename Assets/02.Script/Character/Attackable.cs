@@ -57,49 +57,52 @@ public abstract class Attackable : MonoBehaviour
         while (true)
         {
             EquipedSkill currentSkill = GetNextSkill();
-            
             float attBuffValue = GetPWValue(SkillType.AttBuff);
-            yield return new WaitForSeconds(currentSkill.skillData.postDelay * (1 / (1 + currentSpeed)));
-            SkillData skilldata = currentSkill.skillData;
-            if (!UseMP(skilldata))
+            SkillData skillData = currentSkill.skillData;
+
+
+            if (skillData.castClip != null)
+                StartCoroutine(PlayDelayedSFX(skillData.castClip, 0.2f));
+            yield return new WaitForSeconds(skillData.postDelay * (1 / (1 + currentSpeed)));
+
+            if (!UseMP(skillData))
             {
                 yield return null;
                 continue;
             }
 
-            AnimBehavior(currentSkill, skilldata);
+            // 애니메이션 처리
+            AnimBehavior(currentSkill, skillData);
 
-            var targets = GetTargets(skilldata.target, skilldata.targetNum);
+            var targets = GetTargets(skillData.target, skillData.targetNum);
             foreach (var tgt in targets)
             {
                 BigInteger damage = CalculateBaseDamage(currentSkill);
+                int scale = 100;
+                BigInteger multiplier = new BigInteger((1f + attBuffValue) * scale);
+                damage = (damage * multiplier) / scale;
 
-                switch (skilldata.type)
-                {
-                    case SkillType.Damage:
-                        // float -> 정수 스케일로 변환하여 정밀도 유지
-
-                        int scale = 100; // 정밀도 단위 (예: 2자리까지 보존)
-                        BigInteger multiplier = new BigInteger((1f + attBuffValue) * scale);
-                        damage = (damage * multiplier) / scale;
-                        break;
-                }
                 DamageType damageType = DamageType.Normal;
                 if (GetStatus() is PlayerStatus playerStatus)
                 {
                     (DamageType, BigInteger) critialResult = CalcCrital(damage, playerStatus);
                     damageType = critialResult.Item1;
                     damage = critialResult.Item2;
-                    
                 }
-                tgt.ReceiveSkill(damage, skilldata.type, damageType);
+
+                // 데미지 처리
+                tgt.ReceiveSkill(damage, skillData.type, damageType);
+
+                // hitClip은 즉시 재생 (지연 없음)
+                if (skillData.hitClip != null)
+                    SoundManager.instance.PlaySFX(skillData.hitClip);
 
                 if (target.hp <= 0)
                     StartCoroutine(TargetKill());
             }
 
             if (SettingManager.instance.isSkillEffect)
-                VisualEffectToTarget(targets, skilldata);
+                VisualEffectToTarget(targets, skillData);
 
             if (currentSkill == _defaultAttack)
                 ProgressCoolAttack();
@@ -107,6 +110,18 @@ public abstract class Attackable : MonoBehaviour
             yield return new WaitForSeconds(currentSkill.skillData.preDelay * (1 / (1 + currentSpeed)));
         }
     }
+    private IEnumerator PlayDelayedSFX(AudioClip clip, float offset)
+    {
+        if (clip == null) yield break;
+
+        if (offset > 0)
+            yield return new WaitForSeconds(offset);
+
+        // offset이 0 이하일 경우 즉시 재생
+        SoundManager.instance.PlaySFX(clip);
+    }
+
+
 
     private (DamageType, BigInteger) CalcCrital(BigInteger damage, PlayerStatus playerStatus)
     {
@@ -258,13 +273,14 @@ public abstract class Attackable : MonoBehaviour
     //  Damage & Heal
     // ==========================
 
-    public void ReceiveSkill(BigInteger calcedValue, SkillType skillType = SkillType.Damage, DamageType damageType = DamageType.Normal)
+    public void ReceiveSkill(BigInteger calcedValue, SkillType skillType, DamageType damageType)
     {
         switch (skillType)
         {
             case SkillType.Damage:
                 hp -= calcedValue;
                 if (hp < 0) hp = 0;
+                
 
                 if (this is EnemyController enemy)
                 {
@@ -274,7 +290,10 @@ public abstract class Attackable : MonoBehaviour
                     else
                         StartCoroutine(FlashRed());
                 }
-                else StartCoroutine(FlashRed());
+                else
+                {
+                    StartCoroutine(FlashRed());
+                }
 
                 Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
                 if (SettingManager.instance.isDamageText)
@@ -290,6 +309,7 @@ public abstract class Attackable : MonoBehaviour
             OnDead();
         }
     }
+
 
     private IEnumerator FlashRed()
     {
@@ -366,6 +386,12 @@ public abstract class Attackable : MonoBehaviour
                         }
                     }
                 }
+            }
+            switch (type)
+            {
+                case SkillType.GoldPlus:
+                    sum += ((PlayerStatus)pc.GetStatus()).GoldAscend;
+                    break;
             }
         }
         return sum;

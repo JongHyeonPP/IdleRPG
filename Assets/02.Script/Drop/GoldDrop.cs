@@ -78,5 +78,6 @@ public class GoldDrop : DropBase
     public override void SetValue()
     {
         value = CurrencyManager.instance.GetGoldRangedValue();
+        value = Mathf.FloorToInt(value * (1 + PlayerBroker.GetPWValue(SkillType.GoldPlus)));
     }
 }

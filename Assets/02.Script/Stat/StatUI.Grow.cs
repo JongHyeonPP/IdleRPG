@@ -46,8 +46,8 @@ public partial class StatUI
         var element = _statPointStatDict[stat];
         element.Q<Label>("StatLevel").text = $"Lv.{level}";
 
-        float current = ReinForceManager.instance.GetStatPointStatus(level, stat);
-        float next = ReinForceManager.instance.GetStatPointStatus(level + 1, stat);
+        float current = ReinForceManager.instance.GetReinforceValueStatus(stat, level);
+        float next = ReinForceManager.instance.GetReinforceValueStatus(stat, level + 1);
         element.Q<Label>("StatRise").text = GetStatPointStatRiseText(current, next, stat);
     }
 

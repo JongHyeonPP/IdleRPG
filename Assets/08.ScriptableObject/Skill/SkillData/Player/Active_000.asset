@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: Active_000
   m_EditorClassIdentifier: 
   skillName: Cut
-  uid: Player_000
   iconSprite: {fileID: 8038727968482881496, guid: b4b2056f1aee906468287a50c45a2967, type: 3}
   simple: 
   complex: "\uC801\uC744 \uAC08\uB77C <value*100>%\uC758 \uD53C\uD574\uB97C \uC785\uD799\uB2C8\uB2E4."
@@ -46,3 +45,7 @@ MonoBehaviour:
   isAnim: 1
   visualEffectPrefab: {fileID: 4243325162052384598, guid: 62bb45626bf7111489f07105ae86fb93, type: 3}
   isActiveSkill: 1
+  castClip: {fileID: 8300000, guid: 5fab616e1701bd74f9ad26b0a416ae8a, type: 3}
+  travelClip: {fileID: 0}
+  hitClip: {fileID: 0}
+  loopClip: {fileID: 0}

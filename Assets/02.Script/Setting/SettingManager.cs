@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class SettingManager : MonoBehaviour
@@ -24,13 +23,19 @@ public class SettingManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
         instance = this;
         DontDestroyOnLoad(gameObject);
+
         LoadSettings();
-        
+
+
     }
-
-
+    private void Start()
+    {
+        SoundManager.instance.SetBGMVolume(bgmValue);
+        SoundManager.instance.SetSFXVolume(sfxValue);
+    }
 
     public void SaveSettings()
     {
@@ -48,6 +53,6 @@ public class SettingManager : MonoBehaviour
         sfxValue = PlayerPrefs.GetFloat(SFX_KEY, 0.5f);
         isDamageText = PlayerPrefs.GetInt(DAMAGE_TEXT_KEY, 1) == 1;
         isSkillEffect = PlayerPrefs.GetInt(SKILL_EFFECT_KEY, 1) == 1;
-        isPowerSaving = PlayerPrefs.GetInt(POWER_SAVING_KEY, 1) == 1;
+        isPowerSaving = PlayerPrefs.GetInt(POWER_SAVING_KEY, 0) == 1;
     }
 }

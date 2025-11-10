@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: Active_500
   m_EditorClassIdentifier: 
   skillName: Burst
-  uid: Player_500
   iconSprite: {fileID: -8976129629788330115, guid: 16603015e8f526342a7bf252a9b81bd0, type: 3}
   simple: 
   complex: 
@@ -46,3 +45,7 @@ MonoBehaviour:
   isAnim: 1
   visualEffectPrefab: {fileID: 3536965192658253738, guid: 8b89a09f8ca886d488854e87d2845365, type: 3}
   isActiveSkill: 1
+  castClip: {fileID: 8300000, guid: 5fab616e1701bd74f9ad26b0a416ae8a, type: 3}
+  travelClip: {fileID: 0}
+  hitClip: {fileID: 0}
+  loopClip: {fileID: 0}

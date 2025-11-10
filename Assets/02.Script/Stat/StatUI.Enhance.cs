@@ -46,8 +46,8 @@ public partial class StatUI
         var element = _goldStatDict[stat];
         element.Q<Label>("StatLevel").text = $"Lv.{level}";
 
-        float current = ReinForceManager.instance.GetGoldStatus(level, stat);
-        float next = ReinForceManager.instance.GetGoldStatus(level + 1, stat);
+        float current = ReinForceManager.instance.GetReinforceValueGold(stat, level);
+        float next = ReinForceManager.instance.GetReinforceValueGold(stat, level + 1);
         element.Q<Label>("StatRise").text = SetGoldStatRiseText(current, next, stat);
 
         int price = ReinForceManager.instance.GetReinforcePriceGold(stat, level) + 1;

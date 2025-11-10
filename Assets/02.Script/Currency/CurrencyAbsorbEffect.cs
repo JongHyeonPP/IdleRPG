@@ -27,6 +27,13 @@ public class CurrencyAbsorbEffect : MonoBehaviour
         instance = this;
         uiDoc = GetComponent<UIDocument>();
         root = uiDoc.rootVisualElement;
+
+        // 패널 스케일 모드 고정 (비율 보정)
+        var panelSettings = uiDoc.panelSettings;
+        panelSettings.scaleMode = PanelScaleMode.ScaleWithScreenSize;
+        panelSettings.referenceResolution = new Vector2Int(1080, 2400);
+        panelSettings.match = 1f;
+
         InitPool();
     }
 
@@ -64,6 +71,7 @@ public class CurrencyAbsorbEffect : MonoBehaviour
     }
 
     // startScreenPos를 null로 두면 중앙에서 시작
+    // startScreenPos를 null로 두면 중앙에서 시작
     public void PlayEffect(Resource resource, int amount, Vector3? startScreenPos = null)
     {
         if (CurrencyManager.instance == null) return;
@@ -71,29 +79,26 @@ public class CurrencyAbsorbEffect : MonoBehaviour
         Sprite sprite = CurrencyManager.instance.GetResourceSprite(resource);
         if (sprite == null) return;
 
-        // 시작 좌표: 없으면 화면 중앙
         Vector3 startScreen = startScreenPos ?? new Vector3(Screen.width / 2f, Screen.height / 2f, 0f);
-        Vector2 startPos = RuntimePanelUtils.ScreenToPanel(root.panel, startScreen);
+        Vector2 startPos = ScreenToPanelFixed(root, startScreen); // 변환 필요
 
-        // 리소스 종류별 도착 좌표 선택
-        Vector2 targetScreenPos = resource switch
+        // 이미 1080x2400 기준 좌표는 변환하지 않음
+        Vector2 targetPos = resource switch
         {
             Resource.Gold => goldPos,
             Resource.Dia => diaPos,
             Resource.Clover => cloverPos,
-            _ => new Vector2(Screen.width * 0.5f, 100f)
+            _ => new Vector2(540f, 100f)
         };
-        Vector2 targetPos = RuntimePanelUtils.ScreenToPanel(root.panel, targetScreenPos);
 
-        // 여러 개 생성
         int spawnCount = Mathf.Clamp(amount, 1, 8);
         for (int i = 0; i < spawnCount; i++)
         {
             VisualElement coin = GetFromPool();
             coin.style.display = DisplayStyle.Flex;
             coin.style.backgroundImage = new StyleBackground(sprite);
+            coin.style.opacity = 1f; // 투명도 초기화
 
-            // 퍼지는 방향 계산
             Vector2 randomDir = Random.insideUnitCircle.normalized;
             float spreadDist = Random.Range(scatterRadius * 0.7f, scatterRadius * 1.5f);
             Vector2 spreadPos = startPos + randomDir * spreadDist;
@@ -101,10 +106,10 @@ public class CurrencyAbsorbEffect : MonoBehaviour
 
             float delay = i * 0.05f + Random.Range(0f, 0.1f);
 
-            // 시퀀스: 퍼짐 → 정지 → 흡수
             Sequence seq = DOTween.Sequence();
             seq.AppendInterval(delay);
 
+            // 퍼짐
             seq.Append(DOTween.To(() => 0f, t =>
             {
                 Vector2 cur = Vector2.Lerp(startPos, spreadPos, t);
@@ -113,20 +118,57 @@ public class CurrencyAbsorbEffect : MonoBehaviour
 
             seq.AppendInterval(0.1f);
 
+            // 흡수 이동
             seq.Append(DOTween.To(() => 0f, t =>
             {
                 Vector2 cur = Vector2.Lerp(spreadPos, targetPos, t);
                 coin.style.translate = new Translate(cur.x, cur.y);
             }, 1f, flyDuration).SetEase(Ease.InOutCubic));
 
+            // 도착 후 투명해지기 (0.2초 동안)
+            seq.Append(DOTween.To(() => coin.style.opacity.value, x => coin.style.opacity = x, 0f, 0.2f));
+
+            // 완전히 투명해진 후 풀로 반환
             seq.OnComplete(() => ReturnToPool(coin));
         }
     }
 
-    [ContextMenu("Test Absorb Effect")]
-    private void TestAbsorbEffect()
+    // 핵심: 실제 패널 크기 기준으로 스크린 좌표 변환 (완벽 보정)
+    private Vector2 ScreenToPanelFixed(VisualElement root, Vector3 screenPos)
     {
-        // 테스트용: 중앙에서 골드 8개가 위로 빨려감
+        Rect panelRect = root.worldBound;
+        float scaleX = panelRect.width / Screen.width;
+        float scaleY = panelRect.height / Screen.height;
+
+        float x = screenPos.x * scaleX;
+        float y = (Screen.height - screenPos.y) * scaleY; // 스크린 Y축 보정
+
+        return new Vector2(x, y);
+    }
+
+    [ContextMenu("Test Gold Absorb")]
+    private void TestGoldAbsorb()
+    {
         PlayEffect(Resource.Gold, 20);
+    }
+
+    [ContextMenu("Test Dia Absorb")]
+    private void TestDiaAbsorb()
+    {
+        PlayEffect(Resource.Dia, 20);
+    }
+
+    [ContextMenu("Test Clover Absorb")]
+    private void TestCloverAbsorb()
+    {
+        PlayEffect(Resource.Clover, 20);
+    }
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+            PlayEffect(Resource.Dia, 20);
+
+        if (Input.GetKeyDown(KeyCode.W))
+            PlayEffect(Resource.Clover, 20);
     }
 }

@@ -1,0 +1,9 @@
+Index,ActionType,Talker,Text,Target,Param1,Param2
+1,Dialogue,나,으… 여긴 어디지?,,,
+2,Dialogue,나,몸이 이상하게 무겁다…,,
+3,Move,나,,Left,3,1.5
+4,Dialogue,돼지,끄윽… 너 누구야?,,,
+5,FadeOut,,,,,1.5
+6,Delay,,,,,1
+7,FadeIn,,,,,1.5
+8,Dialogue,나,이건… 꿈인가?,,,

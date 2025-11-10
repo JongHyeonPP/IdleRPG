@@ -210,7 +210,7 @@ public class EnemyController : Attackable, IMoveByPlayer
                 anim.SetTrigger("Attack");
 
             BigInteger dmg = _status.Power;
-            target.ReceiveSkill(dmg);
+            target.ReceiveSkill(dmg, SkillType.Damage, DamageType.Normal);
         }
     }
     public override BigInteger GetMaxHp()

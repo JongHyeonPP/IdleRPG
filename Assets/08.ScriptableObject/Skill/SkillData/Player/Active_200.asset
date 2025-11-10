@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: Active_200
   m_EditorClassIdentifier: 
   skillName: Accelerator
-  uid: Player_200
   iconSprite: {fileID: 2833696505090230696, guid: b12c7e92c9892ac46a8b0971b3ef7d74, type: 3}
   simple: 
   complex: 
@@ -46,3 +45,7 @@ MonoBehaviour:
   isAnim: 1
   visualEffectPrefab: {fileID: 557600089927600706, guid: 275ea0dfd9a370448909cc2eda9fd59f, type: 3}
   isActiveSkill: 1
+  castClip: {fileID: 8300000, guid: 5fab616e1701bd74f9ad26b0a416ae8a, type: 3}
+  travelClip: {fileID: 0}
+  hitClip: {fileID: 0}
+  loopClip: {fileID: 0}
