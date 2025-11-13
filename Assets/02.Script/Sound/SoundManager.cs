@@ -7,13 +7,11 @@ public class SoundManager : MonoBehaviour
     public static SoundManager instance;
 
     [SerializeField] private AudioMixer audioMixer;
-    [SerializeField] private AudioMixerGroup bgmGroup;
-    [SerializeField] private AudioMixerGroup sfxGroup;
     [SerializeField] private AudioSource bgmSource;
+    [SerializeField] private AudioSource sfxSource; // PlayOneShot 전용
 
-    private List<AudioSource> sfxPool = new();
-    private const int poolSize = 10;
     private Dictionary<string, AudioClip> clipCache = new();
+    private bool isMuted;
 
     private void Awake()
     {
@@ -25,28 +23,17 @@ public class SoundManager : MonoBehaviour
 
         instance = this;
         DontDestroyOnLoad(gameObject);
-        InitializePool();
 
         PlayBGM(SoundPath.StartBgm);
 
+        // BGM 교체 이벤트 등록 예시
         BattleBroker.SwitchToBattle += () => PlayBGM(SoundPath.MainBgm);
         BattleBroker.SwitchToBoss += () => PlayBGM(SoundPath.BossBgm);
-        BattleBroker.SwitchToPromoteBattle += (rank) => PlayBGM(SoundPath.BossBgm);
+        BattleBroker.SwitchToPromoteBattle += rank => PlayBGM(SoundPath.BossBgm);
         BattleBroker.SwitchToDungeon += (stage, index) => PlayBGM(SoundPath.BossBgm);
         BattleBroker.SwitchToAdventure += (stage, index) => PlayBGM(SoundPath.BossBgm);
     }
 
-    private void InitializePool()
-    {
-        for (int i = 0; i < poolSize; i++)
-        {
-            var sfxSource = gameObject.AddComponent<AudioSource>();
-            sfxSource.playOnAwake = false;
-            sfxSource.loop = false;
-            sfxSource.outputAudioMixerGroup = sfxGroup;
-            sfxPool.Add(sfxSource);
-        }
-    }
 
     private AudioClip GetClip(string path)
     {
@@ -56,13 +43,17 @@ public class SoundManager : MonoBehaviour
         var clip = Resources.Load<AudioClip>(path);
         if (clip == null)
         {
-            Debug.LogWarning($"클립을 찾을 수 없습니다: {path}");
+            Debug.LogWarning($"[SoundManager] 클립을 찾을 수 없습니다: {path}");
             return null;
         }
 
         clipCache[path] = clip;
         return clip;
     }
+
+    // ----------------------------
+    // 재생
+    // ----------------------------
 
     public void PlayBGM(string path, bool loop = true)
     {
@@ -71,18 +62,14 @@ public class SoundManager : MonoBehaviour
 
         bgmSource.clip = clip;
         bgmSource.loop = loop;
-        bgmSource.outputAudioMixerGroup = bgmGroup;
         bgmSource.Play();
     }
-
-    // ----------------------------
-    // SFX 관련 메서드 (추가됨)
-    // ----------------------------
 
     public void PlaySFX(string path)
     {
         var clip = GetClip(path);
         if (clip == null) return;
+
         PlaySFX(clip);
     }
 
@@ -90,25 +77,7 @@ public class SoundManager : MonoBehaviour
     {
         if (clip == null) return;
 
-        var source = GetAvailableSFXSource();
-        source.clip = clip;
-        source.Play();
-    }
-
-    private AudioSource GetAvailableSFXSource()
-    {
-        foreach (var s in sfxPool)
-        {
-            if (!s.isPlaying)
-                return s;
-        }
-
-        var extra = gameObject.AddComponent<AudioSource>();
-        extra.playOnAwake = false;
-        extra.loop = false;
-        extra.outputAudioMixerGroup = sfxGroup;
-        sfxPool.Add(extra);
-        return extra;
+        sfxSource.PlayOneShot(clip);
     }
 
     // ----------------------------
@@ -118,14 +87,56 @@ public class SoundManager : MonoBehaviour
     public void SetBGMVolume(float value)
     {
         float dB = Mathf.Log10(Mathf.Clamp(value, 0.0001f, 1f)) * 20f;
-        Debug.Log(dB);
         audioMixer.SetFloat("BGM", dB);
     }
 
     public void SetSFXVolume(float value)
     {
-        float dB = Mathf.Log10(Mathf.Clamp(value, 0.0001f, 1f)) * 20f;
-        Debug.Log(dB);
+        if (value <= 0.0001f)
+        {
+            audioMixer.SetFloat("SFX", -80f);
+            return;
+        }
+
+        float boostedValue = Mathf.Clamp(value * 1.2f, 0.0001f, 1.2f);
+        float dB = Mathf.Log10(boostedValue) * 20f;
         audioMixer.SetFloat("SFX", dB);
+    }
+
+    // ----------------------------
+    // 음소거 기능
+    // ----------------------------
+
+    public void MuteAll()
+    {
+        if (isMuted) return;
+
+        bgmSource.mute = true;
+        sfxSource.mute = true;
+
+        isMuted = true;
+    }
+
+    public void UnmuteAll()
+    {
+        if (!isMuted) return;
+
+        bgmSource.mute = false;
+        sfxSource.mute = false;
+
+        isMuted = false;
+    }
+
+    // ----------------------------
+    // 테스트 입력
+    // ----------------------------
+
+    private void Update()
+    {
+        // T 키를 누르면 BtnClick2 SFX를 재생
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            PlaySFX(SoundPath.KnifeEff);
+        }
     }
 }

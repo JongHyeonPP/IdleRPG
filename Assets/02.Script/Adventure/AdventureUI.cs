@@ -26,8 +26,11 @@ public class AdventureUI : MonoBehaviour, IMenuUI
     private Button _adventureButton;
     private Button _dungeonButton;
 
-    private readonly Color inactiveColor = new Color(0.7f, 0.7f, 0.7f);
-    private readonly Color activeColor = new Color(1f, 1f, 1f);
+    // 소리 중복 방지
+    private int _currentCategory = -1;
+
+    private readonly Color inactiveColor = new(0.7f, 0.7f, 0.7f);
+    private readonly Color activeColor = new(1f, 1f, 1f);
 
     [Header("Adventure Panel")]
     [SerializeField] AdventureSlot[] _adventureSlotArr;
@@ -42,7 +45,7 @@ public class AdventureUI : MonoBehaviour, IMenuUI
 
     private List<VisualElement> _dungeonSlotElements;
     private Coroutine _countdownCoroutine;
-    private int _maxScroll = 100; // 서버에서 받도록 변경됨
+    private int _maxScroll = 100;
     private const int DefaultRegenIntervalSec = 180;
 
     private void Awake()
@@ -71,7 +74,7 @@ public class AdventureUI : MonoBehaviour, IMenuUI
     }
 
     // --------------------------------------------------------
-    // 서버로부터 스크롤 충전 정보 불러오기
+    // Scroll Regen from server
     // --------------------------------------------------------
     private async Task RefreshScrollFromServerAsync()
     {
@@ -84,9 +87,6 @@ public class AdventureUI : MonoBehaviour, IMenuUI
             );
 
             var data = JObject.FromObject(result);
-
-            // 서버가 내려주는 데이터 구조 예시:
-            // { "scroll": 54, "nextInSeconds": 125, "maxScroll": 100 }
 
             if (data.ContainsKey("scroll"))
                 _gameData.scroll = data["scroll"].Value<int>();
@@ -120,9 +120,6 @@ public class AdventureUI : MonoBehaviour, IMenuUI
         }
     }
 
-    // --------------------------------------------------------
-    // 로컬 타이머 갱신 (서버 호출 없이)
-    // --------------------------------------------------------
     private IEnumerator UpdateScrollTimer(double seconds)
     {
         double remaining = seconds;
@@ -134,14 +131,12 @@ public class AdventureUI : MonoBehaviour, IMenuUI
             remaining -= 1;
         }
 
-        // 타이머 종료 시 스크롤 1개 충전
         if (_gameData.scroll < _maxScroll)
         {
             _gameData.scroll++;
             _scrollLabel.text = _gameData.scroll.ToString("N0");
         }
 
-        // 아직 최대치가 아니면 다음 충전 사이클 재시작
         if (_gameData.scroll < _maxScroll)
         {
             _countdownCoroutine = StartCoroutine(UpdateScrollTimer(DefaultRegenIntervalSec));
@@ -153,14 +148,10 @@ public class AdventureUI : MonoBehaviour, IMenuUI
         }
     }
 
-    // --------------------------------------------------------
-    // 스크롤 값 갱신 시 호출 (사용/충전 후)
-    // --------------------------------------------------------
     private void OnScrollSet()
     {
         _scrollLabel.text = _gameData.scroll.ToString("N0");
 
-        // 1. 스크롤이 가득 찼을 때 → 타이머 중단
         if (_gameData.scroll >= _maxScroll)
         {
             if (_countdownCoroutine != null)
@@ -172,7 +163,6 @@ public class AdventureUI : MonoBehaviour, IMenuUI
             return;
         }
 
-        // 2. 스크롤이 줄었고, 타이머가 없을 때만 재시작
         if (_countdownCoroutine == null)
         {
             _countdownCoroutine = StartCoroutine(UpdateScrollTimer(DefaultRegenIntervalSec));
@@ -180,7 +170,7 @@ public class AdventureUI : MonoBehaviour, IMenuUI
     }
 
     // --------------------------------------------------------
-    // 어드벤처 / 던전 초기화
+    // Adventure / Dungeon Panels
     // --------------------------------------------------------
     private void InitAdventureSlotPanel()
     {
@@ -196,7 +186,11 @@ public class AdventureUI : MonoBehaviour, IMenuUI
 
             slotElement.Q<Label>("NameLabel").text = slot.slotName;
             slotElement.Q<VisualElement>("SlotIcon").style.backgroundImage = new StyleBackground(slot.slotIcon);
-            slotElement.RegisterCallback<ClickEvent>(_ => OnAdventureSlotClicked(index));
+            slotElement.RegisterCallback<ClickEvent>(_ =>
+            {
+                SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+                OnAdventureSlotClicked(index);
+            });
         }
     }
 
@@ -214,7 +208,11 @@ public class AdventureUI : MonoBehaviour, IMenuUI
 
             slotElement.Q<Label>("NameLabel").text = slot.slotName;
             slotElement.Q<VisualElement>("SlotIcon").style.backgroundImage = new StyleBackground(slot.slotIcon);
-            slotElement.RegisterCallback<ClickEvent>(_ => OnDungeonSlotClicked(index));
+            slotElement.RegisterCallback<ClickEvent>(_ =>
+            {
+                SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+                OnDungeonSlotClicked(index);
+            });
         }
 
         UpdateDungeonSlotStates();
@@ -318,15 +316,45 @@ public class AdventureUI : MonoBehaviour, IMenuUI
         }
     }
 
+    // --------------------------------------------------------
+    // 카테고리 버튼 (Adventure / Dungeon)
+    // --------------------------------------------------------
     private void InitCategoriButton()
     {
         _adventureButton = root.Q<Button>("AdventureButton");
         _dungeonButton = root.Q<Button>("DungeonButton");
 
-        _adventureButton.RegisterCallback<ClickEvent>(_ => OnAdventureButtonClicked());
-        _dungeonButton.RegisterCallback<ClickEvent>(_ => OnDungeonButtonClicked());
+        _adventureButton.RegisterCallback<ClickEvent>(_ => OnClickAdventureButton());
+        _dungeonButton.RegisterCallback<ClickEvent>(_ => OnClickDungeonButton());
 
-        OnAdventureButtonClicked();
+        SetCategori(true); // 초기 표시 무음
+        _currentCategory = 0;
+    }
+
+    private void OnClickAdventureButton()
+    {
+        if (_currentCategory != 0)
+            SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+
+        _currentCategory = 0;
+        SetCategori(true);
+    }
+
+    private void OnClickDungeonButton()
+    {
+        if (_currentCategory != 1)
+            SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+
+        _currentCategory = 1;
+        SetCategori(false);
+    }
+
+    private void SetCategori(bool isAdventure)
+    {
+        if (isAdventure)
+            SwitchPanel(_adventurePanel, _dungeonPanel, _adventureButton, _dungeonButton);
+        else
+            SwitchPanel(_dungeonPanel, _adventurePanel, _dungeonButton, _adventureButton);
     }
 
     private void SetButtonStyle(Button button, Color bgColor, Color outlineColor, Color textColor, float bgAlpha)
@@ -342,24 +370,20 @@ public class AdventureUI : MonoBehaviour, IMenuUI
         hide.style.display = DisplayStyle.None;
         SetButtonStyle(activeBtn, activeColor, activeColor, activeColor, 0.1f);
         SetButtonStyle(inactiveBtn, inactiveColor, inactiveColor, inactiveColor, 0f);
-        if (show == _dungeonPanel) UpdateDungeonSlotStates();
+
+        if (show == _dungeonPanel)
+            UpdateDungeonSlotStates();
     }
 
-    private void OnAdventureButtonClicked()
-    {
-        SwitchPanel(_adventurePanel, _dungeonPanel, _adventureButton, _dungeonButton);
-    }
-
-    private void OnDungeonButtonClicked()
-    {
-        SwitchPanel(_dungeonPanel, _adventurePanel, _dungeonButton, _adventureButton);
-    }
-
+    // --------------------------------------------------------
+    // 기본 UI
+    // --------------------------------------------------------
     void IMenuUI.ActiveUI()
     {
         UpdateAdventureSlotProgress();
         UpdateDungeonSlotStates();
         root.style.display = DisplayStyle.Flex;
+
         if (_animCoroutine != null) StopCoroutine(_animCoroutine);
         _animCoroutine = StartCoroutine(AnimateUI());
     }
@@ -398,6 +422,7 @@ public class AdventureUI : MonoBehaviour, IMenuUI
 
         _rootChild.style.height = _targetHeight;
     }
+
     private void OnApplicationFocus(bool hasFocus)
     {
         if (hasFocus)
@@ -405,5 +430,4 @@ public class AdventureUI : MonoBehaviour, IMenuUI
             _ = RefreshScrollFromServerAsync();
         }
     }
-
 }

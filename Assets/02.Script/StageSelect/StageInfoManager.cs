@@ -259,8 +259,6 @@ public class StageInfoManager : MonoBehaviour
 
             dungeonRewards[dungeonIdx] = dict;
         }
-
-        Debug.Log($"[StageInfoManager] Dungeon rewards loaded. EntranceFee: {dungeonEntranceFee}");
     }
 
 

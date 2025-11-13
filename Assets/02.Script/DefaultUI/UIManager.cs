@@ -26,10 +26,6 @@ public class UIManager : MonoBehaviour
         BattleBroker.SwitchToDungeon += (arg0, arg1) => OnBoss();
         BattleBroker.SwitchToPromoteBattle += (arg0) => OnBoss();
     }
-    void Start()
-    {
-        UIBroker.ChangeMenu?.Invoke(0);
-    }
 
     private void OnBattle()
     {

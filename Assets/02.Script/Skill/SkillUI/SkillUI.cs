@@ -1,4 +1,4 @@
-using EnumCollection;
+ï»¿using EnumCollection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,8 +17,6 @@ public class SkillUI : MonoBehaviour, IMenuUI
     private readonly Dictionary<string, VisualElement> _skillId_SlotDict = new();
     private VisualElement _equipBackground;
     [SerializeField] VisualTreeAsset slotSetAsset;
-
-    // ¹«±â UIÃ³·³ rarityLineAsset Ãß°¡
     [SerializeField] private VisualTreeAsset rarityLineAsset;
 
     private Button _acquireButton;
@@ -26,12 +24,13 @@ public class SkillUI : MonoBehaviour, IMenuUI
     private Button _passiveButton;
     [SerializeField] SkillAcquireUI skillAcquireUI;
 
-    // ButtonColor
     private readonly Color inactiveColor = new(0.7f, 0.7f, 0.7f);
     private readonly Color activeColor = new(1f, 1f, 1f);
 
-    // Fragment
     private readonly Dictionary<Rarity, Label> fragmentLabelDict = new();
+
+    // ì¶”ê°€ë¨ : í˜„ì¬ ì„ íƒëœ íƒ­ ì €ì¥
+    private int _currentTabIndex = -1;
 
     private void Awake()
     {
@@ -60,10 +59,32 @@ public class SkillUI : MonoBehaviour, IMenuUI
 
         InitFragmentGrid();
 
-        // ¹öÆ° Å¬¸¯ ÀÌº¥Æ® µî·Ï
-        _acquireButton.RegisterCallback<ClickEvent>(evt => OnAcquisitionButtonClicked());
-        _activeButton.RegisterCallback<ClickEvent>(evt => OnActiveButtonClicked());
-        _passiveButton.RegisterCallback<ClickEvent>(evt => OnPassiveButtonClicked());
+        // íšë“ ë²„íŠ¼ : í•­ìƒ ì†Œë¦¬ ë‚¨
+        _acquireButton.RegisterCallback<ClickEvent>(evt =>
+        {
+            SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+            OnAcquisitionButtonClicked();
+        });
+
+        // Active ë²„íŠ¼ : ê°™ì€ íƒ­ì´ë©´ ì†Œë¦¬ X
+        _activeButton.RegisterCallback<ClickEvent>(evt =>
+        {
+            if (_currentTabIndex != 0)
+                SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+
+            _currentTabIndex = 0;
+            OnActiveButtonClicked();
+        });
+
+        // Passive ë²„íŠ¼ : ê°™ì€ íƒ­ì´ë©´ ì†Œë¦¬ X
+        _passiveButton.RegisterCallback<ClickEvent>(evt =>
+        {
+            if (_currentTabIndex != 1)
+                SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+
+            _currentTabIndex = 1;
+            OnPassiveButtonClicked();
+        });
 
         SetScrollView();
     }
@@ -71,29 +92,21 @@ public class SkillUI : MonoBehaviour, IMenuUI
     private void SetScrollView()
     {
         SkillData[] skillDataArr = SkillManager.instance.playerSkillArr;
-
-        // Active / Passive ºĞ·ù
         SkillData[] activeSkills = skillDataArr.Where(item => item.isActiveSkill).ToArray();
         SkillData[] passiveSkills = skillDataArr.Where(item => !item.isActiveSkill).ToArray();
 
-        // ·¹¾î¸®Æ¼º° ScrollView ¼¼ÆÃ
         SetEachScrollViewByRarity(activeSkills, _activeScrollView);
         SetEachScrollViewByRarity(passiveSkills, _passiveScrollView);
     }
 
     private void SetEachScrollViewByRarity(SkillData[] dataArr, DraggableScrollView draggableScrollview)
     {
-        // rarity ¼øÀ¸·Î Á¤·Ä
         var ordered = dataArr.OrderBy(skill => skill.rarity).ToArray();
-
-        // ·¹¾î¸®Æ¼ ´ÜÀ§·Î ±×·ìÇÎ
         var grouped = ordered.GroupBy(skill => skill.rarity);
-
         bool firstGroup = true;
 
         foreach (var group in grouped)
         {
-            // Ã¹ ±×·ì »©°í´Â ±¸ºĞ¼± Ãß°¡
             if (!firstGroup && rarityLineAsset != null)
             {
                 TemplateContainer rarityLine = rarityLineAsset.CloneTree();
@@ -101,10 +114,9 @@ public class SkillUI : MonoBehaviour, IMenuUI
             }
             firstGroup = false;
 
-            // ÀÌ ·¹¾î¸®Æ¼¿¡ ¼ÓÇÏ´Â ½ºÅ³ ¸®½ºÆ®
             var skills = group.ToList();
-
             int index = 0;
+
             while (index < skills.Count)
             {
                 VisualElement currentSlotSet = slotSetAsset.CloneTree();
@@ -112,7 +124,6 @@ public class SkillUI : MonoBehaviour, IMenuUI
                 for (int i = 0; i < 4; i++)
                 {
                     VisualElement currentSlot = currentSlotSet.Q<VisualElement>($"SkillData_{i}");
-
                     if (index < skills.Count)
                     {
                         SetSlot(draggableScrollview, skills[index], currentSlot);
@@ -120,7 +131,6 @@ public class SkillUI : MonoBehaviour, IMenuUI
                     }
                     else
                     {
-                        // ³²´Â Ä­Àº ¼û±è
                         currentSlot.style.display = DisplayStyle.None;
                     }
                 }
@@ -129,9 +139,6 @@ public class SkillUI : MonoBehaviour, IMenuUI
             }
         }
     }
-
-
-
 
     private void SetSlot(DraggableScrollView draggableScrollview, SkillData skillData, VisualElement currentSlot)
     {
@@ -172,7 +179,10 @@ public class SkillUI : MonoBehaviour, IMenuUI
         clickVe.RegisterCallback<ClickEvent>(evt =>
         {
             if (!draggableScrollview._isDragging)
+            {
+                SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
                 _skillInfoUI.ActiveUI(skillData);
+            }
         });
 
         _skillId_SlotDict.Add(skillData.name, currentSlot);

@@ -31,7 +31,13 @@ public partial class StatUI
     {
         int level = _gameData.statLevel_Gold[stat] + 1;
         int cost = ReinForceManager.instance.GetReinforcePriceGold(stat, level);
-        if (_gameData.gold < cost) return;
+
+        // 강화 불가 상태면 사운드 중단
+        if (_gameData.gold < cost)
+        {
+            StopStaySoundLoop();
+            return;
+        }
 
         _gameData.gold -= cost;
         _gameData.statLevel_Gold[stat]++;
@@ -40,6 +46,7 @@ public partial class StatUI
         PlayerBroker.OnGoldStatusLevelSet(stat, _gameData.statLevel_Gold[stat]);
         PlayerBroker.OnGoldSet?.Invoke();
     }
+
 
     private void UpdateGoldStatText(StatusType stat, int level)
     {

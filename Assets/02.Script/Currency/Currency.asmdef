@@ -5,7 +5,8 @@
         "Unity.Services.RemoteConfig",
         "EventControl",
         "Utility",
-        "GameData"
+        "GameData",
+        "Sound"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -89,7 +89,7 @@ public partial class TotalStatusUI
         _levelLabel.text = $"Lv. {StartBroker.GetGameData().level}";
     }
 
-    public void ActiveTotalStatusUI()
+    public void ActiveUI()
     {
         root.style.display = DisplayStyle.Flex;
         UIBroker.ActiveTranslucent(root, true);

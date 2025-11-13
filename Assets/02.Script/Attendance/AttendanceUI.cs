@@ -195,7 +195,11 @@ public class AttendanceUI : MonoBehaviour, IGeneralUI
     // UI 활성/비활성
     // ------------------------------------------------------------------
     public void ActiveUI() => root.style.display = DisplayStyle.Flex;
-    private void InactiveUI() => root.style.display = DisplayStyle.None;
+    private void InactiveUI()
+    {
+        SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+        root.style.display = DisplayStyle.None;
+    }
 
     // ------------------------------------------------------------------
     // 출석 버튼 클릭 처리

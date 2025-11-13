@@ -55,7 +55,11 @@ public class AdventureInfoUI : MonoBehaviour, IGeneralUI
         _retryToggle = root.Q<Toggle>("RetryToggle");
         _retryToggle.value = false;
         _startButton = root.Q<Button>("StartButton");
-        root.Q<Button>("ExitButton").RegisterCallback<ClickEvent>(evt => UIBroker.InactiveCurrentUI());
+        root.Q<Button>("ExitButton").RegisterCallback<ClickEvent>(evt => 
+        {
+            SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+            UIBroker.InactiveCurrentUI(); 
+        } );
 
         for (int i = 0; i < 2; i++)
         {

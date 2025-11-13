@@ -15,7 +15,8 @@
         "Kamgam.UIToolkitBlurredBackground",
         "StoreUI",
         "Adventure",
-        "UIInterface"
+        "UIInterface",
+        "Sound"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

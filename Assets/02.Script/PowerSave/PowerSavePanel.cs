@@ -149,6 +149,7 @@ public class PowerSavePanel : MonoBehaviour
 
     public void ActivePowerSavePanel()
     {
+        SoundManager.instance.MuteAll();
         root.style.display = DisplayStyle.Flex;
         StageInfo stage = StageInfoManager.instance.GetNormalStageInfo(_gameData.currentStageNum);
         _stageNameLabel.text = stage.stageName;
@@ -161,6 +162,7 @@ public class PowerSavePanel : MonoBehaviour
 
     public void InactivePowerSavePanel()
     {
+        SoundManager.instance.UnmuteAll();
         root.style.display = DisplayStyle.None;
 
         if (_timeCoroutine != null)

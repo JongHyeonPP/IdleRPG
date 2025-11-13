@@ -1,4 +1,4 @@
-using DG.Tweening;
+ï»¿using DG.Tweening;
 using EnumCollection;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,7 +17,7 @@ public class CurrencyAbsorbEffect : MonoBehaviour
     [SerializeField] private float flyDuration = 0.8f;
     [SerializeField] private float scatterRadius = 60f;
 
-    // ÀÚ¿ø ¾ÆÀÌÄÜ ½ºÅ©¸° ÁÂÇ¥
+    // ìì› ì•„ì´ì½˜ ìŠ¤í¬ë¦° ì¢Œí‘œ
     [SerializeField] private Vector2 goldPos = new(800f, 200f);
     [SerializeField] private Vector2 diaPos = new(1000f, 200f);
     [SerializeField] private Vector2 cloverPos = new(900f, 250f);
@@ -28,7 +28,6 @@ public class CurrencyAbsorbEffect : MonoBehaviour
         uiDoc = GetComponent<UIDocument>();
         root = uiDoc.rootVisualElement;
 
-        // ÆĞ³Î ½ºÄÉÀÏ ¸ğµå °íÁ¤ (ºñÀ² º¸Á¤)
         var panelSettings = uiDoc.panelSettings;
         panelSettings.scaleMode = PanelScaleMode.ScaleWithScreenSize;
         panelSettings.referenceResolution = new Vector2Int(1080, 2400);
@@ -70,8 +69,10 @@ public class CurrencyAbsorbEffect : MonoBehaviour
         pool.Enqueue(v);
     }
 
-    // startScreenPos¸¦ null·Î µÎ¸é Áß¾Ó¿¡¼­ ½ÃÀÛ
-    // startScreenPos¸¦ null·Î µÎ¸é Áß¾Ó¿¡¼­ ½ÃÀÛ
+
+    // ============================================================
+    // PlayEffect â€” ì½”ì¸ í¡ìˆ˜ íš¨ê³¼ (Coin ì‚¬ìš´ë“œ ì •í™•íˆ ìš¸ë¦¼)
+    // ============================================================
     public void PlayEffect(Resource resource, int amount, Vector3? startScreenPos = null)
     {
         if (CurrencyManager.instance == null) return;
@@ -80,9 +81,8 @@ public class CurrencyAbsorbEffect : MonoBehaviour
         if (sprite == null) return;
 
         Vector3 startScreen = startScreenPos ?? new Vector3(Screen.width / 2f, Screen.height / 2f, 0f);
-        Vector2 startPos = ScreenToPanelFixed(root, startScreen); // º¯È¯ ÇÊ¿ä
+        Vector2 startPos = ScreenToPanelFixed(root, startScreen);
 
-        // ÀÌ¹Ì 1080x2400 ±âÁØ ÁÂÇ¥´Â º¯È¯ÇÏÁö ¾ÊÀ½
         Vector2 targetPos = resource switch
         {
             Resource.Gold => goldPos,
@@ -92,77 +92,95 @@ public class CurrencyAbsorbEffect : MonoBehaviour
         };
 
         int spawnCount = Mathf.Clamp(amount, 1, 8);
+
         for (int i = 0; i < spawnCount; i++)
         {
-            VisualElement coin = GetFromPool();
-            coin.style.display = DisplayStyle.Flex;
-            coin.style.backgroundImage = new StyleBackground(sprite);
-            coin.style.opacity = 1f; // Åõ¸íµµ ÃÊ±âÈ­
-
-            Vector2 randomDir = Random.insideUnitCircle.normalized;
-            float spreadDist = Random.Range(scatterRadius * 0.7f, scatterRadius * 1.5f);
-            Vector2 spreadPos = startPos + randomDir * spreadDist;
-            coin.style.translate = new Translate(startPos.x, startPos.y);
-
-            float delay = i * 0.05f + Random.Range(0f, 0.1f);
-
-            Sequence seq = DOTween.Sequence();
-            seq.AppendInterval(delay);
-
-            // ÆÛÁü
-            seq.Append(DOTween.To(() => 0f, t =>
-            {
-                Vector2 cur = Vector2.Lerp(startPos, spreadPos, t);
-                coin.style.translate = new Translate(cur.x, cur.y);
-            }, 1f, 0.25f).SetEase(Ease.OutBack));
-
-            seq.AppendInterval(0.1f);
-
-            // Èí¼ö ÀÌµ¿
-            seq.Append(DOTween.To(() => 0f, t =>
-            {
-                Vector2 cur = Vector2.Lerp(spreadPos, targetPos, t);
-                coin.style.translate = new Translate(cur.x, cur.y);
-            }, 1f, flyDuration).SetEase(Ease.InOutCubic));
-
-            // µµÂø ÈÄ Åõ¸íÇØÁö±â (0.2ÃÊ µ¿¾È)
-            seq.Append(DOTween.To(() => coin.style.opacity.value, x => coin.style.opacity = x, 0f, 0.2f));
-
-            // ¿ÏÀüÈ÷ Åõ¸íÇØÁø ÈÄ Ç®·Î ¹İÈ¯
-            seq.OnComplete(() => ReturnToPool(coin));
+            CreateCoinAndAnimate(sprite, startPos, targetPos, i);
         }
     }
 
-    // ÇÙ½É: ½ÇÁ¦ ÆĞ³Î Å©±â ±âÁØÀ¸·Î ½ºÅ©¸° ÁÂÇ¥ º¯È¯ (¿Ïº® º¸Á¤)
+
+    // ============================================================
+    // 1. ì½”ì¸ 1ê°œ ìƒì„± + ì´ë™ ì‹œí€€ìŠ¤ ìƒì„±
+    // ============================================================
+    private void CreateCoinAndAnimate(Sprite sprite, Vector2 startPos, Vector2 targetPos, int index)
+    {
+        VisualElement coin = GetFromPool();
+        coin.style.display = DisplayStyle.Flex;
+        coin.style.backgroundImage = new StyleBackground(sprite);
+        coin.style.opacity = 1f;
+        coin.style.translate = new Translate(startPos.x, startPos.y);
+
+        Vector2 randomDir = Random.insideUnitCircle.normalized;
+        float spreadDist = Random.Range(scatterRadius * 0.7f, scatterRadius * 1.5f);
+        Vector2 spreadPos = startPos + randomDir * spreadDist;
+
+        float delay = index * 0.05f + Random.Range(0f, 0.1f);
+
+        Sequence seq = DOTween.Sequence();
+        seq.AppendInterval(delay);
+
+        // í¼ì§
+        seq.Append(DOTween.To(() => 0f, t =>
+        {
+            Vector2 cur = Vector2.Lerp(startPos, spreadPos, t);
+            coin.style.translate = new Translate(cur.x, cur.y);
+        }, 1f, 0.25f).SetEase(Ease.OutBack));
+
+        seq.AppendInterval(0.1f);
+
+        // í¡ìˆ˜ ì´ë™
+        seq.Append(DOTween.To(() => 0f, t =>
+        {
+            Vector2 cur = Vector2.Lerp(spreadPos, targetPos, t);
+            coin.style.translate = new Translate(cur.x, cur.y);
+        }, 1f, flyDuration).SetEase(Ease.InOutCubic));
+
+        // â­ ë„ì°© 0.08ì´ˆ ì „ì— ì†Œë¦¬ ìš¸ë¦¬ê¸°
+        float soundTime = delay + 0.25f + 0.1f + flyDuration - 0.2f;
+        seq.InsertCallback(soundTime, () =>
+        {
+            SoundManager.instance.PlaySFX(SoundPath.Coin);
+        });
+
+        // ì‚¬ë¼ì§
+        seq.Append(DOTween.To(() => coin.style.opacity.value, x => coin.style.opacity = x, 0f, 0.2f));
+
+        seq.OnComplete(() => ReturnToPool(coin));
+    }
+
+
+
+
+    // ============================================================
+    // ìŠ¤í¬ë¦° íŒ¨ë„ ì¢Œí‘œ ë³€í™˜
+    // ============================================================
     private Vector2 ScreenToPanelFixed(VisualElement root, Vector3 screenPos)
     {
-        Rect panelRect = root.worldBound;
-        float scaleX = panelRect.width / Screen.width;
-        float scaleY = panelRect.height / Screen.height;
+        Rect rect = root.worldBound;
+        float scaleX = rect.width / Screen.width;
+        float scaleY = rect.height / Screen.height;
 
         float x = screenPos.x * scaleX;
-        float y = (Screen.height - screenPos.y) * scaleY; // ½ºÅ©¸° YÃà º¸Á¤
+        float y = (Screen.height - screenPos.y) * scaleY;
 
         return new Vector2(x, y);
     }
 
+
+    // ============================================================
+    // í…ŒìŠ¤íŠ¸ìš©
+    // ============================================================
     [ContextMenu("Test Gold Absorb")]
-    private void TestGoldAbsorb()
-    {
-        PlayEffect(Resource.Gold, 20);
-    }
+    private void TestGoldAbsorb() => PlayEffect(Resource.Gold, 20);
 
     [ContextMenu("Test Dia Absorb")]
-    private void TestDiaAbsorb()
-    {
-        PlayEffect(Resource.Dia, 20);
-    }
+    private void TestDiaAbsorb() => PlayEffect(Resource.Dia, 20);
 
     [ContextMenu("Test Clover Absorb")]
-    private void TestCloverAbsorb()
-    {
-        PlayEffect(Resource.Clover, 20);
-    }
+    private void TestCloverAbsorb() => PlayEffect(Resource.Clover, 20);
+
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Q))

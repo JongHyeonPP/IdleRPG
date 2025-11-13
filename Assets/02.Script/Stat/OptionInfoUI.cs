@@ -41,6 +41,7 @@ public class OptionInfoUI : MonoBehaviour
     }
     private void HideUI()
     {
+        SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
         root.style.display = DisplayStyle.None;
     }
 }

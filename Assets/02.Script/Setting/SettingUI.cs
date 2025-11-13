@@ -43,6 +43,7 @@ public class SettingUI : MonoBehaviour
 
         root.Q<Button>("ExitButton").RegisterCallback<ClickEvent>(_ =>
         {
+            SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
             UIBroker.InactiveCurrentUI();
         });
 
@@ -51,7 +52,13 @@ public class SettingUI : MonoBehaviour
         powerSavingToggle = root.Q<Toggle>("PowerSavingToggle");
 
         attendanceButton = root.Q<Button>("AttendanceButton");
-        attendanceButton.RegisterCallback<ClickEvent>(_ => _attendanceUI.ActiveUI());
+        attendanceButton.RegisterCallback<ClickEvent>(_ => OpenAttendanceUI());
+    }
+
+    private void OpenAttendanceUI()
+    {
+        SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+        _attendanceUI.ActiveUI();
     }
 
     private void LoadFromSettingManager()
@@ -75,8 +82,6 @@ public class SettingUI : MonoBehaviour
         {
             sm.bgmValue = evt.newValue;
             sm.SaveSettings();
-
-            // SettingManager → SoundManager 단방향 참조만 허용
             SoundManager.instance?.SetBGMVolume(evt.newValue);
         });
 
@@ -84,24 +89,32 @@ public class SettingUI : MonoBehaviour
         {
             sm.sfxValue = evt.newValue;
             sm.SaveSettings();
-
             SoundManager.instance?.SetSFXVolume(evt.newValue);
         });
 
+        // -----------------------------
+        // 토글 → 클릭 시에도 버튼처럼 SFX 재생
+        // -----------------------------
         damageTextToggle.RegisterValueChangedCallback(evt =>
         {
+            SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+
             sm.isDamageText = evt.newValue;
             sm.SaveSettings();
         });
 
         skillEffectToggle.RegisterValueChangedCallback(evt =>
         {
+            SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+
             sm.isSkillEffect = evt.newValue;
             sm.SaveSettings();
         });
 
         powerSavingToggle.RegisterValueChangedCallback(evt =>
         {
+            SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+
             sm.isPowerSaving = evt.newValue;
             sm.SaveSettings();
             UIBroker.ActivePowerSaveCount(evt.newValue);

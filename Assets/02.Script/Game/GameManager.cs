@@ -71,7 +71,6 @@ public class GameManager : MonoBehaviour
         }
         if (3 <=_gameData.invalidCount)
         {
-            StartBroker.OnDetectInvalidAct();
             return false;
         }
 

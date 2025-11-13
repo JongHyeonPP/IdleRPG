@@ -47,14 +47,28 @@ public class CurrencyBarUI : MonoBehaviour, IGeneralUI
         VisualElement playerImage = root.Q<VisualElement>("PlayerImage");
         _totalStatusUI.root.style.display = DisplayStyle.None;
 
-        playerImage.RegisterCallback<ClickEvent>(evt =>
-        {
-            _totalStatusUI.ActiveTotalStatusUI();
-        });
+        playerImage.RegisterCallback<ClickEvent>(evt => OpenTotalStatusUI());
 
-        root.Q<Button>("SettingButton").RegisterCallback<ClickEvent>(evt => _settingUI.ActiveUI());
+        root.Q<Button>("SettingButton").RegisterCallback<ClickEvent>(evt => ActiveSettingUI());
         _powerSaveButton = root.Q<Button>("PowerSaveButton");
-        _powerSaveButton.RegisterCallback<ClickEvent>(evt => _powerSavePanel.ActivePowerSavePanel());
+        _powerSaveButton.RegisterCallback<ClickEvent>(evt => ActivePowerSavePanel());
+    }
+
+    private void OpenTotalStatusUI()
+    {
+        SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+        _totalStatusUI.ActiveUI();
+    }
+
+    private void ActivePowerSavePanel()
+    {
+        _powerSavePanel.ActivePowerSavePanel();
+    }
+
+    private void ActiveSettingUI()
+    {
+        SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+        _settingUI.ActiveUI();
     }
 
     private void SetLevelExp()

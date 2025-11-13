@@ -4,7 +4,8 @@
     "references": [
         "Utility",
         "Game",
-        "EventControl"
+        "EventControl",
+        "Sound"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
