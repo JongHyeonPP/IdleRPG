@@ -56,7 +56,7 @@ public class CompanionPromoteInfoUI : MonoBehaviour, IGeneralUI
     {
         _companionPromoteData = CompanionManager.instance.companionPromoteData;
         SetLabelSet(root.Q<VisualElement>("AttBuffLabelSet"), _companionPromoteData.attBuff, "추가 공격력(%)");
-        SetLabelSet(root.Q<VisualElement>("DefBuffLabelSet"), _companionPromoteData.defBuff, "추가 방어력(%)");
+        SetLabelSet(root.Q<VisualElement>("DefBuffLabelSet"), _companionPromoteData.defBuff, "받는 피해 감소(%)");
         SetLabelSet(root.Q<VisualElement>("CriticalDamageLabelSet"), _companionPromoteData.criticalDamage, "치명타 데미지(%)");
         SetLabelSet(root.Q<VisualElement>("MaxHpLabelSet"), _companionPromoteData.maxHp, "추가 체력(%)");
         SetLabelSet(root.Q<VisualElement>("HpRecoverLabelSet"), _companionPromoteData.hpRecover, "추가 체력 회복량(%)");

@@ -42,6 +42,7 @@ public class OfflineRewardReceive : MonoBehaviour
 
     private void OnClickUi()
     {
+        SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
         _offlineRewardUi.ActiveUi(_rewardResult);
     }
 

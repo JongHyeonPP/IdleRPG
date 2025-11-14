@@ -22,6 +22,12 @@ public class PurchaseManager : MonoBehaviour
         _ = InitializeProductsFromRc();
         PlayerBroker.PurchaseCurrency += PurchaseAsync;
         PlayerBroker.RequestGacha += CallGacha;
+        PlayerBroker.OnPurchaseCurrency += PurchaseCallBack;
+    }
+
+    private void PurchaseCallBack(PurchaseResult result)
+    {
+        Currency
     }
 
     private async Task InitializeProductsFromRc()
@@ -351,5 +357,10 @@ public class PurchaseManager : MonoBehaviour
                 Items = new List<string>()
             });
         }
+    }
+    [ContextMenu("PurchaseTest")]
+    private void PurchaseTest()
+    {
+        PlayerBroker.PurchaseCurrency("dia1");
     }
 }

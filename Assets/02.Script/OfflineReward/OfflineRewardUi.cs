@@ -1,3 +1,4 @@
+using EnumCollection;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -31,6 +32,7 @@ public class OfflineRewardUI : MonoBehaviour
     private int _currentExp;
     private int _currentDia;
     private int _currentClover;
+    private double _currentTime;
     private enum RewardType
     {
         Gold, Exp, Dia, Clover
@@ -82,6 +84,7 @@ public class OfflineRewardUI : MonoBehaviour
     {
         UIBroker.ActiveTranslucent(_root, true);
         _root.style.display = DisplayStyle.Flex;
+        _currentTime = _rewardResult.OfflineTime;
         _acquisitionTimeLabel.text = $"자동사냥 시간 : {_rewardResult.OfflineTime / 60:F0} 분";
         string goldAcquisitionStr = _table.Compute(_formulaDict["Gold"].Replace("{second} *", "").Replace("{maxStageNum}", _gameData.maxStageNum.ToString()), null).ToString();
         _goldAcquisitionLabel.text = $"{goldAcquisitionStr}/m";
@@ -118,5 +121,9 @@ public class OfflineRewardUI : MonoBehaviour
         PlayerBroker.OnCloverSet();
         NetworkBroker.OnOfflineReward();
         NetworkBroker.SaveServerData();
+
+        CurrencyAbsorbEffect.instance.PlayEffect(Resource.Gold, (int)(_currentTime / 60) * 20);
+        CurrencyAbsorbEffect.instance.PlayEffect(Resource.Clover, (int)(_currentTime / 60) * 20);
+        CurrencyAbsorbEffect.instance.PlayEffect(Resource.Dia, (int)(_currentTime / 60) * 20);
     }
 }
