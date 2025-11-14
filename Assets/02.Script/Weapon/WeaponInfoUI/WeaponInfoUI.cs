@@ -1,8 +1,10 @@
 using EnumCollection;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static WeaponData;
 
 public class WeaponInfoUI : MonoBehaviour, IGeneralUI
 {
@@ -13,7 +15,8 @@ public class WeaponInfoUI : MonoBehaviour, IGeneralUI
     private Label _powerLabel;
     private Label _criticalDamageLabel;
     private Label _criticalLabel;
-
+    private Label _attackSpeedLabel;
+    private Label _effectLabel;
     private WeaponData _currentWeapon;
     private Button _reinforceButton;
     private Button _insufficientPanel;
@@ -25,6 +28,17 @@ public class WeaponInfoUI : MonoBehaviour, IGeneralUI
 
     public GameObject _successEffect;
     public GameObject _spot;
+
+
+private static readonly Dictionary<SkillType, string> WeaponEffect = new()
+{
+        {SkillType.AttBuff,"공격력 버프" },
+        {SkillType.DefBuff,"받는피해 10% 감소 버프" },
+        {SkillType.SpeedBuff,"공격속도 버프" },
+        {SkillType.Revive,"부활(보스 전투중 한번 죽으면 체력100%회복)" },
+        {SkillType.Invincible,"무적(3초지속,10초쿨타임)" },
+        {SkillType.Paralyzation,"무력화(보스 2초동안 무력화,5초 쿨타임" }
+};
 
     private static readonly Dictionary<WeaponType, string> WeaponTypeNames = new()
     {
@@ -45,7 +59,7 @@ public class WeaponInfoUI : MonoBehaviour, IGeneralUI
         { Rarity.Ancient, "고대" }
     };
 
-    private void Awake()
+private void Awake()
     {
         _gameData = StartBroker.GetGameData();
         root = GetComponent<UIDocument>().rootVisualElement;
@@ -64,7 +78,8 @@ public class WeaponInfoUI : MonoBehaviour, IGeneralUI
         _powerLabel = root.Q<Label>("Power");
         _criticalDamageLabel = root.Q<Label>("CriticalDamage");
         _criticalLabel = root.Q<Label>("Critical");
-
+        _attackSpeedLabel = root.Q<Label>("AttackSpeed");
+        _effectLabel = root.Q<Label>("Effect");
         var equipButton = root.Q<Button>("EquipButton");
         equipButton.RegisterCallback<ClickEvent>(evt =>
         {
@@ -152,14 +167,29 @@ public class WeaponInfoUI : MonoBehaviour, IGeneralUI
             case Rarity.Ancient: ApplyColor(Color.red); break;
             default: ApplyColor(Color.white); break;
         }
+        int currentLevel = GetWeaponLevel(weaponData.UID);
+        var (currentPower, currentCritDmg, currentCrit, currentAtkSpeed) = weaponData.GetStats(currentLevel);
+        var (nextPower, nextCritDmg, nextCrit, nextAtkSpeed) = weaponData.GetStats(currentLevel + 1);
 
-        int level = GetWeaponLevel(weaponData.UID);
-        var (currPow, currCritDmg, currCrit) = weaponData.GetStats(level);
-        var (nextPow, nextCritDmg, nextCrit) = weaponData.GetStats(level + 1);
+        _powerLabel.text = $"공격력: {currentPower} → {nextPower}";
+        _criticalDamageLabel.text = $"치명타 공격력: {currentCritDmg} → {nextCritDmg}";
+        _criticalLabel.text = $"치명타 확률: {currentCrit}% → {nextCrit}%";
+        _attackSpeedLabel.text = $"공격속도: {currentAtkSpeed}% → {nextAtkSpeed}%";
 
-        _powerLabel.text = $"공격력: {currPow} → {nextPow}";
-        _criticalDamageLabel.text = $"치명타 공격력: {currCritDmg} → {nextCritDmg}";
-        _criticalLabel.text = $"치명타 확률: {currCrit} → {nextCrit}%";
+        if (weaponData._weaponEffects != null && weaponData._weaponEffects.Length > 0)
+        {
+            var effectStrings = weaponData._weaponEffects
+                .Where(e => WeaponEffect.ContainsKey(e.type))
+                .Select(e => WeaponEffect[e.type]);
+
+            _effectLabel.text = "효과:\n" + string.Join("\n", effectStrings);
+        }
+        else
+        {
+            _effectLabel.text = "";
+        }
+
+        WeaponManager.instance.SetWeaponIconToVe(weaponData, _weaponImage);
 
         _currentWeapon = weaponData;
     }
@@ -191,8 +221,9 @@ public class WeaponInfoUI : MonoBehaviour, IGeneralUI
         NetworkBroker.SaveServerData();
 
         ShowWeaponInfo(_currentWeapon);
+        BattleBroker.OnWeaponLevelChanged?.Invoke(weaponID);
     }
-
+  
     private IEnumerator HideInsufficientPanel(float delay)
     {
         yield return new WaitForSeconds(delay);

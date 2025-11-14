@@ -10,7 +10,7 @@ public class WeaponBookData : ScriptableObject
     [Header("Upgrade Info")]
     public int[] upgradeLevels;
     public float[] upgradeStats;
-
+   
     public string GetEffectDescription()
     {
         string description = "";

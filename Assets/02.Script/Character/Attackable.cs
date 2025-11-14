@@ -1,4 +1,5 @@
 using EnumCollection;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,9 +21,25 @@ public abstract class Attackable : MonoBehaviour
 
     private EquipedSkill _defaultAttack;
     public float currentSpeed { protected set; get; }
+    public Dictionary<SkillType, bool> skillOnCooldown = new();
+    public Dictionary<SkillType, bool> skillActive = new();
     private void Awake()
     {
         //_gameData = StartBroker.GetGameData();
+    }
+    private void Start()
+    {
+        if (this is PlayerController player)
+        {
+            foreach (SkillType skill in Enum.GetValues(typeof(SkillType)))
+            {
+                if (!skillActive.ContainsKey(skill))
+                    skillActive[skill] = false;
+
+                if (!skillOnCooldown.ContainsKey(skill))
+                    skillOnCooldown[skill] = false;
+            }
+        }
     }
     protected void SetDefaultAttack() => _defaultAttack = new();
 
@@ -56,8 +73,35 @@ public abstract class Attackable : MonoBehaviour
 
         while (true)
         {
+            if (target is PlayerController player && player.playerKnockback)
+            {
+                yield break;
+            }
+
             EquipedSkill currentSkill = GetNextSkill();
             float attBuffValue = GetPWValue(SkillType.AttBuff);
+            float speedBuffValue=GetPWValue(SkillType.SpeedBuff);
+            
+            float speedDuration = 3f;
+            float speedCooldown = 3f;
+            if (speedBuffValue > 0 && !skillActive[SkillType.SpeedBuff])
+            {
+                StartCoroutine(SkillCooldownCheck(SkillType.SpeedBuff, speedDuration, speedCooldown));
+            }
+
+            float paralyzeDuration = GetPWValue(SkillType.Paralyzation);
+            float paralyzeCooldown = 3f;
+
+            if (paralyzeDuration > 0)
+            {
+                skillActive.TryGetValue(SkillType.Paralyzation, out bool isActive);
+
+                if (!isActive)
+                {
+                    StartCoroutine(SkillCooldownCheck(SkillType.Paralyzation, paralyzeDuration, paralyzeCooldown));
+                }
+            }
+
             SkillData skillData = currentSkill.skillData;
 
 
@@ -74,7 +118,14 @@ public abstract class Attackable : MonoBehaviour
             // 애니메이션 처리
             AnimBehavior(currentSkill, skillData);
 
+            float invincibleDuration = GetPWValue(SkillType.Invincible);
+            float invincibleCooldown = 3f;
+
+            if (invincibleDuration > 0)
+                StartCoroutine(SkillCooldownCheck(SkillType.Invincible,invincibleDuration,invincibleCooldown));
+
             var targets = GetTargets(skillData.target, skillData.targetNum);
+
             foreach (var tgt in targets)
             {
                 BigInteger damage = CalculateBaseDamage(currentSkill);
@@ -89,16 +140,37 @@ public abstract class Attackable : MonoBehaviour
                     damageType = critialResult.Item1;
                     damage = critialResult.Item2;
                 }
+                float doubleHitChance = GetPWValue(SkillType.DoubleHit);
+                if (UnityEngine.Random.value < doubleHitChance)
+                    damage += damage;
 
-                // 데미지 처리
+                // 힐 온 히트
+                float healPercent = GetPWValue(SkillType.healOnHit);
+                if (healPercent > 0)
+                {
+                    BigInteger healAmount = (GetStatus().MaxHp * (BigInteger)healPercent) / 100;
+                    (this as PlayerController)?.Heal(healAmount);
+                }
+
+                // **데미지 적용**
                 tgt.ReceiveSkill(damage, skillData.type, damageType);
 
-                // hitClip은 즉시 재생 (지연 없음)
+                // 히트 사운드(지연 없음)
                 if (skillData.hitClip != null)
                     SoundManager.instance.PlaySFX(skillData.hitClip);
 
-                if (target.hp <= 0)
+
+
+                if (target == null)
+                {
+                    yield break; 
+                }
+                else if (target.hp <= 0)
+                {
                     StartCoroutine(TargetKill());
+                    yield break;
+                }
+
             }
 
             if (SettingManager.instance.isSkillEffect)
@@ -106,7 +178,7 @@ public abstract class Attackable : MonoBehaviour
 
             if (currentSkill == _defaultAttack)
                 ProgressCoolAttack();
-
+       
             yield return new WaitForSeconds(currentSkill.skillData.preDelay * (1 / (1 + currentSpeed)));
         }
     }
@@ -275,12 +347,23 @@ public abstract class Attackable : MonoBehaviour
 
     public void ReceiveSkill(BigInteger calcedValue, SkillType skillType, DamageType damageType)
     {
+        if (skillActive.TryGetValue(SkillType.Invincible, out bool isActive) && isActive && skillType == SkillType.Damage)
+        {
+            return;
+        }
+
         switch (skillType)
         {
             case SkillType.Damage:
-                hp -= calcedValue;
+                float defBuffValue = GetPWValue(SkillType.DefBuff);
+                float damageMultiplier = Mathf.Max(0f, 1f - defBuffValue);
+                int scale = 100;
+                BigInteger multiplier = new BigInteger(damageMultiplier * scale);
+                BigInteger finalDamage = (calcedValue * multiplier) / scale;
+
+                hp -= finalDamage;
                 if (hp < 0) hp = 0;
-                
+
 
                 if (this is EnemyController enemy)
                 {
@@ -293,11 +376,23 @@ public abstract class Attackable : MonoBehaviour
                 else
                 {
                     StartCoroutine(FlashRed());
+
+                    if (this is PlayerController player)
+                    {
+                        float superArmorValue = GetPWValue(SkillType.SuperArmor);
+                        if (superArmorValue <= 0)
+                        {
+                            player.playerKnockback = true;
+                        }
+                    }
+
                 }
 
                 Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
+
                 if (SettingManager.instance.isDamageText)
                     BattleBroker.ShowDamageText(screenPos, calcedValue.ToString("N0"), damageType);
+
                 break;
         }
 
@@ -322,6 +417,33 @@ public abstract class Attackable : MonoBehaviour
         for (int i = 0; i < renderers.Length; i++)
             renderers[i].color = originalColors[i];
     }
+
+    public IEnumerator SkillCooldownCheck(SkillType skill, float duration, float cooldown)
+    {
+        if (!skillOnCooldown.ContainsKey(skill))
+            skillOnCooldown[skill] = false;
+        if (!skillActive.ContainsKey(skill))
+            skillActive[skill] = false;
+
+        if (skillOnCooldown[skill] || skillActive[skill])
+            yield break;
+
+        skillActive[skill] = true;
+        skillOnCooldown[skill] = true;
+        
+        if (skill == SkillType.SpeedBuff)
+            currentSpeed += GetPWValue(SkillType.SpeedBuff);
+
+        yield return new WaitForSeconds(duration);
+        skillActive[skill] = false;
+        
+        if (skill == SkillType.SpeedBuff)
+            currentSpeed -= GetPWValue(SkillType.SpeedBuff);
+
+        yield return new WaitForSeconds(cooldown);
+        skillOnCooldown[skill] = false;
+    }
+
 
     // ==========================
     //  Passive Damage

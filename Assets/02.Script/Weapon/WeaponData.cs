@@ -17,6 +17,7 @@ public class WeaponData : ScriptableObject, IGachaItems
     [SerializeField] private int _maxHp;
     [SerializeField] private int _criticalDamage;
     [SerializeField] private int _critical;
+    [SerializeField] private float _attackSpeed;
     [SerializeField] private Sprite _weaponSprite;
     [SerializeField] private Vector2 _textureSize = new(1, 1);
     [SerializeField] private float _textureScale;
@@ -25,12 +26,15 @@ public class WeaponData : ScriptableObject, IGachaItems
     [SerializeField] private int _powerPerUpgrade;
     [SerializeField] private int _critDmgPerUpgrade;
     [SerializeField] private int _critPerUpgrade;
+    [SerializeField] private float _attackSpeedPerUpgrade;
     public WeaponEffect[] _weaponEffects;
     public WeaponType WeaponType => _weaponType;
     public Rarity WeaponRarity => _weaponRarity;
     public int Power => _power;
     public int CriticalDamage => _criticalDamage;
     public int Critical => _critical;
+
+    public float AttackSpeed => _attackSpeed;
     public Sprite WeaponSprite => _weaponSprite;
     public Vector2 TextureSize =>  _textureSize;
     public float TextureScale =>  _textureScale;
@@ -38,30 +42,26 @@ public class WeaponData : ScriptableObject, IGachaItems
     public int PowerPerUpgrade => _powerPerUpgrade;
     public int CritDmgPerUpgrade => _critDmgPerUpgrade;
     public int CritPerUpgrade => _critPerUpgrade;
+    public float AttackSpeedPerUpgrade => _attackSpeedPerUpgrade;
+
     public string WeaponName => _weaponName;
-    public void SetReinforcedStats(float powerIncrease, float critDamageIncrease, float critIncrease)
+    public void SetReinforcedStats(float powerIncrease, float critDamageIncrease, float critIncrease,float speedIncrease)
     {
         _power += (int)powerIncrease;
         _criticalDamage += (int)critDamageIncrease;
         _critical += (int)critIncrease;
+        _attackSpeed += (float)speedIncrease;
     }
-    public (int power, int critDamage, int crit) GetStats(int level)
+    public (int power, int critDamage, int crit,float attackSpeed) GetStats(int level)
     {
         int power = _power + (PowerPerUpgrade * level);
         int critDamage = _criticalDamage + (CritDmgPerUpgrade * level);
         int crit = _critical + (CritPerUpgrade * level);
-        return (power, critDamage, crit);
+        float attackspeed = _attackSpeed + (AttackSpeedPerUpgrade * level);
+        return (power, critDamage, crit,attackspeed);
     }
     public Rarity ItemRarity => WeaponRarity;
-    public bool IsAncientWeapon
-    {
-        get
-        {
-            if (int.TryParse(UID, out int id))
-                return id / 100 == 6; 
-            return true;
-        }
-    }
+    
     [Serializable]
     public class WeaponEffect
     {

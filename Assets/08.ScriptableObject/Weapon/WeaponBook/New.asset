@@ -20,7 +20,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3c7b5ed452b671d4b8fa64810a3fde04, type: 2}
   - {fileID: 11400000, guid: 02d5c56dde7dd8244a2c7e37107e4df3, type: 2}
   - {fileID: 11400000, guid: b524869e7cd2505418c009e2d78e9086, type: 2}
-  upgradeLevels: 120000001e0000003c00000078000000f0000000
+  upgradeLevels: 19000000320000004b000000640000007d000000
   upgradeStats:
   - 1
   - 1

@@ -20,9 +20,10 @@ namespace EnumCollection
         //Active
         Damage,
         //Passive
-        AttBuff, SpeedBuff, DefBuff,
-        HealOnHit, DoubleHit, ExpPlus,
-        GoldPlus
+
+        AttBuff, SpeedBuff,DefBuff,
+        healOnHit, DoubleHit, ExpPlus, Revive, Invincible, Paralyzation,SuperArmor, GoldPlus
+
     }
     public enum SkillTarget
     {

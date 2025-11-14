@@ -15,7 +15,7 @@ MonoBehaviour:
   skillName: Slash
   iconSprite: {fileID: 6201252808942594478, guid: 366f286d02c1a344a8097139c386be8e, type: 3}
   simple: 
-  complex: "\uBB3C\uC758 \uD798\uC744 \uB2F4\uC544 \uC801\uC744 \uAC08\uB77C <value*100>%\uC758
+  complex: "\uBB3C\uC758 \uD798\uC73C\uB85C \uC801\uC5D0\uAC8C <value*100>%\uC758
     \uD53C\uD574\uB97C \uC785\uD799\uB2C8\uB2E4."
   rarity: 0
   isPlayerSkill: 1

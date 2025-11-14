@@ -10,8 +10,11 @@ public class EnemyStatus : ScriptableObject, ICharacterStatus
     public GameObject prefab;
     public bool isMonster;
     public EnemyType enemyType;
+    public float KnockbackForce = 5f;    
+    public float KnockbackDuration = 0.2f; 
     //보스만 스킬을 사용하도록, 인스펙터 할당
     [SerializeField] private List<EquipedSkill> _skills = new();
+    public float KnockbackChance =1.0f;
     //스탯은 스테이지에 있는 모든 몹이 동일한 값을 가져온다.
     public BigInteger MaxHp
     {

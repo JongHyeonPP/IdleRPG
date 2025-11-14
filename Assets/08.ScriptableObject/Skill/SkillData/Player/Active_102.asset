@@ -15,7 +15,8 @@ MonoBehaviour:
   skillName: FireSlash
   iconSprite: {fileID: -1318599591115060820, guid: bcef0c6dfde22c34aa484e6f060e6114, type: 3}
   simple: 
-  complex: 
+  complex: "\uBD88\uC758 \uD798\uC73C\uB85C <value*100>%\uC758 \uD53C\uD574\uB97C
+    \uC785\uD799\uB2C8\uB2E4."
   rarity: 1
   isPlayerSkill: 1
   skillCoolType: 0

@@ -40,7 +40,10 @@ public class BattleManager : MonoBehaviour
     private readonly float _enemyPlayerDistance = 1.5f;
     private readonly float _bossPlayerDistance = 2f;
     private readonly int _enemyBundleNum = 10;
-
+    private bool _isKnockback=false;
+    private float _knockbackTimer = 0f;
+    private float _knockbackDuration = 0.25f;
+    private float _knockbackForce = 5f;
     private void Awake()
     {
         instance ??= this;
@@ -90,14 +93,23 @@ public class BattleManager : MonoBehaviour
 
     private void BattleLoop()
     {
+        var player = (PlayerController)BattleBroker.GetPlayerController();
+        if (player.playerKnockback || _isKnockback)
+            return;
+
         if (_controller.target != null)
             HandleTargetCase();
         else
             HandleNoTargetCase();
     }
-
+  
     private void HandleTargetCase()
     {
+        var player = (PlayerController)BattleBroker.GetPlayerController();
+
+        if (player != null && player.playerKnockback)
+            return;
+
         float dist = _controller.target.transform.position.x - _controller.transform.position.x;
         float range = (_battleType == BattleType.Default) ? _enemyPlayerDistance : _bossPlayerDistance;
         bool withinRange = dist < range;
@@ -109,7 +121,6 @@ public class BattleManager : MonoBehaviour
             BattleBroker.ControllCompanionMove?.Invoke(2);
 
             if (_battleType is BattleType.Boss or BattleType.CompanionTech or BattleType.Adventure or BattleType.Dungeon or BattleType.Promote)
-
                 _controller.target.StartAttack();
 
             _isMove = false;
@@ -146,13 +157,43 @@ public class BattleManager : MonoBehaviour
             _currentTargetIndex++;
         }
     }
-
+    
     private void MoveByPlayer()
     {
-        float playerSpeed = ((PlayerController)BattleBroker.GetPlayerController()).currentSpeed;
+        var player = (PlayerController)BattleBroker.GetPlayerController();
+
+        if (player.playerKnockback && !_isKnockback)
+        {
+            _isKnockback = true;
+            _knockbackTimer = 0f;
+            player.playerKnockback = false;
+            _isMove = false;
+
+            if (_controller.target != null)
+                _controller.target = null;
+        }
+
+        if (_isKnockback)
+        {
+            _knockbackTimer += Time.fixedDeltaTime;
+            
+            foreach (var mover in MediatorManager<IMoveByPlayer>.GetRegisteredObjects())
+                mover.MoveByPlayer(Vector2.right * _knockbackForce * Time.fixedDeltaTime);
+            player.anim.SetTrigger("Damaged");
+            if (_knockbackTimer >= _knockbackDuration)
+            {
+                _isKnockback = false;
+                _knockbackTimer = 0f;
+                _isMove = true; 
+            }
+            return;
+        }
+
+        float playerSpeed = player.currentSpeed;
         foreach (var mover in MediatorManager<IMoveByPlayer>.GetRegisteredObjects())
             mover.MoveByPlayer(_isMove ? _defaultSpeed * playerSpeed * Time.fixedDeltaTime * Vector2.left : Vector3.zero);
     }
+   
 
     private void SetEvent()
     {

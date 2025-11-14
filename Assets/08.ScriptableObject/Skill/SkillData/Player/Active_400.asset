@@ -15,7 +15,8 @@ MonoBehaviour:
   skillName: SpinningCut
   iconSprite: {fileID: 5502737878774933199, guid: 5bd20f76d5f7df248812e6c463d548f6, type: 3}
   simple: 
-  complex: 
+  complex: "\uAE08\uB2E8\uC758 \uBE44\uAE30\uB85C <value*100>%\uC758 \uD53C\uD574\uB97C
+    \uC785\uD799\uB2C8\uB2E4."
   rarity: 4
   isPlayerSkill: 1
   skillCoolType: 0
