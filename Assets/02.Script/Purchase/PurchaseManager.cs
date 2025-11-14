@@ -27,7 +27,7 @@ public class PurchaseManager : MonoBehaviour
 
     private void PurchaseCallBack(PurchaseResult result)
     {
-        Currency
+        
     }
 
     private async Task InitializeProductsFromRc()
