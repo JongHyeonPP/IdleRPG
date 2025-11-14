@@ -244,7 +244,7 @@ public class EnemyController : Attackable, IMoveByPlayer
                 anim.SetTrigger("Attack");
 
             BigInteger dmg = _status.Power;
-            target.ReceiveDamage(dmg);
+            target.ReceiveSkill(dmg);
         }
     }
    

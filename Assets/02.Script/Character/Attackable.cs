@@ -133,6 +133,7 @@ public abstract class Attackable : MonoBehaviour
                         damage = (damage * multiplier) / scale;
                         break;
                 }
+
                 float doubleHitChance = GetPWValue(SkillType.DoubleHit);
                 if (UnityEngine.Random.value < doubleHitChance )
                 {
@@ -147,17 +148,40 @@ public abstract class Attackable : MonoBehaviour
                 }
                 tgt.ReceiveSkill(damage, skilldata.type);
 
-                if (target.hp <= 0)
+
+                if (target == null)
+                {
+                    yield break; 
+                }
+                else if (target.hp <= 0)
+                {
                     StartCoroutine(TargetKill());
+                    yield break;
+                }
+
             }
 
-            VisualEffectToTarget(targets, skilldata);
+            if (SettingManager.instance.isSkillEffect)
+                VisualEffectToTarget(targets, skilldata);
 
             if (currentSkill == _defaultAttack)
                 ProgressCoolAttack();
        
             yield return new WaitForSeconds(currentSkill.skillData.preDelay * (1 / (1 + currentSpeed)));
         }
+    }
+
+    private (DamageType, BigInteger) CalcCrital(BigInteger damage, PlayerStatus playerStatus)
+    {
+        bool isCritical = UtilityManager.CalculateProbability(playerStatus.Critical);
+        DamageType damageType = isCritical ? DamageType.Critical : DamageType.Normal;
+        if (isCritical)
+        {
+            damage = damage * new BigInteger(playerStatus.CriticalDamage * 100);
+            damage /= 100;
+        }
+        return (damageType, damage);
+        
     }
 
     // ==========================
@@ -296,9 +320,8 @@ public abstract class Attackable : MonoBehaviour
     // ==========================
     //  Damage & Heal
     // ==========================
-    public virtual void ReceiveDamage(BigInteger damage) => ReceiveSkill(damage, SkillType.Damage);
 
-    private void ReceiveSkill(BigInteger calcedValue, SkillType skillType)
+    public void ReceiveSkill(BigInteger calcedValue, SkillType skillType = SkillType.Damage, DamageType damageType = DamageType.Normal)
     {
         if (skillActive.TryGetValue(SkillType.Invincible, out bool isActive) && isActive && skillType == SkillType.Damage)
         {
@@ -341,7 +364,10 @@ public abstract class Attackable : MonoBehaviour
                 }
 
                 Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
-                BattleBroker.ShowDamageText(screenPos, finalDamage.ToString("N0"));
+
+                if (SettingManager.instance.isDamageText)
+                    BattleBroker.ShowDamageText(screenPos, calcedValue.ToString("N0"), damageType);
+
                 break;
         }
 

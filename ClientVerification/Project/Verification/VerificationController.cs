@@ -49,6 +49,7 @@ namespace ClientVerification.Verification
             var verifiers = new List<IDataVerifier>
             {
                 new StatPointVerifier(clientData),
+                new StatPointVerifier(_serverData),
                 new ResourceVerifier(resourceReports, _serverData, _logger, verificationSystem, context, gameApiClient),
                 new SpendVerifier(spendReports, _serverData, _logger, verificationSystem, context, gameApiClient)
             };
@@ -118,6 +119,7 @@ namespace ClientVerification.Verification
 
         private void ApplyUsualFieldsOnly(GameData server, GameData client)
         {
+            server.statLevel_StatPoint = new(client.statLevel_StatPoint);
             server.stat_Promote = new(client.stat_Promote);
             server.skillLevel = new(client.skillLevel);
             server.skillFragment = new(client.skillFragment);

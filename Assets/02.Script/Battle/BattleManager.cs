@@ -63,7 +63,7 @@ public class BattleManager : MonoBehaviour
         _controller.MoveState(true);
         _currentStageInfo = StageInfoManager.instance.GetNormalStageInfo(_gameData.currentStageNum);
         BattleBroker.OnStageChange();
-        BattleBroker.RefreshStageSelectUI(_gameData.currentStageNum);
+        UIBroker.RefreshStageSelectUI();
 
         //Awake에서 해당 이벤트들이 연결된 이후 Start에서 실행
         if (!string.IsNullOrEmpty(_gameData.playerWeaponId))
@@ -305,6 +305,7 @@ public class BattleManager : MonoBehaviour
         if (_gameData.currentStageNum > _gameData.maxStageNum)
         {
             _gameData.maxStageNum = _gameData.currentStageNum;
+            UIBroker.RefreshStageSelectUI();
             if (_gameData.currentStageNum is 1 or 21)
             {
                 _isBattleActive = false;
@@ -471,7 +472,6 @@ public class BattleManager : MonoBehaviour
         {
             case BattleType.Boss:
                 _gameData.currentStageNum++;
-                BattleBroker.RefreshStageSelectUI(_gameData.currentStageNum);
                 _currentStageInfo = StageInfoManager.instance.GetNormalStageInfo(_gameData.currentStageNum);
                 _nextBattleType = BattleType.Default;
                 DelayOnEnd();
@@ -587,7 +587,7 @@ public class BattleManager : MonoBehaviour
 
         // 드롭 확률 원본 (Remote Config에서 가져오기)
         string probJson = RemoteConfigService.Instance.appConfig.GetJson("DROP_PROBABILITY", "None");
-        Dictionary<string, float> fullProbDict = JsonConvert.DeserializeObject<Dictionary<string, float>>(probJson);
+        var fullProbDict = JsonConvert.DeserializeObject<Dictionary<string, float>>(probJson);
 
         // 드롭 대상 및 가중치 리스트 구성
         List<(string type, float weight)> dropCandidates = new()

@@ -440,7 +440,7 @@ public class CurrencyManager : MonoBehaviour
     // [UI / BROKER HELPERS]
     // ======================================
 
-    private Sprite GetResourceSprite(Resource resource) =>
+    public Sprite GetResourceSprite(Resource resource) =>
         resource switch
         {
             Resource.Gold => _goldSprite,

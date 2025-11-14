@@ -175,7 +175,7 @@ public class SkillUI : MonoBehaviour, IMenuUI
                 _skillInfoUI.ActiveUI(skillData);
         });
 
-        _skillId_SlotDict.Add(skillData.uid, currentSlot);
+        _skillId_SlotDict.Add(skillData.name, currentSlot);
     }
 
     private void OnFragmentSet()

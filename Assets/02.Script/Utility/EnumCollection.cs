@@ -86,7 +86,7 @@ namespace EnumCollection
     {
         //¿Á»≠ »πµÊ√≥
         Battle, Adventure, Companion, Dungeon,
-        Advertise
+        Advertise, Attendance
     }
     public enum SpendType
     {
@@ -96,5 +96,9 @@ namespace EnumCollection
     public enum GachaType
     {
         Weapon, Costume
+    }
+    public enum DamageType
+    {
+        Normal, Critical
     }
 }

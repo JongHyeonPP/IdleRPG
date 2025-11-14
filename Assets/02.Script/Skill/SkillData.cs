@@ -15,7 +15,6 @@ public class SkillData : ScriptableObject
 {
     [Header("Info")]
     public string skillName;
-    public string uid;
     public Sprite iconSprite;
     public string simple;
     public string complex;

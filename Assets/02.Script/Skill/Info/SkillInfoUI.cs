@@ -115,7 +115,7 @@ public class SkillInfoUI : MonoBehaviour,IGeneralUI
     public void OnUpgradeButtonClick()
     {
         Rarity rarity = currentSkillData.rarity;
-        string uid = currentSkillData.uid;
+        string uid = currentSkillData.name;
         int requiredFragment = CurrencyManager.instance.GetRequireFragment_Skill(rarity, _gameData.skillLevel[uid]+1);
         if (!_gameData.skillFragment.TryGetValue(rarity, out int ownedSkillFragement))
         {
@@ -133,10 +133,10 @@ public class SkillInfoUI : MonoBehaviour,IGeneralUI
             }
             else
             {
-                fragmentLabel.text = CurrencyManager.instance.GetRequireFragment_Skill(rarity, _gameData.skillLevel[uid]+1).ToString();
+                fragmentLabel.text = CurrencyManager.instance.GetRequireFragment_Skill(rarity, _gameData.skillLevel[name]+1).ToString();
             }
-            levelLabel.text = $"Lv.{_gameData.skillLevel[currentSkillData.uid]}";
-            PlayerBroker.OnSkillLevelSet(currentSkillData.uid, _gameData.skillLevel[currentSkillData.uid]);
+            levelLabel.text = $"Lv.{_gameData.skillLevel[currentSkillData.name]}";
+            PlayerBroker.OnSkillLevelSet(currentSkillData.name, _gameData.skillLevel[currentSkillData.name]);
         }
         else//재화가 부족한 경우
         {

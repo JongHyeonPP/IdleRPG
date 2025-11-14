@@ -19,6 +19,7 @@ MonoBehaviour:
   _criticalDamage: 1
   _critical: 1
   _attackSpeed: 0
+
   _weaponSprite: {fileID: 21300000, guid: 94f5e532a27fb4ec496f998c31e084ba, type: 3}
   _textureSize: {x: 11, y: 21}
   _textureScale: 1
@@ -31,3 +32,4 @@ MonoBehaviour:
   _weaponEffects:
   - type: 9
     value: 3
+

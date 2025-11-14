@@ -16,4 +16,6 @@ public static class NetworkBroker
     public static Action OnOfflineReward;
 
     public static Action<(Resource, int)> LoadAd;
+
+    public static Action<string> PurchaseItem;
 }

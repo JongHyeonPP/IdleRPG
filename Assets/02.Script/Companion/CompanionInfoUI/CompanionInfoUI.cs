@@ -215,7 +215,7 @@ public class CompanionInfoUI : MonoBehaviour, IGeneralUI
         for (int i = 0; i < skillArr.Length; i++)
         {
             SkillData x = skillArr[i];
-            if (x.uid == skillUid)
+            if (x.name == skillUid)
             {
                skillData = SkillManager.instance.GetSkillData(skillUid);
                 skillIndex = i;
@@ -224,7 +224,7 @@ public class CompanionInfoUI : MonoBehaviour, IGeneralUI
         if (skillData == null)
             return;
         //업 한 이후
-        _gameData.skillLevel[skillData.uid] = skillLevel;
+        _gameData.skillLevel[skillData.name] = skillLevel;
         _passiveSlotArr[skillIndex].Q<Label>("SkillLevelLabel").text = $"Lv.{skillLevel}";
         if (skillLevel == CurrencyManager.MAXCOMPANIONSKILLLEVEL)
         {
@@ -246,7 +246,7 @@ public class CompanionInfoUI : MonoBehaviour, IGeneralUI
     }
     private void OnPassiveButtonClick(int skillIndex)
     {
-        string uid = _companionManager.companionArr[_currentCompanionIndex].companionStatus.companionSkillArr[skillIndex].uid;
+        string uid = _companionManager.companionArr[_currentCompanionIndex].companionStatus.companionSkillArr[skillIndex].name;
         if (!_gameData.skillLevel.TryGetValue(uid, out int currentLevel))
         {
             currentLevel = 0;
@@ -340,7 +340,7 @@ public class CompanionInfoUI : MonoBehaviour, IGeneralUI
             Label effectLabel = passiveSlot.Q<Label>("EffectLabel");
             effectLabel.text = skillData.simple;
             Label skillLevelLabel = passiveSlot.Q<Label>("SkillLevelLabel");
-            if (!_gameData.skillLevel.TryGetValue(skillData.uid, out int currentLevel))
+            if (!_gameData.skillLevel.TryGetValue(skillData.name, out int currentLevel))
             {
                 currentLevel = 0;
             }

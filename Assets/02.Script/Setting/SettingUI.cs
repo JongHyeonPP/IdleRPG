@@ -13,6 +13,10 @@ public class SettingUI : MonoBehaviour
     private Toggle skillEffectToggle;
     private Toggle powerSavingToggle;
 
+    [SerializeField] AttendanceUI _attendanceUI;
+
+    private Button attendanceButton;
+
     void Start()
     {
         root = GetComponent<UIDocument>().rootVisualElement;
@@ -33,7 +37,7 @@ public class SettingUI : MonoBehaviour
         sfxSlider.label = "È¿°úÀ½";
 
         Button attendenceCheckButton = root.Q<Button>("AttendenceCheckButton");
-        attendenceDot = new(attendenceCheckButton, this);
+        attendenceDot = new(root, this);
         attendenceDot.StartNotice();
 
         root.Q<Button>("ExitButton").RegisterCallback<ClickEvent>(evt => UIBroker.InactiveCurrentUI());
@@ -42,6 +46,9 @@ public class SettingUI : MonoBehaviour
         damageTextToggle = root.Q<Toggle>("DamageTextToggle");
         skillEffectToggle = root.Q<Toggle>("SkillEffectToggle");
         powerSavingToggle = root.Q<Toggle>("PowerSavingToggle");
+
+        attendanceButton = root.Q<Button>("AttendanceButton");
+        attendanceButton.RegisterCallback<ClickEvent>(evt => _attendanceUI.ActiveUI());
     }
 
     private void LoadFromSettingManager()
@@ -89,6 +96,7 @@ public class SettingUI : MonoBehaviour
         {
             sm.isPowerSaving = evt.newValue;
             sm.SaveSettings();
+            UIBroker.ActivePowerSaveCount(evt.newValue);
         });
     }
 

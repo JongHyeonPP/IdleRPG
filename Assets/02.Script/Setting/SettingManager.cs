@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class SettingManager : MonoBehaviour
@@ -26,7 +27,10 @@ public class SettingManager : MonoBehaviour
         instance = this;
         DontDestroyOnLoad(gameObject);
         LoadSettings();
+        
     }
+
+
 
     public void SaveSettings()
     {
