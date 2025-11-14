@@ -306,10 +306,20 @@ public class BattleManager : MonoBehaviour
         {
             _gameData.maxStageNum = _gameData.currentStageNum;
             UIBroker.RefreshStageSelectUI();
-            if (_gameData.currentStageNum is 1 or 21)
+            int storyIndex = -1;
+            switch (_gameData.currentStageNum)
+            {
+                case 1:
+                    storyIndex = 0;
+                    break;
+                case 21:
+                    storyIndex = 1;
+                    break;
+            }
+            if (storyIndex>=0)
             {
                 _isBattleActive = false;
-                BattleBroker.SwitchToStory?.Invoke(_gameData.currentStageNum == 1 ? 1 : 2);
+                BattleBroker.SwitchToStory?.Invoke(storyIndex);
                 return;
             }
         }
@@ -485,6 +495,8 @@ public class BattleManager : MonoBehaviour
                 _gameData.clover += companionReward.Item2;
                 PlayerBroker.OnDiaSet();
                 PlayerBroker.OnCloverSet();
+                CurrencyAbsorbEffect.instance.PlayEffect(Resource.Dia, 20);
+                CurrencyAbsorbEffect.instance.PlayEffect(Resource.Gold, 20);
                 NetworkBroker.QueueResourceReport(0, $"{techInfo.techIndex_0}_{techInfo.techIndex_1}", Resource.None, Source.Companion);
 
                 _currentStageInfo = StageInfoManager.instance.GetNormalStageInfo(_gameData.currentStageNum);
@@ -502,6 +514,8 @@ public class BattleManager : MonoBehaviour
                 PlayerBroker.OnDiaSet();
                 PlayerBroker.OnCloverSet();
                 PlayerBroker.OnScrollSet();
+                CurrencyAbsorbEffect.instance.PlayEffect(Resource.Dia, 20);
+                CurrencyAbsorbEffect.instance.PlayEffect(Resource.Clover, 20);
                 NetworkBroker.QueueResourceReport(0, $"{adventureInfo.adventureIndex_0}_{adventureInfo.adventureIndex_1}", Resource.Dia, Source.Adventure);
                 var stageInfoArr = StageInfoManager.instance.GetAdventureStageInfo(adventureInfo.adventureIndex_0);
                 if (BattleBroker.GetAdventureRetry() && stageInfoArr != null && stageInfoArr.Length - 1 > adventureInfo.adventureIndex_1)
@@ -530,12 +544,14 @@ public class BattleManager : MonoBehaviour
                             case Resource.Gold:
                                 _gameData.gold += dungeonReward.amount;
                                 PlayerBroker.OnGoldSet();
+                                CurrencyAbsorbEffect.instance.PlayEffect(Resource.Gold, 20);
                                 NetworkBroker.QueueResourceReport(0, $"{dungeonIndex_0}_{dungeonIndex_1}", Resource.Gold, Source.Dungeon);
                                 break;
 
                             case Resource.Clover:
                                 _gameData.clover += dungeonReward.amount;
                                 PlayerBroker.OnCloverSet();
+                                CurrencyAbsorbEffect.instance.PlayEffect(Resource.Clover, 20);
                                 NetworkBroker.QueueResourceReport(0, $"{dungeonIndex_0}_{dungeonIndex_1}", Resource.Clover, Source.Dungeon);
                                 break;
 

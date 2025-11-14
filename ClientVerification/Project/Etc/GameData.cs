@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Numerics;
-using ClientVerification.Attribute;
+﻿using ClientVerification.Attribute;
 using ClientVerification.Etc;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Numerics;
 
 public class GameData
 {
@@ -87,6 +87,7 @@ public class GameData
     public int playerRankIndex;
     public int lastAttendanceNum;
     public string lastAttendanceTime;
+    public int gachaThreshold;
     #region 서버에만
     public int invalidCount;
     public string lastScrollTime;

@@ -31,7 +31,7 @@ public partial class StatUI : MonoBehaviour, IMenuUI
     private Button[] _categoriButtons;
     private VisualElement[] _categoriPanels;
     private Label _statPointLabel;
-
+    private Coroutine _staySoundCoroutine;
     private readonly Dictionary<StatusType, (string name, Sprite icon)> _statInfoDict = new();
     private readonly Dictionary<StatusType, VisualElement> _goldStatDict = new();
     private readonly Dictionary<StatusType, VisualElement> _statPointStatDict = new();
@@ -69,17 +69,17 @@ public partial class StatUI : MonoBehaviour, IMenuUI
         InitEnhancePanel();
         InitGrowPanel();
         InitPromotePanel();
-        OnCategoriButtonClick(0);
+        SetCategori(0);
     }
 
     private void InitStatInfo()
     {
-        _statInfoDict[StatusType.Power] = ("STR", powerSprite);
-        _statInfoDict[StatusType.MaxHp] = ("HP", maxHpSprite);
-        _statInfoDict[StatusType.HpRecover] = ("VIT", hpRecoverSprite);
-        _statInfoDict[StatusType.Critical] = ("치명타", criticalSprite);
-        _statInfoDict[StatusType.CriticalDamage] = ("CRI", criticalDamageSprite);
-        _statInfoDict[StatusType.GoldAscend] = ("LUK", goldAscendSprite);
+        _statInfoDict[StatusType.Power] = ("공격력", powerSprite);
+        _statInfoDict[StatusType.MaxHp] = ("체력", maxHpSprite);
+        _statInfoDict[StatusType.HpRecover] = ("체력 회복", hpRecoverSprite);
+        _statInfoDict[StatusType.Critical] = ("치명타 확률", criticalSprite);
+        _statInfoDict[StatusType.CriticalDamage] = ("치명타 피해량", criticalDamageSprite);
+        _statInfoDict[StatusType.GoldAscend] = ("골드 획득량", goldAscendSprite);
     }
 
     private void InitButton()
@@ -91,7 +91,20 @@ public partial class StatUI : MonoBehaviour, IMenuUI
         }
     }
 
+    // ============================================================
+    //  ★ 여기만 변경됨: 같은 카테고리면 소리 X + 갱신 X
+    // ============================================================
     private void OnCategoriButtonClick(int index)
+    {
+        // 이미 활성화된 카테고리면 아무 동작도 안 함 (소리도 X)
+        if (_categoriPanels[index].style.display == DisplayStyle.Flex)
+            return;
+
+        SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+        SetCategori(index);
+    }
+
+    private void SetCategori(int index)
     {
         if (index == 2)
         {
@@ -125,11 +138,12 @@ public partial class StatUI : MonoBehaviour, IMenuUI
 
     void IMenuUI.ActiveUI()
     {
-        OnCategoriButtonClick(0);
+        SetCategori(0);
         root.style.display = DisplayStyle.Flex;
     }
 
     void IMenuUI.InactiveUI() => root.style.display = DisplayStyle.None;
+
     private void Update()
     {
 #if UNITY_EDITOR || UNITY_STANDALONE
@@ -151,8 +165,14 @@ public partial class StatUI : MonoBehaviour, IMenuUI
         _currentValue = 0;
         lockedScrollView = isGold ? _enhanceScrollView : _growScrollView;
         lockedScrollView.LockScrollPosition();
+
+        if (_staySoundCoroutine != null)
+            StopCoroutine(_staySoundCoroutine);
+        _staySoundCoroutine = StartCoroutine(PlayStaySoundLoop());
+
         _incrementCoroutine = StartCoroutine(PointerDownCoroutine(stat, isGold));
     }
+
     private void OnPointerUp()
     {
         if (_incrementCoroutine == null)
@@ -163,6 +183,8 @@ public partial class StatUI : MonoBehaviour, IMenuUI
         lockedScrollView?.UnlockScrollPosition();
         lockedScrollView = null;
 
+        StopStaySoundLoop();
+
         if (_currentValue > 0)
         {
             NetworkBroker.QueueSpendReport(SpendType.Status, _currentStatusType.ToString(), _currentValue);
@@ -171,6 +193,7 @@ public partial class StatUI : MonoBehaviour, IMenuUI
 
         NetworkBroker.SaveServerData();
     }
+
     private IEnumerator PointerDownCoroutine(StatusType stat, bool isGold)
     {
         yield return null;
@@ -190,6 +213,24 @@ public partial class StatUI : MonoBehaviour, IMenuUI
                 IncreaseStatPointStat(stat);
 
             yield return new WaitForSeconds(0.08f);
+        }
+    }
+
+    private IEnumerator PlayStaySoundLoop()
+    {
+        while (true)
+        {
+            SoundManager.instance.PlaySFX(SoundPath.ButtonStay);
+            yield return new WaitForSeconds(0.4f);
+        }
+    }
+
+    private void StopStaySoundLoop()
+    {
+        if (_staySoundCoroutine != null)
+        {
+            StopCoroutine(_staySoundCoroutine);
+            _staySoundCoroutine = null;
         }
     }
 }

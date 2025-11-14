@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: Active_001
   m_EditorClassIdentifier: 
   skillName: Slash
-  uid: Player_001
   iconSprite: {fileID: 6201252808942594478, guid: 366f286d02c1a344a8097139c386be8e, type: 3}
   simple: 
   complex: "\uBB3C\uC758 \uD798\uC73C\uB85C \uC801\uC5D0\uAC8C <value*100>%\uC758
@@ -47,3 +46,7 @@ MonoBehaviour:
   isAnim: 1
   visualEffectPrefab: {fileID: 7834458620227235833, guid: 044bf2cf72e5e5749a64fc84e3b639c6, type: 3}
   isActiveSkill: 1
+  castClip: {fileID: 8300000, guid: 5fab616e1701bd74f9ad26b0a416ae8a, type: 3}
+  travelClip: {fileID: 0}
+  hitClip: {fileID: 0}
+  loopClip: {fileID: 0}

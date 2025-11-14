@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: Active_102
   m_EditorClassIdentifier: 
   skillName: FireSlash
-  uid: Player_102
   iconSprite: {fileID: -1318599591115060820, guid: bcef0c6dfde22c34aa484e6f060e6114, type: 3}
   simple: 
   complex: "\uBD88\uC758 \uD798\uC73C\uB85C <value*100>%\uC758 \uD53C\uD574\uB97C
@@ -47,3 +46,7 @@ MonoBehaviour:
   isAnim: 1
   visualEffectPrefab: {fileID: 5021638172128956239, guid: 7aa5b373380bae0459711760bc459ca3, type: 3}
   isActiveSkill: 1
+  castClip: {fileID: 8300000, guid: 5fab616e1701bd74f9ad26b0a416ae8a, type: 3}
+  travelClip: {fileID: 0}
+  hitClip: {fileID: 0}
+  loopClip: {fileID: 0}

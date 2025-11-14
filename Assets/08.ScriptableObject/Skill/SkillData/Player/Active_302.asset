@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: Active_302
   m_EditorClassIdentifier: 
   skillName: ClawSlash
-  uid: Player_302
   iconSprite: {fileID: -109910242830310983, guid: c577addea8a4d6e4090143e7b5c62c95, type: 3}
   simple: 
   complex: "\uC815\uB839\uC758 \uD798\uC73C\uB85C <value*100>%\uC758 \uD53C\uD574\uB97C
@@ -47,3 +46,7 @@ MonoBehaviour:
   isAnim: 1
   visualEffectPrefab: {fileID: 1028234515423213103, guid: dc41cfb45db98f043aebb3fd0bb419f9, type: 3}
   isActiveSkill: 1
+  castClip: {fileID: 8300000, guid: 5fab616e1701bd74f9ad26b0a416ae8a, type: 3}
+  travelClip: {fileID: 0}
+  hitClip: {fileID: 0}
+  loopClip: {fileID: 0}

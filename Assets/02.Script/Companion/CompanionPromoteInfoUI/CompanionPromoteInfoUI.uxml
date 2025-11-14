@@ -11,17 +11,16 @@
             <engine:VisualElement name="MainPanel_0" style="flex-grow: 0; height: 210px; align-items: center; justify-content: center;">
                 <engine:Label text="클로버를 사용하여 랜덤 옵션을 부여할 수 있습니다." style="font-size: 35px;" />
             </engine:VisualElement>
-            <engine:VisualElement name="MainPanel_1" style="flex-grow: 0; height: 746px; background-color: rgba(0, 0, 0, 0.39); border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px; font-size: 35px; justify-content: center; padding-top: 50px; padding-bottom: 50px;">
-                <engine:Instance template="CompanionPromoteLabelSet" name="PowerLabelSet" style="flex-grow: 1;" />
-                <engine:Instance template="CompanionPromoteLabelSet" name="CriticalDamageLabelSet" style="flex-grow: 1;" />
-                <engine:Instance template="CompanionPromoteLabelSet" name="MaxHpLabelSet" style="flex-grow: 1;" />
-                <engine:Instance template="CompanionPromoteLabelSet" name="HpRecoverLabelSet" style="flex-grow: 1;" />
-                <engine:Instance template="CompanionPromoteLabelSet" name="MaxMpLabelSet" style="flex-grow: 1;" />
-                <engine:Instance template="CompanionPromoteLabelSet" name="MpRecoverLabelSet" style="flex-grow: 1;" />
-                <engine:Instance template="CompanionPromoteLabelSet" name="GoldAscendLabelSet" style="flex-grow: 1;" />
-                <engine:Instance template="CompanionPromoteLabelSet" name="ResistLabelSet" style="flex-grow: 1;" />
-                <engine:Instance template="CompanionPromoteLabelSet" name="PenetrationLabelSet" style="flex-grow: 1;" />
-                <engine:Instance template="CompanionPromoteLabelSet" name="ExpAscendLabelSet" style="flex-grow: 1;" />
+            <engine:VisualElement name="LabelParent" style="flex-grow: 0; height: 746px; background-color: rgba(0, 0, 0, 0.39); border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px; font-size: 35px; justify-content: center; padding-top: 0; padding-bottom: 20px;">
+                <engine:Instance template="CompanionPromoteLabelSet" name="AttBuffLabelSet" />
+                <engine:Instance template="CompanionPromoteLabelSet" name="DefBuffLabelSet" />
+                <engine:Instance template="CompanionPromoteLabelSet" name="CriticalDamageLabelSet" />
+                <engine:Instance template="CompanionPromoteLabelSet" name="MaxHpLabelSet" />
+                <engine:Instance template="CompanionPromoteLabelSet" name="HpRecoverLabelSet" />
+                <engine:Instance template="CompanionPromoteLabelSet" name="MaxMpLabelSet" />
+                <engine:Instance template="CompanionPromoteLabelSet" name="MpRecoverLabelSet" />
+                <engine:Instance template="CompanionPromoteLabelSet" name="GoldAscendLabelSet" />
+                <engine:Instance template="CompanionPromoteLabelSet" name="ExpAscendLabelSet" />
             </engine:VisualElement>
             <engine:VisualElement name="MainPanel_2" style="flex-grow: 1; padding-left: 57px; padding-top: 42px; font-size: 35px;">
                 <engine:Label text="*카테고리 간의 부여 확률은 모두 동일합니다." />

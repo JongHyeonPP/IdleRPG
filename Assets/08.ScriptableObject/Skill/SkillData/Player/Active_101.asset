@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: Active_101
   m_EditorClassIdentifier: 
   skillName: DarkSlash
-  uid: Player_101
   iconSprite: {fileID: -4287362093729093706, guid: bc50bbdee2fd7cb4097d8d2081ef0481, type: 3}
   simple: 
   complex: "\uC5B4\uB460\uC758 \uD798\uC73C\uB85C <value*100>%\uC758 \uD53C\uD574\uB97C
@@ -47,3 +46,7 @@ MonoBehaviour:
   isAnim: 1
   visualEffectPrefab: {fileID: 6497890677961494127, guid: c5527ae747f8677429e34d7efd804f24, type: 3}
   isActiveSkill: 1
+  castClip: {fileID: 8300000, guid: 5fab616e1701bd74f9ad26b0a416ae8a, type: 3}
+  travelClip: {fileID: 0}
+  hitClip: {fileID: 0}
+  loopClip: {fileID: 0}

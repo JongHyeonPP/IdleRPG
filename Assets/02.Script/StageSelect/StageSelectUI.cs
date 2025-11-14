@@ -12,36 +12,44 @@ public class StageSelectUI : MonoBehaviour, IGeneralUI
     public VisualElement root { get; private set; }
     public VisualElement rootChild;
     private Background[] backgrounds;
-    private int _currentIndex; // 현재 Background의 인덱스
+    private int _currentIndex;
+
     private Label regionLabel;
     private VisualElement backgroundImage;
 
-    //[SerializeField] private Sprite[] backgroundSprites;
     private GameData _gameData;
+
     private void Awake()
     {
         _gameData = StartBroker.GetGameData();
-        // Background 배열 초기화
+
         _draggableLV = GetComponent<FlexibleListView>();
         backgrounds = (Background[])Enum.GetValues(typeof(Background));
+
         root = GetComponent<UIDocument>().rootVisualElement;
         rootChild = root.Q<VisualElement>("StageSelectUI");
+
         Button exitButton = root.Q<Button>("ExitButton");
         Button leftButton = root.Q<Button>("LeftButton");
         Button rightButton = root.Q<Button>("RightButton");
+
         regionLabel = root.Q<Label>("RegionLabel");
         backgroundImage = root.Q<VisualElement>("BackgroundImage");
-        exitButton.RegisterCallback<ClickEvent>(evt=>OnExitButtonClick());
-        leftButton.RegisterCallback<ClickEvent>(evt=>OnLeftButtonClick());
-        rightButton.RegisterCallback<ClickEvent>(evt=>OnRightButtonClick());
+
+        exitButton.RegisterCallback<ClickEvent>(evt => OnExitButtonClick());
+        leftButton.RegisterCallback<ClickEvent>(evt => OnLeftButtonClick());
+        rightButton.RegisterCallback<ClickEvent>(evt => OnRightButtonClick());
+
         UIBroker.RefreshStageSelectUI += OnNextStage;
-        BattleBroker.OnStageChange += ()=>_draggableLV.listView.Rebuild();
+        BattleBroker.OnStageChange += () => _draggableLV.listView.Rebuild();
     }
 
     private void OnExitButtonClick()
     {
+        SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
         ToggleUi(false);
     }
+
     public void ToggleUi(bool isOn)
     {
         if (isOn)
@@ -54,15 +62,14 @@ public class StageSelectUI : MonoBehaviour, IGeneralUI
         {
             UIBroker.InactiveCurrentUI?.Invoke();
         }
-        
     }
+
     private IEnumerator AnimateScale(float startScale, float endScale, float duration)
     {
         float time = 0f;
-        float overshootScale = endScale * 1.05f; // 5% 더 확대
+        float overshootScale = endScale * 1.05f;
 
-        // 1단계: 80% -> 105% (Overshoot)
-        while (time < duration * 0.7f) // 70%의 시간 동안 확장
+        while (time < duration * 0.7f)
         {
             float t = time / (duration * 0.7f);
             float scaleValue = Mathf.Lerp(startScale, overshootScale, EaseOut(t));
@@ -72,9 +79,8 @@ public class StageSelectUI : MonoBehaviour, IGeneralUI
             yield return null;
         }
 
-        // 2단계: 105% -> 100% (자연스럽게 수축)
         time = 0f;
-        while (time < duration * 0.3f) // 남은 30%의 시간 동안 원래 크기로 축소
+        while (time < duration * 0.3f)
         {
             float t = time / (duration * 0.3f);
             float scaleValue = Mathf.Lerp(overshootScale, endScale, EaseIn(t));
@@ -84,34 +90,32 @@ public class StageSelectUI : MonoBehaviour, IGeneralUI
             yield return null;
         }
 
-        root.style.scale = new Scale(new Vector2(endScale, endScale)); // 정확히 100%로 정렬
+        root.style.scale = new Scale(new Vector2(endScale, endScale));
     }
 
-    // 부드러운 Ease Out 함수 (확대할 때 사용)
     private float EaseOut(float t)
     {
-        return 1f - Mathf.Pow(1f - t, 3); // 빠르게 증가 후 느려짐
+        return 1f - Mathf.Pow(1f - t, 3);
     }
 
-    // 부드러운 Ease In 함수 (축소할 때 사용)
     private float EaseIn(float t)
     {
-        return t * t * t; // 천천히 시작해서 빠르게 줄어듦
+        return t * t * t;
     }
 
     private void OnLeftButtonClick()
     {
-        // 이전 인덱스를 계산 (순환)
+        SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+
         _currentIndex = (_currentIndex - 1 + backgrounds.Length) % backgrounds.Length;
-        // 페이지 변경
         ChangePage(_currentIndex);
     }
 
     private void OnRightButtonClick()
     {
-        // 다음 인덱스를 계산 (순환)
+        SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+
         _currentIndex = (_currentIndex + 1) % backgrounds.Length;
-        // 페이지 변경
         ChangePage(_currentIndex);
     }
 
@@ -120,17 +124,21 @@ public class StageSelectUI : MonoBehaviour, IGeneralUI
         _currentIndex = index;
 
         StageRegion stageRegion = StageInfoManager.instance.GetRegionInfo(index);
+
         backgroundImage.style.backgroundImage = new StyleBackground(stageRegion.regionSprite);
         regionLabel.text = stageRegion.regionName;
+
         int start = index * NUMINPAGE;
         List<IListViewItem> items = StageInfoManager.instance.GetStageInfosAsItem(start, NUMINPAGE);
 
         _draggableLV.ChangeItems(items);
     }
+
     public void OnNextStage()
     {
-        ChangePage(( _gameData.currentStageNum - 1) / NUMINPAGE);
+        ChangePage((_gameData.currentStageNum - 1) / NUMINPAGE);
     }
+
     public void OnBattle()
     {
         root.style.visibility = Visibility.Hidden;
@@ -143,6 +151,5 @@ public class StageSelectUI : MonoBehaviour, IGeneralUI
 
     public void OnBoss()
     {
-
     }
 }

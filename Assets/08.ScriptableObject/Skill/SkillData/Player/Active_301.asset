@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: Active_301
   m_EditorClassIdentifier: 
   skillName: Fury
-  uid: Player_301
   iconSprite: {fileID: -7190773895159608945, guid: 5f38a4c68398b944aa8e7bdf6f04dd22, type: 3}
   simple: 
   complex: "\uBC88\uAC1C\uC758 \uD798\uC744 \uC774\uC6A9\uD574 <value*2>%\uC758 \uACF5\uACA9\uB825\uC744
@@ -47,3 +46,7 @@ MonoBehaviour:
   isAnim: 1
   visualEffectPrefab: {fileID: 5520833425539985215, guid: 55071b11ce354fb4bbe55676790227d1, type: 3}
   isActiveSkill: 1
+  castClip: {fileID: 8300000, guid: 5fab616e1701bd74f9ad26b0a416ae8a, type: 3}
+  travelClip: {fileID: 0}
+  hitClip: {fileID: 0}
+  loopClip: {fileID: 0}

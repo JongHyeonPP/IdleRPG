@@ -46,7 +46,10 @@ public class DungeonInfoUI : MonoBehaviour, IGeneralUI
 
         // 버튼 콜백 등록
         root.Q<Button>("StartButton").RegisterCallback<ClickEvent>(_ => OnStartButtonClick());
-        root.Q<Button>("ExitButton").RegisterCallback<ClickEvent>(_ => UIBroker.InactiveCurrentUI());
+        root.Q<Button>("ExitButton").RegisterCallback<ClickEvent>(_ => {
+            SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+            UIBroker.InactiveCurrentUI();
+            });
 
         // UI 요소 캐싱
         _activePanel = root.Q<VisualElement>("ActivePanel");
@@ -108,7 +111,10 @@ public class DungeonInfoUI : MonoBehaviour, IGeneralUI
         root.style.display = DisplayStyle.None;
     }
 
-    public void OnStory() { }
+    public void OnStory() 
+    {
+        root.style.display = DisplayStyle.None;
+    }
     public void OnBoss() { }
 
     /// <summary>

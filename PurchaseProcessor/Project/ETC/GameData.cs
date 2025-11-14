@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using PurchaseProcessor.Attribute;
+using System;
 using System.Collections.Generic;
 using System.Numerics;
-using Newtonsoft.Json;
-using PurchaseProcessor.Attribute;
 
 public class GameData
 {
@@ -50,7 +50,7 @@ public class GameData
 
     #region 플레이어 정보
     public string userName;
-    public int invalidCount;
+
     #endregion
 
     #region 승급 효과 관련 (Player & Companion)
@@ -84,5 +84,14 @@ public class GameData
     public int[] dungeonProgress = new int[3];
 
     public int playerRankIndex;
+    public int lastAttendanceNum;
+    public string lastAttendanceTime;
     public int gachaThreshold;
+    #region 서버에만
+    public int invalidCount;
+    public string lastScrollTime;
+
+
+
+    #endregion
 }

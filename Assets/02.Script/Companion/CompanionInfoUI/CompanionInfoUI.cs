@@ -11,44 +11,59 @@ public class CompanionInfoUI : MonoBehaviour, IGeneralUI
     private CompanionManager _companionManager;
     private GameData _gameData;
     public VisualElement root { get; private set; }
+
     private VisualElement[] _renderTextureArr;
     private VisualElement[] _mainPanelArr = new VisualElement[2];
+
     private Label _jobLabel;
     private Label _nameLabel;
     private Label _levelLabel;
     private ProgressBar _expProgressBar;
+
     private int _currentCompanionIndex;
+
     private Button _statusButton;
     private Button _promoteButton;
+
     private Button[] _switchButton = new Button[2];
-    //Status
+
     private VisualElement[] _passiveSlotArr;
     private Label _companionEffectLabel;
-    //Promote
+
     [SerializeField] CompanionPromoteInfoUI _companionPromoteInfoUI;
     private readonly VisualElement[] _promoteSlotArr = new VisualElement[5];
+
     private Button _infoButton;
     private Label cloverLabel;
+
     private CompanionPromoteData _companionPromoteData;
     private readonly bool[] _isLockEffectArr = new bool[5];
     private int _currentActiveEffectIndex;
     private Button _changeButton;
     private Label _cloverPriceLabel;
+
     private void Awake()
     {
         _gameData = StartBroker.GetGameData();
         root = GetComponent<UIDocument>().rootVisualElement;
+
         Button exitButton = root.Q<Button>("ExitButton");
-        exitButton.RegisterCallback<ClickEvent>(evt => OnExitButtonClick());
-        
+        exitButton.RegisterCallback<ClickEvent>(evt =>
+        {
+            SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+            OnExitButtonClick();
+        });
+
         VisualElement renderTextureparent = root.Q<VisualElement>("RenderTextureParent");
         _renderTextureArr = new VisualElement[renderTextureparent.childCount];
         for (int i = 0; i < renderTextureparent.childCount; i++)
         {
             _renderTextureArr[i] = renderTextureparent.ElementAt(i);
         }
+
         _mainPanelArr[0] = root.Q<VisualElement>("StatusPanel");
         _mainPanelArr[1] = root.Q<VisualElement>("PromotePanel");
+
         _jobLabel = root.Q<Label>("JobLabel");
         _nameLabel = root.Q<Label>("NameLabel");
         _levelLabel = root.Q<Label>("LevelLabel");
@@ -57,13 +72,24 @@ public class CompanionInfoUI : MonoBehaviour, IGeneralUI
 
         _switchButton[0] = root.Q<Button>("LeftSwitchButton");
         _switchButton[1] = root.Q<Button>("RightSwitchButton");
-        _switchButton[0].RegisterCallback<ClickEvent>(evt=>OnSwitchButtonClick(0));
-        _switchButton[1].RegisterCallback<ClickEvent>(evt=>OnSwitchButtonClick(1));
+
+        _switchButton[0].RegisterCallback<ClickEvent>(evt =>
+        {
+            SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+            OnSwitchButtonClick(0);
+        });
+
+        _switchButton[1].RegisterCallback<ClickEvent>(evt =>
+        {
+            SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+            OnSwitchButtonClick(1);
+        });
 
         InitCategoriButton();
         InitStatusPanel();
         InitPromotePanel();
     }
+
     private void Start()
     {
         _companionManager = CompanionManager.instance;
@@ -71,62 +97,76 @@ public class CompanionInfoUI : MonoBehaviour, IGeneralUI
         PlayerBroker.OnSkillLevelSet += OnSkillLevelSet;
         _companionPromoteData = CompanionManager.instance.companionPromoteData;
     }
+
     private void OnSwitchButtonClick(int buttonIndex)
     {
-        int newCompanionIndex;
-        if (buttonIndex == 0)
-        {
-            newCompanionIndex = _currentCompanionIndex - 1;
-            if (newCompanionIndex == -1)
-                newCompanionIndex = 2;
-        }
-        else
-        {
-            newCompanionIndex = _currentCompanionIndex + 1;
-            if (newCompanionIndex == 3)
-                newCompanionIndex = 0;
-        }
-        SwitchCompanion(newCompanionIndex);
+        int newIndex = buttonIndex == 0
+            ? (_currentCompanionIndex == 0 ? 2 : _currentCompanionIndex - 1)
+            : (_currentCompanionIndex == 2 ? 0 : _currentCompanionIndex + 1);
+
+        SwitchCompanion(newIndex);
     }
+
     private void InitPromotePanel()
     {
         _infoButton = _mainPanelArr[1].Q<Button>("InfoButton");
-        _infoButton.RegisterCallback<ClickEvent>(evt=>_companionPromoteInfoUI.ActiveUI());
+        _infoButton.RegisterCallback<ClickEvent>(evt =>
+        {
+            SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+            _companionPromoteInfoUI.ActiveUI();
+        });
+
         cloverLabel = _mainPanelArr[1].Q<Label>("CloverLabel");
         PlayerBroker.OnCloverSet += SetCloverLabel;
         SetCloverLabel();
+
         VisualElement promoteEffectSlotParent = root.Q<VisualElement>("PromoteEffectSlotParent");
+
         for (int i = 0; i < _promoteSlotArr.Length; i++)
         {
             int index = i;
+
             _promoteSlotArr[i] = promoteEffectSlotParent.ElementAt(i);
-            _promoteSlotArr[i].Q<Button>("EachEffectChangeButton").RegisterCallback<ClickEvent>(evt=>OnClickPrmoteEffectSlot(index));
+            _promoteSlotArr[i]
+                .Q<Button>("EachEffectChangeButton")
+                .RegisterCallback<ClickEvent>(evt =>
+                {
+                    SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+                    OnClickPrmoteEffectSlot(index);
+                });
+
             Label disableLabel = _promoteSlotArr[i].Q<Label>("DisableLabel");
-            int requireTechNum = 0;
-            switch (i)
+            int requireTechNum = i switch
             {
-                case 2:
-                    requireTechNum = 1;
-                    break;
-                case 3:
-                    requireTechNum = 2;
-                    break;
-                case 4:
-                    requireTechNum = 3;
-                    break;
-            }
+                2 => 1,
+                3 => 2,
+                4 => 3,
+                _ => 0
+            };
             disableLabel.text = $"{requireTechNum}차 전직 시 해금";
         }
+
         _changeButton = _mainPanelArr[1].Q<Button>("ChangeButton");
         _cloverPriceLabel = _mainPanelArr[1].Q<Label>("CloverPriceLabel");
-        _changeButton.RegisterCallback<ClickEvent>(evt=>CompanionPromoteEffectChange());
+
+        _changeButton.RegisterCallback<ClickEvent>(evt =>
+        {
+            CompanionPromoteEffectChange();
+        });
+
         PlayerBroker.OnCompanionPromoteEffectSet += OnCompanionPromoteEffectSet;
     }
+
     private void OnClickPrmoteEffectSlot(int index)
     {
         _isLockEffectArr[index] = !_isLockEffectArr[index];
-        _promoteSlotArr[index].Q<VisualElement>("LockPanel").style.display = _isLockEffectArr[index] ? DisplayStyle.Flex : DisplayStyle.None;
+
+        _promoteSlotArr[index]
+            .Q<VisualElement>("LockPanel")
+            .style.display = _isLockEffectArr[index] ? DisplayStyle.Flex : DisplayStyle.None;
+
         int trueCount = _isLockEffectArr.Count(item => item);
+
         if (trueCount == _currentActiveEffectIndex)
         {
             _changeButton.style.display = DisplayStyle.None;
@@ -134,74 +174,65 @@ public class CompanionInfoUI : MonoBehaviour, IGeneralUI
         else
         {
             _changeButton.style.display = DisplayStyle.Flex;
-            _cloverPriceLabel.text = (CompanionManager.PROMOTE_EFFECT_CHANGE_PRICE * (1 + _isLockEffectArr.Count(item=>item))).ToString();
+            _cloverPriceLabel.text =
+                (CompanionManager.PROMOTE_EFFECT_CHANGE_PRICE * (1 + trueCount)).ToString();
         }
     }
+
     private void CompanionPromoteEffectChange()
     {
         int price = CompanionManager.PROMOTE_EFFECT_CHANGE_PRICE * (1 + _isLockEffectArr.Count(item => item));
+
+        // 재화 부족하면 아무 것도 하지 않고 리턴. 소리도 X
         if (_gameData.clover < price)
             return;
+
+        // 여기 오면 성공하는 로직
         for (int i = 0; i < _gameData.companionPromoteTech[_currentCompanionIndex].Max() + 2; i++)
         {
             if (!_isLockEffectArr[i])
                 SetEachPromoteEffect(i);
         }
+
+        // 실제 소모
         _gameData.clover -= price;
         PlayerBroker.OnCloverSet();
         NetworkBroker.SaveServerData();
+
+        // 성공했을 때만 사운드 재생
+        SoundManager.instance.PlaySFX(SoundPath.ChangeEff);
     }
+
 
     private void SetEachPromoteEffect(int effectIndex)
     {
-        int statusTypeIndex = Random.Range(0, 10);
-        StatusType statusType;
-        switch (statusTypeIndex)
+        int statusTypeIndex = Random.Range(0, 9);
+        StatusType statusType = statusTypeIndex switch
         {
-            default:
-                statusType = StatusType.Power;
-                break;
-            case 1:
-                statusType = StatusType.CriticalDamage;
-                break;
-            case 2:
-                statusType = StatusType.MaxHp;
-                break;
-            case 3:
-                statusType = StatusType.HpRecover;
-                break;
-            case 4:
-                statusType = StatusType.MaxMp;
-                break;
-            case 5:
-                statusType = StatusType.MpRecover;
-                break;
-            case 6:
-                statusType = StatusType.GoldAscend;
-                break;
-            case 7:
-                statusType = StatusType.AttBuff;
-                break;
-            case 8:
-                statusType = StatusType.DefBuff;
-                break;
-            case 9:
-                statusType = StatusType.ExpAscend;
-                break;
-        }
+            1 => StatusType.DefBuff,
+            2 => StatusType.CriticalDamage,
+            3 => StatusType.MaxHp,
+            4 => StatusType.HpRecover,
+            5 => StatusType.MaxMp,
+            6 => StatusType.MpRecover,
+            7 => StatusType.GoldAscend,
+            8 => StatusType.ExpAscend,
+            _ => StatusType.AttBuff,
+        };
 
         Rarity rarity = (Rarity)UtilityManager.AllocateProbability(_companionPromoteData.probabilityInRarity);
         (StatusType, Rarity) newValue = (statusType, rarity);
-        _gameData.companionPromoteEffect[_currentCompanionIndex][effectIndex] = (statusType, rarity);
-        PlayerBroker.OnCompanionPromoteEffectSet( _currentCompanionIndex, effectIndex, newValue);
+
+        _gameData.companionPromoteEffect[_currentCompanionIndex][effectIndex] = newValue;
+        PlayerBroker.OnCompanionPromoteEffectSet(_currentCompanionIndex, effectIndex, newValue);
     }
 
-    private void OnCompanionPromoteEffectSet(int companionIndex, int effectIndex, (StatusType, Rarity)? nullableTuple)
+    private void OnCompanionPromoteEffectSet(int companionIndex, int effectIndex, (StatusType, Rarity)? value)
     {
-        if (companionIndex != _currentCompanionIndex)
-            return;
-        SetPromoteEffectLabel(nullableTuple, effectIndex);
+        if (companionIndex != _currentCompanionIndex) return;
+        SetPromoteEffectLabel(value, effectIndex);
     }
+
     private void SetCloverLabel()
     {
         cloverLabel.text = _gameData.clover.ToString("N0");
@@ -210,22 +241,23 @@ public class CompanionInfoUI : MonoBehaviour, IGeneralUI
     private void OnSkillLevelSet(string skillUid, int skillLevel)
     {
         SkillData[] skillArr = _companionManager.companionArr[_currentCompanionIndex].companionStatus.companionSkillArr;
+
         SkillData skillData = null;
         int skillIndex = -1;
+
         for (int i = 0; i < skillArr.Length; i++)
         {
-            SkillData x = skillArr[i];
-            if (x.name == skillUid)
+            if (skillArr[i].name == skillUid)
             {
-               skillData = SkillManager.instance.GetSkillData(skillUid);
+                skillData = SkillManager.instance.GetSkillData(skillUid);
                 skillIndex = i;
             }
         }
-        if (skillData == null)
-            return;
-        //업 한 이후
-        _gameData.skillLevel[skillData.name] = skillLevel;
+        if (skillData == null) return;
+
+        _gameData.skillLevel[skillUid] = skillLevel;
         _passiveSlotArr[skillIndex].Q<Label>("SkillLevelLabel").text = $"Lv.{skillLevel}";
+
         if (skillLevel == CurrencyManager.MAXCOMPANIONSKILLLEVEL)
         {
             _passiveSlotArr[skillIndex].Q<Button>().style.display = DisplayStyle.None;
@@ -235,189 +267,242 @@ public class CompanionInfoUI : MonoBehaviour, IGeneralUI
         {
             _passiveSlotArr[skillIndex].Q<Button>().style.display = DisplayStyle.Flex;
             _passiveSlotArr[skillIndex].Q<VisualElement>("MaxLevelLabel").style.display = DisplayStyle.None;
-            PriceInfo.CompanionSkillPrice afterPrice = CurrencyManager.instance.GetRequireCompanionSkill_CloverFragment(_currentCompanionIndex, skillIndex, skillLevel + 1);
-            Label cloverLabel = _passiveSlotArr[skillIndex].Q<Label>("CloverLabel");
-            cloverLabel.text = afterPrice.clover.ToString();
-            Label fragmentLabel = _passiveSlotArr[skillIndex].Q<Label>("FragmentLabel");
-            fragmentLabel.text = afterPrice.fragment.ToString();
+
+            PriceInfo.CompanionSkillPrice afterPrice =
+                CurrencyManager.instance.GetRequireCompanionSkill_CloverFragment(
+                    _currentCompanionIndex,
+                    skillIndex,
+                    skillLevel + 1
+                );
+
+            _passiveSlotArr[skillIndex].Q<Label>("CloverLabel").text = afterPrice.clover.ToString();
+            _passiveSlotArr[skillIndex].Q<Label>("FragmentLabel").text = afterPrice.fragment.ToString();
         }
-        
+
         NetworkBroker.SaveServerData();
     }
+
     private void OnPassiveButtonClick(int skillIndex)
     {
-        string uid = _companionManager.companionArr[_currentCompanionIndex].companionStatus.companionSkillArr[skillIndex].name;
+        SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+
+        string uid =
+            _companionManager
+                .companionArr[_currentCompanionIndex]
+                .companionStatus
+                .companionSkillArr[skillIndex]
+                .name;
+
         if (!_gameData.skillLevel.TryGetValue(uid, out int currentLevel))
-        {
             currentLevel = 0;
-        }
-        PriceInfo.CompanionSkillPrice beforePrice = CurrencyManager.instance.GetRequireCompanionSkill_CloverFragment(_currentCompanionIndex, skillIndex, currentLevel+1);
+
+        PriceInfo.CompanionSkillPrice beforePrice =
+            CurrencyManager.instance.GetRequireCompanionSkill_CloverFragment(
+                _currentCompanionIndex,
+                skillIndex,
+                currentLevel + 1
+            );
+
+        if (beforePrice.clover > _gameData.clover) return;
+
         if (!_gameData.skillFragment.ContainsKey(beforePrice.fragmentRarity))
-        {
             _gameData.skillFragment[beforePrice.fragmentRarity] = 0;
-        }
-        if (beforePrice.clover > _gameData.clover || beforePrice.fragment > _gameData.skillFragment[beforePrice.fragmentRarity])
-        {
-            Debug.Log("재화 부족");
-            return;
-        }
-        if (!_gameData.skillFragment.ContainsKey(beforePrice.fragmentRarity))
-        {
-            _gameData.skillFragment[beforePrice.fragmentRarity] = 0;
-        }
+
+        if (beforePrice.fragment > _gameData.skillFragment[beforePrice.fragmentRarity]) return;
+
         _gameData.clover -= beforePrice.clover;
         _gameData.skillFragment[beforePrice.fragmentRarity] -= beforePrice.fragment;
+
         _gameData.skillLevel[uid] = ++currentLevel;
+
         PlayerBroker.OnSkillLevelSet(uid, currentLevel);
         PlayerBroker.OnCompanionExpSet(_currentCompanionIndex);
     }
+
     private void OnCompanionExpSet(int companionIndex)
     {
         (int, int) levelExp = CompanionManager.instance.GetCompanionLevelExp(companionIndex);
+
         _levelLabel.text = $"Lv.{levelExp.Item1}";
         _expProgressBar.value = levelExp.Item2 / (float)CompanionManager.EXPINTERVAL;
         _expProgressBar.title = $"{levelExp.Item2}/{CompanionManager.EXPINTERVAL}";
-        var companion = CompanionManager.instance.companionArr[_currentCompanionIndex];
-        //_companionEffectLabel.text = SkillManager.instance.GetParsedComplexExplain(companion.companionStatus.companionEffect, levelExp.Item1);
     }
-    
+
     private void OnExitButtonClick()
     {
         UIBroker.InactiveCurrentUI?.Invoke();
     }
+
     private void InitStatusPanel()
     {
         VisualElement passiveParent = root.Q<VisualElement>("PassiveParent");
         _passiveSlotArr = new VisualElement[passiveParent.childCount];
+
         for (int i = 0; i < _passiveSlotArr.Length; i++)
         {
             int skillIndex = i;
-            VisualElement passiveSlot = passiveParent.ElementAt(i);
-            _passiveSlotArr[skillIndex] = passiveSlot;
-            passiveSlot.Q<Button>().RegisterCallback<ClickEvent>(evt => OnPassiveButtonClick(skillIndex));
-        }
 
+            _passiveSlotArr[i] = passiveParent.ElementAt(i);
+
+            _passiveSlotArr[i]
+                .Q<Button>()
+                .RegisterCallback<ClickEvent>(evt =>
+                {
+                    SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+                    OnPassiveButtonClick(skillIndex);
+                });
+        }
     }
+
     public void ActiveUI(int companionIndex)
     {
         UIBroker.InactiveCurrentUI += RefreshRenderLayer;
+
         root.style.display = DisplayStyle.Flex;
         SwitchCompanion(companionIndex);
         ShowCategori(true);
     }
+
     private void SwitchCompanion(int companionIndex)
     {
         _currentCompanionIndex = companionIndex;
-        CompanionStatus companionStatus = CompanionManager.instance.companionArr[_currentCompanionIndex].companionStatus;
+
+        CompanionStatus status =
+            CompanionManager.instance.companionArr[_currentCompanionIndex].companionStatus;
 
         UIBroker.ActiveTranslucent(root, true);
+
         for (int i = 0; i < _renderTextureArr.Length; i++)
         {
-            if (_currentCompanionIndex == i)
-            {
-                _renderTextureArr[i].style.display = DisplayStyle.Flex;
-            }
-            else
-            {
-                _renderTextureArr[i].style.display = DisplayStyle.None;
-            }
+            _renderTextureArr[i].style.display =
+                _currentCompanionIndex == i ? DisplayStyle.Flex : DisplayStyle.None;
         }
-        //_jobLabel.text = companionStatus.companionJob;
-        _nameLabel.text = companionStatus.companionName;
+
+        _nameLabel.text = status.companionName;
+
         StatusSet();
         PromoteSet();
     }
+
     private void StatusSet()
     {
         for (int i = 0; i < _passiveSlotArr.Length; i++)
         {
             int skillIndex = i;
-            VisualElement passiveSlot = _passiveSlotArr[i];
-            SkillData skillData = _companionManager.companionArr[_currentCompanionIndex].companionStatus.companionSkillArr[skillIndex];
-            VisualElement iconSprite = passiveSlot.Q<VisualElement>("IconSprite");
-            Label nameLabel = passiveSlot.Q<Label>("NameLabel");
-            nameLabel.text = skillData.skillName;
-            Label effectLabel = passiveSlot.Q<Label>("EffectLabel");
-            effectLabel.text = skillData.simple;
-            Label skillLevelLabel = passiveSlot.Q<Label>("SkillLevelLabel");
-            if (!_gameData.skillLevel.TryGetValue(skillData.name, out int currentLevel))
+
+            VisualElement slot = _passiveSlotArr[i];
+            SkillData skillData = _companionManager
+                .companionArr[_currentCompanionIndex]
+                .companionStatus
+                .companionSkillArr[skillIndex];
+
+            slot.Q<Label>("NameLabel").text = skillData.skillName;
+            slot.Q<VisualElement>("IconSprite").style.backgroundImage = new(skillData.iconSprite);
+            slot.Q<Label>("EffectLabel").text = skillData.simple;
+
+            if (!_gameData.skillLevel.TryGetValue(skillData.name, out int curLevel))
+                curLevel = 0;
+
+            slot.Q<Label>("SkillLevelLabel").text = $"Lv.{curLevel}";
+
+            if (curLevel == CurrencyManager.MAXCOMPANIONSKILLLEVEL)
             {
-                currentLevel = 0;
-            }
-            skillLevelLabel.text = $"Lv.{currentLevel}";
-            if (currentLevel == CurrencyManager.MAXCOMPANIONSKILLLEVEL)
-            {
-                passiveSlot.Q<Button>().style.display = DisplayStyle.None;
-                passiveSlot.Q<Label>("MaxLevelLabel").style.display = DisplayStyle.Flex;
+                slot.Q<Button>().style.display = DisplayStyle.None;
+                slot.Q<VisualElement>("MaxLevelLabel").style.display = DisplayStyle.Flex;
             }
             else
             {
-                passiveSlot.Q<Button>().style.display = DisplayStyle.Flex;
-                passiveSlot.Q<Label>("MaxLevelLabel").style.display = DisplayStyle.None;
-                PriceInfo.CompanionSkillPrice price = CurrencyManager.instance.GetRequireCompanionSkill_CloverFragment(_currentCompanionIndex, skillIndex, currentLevel + 1);
-                Label cloverLabel = passiveSlot.Q<Label>("CloverLabel");
-                cloverLabel.text = price.clover.ToString();
-                Label fragmentLabel = passiveSlot.Q<Label>("FragmentLabel");
-                VisualElement fragmentSprite = passiveSlot.Q<VisualElement>("FragmentSprite");
-                fragmentSprite.style.backgroundImage = new(CurrencyManager.instance._fragmentSprites[(int)price.fragmentRarity]);
-                fragmentLabel.text = price.fragment.ToString();
+                slot.Q<Button>().style.display = DisplayStyle.Flex;
+                slot.Q<VisualElement>("MaxLevelLabel").style.display = DisplayStyle.None;
+
+                PriceInfo.CompanionSkillPrice price =
+                    CurrencyManager.instance.GetRequireCompanionSkill_CloverFragment(
+                        _currentCompanionIndex,
+                        skillIndex,
+                        curLevel + 1
+                    );
+
+                slot.Q<Label>("CloverLabel").text = price.clover.ToString();
+                slot.Q<Label>("FragmentLabel").text = price.fragment.ToString();
+
+                slot
+                    .Q<VisualElement>("FragmentSprite")
+                    .style.backgroundImage =
+                        new StyleBackground(CurrencyManager.instance._fragmentSprites[(int)price.fragmentRarity]);
             }
-            iconSprite.style.backgroundImage = new(skillData.iconSprite);
         }
+
         OnCompanionExpSet(_currentCompanionIndex);
-        UIBroker.SwitchRenderTargetLayer(new string[] { "RenderTexture_0", $"RenderTexture_{_currentCompanionIndex + 1}" });
+
+        UIBroker.SwitchRenderTargetLayer(new string[]
+        {
+            "RenderTexture_0",
+            $"RenderTexture_{_currentCompanionIndex + 1}"
+        });
     }
+
     private void PromoteSet()
     {
-        Dictionary<int, (StatusType, Rarity)> companionPromoteDict = _gameData.companionPromoteEffect[_currentCompanionIndex];
-        int[] companionJobDegree = _gameData.companionPromoteTech[_currentCompanionIndex];
-        _currentActiveEffectIndex = companionJobDegree.Max() +2;
+        Dictionary<int, (StatusType, Rarity)> dict =
+            _gameData.companionPromoteEffect[_currentCompanionIndex];
+
+        int[] jobDegree = _gameData.companionPromoteTech[_currentCompanionIndex];
+        _currentActiveEffectIndex = jobDegree.Max() + 2;
+
         for (int i = 0; i < _promoteSlotArr.Length; i++)
         {
-            VisualElement ablePanel = _promoteSlotArr[i].Q<VisualElement>("AblePanel");
-            VisualElement disablePanel = _promoteSlotArr[i].Q<VisualElement>("DisablePanel");
+            VisualElement able = _promoteSlotArr[i].Q<VisualElement>("AblePanel");
+            VisualElement disable = _promoteSlotArr[i].Q<VisualElement>("DisablePanel");
 
             if (_currentActiveEffectIndex <= i)
             {
-                ablePanel.style.display = DisplayStyle.None;
-                disablePanel.style.display = DisplayStyle.Flex;
+                able.style.display = DisplayStyle.None;
+                disable.style.display = DisplayStyle.Flex;
                 continue;
             }
-            ablePanel.style.display = DisplayStyle.Flex;
-            disablePanel.style.display = DisplayStyle.None;
-            
-            if (companionPromoteDict.TryGetValue(i, out (StatusType, Rarity) tuple))
-            {
+
+            able.style.display = DisplayStyle.Flex;
+            disable.style.display = DisplayStyle.None;
+
+            if (dict.TryGetValue(i, out var tuple))
                 SetPromoteEffectLabel(tuple, i);
-            }
             else
-            {
-                Label effectLabel = ablePanel.Q<Label>("EffectLabel");
-                effectLabel.text = string.Empty;
-            }
+                _promoteSlotArr[i].Q<Label>("EffectLabel").text = string.Empty;
+
             _isLockEffectArr[i] = false;
-            ablePanel.Q<VisualElement>("LockPanel").style.display = DisplayStyle.None;
+            able.Q<VisualElement>("LockPanel").style.display = DisplayStyle.None;
+
             _cloverPriceLabel.text = CompanionManager.PROMOTE_EFFECT_CHANGE_PRICE.ToString();
         }
     }
-    private void SetPromoteEffectLabel((StatusType, Rarity)? nullableTuple, int effectIndex)
+
+    private void SetPromoteEffectLabel((StatusType, Rarity)? value, int index)
     {
-        Label effectLabel = _promoteSlotArr[effectIndex].Q<Label>("EffectLabel");
-        if (nullableTuple == null)
+        Label label = _promoteSlotArr[index].Q<Label>("EffectLabel");
+
+        if (value == null)
         {
-            effectLabel.text = string.Empty;
+            label.text = string.Empty;
             return;
         }
-        (StatusType, Rarity) tuple = nullableTuple.Value;
+
+        (StatusType, Rarity) tuple = value.Value;
         float effectValue = CompanionManager.instance.GetCompanionPromoteValue(tuple.Item1, tuple.Item2);
-        
-        effectLabel.text = CompanionManager.instance.GetCompanionPromoteText(tuple.Item1, effectValue);
-        effectLabel.style.color = CurrencyManager.instance.rarityColor[(int)tuple.Item2];
+
+        label.text = CompanionManager.instance.GetCompanionPromoteText(tuple.Item1, effectValue);
+        label.style.color = CurrencyManager.instance.rarityColor[(int)tuple.Item2];
     }
 
     private void RefreshRenderLayer()
     {
-        UIBroker.SwitchRenderTargetLayer(new string[] { "RenderTexture_0", "RenderTexture_1", "RenderTexture_2", "RenderTexture_3" });
+        UIBroker.SwitchRenderTargetLayer(new string[]
+        {
+            "RenderTexture_0",
+            "RenderTexture_1",
+            "RenderTexture_2",
+            "RenderTexture_3"
+        });
+
         UIBroker.InactiveCurrentUI -= RefreshRenderLayer;
     }
 
@@ -425,19 +510,28 @@ public class CompanionInfoUI : MonoBehaviour, IGeneralUI
     {
         _statusButton = root.Q<Button>("StatusButton");
         _promoteButton = root.Q<Button>("PromoteButton");
+
         _statusButton.RegisterCallback<ClickEvent>(evt =>
         {
+            SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
             ShowCategori(true);
         });
+
         _promoteButton.RegisterCallback<ClickEvent>(evt =>
         {
+            SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
             ShowCategori(false);
         });
     }
-    void ShowCategori(bool isStatus)
+
+    private void ShowCategori(bool isStatus)
     {
-        _statusButton.Q<VisualElement>("SelectedPanel").style.display = isStatus ? DisplayStyle.Flex : DisplayStyle.None;
-        _promoteButton.Q<VisualElement>("SelectedPanel").style.display = isStatus ? DisplayStyle.None : DisplayStyle.Flex;
+        _statusButton.Q<VisualElement>("SelectedPanel").style.display =
+            isStatus ? DisplayStyle.Flex : DisplayStyle.None;
+
+        _promoteButton.Q<VisualElement>("SelectedPanel").style.display =
+            isStatus ? DisplayStyle.None : DisplayStyle.Flex;
+
         _mainPanelArr[0].style.display = isStatus ? DisplayStyle.Flex : DisplayStyle.None;
         _mainPanelArr[1].style.display = isStatus ? DisplayStyle.None : DisplayStyle.Flex;
     }

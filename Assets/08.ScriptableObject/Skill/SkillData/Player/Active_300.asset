@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: Active_300
   m_EditorClassIdentifier: 
   skillName: MoonSlash
-  uid: Player_300
   iconSprite: {fileID: -4530159624873556101, guid: e4df624c909a5a44f9c825ce12a4312b, type: 3}
   simple: 
   complex: "\uB2EC\uC758 \uD798\uC73C\uB85C <value*100>%\uC758 \uD53C\uD574\uB97C
@@ -47,3 +46,7 @@ MonoBehaviour:
   isAnim: 1
   visualEffectPrefab: {fileID: 7425211703451116844, guid: 35cd325dd18702d4d8926538236aebc6, type: 3}
   isActiveSkill: 1
+  castClip: {fileID: 8300000, guid: 5fab616e1701bd74f9ad26b0a416ae8a, type: 3}
+  travelClip: {fileID: 0}
+  hitClip: {fileID: 0}
+  loopClip: {fileID: 0}

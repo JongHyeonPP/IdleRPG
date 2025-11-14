@@ -24,6 +24,8 @@ namespace ClientVerification.Verification
         private readonly Dictionary<string, object> dungeonReward;
         private readonly Dictionary<string, object> companionReward;
         private readonly Dictionary<string, Dictionary<string, int>> attendanceReward;
+        private readonly Dictionary<StatusType, ReinforceRule> reinforceValueGold;
+        private readonly Dictionary<StatusType, ReinforceRule> reinforceValueStatus;
         private readonly string levelExpFormula;
 
         private readonly int maxLevel = 9999;
@@ -56,6 +58,8 @@ namespace ClientVerification.Verification
             companionReward = verificationSystem.GetRemoteConfig<Dictionary<string, object>>(context, gameApiClient, "COMPANION_REWARD");
             attendanceReward = verificationSystem.GetRemoteConfig<Dictionary<string, Dictionary<string, int>>>(context, gameApiClient, "ATTENDANCE_INFO");
             levelExpFormula = verificationSystem.GetRemoteConfig<string>(context, gameApiClient, "LEVEL_UP_REQUIRE_EXP");
+            reinforceValueGold = verificationSystem.GetRemoteConfig<Dictionary<StatusType, ReinforceRule>>(context, gameApiClient, "REINFORCE_VALUE_GOLD");
+            reinforceValueStatus = verificationSystem.GetRemoteConfig<Dictionary<StatusType, ReinforceRule>>(context, gameApiClient, "REINFORCE_VALUE_STATUS");
         }
 
         public bool Verify(out string reason)

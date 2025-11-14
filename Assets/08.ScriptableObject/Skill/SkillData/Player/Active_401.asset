@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: Active_401
   m_EditorClassIdentifier: 
   skillName: Hurricane
-  uid: Player_401
   iconSprite: {fileID: -7355599002919977655, guid: a5ee2aa16f2c1b241bf016df2e6d1b62, type: 3}
   simple: 
   complex: "\uD0DC\uD48D\uC758 \uD798\uC73C\uB85C <value*100>%\uC758 \uD53C\uD574\uB97C
@@ -47,3 +46,7 @@ MonoBehaviour:
   isAnim: 1
   visualEffectPrefab: {fileID: 8244195218799933566, guid: 777117f0282d54d418ffc0f221af93a5, type: 3}
   isActiveSkill: 1
+  castClip: {fileID: 8300000, guid: 5fab616e1701bd74f9ad26b0a416ae8a, type: 3}
+  travelClip: {fileID: 0}
+  hitClip: {fileID: 0}
+  loopClip: {fileID: 0}

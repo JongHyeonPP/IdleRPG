@@ -220,6 +220,7 @@ public class PromoteAbilityUI : MonoBehaviour
     }
     private void HidePromoteInfo()
     {
+        SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
         root.style.display = DisplayStyle.None;
         UIBroker.InactiveCurrentUI?.Invoke();
     }

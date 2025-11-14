@@ -57,8 +57,11 @@ public class MenuControlUI : MonoBehaviour, IGeneralUI
         blurredBackground.BlurTint = new Color(0f, 0f, 0f, 0f);
 
         UIBroker.ActiveBlurredBackground += ActiveBlurredBackground;
-        UIBroker.ChangeMenu += (index) => OnChangeMenu(index == currentIndex ? 0 : index);
+        UIBroker.ChangeMenu += OnChangeMenu;
         UIBroker.OnMenuUINotice += OnMenuUINotice;
+
+        BattleBroker.SwitchToStory += index => root.style.display = DisplayStyle.None;
+        BattleBroker.SwitchToBattle += () => root.style.display = DisplayStyle.Flex;
 
         menuUiArr = new IMenuUI[] { _statUI, _weaponUI, _skillUI, _companionUI, _adventureUI, _storeUI };
 
@@ -68,13 +71,15 @@ public class MenuControlUI : MonoBehaviour, IGeneralUI
         plankArr = buttonParent.Children().Select(item => item.Q<VisualElement>("PlankPanel")).ToArray();
         menuParent = root.Q<VisualElement>("MenuParent");
 
+        // 버튼 Connect
         for (int i = 0; i < buttonParent.childCount; i++)
         {
             int localIndex = i;
             VisualElement menuButton = buttonParent.ElementAt(localIndex);
             Label label = menuButton.Q<Label>();
             Button button = menuButton.Q<Button>();
-            button.RegisterCallback<ClickEvent>(evt => UIBroker.ChangeMenu(localIndex));
+
+            button.RegisterCallback<ClickEvent>(evt => OnButtonClicked(localIndex));
 
             label.text = i switch
             {
@@ -89,11 +94,31 @@ public class MenuControlUI : MonoBehaviour, IGeneralUI
         }
     }
 
+    // ====================================================================
+    // static 제거 → currentIndex 접근 가능
+    // ====================================================================
+    private void OnButtonClicked(int localIndex)
+    {
+        // 같은 메뉴면 아무것도 안 함 + 소리도 안 나게
+        if (localIndex == currentIndex)
+            return;
+
+        // 다른 메뉴면 소리 재생
+        if (localIndex == 5)
+            SoundManager.instance.PlaySFX(SoundPath.StoreIntro);
+        else
+            SoundManager.instance.PlaySFX(SoundPath.BtnClick);
+
+        // 기존 이벤트 그대로 호출
+        UIBroker.ChangeMenu(localIndex);
+    }
+
     private void Start()
     {
         var upperParent = root.Q<VisualElement>("UpperParent");
         upperParent.Add(_offlineRewardReceive.root);
         upperParent.Add(_equipedSkillUI.root);
+
         _equipedSkillUI.root.style.position = Position.Relative;
         _offlineRewardReceive.root.style.position = Position.Relative;
 
@@ -123,7 +148,7 @@ public class MenuControlUI : MonoBehaviour, IGeneralUI
 
     private void OnChangeMenu(int index)
     {
-        // 전투 중 진입 제한
+        // 전투 중 접근 제한
         if (BattleBroker.GetBattleType != null)
         {
             switch (BattleBroker.GetBattleType())
@@ -133,7 +158,7 @@ public class MenuControlUI : MonoBehaviour, IGeneralUI
                 case BattleType.Adventure:
                 case BattleType.Dungeon:
                 case BattleType.Promote:
-                    if (index == 3 || index == 4 || index ==5) // 동료 or 모험
+                    if (index == 3 || index == 4 || index == 5)
                     {
                         UIBroker.ShowPopUpInBattle("전투중에는 이용이 불가합니다");
                         return;
@@ -142,7 +167,6 @@ public class MenuControlUI : MonoBehaviour, IGeneralUI
             }
         }
 
-        // 카메라 변경도 여기서 처리
         UpdateCameraSize(index);
 
         if (currentIndex != index)
@@ -166,25 +190,13 @@ public class MenuControlUI : MonoBehaviour, IGeneralUI
             plankArr[index].style.bottom = 30f;
             _noticeDotArr[index].OnPositionSet(0, -30);
             menuUiArr[index].ActiveUI();
+
             currentIndex = index;
         }
     }
 
     private void UpdateCameraSize(int index)
     {
-        //// 전투 중이면 카메라 조정 금지
-        //if (BattleBroker.GetBattleType != null)
-        //{
-        //    switch (BattleBroker.GetBattleType())
-        //    {
-        //        case BattleType.Boss:
-        //        case BattleType.CompanionTech:
-        //        case BattleType.Adventure:
-        //        case BattleType.Dungeon:
-        //            return;
-        //    }
-        //}
-
         CameraInfo targetInfo = (index == 0 || index == 1 || index == 2) ? shrinkInfo : expandInfo;
 
         mainCamera.transform.position = targetInfo.position;

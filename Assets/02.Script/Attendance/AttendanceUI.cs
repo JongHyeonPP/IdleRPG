@@ -8,7 +8,7 @@ using Unity.Services.RemoteConfig;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class AttendanceUI : MonoBehaviour
+public class AttendanceUI : MonoBehaviour, IGeneralUI
 {
     private List<AttendanceSlot> slots = new();
     public VisualElement root { private set; get; }
@@ -17,7 +17,6 @@ public class AttendanceUI : MonoBehaviour
     private Button rewardButton;
     private Dictionary<string, Dictionary<string, int>> attendanceInfo;
 
-    private Coroutine dateCheckCoroutine;
 
     private void Awake()
     {
@@ -39,16 +38,14 @@ public class AttendanceUI : MonoBehaviour
         rewardButton = root.Q<Button>("RewardButton");
         if (rewardButton != null)
             rewardButton.RegisterCallback<ClickEvent>((evt) => OnRewardButtonClicked());
-    }
 
-    private void Start()
-    {
+
         LoadRemoteConfig();
         InitializeBaseUI();
         UpdateAttendanceState();
 
         // 자정 감시 코루틴 시작
-        dateCheckCoroutine = StartCoroutine(CheckDateChange());
+        StartCoroutine(CheckDateChange());
 
         // -----------------------------
         // 오늘 출석이 안 된 경우 자동으로 UI 활성화
@@ -64,6 +61,11 @@ public class AttendanceUI : MonoBehaviour
             Debug.Log("[AttendanceUI] 오늘 미출석 상태, 출석 UI 자동 활성화");
             ActiveUI();
         }
+    }
+
+    private void Start()
+    {
+        
     }
 
 
@@ -193,7 +195,11 @@ public class AttendanceUI : MonoBehaviour
     // UI 활성/비활성
     // ------------------------------------------------------------------
     public void ActiveUI() => root.style.display = DisplayStyle.Flex;
-    private void InactiveUI() => root.style.display = DisplayStyle.None;
+    private void InactiveUI()
+    {
+        SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+        root.style.display = DisplayStyle.None;
+    }
 
     // ------------------------------------------------------------------
     // 출석 버튼 클릭 처리
@@ -250,5 +256,22 @@ public class AttendanceUI : MonoBehaviour
         // 리포트 전송 및 다이아 UI 갱신
         NetworkBroker.QueueResourceReport(0, null, Resource.None, Source.Attendance);
         PlayerBroker.OnDiaSet();
+        CurrencyAbsorbEffect.instance.PlayEffect(Resource.Dia, 20);
+    }
+
+    public void OnBattle()
+    {
+        
+    }
+
+    public void OnStory()
+    {
+        Debug.Log("OnStory");
+        root.style.display = DisplayStyle.None;
+    }
+
+    public void OnBoss()
+    {
+
     }
 }

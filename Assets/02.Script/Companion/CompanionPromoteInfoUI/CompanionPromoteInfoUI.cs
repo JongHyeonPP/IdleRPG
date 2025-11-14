@@ -55,16 +55,16 @@ public class CompanionPromoteInfoUI : MonoBehaviour, IGeneralUI
     private void InitLabelSets()
     {
         _companionPromoteData = CompanionManager.instance.companionPromoteData;
-        SetLabelSet(root.Q<VisualElement>("PowerLabelSet"), _companionPromoteData.power, "추가 공격력(%)");
+        SetLabelSet(root.Q<VisualElement>("AttBuffLabelSet"), _companionPromoteData.attBuff, "추가 공격력(%)");
+        SetLabelSet(root.Q<VisualElement>("DefBuffLabelSet"), _companionPromoteData.defBuff, "추가 방어력(%)");
         SetLabelSet(root.Q<VisualElement>("CriticalDamageLabelSet"), _companionPromoteData.criticalDamage, "치명타 데미지(%)");
         SetLabelSet(root.Q<VisualElement>("MaxHpLabelSet"), _companionPromoteData.maxHp, "추가 체력(%)");
         SetLabelSet(root.Q<VisualElement>("HpRecoverLabelSet"), _companionPromoteData.hpRecover, "추가 체력 회복량(%)");
         SetLabelSet(root.Q<VisualElement>("MaxMpLabelSet"), _companionPromoteData.maxMp, "추가 마나(%)");
         SetLabelSet(root.Q<VisualElement>("MpRecoverLabelSet"), _companionPromoteData.mpRecover, "추가 마나 회복량(%)");
         SetLabelSet(root.Q<VisualElement>("GoldAscendLabelSet"), _companionPromoteData.goldAscend, "추가 골드(%)");
-        SetLabelSet(root.Q<VisualElement>("ResistLabelSet"), _companionPromoteData.resist, "저항력", false);
-        SetLabelSet(root.Q<VisualElement>("PenetrationLabelSet"), _companionPromoteData.penetration, "관통력", false);
-        SetLabelSet(root.Q<VisualElement>("ExpAscendLabelSet"), _companionPromoteData.expAscend, "추가 경험치");
+
+        SetLabelSet(root.Q<VisualElement>("ExpAscendLabelSet"), _companionPromoteData.expAscend, "추가 경험치(%)");
     }
 
     private void SetLabelSet(VisualElement labelSet, float[] statusArr, string categoriStr, bool isPercent = true)
@@ -96,6 +96,7 @@ public class CompanionPromoteInfoUI : MonoBehaviour, IGeneralUI
     }
     private void OnExitButtonClick()
     {
+        SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
         root.style.display = DisplayStyle.None;
     }
 

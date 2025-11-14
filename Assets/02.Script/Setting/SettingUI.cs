@@ -13,7 +13,7 @@ public class SettingUI : MonoBehaviour
     private Toggle skillEffectToggle;
     private Toggle powerSavingToggle;
 
-    [SerializeField] AttendanceUI _attendanceUI;
+    [SerializeField] private AttendanceUI _attendanceUI;
 
     private Button attendanceButton;
 
@@ -21,6 +21,7 @@ public class SettingUI : MonoBehaviour
     {
         root = GetComponent<UIDocument>().rootVisualElement;
         root.style.display = DisplayStyle.None;
+
         InitElement();
         LoadFromSettingManager();
         RegisterEvents();
@@ -40,15 +41,24 @@ public class SettingUI : MonoBehaviour
         attendenceDot = new(root, this);
         attendenceDot.StartNotice();
 
-        root.Q<Button>("ExitButton").RegisterCallback<ClickEvent>(evt => UIBroker.InactiveCurrentUI());
+        root.Q<Button>("ExitButton").RegisterCallback<ClickEvent>(_ =>
+        {
+            SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+            UIBroker.InactiveCurrentUI();
+        });
 
-        // 토글 요소 가져오기
         damageTextToggle = root.Q<Toggle>("DamageTextToggle");
         skillEffectToggle = root.Q<Toggle>("SkillEffectToggle");
         powerSavingToggle = root.Q<Toggle>("PowerSavingToggle");
 
         attendanceButton = root.Q<Button>("AttendanceButton");
-        attendanceButton.RegisterCallback<ClickEvent>(evt => _attendanceUI.ActiveUI());
+        attendanceButton.RegisterCallback<ClickEvent>(_ => OpenAttendanceUI());
+    }
+
+    private void OpenAttendanceUI()
+    {
+        SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+        _attendanceUI.ActiveUI();
     }
 
     private void LoadFromSettingManager()
@@ -72,28 +82,39 @@ public class SettingUI : MonoBehaviour
         {
             sm.bgmValue = evt.newValue;
             sm.SaveSettings();
+            SoundManager.instance?.SetBGMVolume(evt.newValue);
         });
 
         sfxSlider.RegisterValueChangedCallback(evt =>
         {
             sm.sfxValue = evt.newValue;
             sm.SaveSettings();
+            SoundManager.instance?.SetSFXVolume(evt.newValue);
         });
 
+        // -----------------------------
+        // 토글 → 클릭 시에도 버튼처럼 SFX 재생
+        // -----------------------------
         damageTextToggle.RegisterValueChangedCallback(evt =>
         {
+            SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+
             sm.isDamageText = evt.newValue;
             sm.SaveSettings();
         });
 
         skillEffectToggle.RegisterValueChangedCallback(evt =>
         {
+            SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+
             sm.isSkillEffect = evt.newValue;
             sm.SaveSettings();
         });
 
         powerSavingToggle.RegisterValueChangedCallback(evt =>
         {
+            SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+
             sm.isPowerSaving = evt.newValue;
             sm.SaveSettings();
             UIBroker.ActivePowerSaveCount(evt.newValue);

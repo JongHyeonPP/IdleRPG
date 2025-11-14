@@ -100,11 +100,6 @@ public class ClientReportManager : MonoBehaviour
             args
         );
 
-        if (result.invalidCount >= 3)
-        {
-            StartBroker.OnDetectInvalidAct();
-        }
-
         if (result.isVerificationSuccess)
             Debug.Log("서버에 저장됐음.");
         else

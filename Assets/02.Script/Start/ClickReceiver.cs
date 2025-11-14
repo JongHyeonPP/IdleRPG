@@ -20,7 +20,7 @@ public class ClickReceiver : MonoBehaviour
         _startLabel = _root.Q<Label>("StartLabel");
 
         // 클릭 이벤트 등록
-        _root.RegisterCallback<ClickEvent>(OnClickReceiver);
+        _root.RegisterCallback<ClickEvent>((evt)=>OnClickReceiver());
 
         // 초기 색상 설정
             _startLabel.style.color = new StyleColor(Color.white);
@@ -57,10 +57,10 @@ public class ClickReceiver : MonoBehaviour
             yield return null;
         }
     }
-
-    private void OnClickReceiver(ClickEvent evt)
+    private void OnClickReceiver()
     {
         _startManager.OnClickedStartImage();
         gameObject.SetActive(false);
+        SoundManager.instance.PlaySFX(SoundPath.BtnClick);
     }
 }

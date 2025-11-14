@@ -14,7 +14,12 @@ public partial class StatUI
             InitPromoteElement(rank, element);
         }
 
-        abilityButton.RegisterCallback<ClickEvent>(_ => _promoteAbilityUI.ShowPromoteInfo());
+        abilityButton.RegisterCallback<ClickEvent>(_ =>
+        {
+            SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+            _promoteAbilityUI.ShowPromoteInfo();
+        });
+
         UpdatePromoteLockState();
     }
 
@@ -33,11 +38,40 @@ public partial class StatUI
 
         switch (rank)
         {
-            case Rank.Stone: name = "스톤"; ability = "공격력x1 체력x1"; recommand = "권장 레벨 1"; sprite = stoneSprite; break;
-            case Rank.Bronze: name = "브론즈"; ability = "공격력x2 체력x2"; recommand = "권장 레벨 50"; sprite = bronzeSprite; break;
-            case Rank.Iron: name = "아이언"; ability = "공격력x5 체력x5"; recommand = "권장 레벨 90"; sprite = ironSprite; break;
-            case Rank.Silver: name = "실버"; ability = "공격력x18 체력x18"; recommand = "권장 레벨 180"; sprite = silverSprite; break;
-            case Rank.Gold: name = "골드"; ability = "공격력x25 체력x25"; recommand = "권장 레벨 300"; sprite = goldSprite; break;
+            case Rank.Stone:
+                name = "스톤";
+                ability = "공격력x1 체력x1";
+                recommand = "권장 레벨 1";
+                sprite = stoneSprite;
+                break;
+
+            case Rank.Bronze:
+                name = "브론즈";
+                ability = "공격력x2 체력x2";
+                recommand = "권장 레벨 50";
+                sprite = bronzeSprite;
+                break;
+
+            case Rank.Iron:
+                name = "아이언";
+                ability = "공격력x5 체력x5";
+                recommand = "권장 레벨 90";
+                sprite = ironSprite;
+                break;
+
+            case Rank.Silver:
+                name = "실버";
+                ability = "공격력x18 체력x18";
+                recommand = "권장 레벨 180";
+                sprite = silverSprite;
+                break;
+
+            case Rank.Gold:
+                name = "골드";
+                ability = "공격력x25 체력x25";
+                recommand = "권장 레벨 300";
+                sprite = goldSprite;
+                break;
         }
 
         nameLabel.text = name;
@@ -47,7 +81,8 @@ public partial class StatUI
 
         button.clicked += () =>
         {
-            OnCategoriButtonClick(0);
+            SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+            SetCategori(0);
             BattleBroker.SwitchToPromoteBattle(rank);
         };
     }

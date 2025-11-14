@@ -79,7 +79,6 @@ public abstract class Attackable : MonoBehaviour
             }
 
             EquipedSkill currentSkill = GetNextSkill();
-            
             float attBuffValue = GetPWValue(SkillType.AttBuff);
             float speedBuffValue=GetPWValue(SkillType.SpeedBuff);
             
@@ -102,15 +101,22 @@ public abstract class Attackable : MonoBehaviour
                     StartCoroutine(SkillCooldownCheck(SkillType.Paralyzation, paralyzeDuration, paralyzeCooldown));
                 }
             }
-            yield return new WaitForSeconds(currentSkill.skillData.postDelay * (1 / (1 + currentSpeed)));
-            SkillData skilldata = currentSkill.skillData;
-            if (!UseMP(skilldata))
+
+            SkillData skillData = currentSkill.skillData;
+
+
+            if (skillData.castClip != null)
+                StartCoroutine(PlayDelayedSFX(skillData.castClip, 0.2f));
+            yield return new WaitForSeconds(skillData.postDelay * (1 / (1 + currentSpeed)));
+
+            if (!UseMP(skillData))
             {
                 yield return null;
                 continue;
             }
 
-            AnimBehavior(currentSkill, skilldata);
+            // 애니메이션 처리
+            AnimBehavior(currentSkill, skillData);
 
             float invincibleDuration = GetPWValue(SkillType.Invincible);
             float invincibleCooldown = 3f;
@@ -118,35 +124,41 @@ public abstract class Attackable : MonoBehaviour
             if (invincibleDuration > 0)
                 StartCoroutine(SkillCooldownCheck(SkillType.Invincible,invincibleDuration,invincibleCooldown));
 
-            var targets = GetTargets(skilldata.target, skilldata.targetNum);
+            var targets = GetTargets(skillData.target, skillData.targetNum);
+
             foreach (var tgt in targets)
             {
                 BigInteger damage = CalculateBaseDamage(currentSkill);
+                int scale = 100;
+                BigInteger multiplier = new BigInteger((1f + attBuffValue) * scale);
+                damage = (damage * multiplier) / scale;
 
-                switch (skilldata.type)
+                DamageType damageType = DamageType.Normal;
+                if (GetStatus() is PlayerStatus playerStatus)
                 {
-                    case SkillType.Damage:
-                        // float -> 정수 스케일로 변환하여 정밀도 유지
-
-                        int scale = 100; // 정밀도 단위 (예: 2자리까지 보존)
-                        BigInteger multiplier = new BigInteger((1f + attBuffValue) * scale);
-                        damage = (damage * multiplier) / scale;
-                        break;
+                    (DamageType, BigInteger) critialResult = CalcCrital(damage, playerStatus);
+                    damageType = critialResult.Item1;
+                    damage = critialResult.Item2;
                 }
-
                 float doubleHitChance = GetPWValue(SkillType.DoubleHit);
-                if (UnityEngine.Random.value < doubleHitChance )
-                {
+                if (UnityEngine.Random.value < doubleHitChance)
                     damage += damage;
-                }
 
+                // 힐 온 히트
                 float healPercent = GetPWValue(SkillType.healOnHit);
-                if (healPercent > 0 )
+                if (healPercent > 0)
                 {
                     BigInteger healAmount = (GetStatus().MaxHp * (BigInteger)healPercent) / 100;
                     (this as PlayerController)?.Heal(healAmount);
                 }
-                tgt.ReceiveSkill(damage, skilldata.type);
+
+                // **데미지 적용**
+                tgt.ReceiveSkill(damage, skillData.type, damageType);
+
+                // 히트 사운드(지연 없음)
+                if (skillData.hitClip != null)
+                    SoundManager.instance.PlaySFX(skillData.hitClip);
+
 
 
                 if (target == null)
@@ -162,7 +174,7 @@ public abstract class Attackable : MonoBehaviour
             }
 
             if (SettingManager.instance.isSkillEffect)
-                VisualEffectToTarget(targets, skilldata);
+                VisualEffectToTarget(targets, skillData);
 
             if (currentSkill == _defaultAttack)
                 ProgressCoolAttack();
@@ -170,6 +182,18 @@ public abstract class Attackable : MonoBehaviour
             yield return new WaitForSeconds(currentSkill.skillData.preDelay * (1 / (1 + currentSpeed)));
         }
     }
+    private IEnumerator PlayDelayedSFX(AudioClip clip, float offset)
+    {
+        if (clip == null) yield break;
+
+        if (offset > 0)
+            yield return new WaitForSeconds(offset);
+
+        // offset이 0 이하일 경우 즉시 재생
+        SoundManager.instance.PlaySFX(clip);
+    }
+
+
 
     private (DamageType, BigInteger) CalcCrital(BigInteger damage, PlayerStatus playerStatus)
     {
@@ -321,7 +345,7 @@ public abstract class Attackable : MonoBehaviour
     //  Damage & Heal
     // ==========================
 
-    public void ReceiveSkill(BigInteger calcedValue, SkillType skillType = SkillType.Damage, DamageType damageType = DamageType.Normal)
+    public void ReceiveSkill(BigInteger calcedValue, SkillType skillType, DamageType damageType)
     {
         if (skillActive.TryGetValue(SkillType.Invincible, out bool isActive) && isActive && skillType == SkillType.Damage)
         {
@@ -339,8 +363,7 @@ public abstract class Attackable : MonoBehaviour
 
                 hp -= finalDamage;
                 if (hp < 0) hp = 0;
-                //hp -= calcedValue;
-                //if (hp < 0) hp = 0;
+
 
                 if (this is EnemyController enemy)
                 {
@@ -353,6 +376,7 @@ public abstract class Attackable : MonoBehaviour
                 else
                 {
                     StartCoroutine(FlashRed());
+
                     if (this is PlayerController player)
                     {
                         float superArmorValue = GetPWValue(SkillType.SuperArmor);
@@ -361,6 +385,7 @@ public abstract class Attackable : MonoBehaviour
                             player.playerKnockback = true;
                         }
                     }
+
                 }
 
                 Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
@@ -379,6 +404,7 @@ public abstract class Attackable : MonoBehaviour
             OnDead();
         }
     }
+
 
     private IEnumerator FlashRed()
     {
@@ -482,6 +508,12 @@ public abstract class Attackable : MonoBehaviour
                         }
                     }
                 }
+            }
+            switch (type)
+            {
+                case SkillType.GoldPlus:
+                    sum += ((PlayerStatus)pc.GetStatus()).GoldAscend;
+                    break;
             }
         }
         return sum;

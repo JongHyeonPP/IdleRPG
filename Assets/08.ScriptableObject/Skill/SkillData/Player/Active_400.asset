@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: Active_400
   m_EditorClassIdentifier: 
   skillName: SpinningCut
-  uid: Player_400
   iconSprite: {fileID: 5502737878774933199, guid: 5bd20f76d5f7df248812e6c463d548f6, type: 3}
   simple: 
   complex: "\uAE08\uB2E8\uC758 \uBE44\uAE30\uB85C <value*100>%\uC758 \uD53C\uD574\uB97C
@@ -47,3 +46,7 @@ MonoBehaviour:
   isAnim: 1
   visualEffectPrefab: {fileID: 6284427670240033111, guid: b6c93de8c15a37441a72496d9ae7994e, type: 3}
   isActiveSkill: 1
+  castClip: {fileID: 8300000, guid: 5fab616e1701bd74f9ad26b0a416ae8a, type: 3}
+  travelClip: {fileID: 0}
+  hitClip: {fileID: 0}
+  loopClip: {fileID: 0}

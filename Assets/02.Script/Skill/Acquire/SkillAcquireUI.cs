@@ -198,6 +198,7 @@ public class SkillAcquireUI : MonoBehaviour, IGeneralUI
 
     public void InactiveUI()
     {
+        SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
         UIBroker.InactiveCurrentUI();
     }
 
