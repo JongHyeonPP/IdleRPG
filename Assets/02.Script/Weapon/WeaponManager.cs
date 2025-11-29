@@ -14,20 +14,48 @@ public class WeaponManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        _playerWeaponData = _playerWeaponData.OrderBy(item => item.UID).ToList();
-        _companionWeaponData = _companionWeaponData.OrderBy(item => item.UID).ToList();
+
+        _playerWeaponData = _playerWeaponData
+            .Where(item => item != null)
+            .OrderBy(item => item.UID)
+            .ToList();
+
+        _companionWeaponData = _companionWeaponData
+            .Where(item => item != null)
+            .OrderBy(item => item.UID)
+            .ToList();
+
         ConvertListToDict();
     }
+
 
     private void ConvertListToDict()
     {
         weaponDict = new Dictionary<string, WeaponData>();
 
-        foreach (var weapon in _playerWeaponData.Concat(_companionWeaponData)) // 두 리스트를 합쳐서 변환
+        foreach (var weapon in _playerWeaponData.Concat(_companionWeaponData))
         {
+            if (weapon == null)
+            {
+                Debug.LogError("WeaponManager: 리스트 안에 null weapon 있음.");
+                continue;
+            }
+
+            if (string.IsNullOrEmpty(weapon.UID))
+            {
+                Debug.LogError($"WeaponManager: UID가 비어 있는 무기 발견. name={weapon.name}");
+                continue;
+            }
+
+            if (weaponDict.ContainsKey(weapon.UID))
+            {
+                Debug.LogWarning($"WeaponManager: 중복 UID 발견: {weapon.UID}  name={weapon.name}");
+            }
+
             weaponDict[weapon.UID] = weapon;
         }
     }
+
 
     public List<WeaponData> GetWeaponDataByRarity(Rarity rarity)
     {

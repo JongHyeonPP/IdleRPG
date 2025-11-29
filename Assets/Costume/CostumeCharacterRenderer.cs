@@ -46,7 +46,7 @@ public class CostumeCharacterRenderer : MonoBehaviour
             if (player != null)
                 _gameAppearanceController = player.GetComponent<AppearanceController>();
         }
-
+        PlayerBroker.OnPlayerAppearanceChange += _gameAppearanceController.SetAppearance;
         Init();
     }
 
@@ -312,6 +312,6 @@ public class CostumeCharacterRenderer : MonoBehaviour
 
     public void UpdateGameAppearanceData()
     {
-        _gameAppearanceController?.SetAppearance(_curAppearanceData);
+        PlayerBroker.OnPlayerAppearanceChange(_curAppearanceData);
     }
 }

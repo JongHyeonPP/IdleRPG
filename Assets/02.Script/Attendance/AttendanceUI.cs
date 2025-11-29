@@ -266,7 +266,6 @@ public class AttendanceUI : MonoBehaviour, IGeneralUI
 
     public void OnStory()
     {
-        Debug.Log("OnStory");
         root.style.display = DisplayStyle.None;
     }
 

@@ -2,10 +2,10 @@
     "name": "Story",
     "rootNamespace": "",
     "references": [
-        "GUID:c1f3ac597cd61d64e994b094eaa1fa95",
         "GUID:20b20c657697e4f478d6b5b4c5837706",
-        "GUID:93d1ce2967cb6064e84d3be3644665e5",
-        "GUID:c540aad5c5158cd439bc0b19ee85eea2"
+        "GUID:b8a73df1859a4ac40b858c9405b3375c",
+        "GUID:c1f3ac597cd61d64e994b094eaa1fa95",
+        "GUID:74e76e8859ef57e4390b860641e86449"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

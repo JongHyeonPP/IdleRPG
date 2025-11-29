@@ -28,6 +28,7 @@ public class SoundManager : MonoBehaviour
 
         // BGM 교체 이벤트 등록 예시
         BattleBroker.SwitchToBattle += () => PlayBGM(SoundPath.MainBgm);
+        BattleBroker.SwitchToStory += (_) => PlayBGM(null);
         BattleBroker.SwitchToBoss += () => PlayBGM(SoundPath.BossBgm);
         BattleBroker.SwitchToPromoteBattle += rank => PlayBGM(SoundPath.BossBgm);
         BattleBroker.SwitchToDungeon += (stage, index) => PlayBGM(SoundPath.BossBgm);
@@ -57,6 +58,11 @@ public class SoundManager : MonoBehaviour
 
     public void PlayBGM(string path, bool loop = true)
     {
+        if (path == null)
+        {
+            bgmSource.Stop();
+            return;
+        }
         var clip = GetClip(path);
         if (clip == null) return;
 

@@ -114,7 +114,7 @@ public partial class TotalStatusUI : MonoBehaviour
         else
         {
             WeaponManager.instance.SetWeaponIconToVe(weaponData, equipIcon);
-            nameLabel.text = weaponData.name;
+            nameLabel.text = weaponData.WeaponName;
         }
 
     }

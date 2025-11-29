@@ -383,14 +383,14 @@ public class StageInfoManager : MonoBehaviour
     private void SetDropInfo()
     {
         // GOLD FORMULA
-        string goldJson = Unity.Services.RemoteConfig.RemoteConfigService.Instance.appConfig.GetJson("GOLD_DROP_FORMULA", "None");
+        string goldJson = RemoteConfigService.Instance.appConfig.GetJson("GOLD_DROP_FORMULA", "None");
         if (string.IsNullOrEmpty(goldJson) || goldJson == "None")
         {
             Debug.LogError("GOLD_DROP_FORMULA not found in Remote Config.");
             return;
         }
 
-        var goldDict = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(goldJson);
+        var goldDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(goldJson);
         string goldFormula = goldDict["Formula"].ToString();
         float goldRange = Convert.ToSingle(goldDict["Range"]);
 
@@ -398,7 +398,7 @@ public class StageInfoManager : MonoBehaviour
         float goldBonusValue = 0f;
         if (goldDict.TryGetValue("Bonus", out var bonusObj))
         {
-            var arr = Newtonsoft.Json.JsonConvert.DeserializeObject<List<object>>(bonusObj.ToString());
+            var arr = JsonConvert.DeserializeObject<List<object>>(bonusObj.ToString());
             foreach (var item in arr)
                 goldBonusStages.Add(Convert.ToInt32(item));
         }
@@ -406,14 +406,14 @@ public class StageInfoManager : MonoBehaviour
             goldBonusValue = Convert.ToSingle(bv);
 
         // EXP FORMULA
-        string expJson = Unity.Services.RemoteConfig.RemoteConfigService.Instance.appConfig.GetJson("EXP_DROP_FORMULA", "None");
+        string expJson = RemoteConfigService.Instance.appConfig.GetJson("EXP_DROP_FORMULA", "None");
         if (string.IsNullOrEmpty(expJson) || expJson == "None")
         {
             Debug.LogError("EXP_DROP_FORMULA not found in Remote Config.");
             return;
         }
 
-        var expDict = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(expJson);
+        var expDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(expJson);
         string expFormula = expDict["Formula"].ToString();
         float expRange = Convert.ToSingle(expDict["Range"]);
 
@@ -421,7 +421,7 @@ public class StageInfoManager : MonoBehaviour
         float expBonusValue = 0f;
         if (expDict.TryGetValue("Bonus", out var expBonusObj))
         {
-            var arr = Newtonsoft.Json.JsonConvert.DeserializeObject<List<object>>(expBonusObj.ToString());
+            var arr = JsonConvert.DeserializeObject<List<object>>(expBonusObj.ToString());
             foreach (var item in arr)
                 expBonusStages.Add(Convert.ToInt32(item));
         }

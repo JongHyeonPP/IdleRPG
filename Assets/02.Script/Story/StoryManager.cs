@@ -1,211 +1,216 @@
-using EnumCollection;
-using NUnit.Framework.Interfaces;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using EnumCollection;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
+using System.Collections.Generic;
 
 public class StoryManager : MonoBehaviour
 {
-    public CameraController cameracontroller;
-    public List<StoryPrefabData> storyPrefabsList; 
-    private List<GameObject> activePrefabs = new List<GameObject>();
-    public Transform spawnPoint;
-    public StoryUI _storyUI;
-    public PlayerRendercamera _renderCamera;
-    private bool _isNextTriggered = false;
-    private AbstractStoryObjectController currentStoryController;
-    private Dictionary<int, AbstractStoryObjectController> _storyControllers = new Dictionary<int, AbstractStoryObjectController>();
-    private int _currentStoryIndex = 0;
+    public static StoryManager instance;
+
+    [SerializeField] private StoryRunner runner;
+    [SerializeField] private StoryChapter[] chapters;
+
+    [Header("Camera References")]
+    [SerializeField] private Camera mainCamera;
+    [SerializeField] private Camera storyCamera;
+
+    [Header("Talkers")]
+    [SerializeField] private StoryTalker protagonistTalker;
+    [SerializeField] private StoryTalker archerTalker;
+    [SerializeField] private StoryTalker warriorTalker;
+    [SerializeField] private StoryTalker mageTalker;
+
+    [Header("Models")]
+    [SerializeField] private GameObject protagonistModel;
+    [SerializeField] private GameObject archerModel;
+    [SerializeField] private GameObject warriorModel;
+    [SerializeField] private GameObject mageModel;
+
+    private StoryChapter activeChapter;
+
+    private Dictionary<StoryRenderType, StoryTalker> talkerMap;
+    private Dictionary<StoryRenderType, GameObject> modelMap;
+
+    // ★ 원래 위치 저장
+    private Dictionary<GameObject, Vector3> originalPositions = new();
+
 
     private void Awake()
     {
-        TextReader.LoadData();
-     
-    }
-   
-    private void OnEnable()
-    {
-        BattleBroker.SwitchToPromoteBattle += OnChallengeRank;
-        BattleBroker.SwitchToBattle += ClearStoryPrefabs;
-    }
-    private void OnChallengeRank(Rank rank)
-    {
-       
+        instance = this;
+        if (mainCamera == null)
+            mainCamera = Camera.main;
 
-    }
+        InitMaps();
 
-    public void StoryStart(int i)
-    {
-       
-        LoadStoryPrefabs(i);
-       
-    }
-    private void ClearStoryPrefabs()
-    {
-
-        foreach (var obj in activePrefabs)
+        // 모든 Chapter를 활성화시키되 본문은 꺼둔다
+        foreach (var c in chapters)
         {
-            Destroy(obj);
-        }
-        activePrefabs.Clear();
-    }
-    private void LoadStoryPrefabs(int storyIndex)
-    {
-        StoryPrefabData storyData = storyPrefabsList.Find(x => x.storyIndex == storyIndex);
-
-        foreach (var prefab in storyData.storyPrefabs)
-        {
-            GameObject obj = Instantiate(prefab, spawnPoint.position, Quaternion.identity);
-            activePrefabs.Add(obj);
-
-            if (storyIndex == 1)
+            if (c != null)
             {
-                currentStoryController = obj.GetComponent<FirstStoryController>();
+                c.gameObject.SetActive(true);
+                c.SetChapterActive(false);
             }
         }
 
-        cameracontroller.SwitchToCamera(false);
-        
-        int startIndex = storyIndex * 1000 + 1;
-        _currentStoryIndex = storyIndex;
-        //if (storyIndex == 1)
-        //{
-        //    _storyControllers.Add(0, currentStoryController);
-        //    StartCoroutine(FirstStoryStart(startIndex));
-        //}
-        //if (storyIndex == 2)
-        //{
-        //    _storyControllers.Add(0, currentStoryController);
-        //    StartCoroutine(SecondStoryStart(startIndex));
-        //}
-        if (storyIndex == 1 || storyIndex == 2)
-        {
-            if (!_storyControllers.ContainsKey(storyIndex))
-                _storyControllers.Add(storyIndex, currentStoryController);
-            else
-                _storyControllers[storyIndex] = currentStoryController; // �����
+        // Local talker 전부 OFF
+        DisableLocalTalkersOfAllChapters();
 
-            if (storyIndex == 1)
-                StartCoroutine(FirstStoryStart(startIndex));
-            else
-                StartCoroutine(SecondStoryStart(startIndex));
+        // ★ 원래 위치 저장 (동료 + 플레이어 + 챕터별 local 모델)
+        SaveOriginalPositions();
+
+        PlayerBroker.OnPlayerAppearanceChange += ad =>
+        {
+            protagonistModel.GetComponentInChildren<AppearanceController>()
+                ?.SetAppearance(ad);
+        };
+
+        BattleBroker.SwitchToStory += RunStory;
+        BattleBroker.SwitchToBattle += SwitchToBattle;
+    }
+
+    private void InitMaps()
+    {
+        talkerMap = new();
+        modelMap = new();
+
+        talkerMap[StoryRenderType.Player] = protagonistTalker;
+        talkerMap[StoryRenderType.Companion0] = archerTalker;
+        talkerMap[StoryRenderType.Companion1] = warriorTalker;
+        talkerMap[StoryRenderType.Companion2] = mageTalker;
+
+        modelMap[StoryRenderType.Player] = protagonistModel;
+        modelMap[StoryRenderType.Companion0] = archerModel;
+        modelMap[StoryRenderType.Companion1] = warriorModel;
+        modelMap[StoryRenderType.Companion2] = mageModel;
+    }
+
+    private void SaveOriginalPositions()
+    {
+        // 플레이어 + 동료
+        foreach (var kv in modelMap)
+        {
+            if (kv.Value != null)
+                originalPositions[kv.Value] = kv.Value.transform.position;
+        }
+
+        // ★ 각 chapter의 local models도 저장
+        foreach (var c in chapters)
+        {
+            if (c == null) continue;
+
+            var locals = c.LocalModels;
+            if (locals == null) continue;
+
+            foreach (var m in locals)
+            {
+                if (m != null)
+                    originalPositions[m] = m.transform.position;
+            }
         }
     }
 
-    private IEnumerator FirstStoryStart(int storyIndex)
+    private void DisableLocalTalkersOfAllChapters()
     {
-        RenderTexture renderTexture = _renderCamera.GetRenderTexture();
-        _storyUI.SetImage(renderTexture);
-
-        if (currentStoryController is FirstStoryController firstStory)
+        foreach (var c in chapters)
         {
-            StartCoroutine(firstStory.Run(firstStory.protagonist));
+            var locals = c?.LocalTalkers;
+            if (locals == null) continue;
+
+            foreach (var t in locals)
+                if (t != null && t.talkerObject != null)
+                    t.talkerObject.SetActive(false);
         }
-
-        _storyUI.SetStoryText("��", "�����...?", Color.black);
-        _renderCamera.SetCharacterDisplayTarget("��");
-        _storyUI.RegisterNextButtonClick(() => _isNextTriggered = true);
-
-        yield return new WaitUntil(() => _isNextTriggered);
-
-        _isNextTriggered = false;
     }
-    private IEnumerator SecondStoryStart(int storyIndex)
+
+    private void RunStory(int index)
     {
-        RenderTexture renderTexture = _renderCamera.GetRenderTexture();
-        _storyUI.SetImage(renderTexture);
-
-        if (currentStoryController is FirstStoryController firstStory)
-        {
-            StartCoroutine(firstStory.Run(firstStory.protagonist));
-        }
-
-        _storyUI.SetStoryText("��", "�����...?", Color.black);
-        _renderCamera.SetCharacterDisplayTarget("��");
-        _storyUI.RegisterNextButtonClick(() => _isNextTriggered = true);
-
-        yield return new WaitUntil(() => _isNextTriggered);
-
-        _isNextTriggered = false;
-    }
-    public void NextStorySegment(int index)
-    {
-        int storyIndex = index / 1000 -1;
-        if (!_storyControllers.ContainsKey(storyIndex))
+        if (index < 0 || index >= chapters.Length)
             return;
 
-        AbstractStoryObjectController currentStory = _storyControllers[storyIndex];
+        DisableLocalTalkersOfAllChapters();
 
-        TextData textData = TextReader.GetTextData(index);
-        Color textColor = (textData.Talker == "����") ? Color.red : Color.black;
-        _storyUI.SetStoryText(textData.Talker, textData.Text, textColor);
-        _renderCamera.SetCharacterDisplayTarget(textData.Talker);
+        foreach (var c in chapters)
+            c.SetChapterActive(false);
 
-        if (currentStory is FirstStoryController firstStory)
+        activeChapter = chapters[index];
+        activeChapter.SetChapterActive(true);
+
+        // Local talker ON
+        var locals = activeChapter.LocalTalkers;
+        if (locals != null)
         {
-            if (index == 1003)
-            {
-                GameObject bigPig = firstStory.GetTargetObject("BigPig_Pink");
-                if (bigPig != null)
-                {
-                    StartCoroutine(firstStory.Run(bigPig));
-                }
-            }
-            else if (index == 1006)
-            {
-                GameObject pig = firstStory.GetTargetObject("Pig_Pink");
-                if (pig != null)
-                {
-                    StartCoroutine(firstStory.Run(pig));
-                }
-
-                StartCoroutine(firstStory.RunAway(firstStory.protagonist));
-                StartCoroutine(_storyUI.FadeEffect(false));
-
-                EndStory();
-            }
+            foreach (var t in locals)
+                if (t != null && t.talkerObject != null)
+                    t.talkerObject.SetActive(true);
         }
-        else if(currentStory is SecondStoryController secondstory)
+
+        // 필요한 모델만 Enable
+        foreach (var kv in modelMap)
         {
+            bool needed = false;
 
-            if (index == 2003)
-            {
-                GameObject bigPig = secondstory.GetTargetObject("BigPig_Pink");
-                if (bigPig != null)
-                {
-                    StartCoroutine(secondstory.Run(bigPig));
-                }
-            }
-            else if (index == 2006)
-            {
-                GameObject pig = secondstory.GetTargetObject("Pig_Pink");
-                if (pig != null)
-                {
-                    StartCoroutine(secondstory.Run(pig));
-                }
+            foreach (var t in activeChapter.GetRequiredRenderTypes())
+                if (t == kv.Key)
+                    needed = true;
 
-                StartCoroutine(secondstory.RunAway(secondstory.protagonist));
-                StartCoroutine(_storyUI.FadeEffect(false));
-
-                EndStory();
-            }
+            kv.Value.SetActive(needed);
         }
-       
+
+        mainCamera.enabled = false;
+        storyCamera.enabled = true;
+
+        runner.ResetUI();
+        activeChapter.BuildActions(runner);
+        runner.Run();
     }
-    private void EndStory()
+
+    private void SwitchToBattle()
     {
-        _storyUI.ResetStoryUI();
-        _currentStoryIndex++; 
+        // 챕터 종료 → fadeOut은 runner 내부에 있음 → fadeOut 완료 후 호출됨
+        ResetAllModelPositionsAfterStory();
+
+        DisableLocalTalkersOfAllChapters();
+
+        if (activeChapter != null)
+        {
+            activeChapter.SetChapterActive(false);
+            activeChapter = null;
+        }
+
+        // 모든 파티 모델은 다시 활성화
+        foreach (var m in modelMap.Values)
+            m.SetActive(true);
+
+        storyCamera.enabled = false;
+        mainCamera.enabled = true;
     }
-    public int GetCurrentStoryIndex()
+
+    // ★ 이 함수는 fadeOut 끝난 뒤 실행됨
+    public void ResetAllModelPositionsAfterStory()
     {
-        return _currentStoryIndex;
+        foreach (var kv in originalPositions)
+        {
+            GameObject model = kv.Key;
+            Vector3 pos = kv.Value;
+
+            if (model != null)
+                model.transform.position = pos;
+        }
     }
+
+    public StoryTalker GetTalker(StoryRenderType type)
+    {
+        if (talkerMap.TryGetValue(type, out var talker))
+            return talker;
+
+        return null;
+    }
+    public GameObject GetModel(StoryRenderType type)
+    {
+        if (modelMap.TryGetValue(type, out var model))
+            return model;
+
+        return null;
+    }
+
 }
-    
-
-
-

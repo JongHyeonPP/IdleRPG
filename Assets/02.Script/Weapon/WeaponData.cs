@@ -21,7 +21,6 @@ public class WeaponData : ScriptableObject, IGachaItems
     [SerializeField] private Sprite _weaponSprite;
     [SerializeField] private Vector2 _textureSize = new(1, 1);
     [SerializeField] private float _textureScale;
-    [SerializeField] string _uID;
     [SerializeField] private string _weaponName;
     [SerializeField] private int _powerPerUpgrade;
     [SerializeField] private int _critDmgPerUpgrade;
@@ -38,7 +37,7 @@ public class WeaponData : ScriptableObject, IGachaItems
     public Sprite WeaponSprite => _weaponSprite;
     public Vector2 TextureSize =>  _textureSize;
     public float TextureScale =>  _textureScale;
-    public string UID => _uID;
+    public string UID => name;
     public int PowerPerUpgrade => _powerPerUpgrade;
     public int CritDmgPerUpgrade => _critDmgPerUpgrade;
     public int CritPerUpgrade => _critPerUpgrade;

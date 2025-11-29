@@ -73,126 +73,91 @@ public abstract class Attackable : MonoBehaviour
 
         while (true)
         {
-            if (target is PlayerController player && player.playerKnockback)
-            {
+            // 넉백 중이면 중단
+            if (target is PlayerController p && p.playerKnockback)
                 yield break;
-            }
 
             EquipedSkill currentSkill = GetNextSkill();
-            float attBuffValue = GetPWValue(SkillType.AttBuff);
-            float speedBuffValue=GetPWValue(SkillType.SpeedBuff);
-            
-            float speedDuration = 3f;
-            float speedCooldown = 3f;
-            if (speedBuffValue > 0 && !skillActive[SkillType.SpeedBuff])
-            {
-                StartCoroutine(SkillCooldownCheck(SkillType.SpeedBuff, speedDuration, speedCooldown));
-            }
-
-            float paralyzeDuration = GetPWValue(SkillType.Paralyzation);
-            float paralyzeCooldown = 3f;
-
-            if (paralyzeDuration > 0)
-            {
-                skillActive.TryGetValue(SkillType.Paralyzation, out bool isActive);
-
-                if (!isActive)
-                {
-                    StartCoroutine(SkillCooldownCheck(SkillType.Paralyzation, paralyzeDuration, paralyzeCooldown));
-                }
-            }
-
             SkillData skillData = currentSkill.skillData;
 
-
+            //  1. 휘두르는 소리 즉시 재생 (딜레이 없음)
             if (skillData.castClip != null)
-                StartCoroutine(PlayDelayedSFX(skillData.castClip, 0.2f));
-            yield return new WaitForSeconds(skillData.postDelay * (1 / (1 + currentSpeed)));
+                SoundManager.instance.PlaySFX(skillData.castClip);
 
+            //  2. preDelay (판정 전까지 기다리는 시간)
+            yield return new WaitForSeconds(skillData.preDelay * (1f / (currentSpeed)));
+
+            //  3. preDelay 끝남 → 타격 판정 발생 시점
             if (!UseMP(skillData))
             {
                 yield return null;
                 continue;
             }
 
-            // 애니메이션 처리
             AnimBehavior(currentSkill, skillData);
-
-            float invincibleDuration = GetPWValue(SkillType.Invincible);
-            float invincibleCooldown = 3f;
-
-            if (invincibleDuration > 0)
-                StartCoroutine(SkillCooldownCheck(SkillType.Invincible,invincibleDuration,invincibleCooldown));
 
             var targets = GetTargets(skillData.target, skillData.targetNum);
 
             foreach (var tgt in targets)
             {
-                BigInteger damage = CalculateBaseDamage(currentSkill);
-                int scale = 100;
-                BigInteger multiplier = new BigInteger((1f + attBuffValue) * scale);
-                damage = (damage * multiplier) / scale;
+                if (target == null) yield break;
 
-                DamageType damageType = DamageType.Normal;
-                if (GetStatus() is PlayerStatus playerStatus)
-                {
-                    (DamageType, BigInteger) critialResult = CalcCrital(damage, playerStatus);
-                    damageType = critialResult.Item1;
-                    damage = critialResult.Item2;
-                }
-                float doubleHitChance = GetPWValue(SkillType.DoubleHit);
-                if (UnityEngine.Random.value < doubleHitChance)
-                    damage += damage;
+                // 데미지 계산
+                BigInteger damage = CalculateDamageFull(currentSkill, skillData);
 
-                // 힐 온 히트
-                float healPercent = GetPWValue(SkillType.healOnHit);
-                if (healPercent > 0)
-                {
-                    BigInteger healAmount = (GetStatus().MaxHp * (BigInteger)healPercent) / 100;
-                    (this as PlayerController)?.Heal(healAmount);
-                }
+                // 데미지 적용
+                tgt.ReceiveSkill(damage, skillData.type, DamageType.Normal);
 
-                // **데미지 적용**
-                tgt.ReceiveSkill(damage, skillData.type, damageType);
-
-                // 히트 사운드(지연 없음)
+                //  4. 타격 소리 예약: "항상 판정 0.5초 후"
                 if (skillData.hitClip != null)
-                    SoundManager.instance.PlaySFX(skillData.hitClip);
+                    StartCoroutine(PlayHitAfterDelay(skillData.hitClip, 0.2f));
 
-
-
-                if (target == null)
-                {
-                    yield break; 
-                }
-                else if (target.hp <= 0)
+                // 타겟 죽었으면 루프 중단
+                if (target == null || target.hp <= 0)
                 {
                     StartCoroutine(TargetKill());
                     yield break;
                 }
-
             }
 
+            // 스킬 이펙트
             if (SettingManager.instance.isSkillEffect)
                 VisualEffectToTarget(targets, skillData);
 
             if (currentSkill == _defaultAttack)
                 ProgressCoolAttack();
-       
-            yield return new WaitForSeconds(currentSkill.skillData.preDelay * (1 / (1 + currentSpeed)));
+
+            //  5. postDelay (다음 공격까지 대기)
+            yield return new WaitForSeconds(skillData.postDelay * (1f / (currentSpeed)));
         }
     }
-    private IEnumerator PlayDelayedSFX(AudioClip clip, float offset)
+    private IEnumerator PlayHitAfterDelay(AudioClip clip, float delay)
     {
-        if (clip == null) yield break;
-
-        if (offset > 0)
-            yield return new WaitForSeconds(offset);
-
-        // offset이 0 이하일 경우 즉시 재생
+        yield return new WaitForSeconds(delay);
         SoundManager.instance.PlaySFX(clip);
     }
+    private BigInteger CalculateDamageFull(EquipedSkill skill, SkillData skillData)
+    {
+        BigInteger damage = CalculateBaseDamage(skill);
 
+        float attBuffValue = GetPWValue(SkillType.AttBuff);
+
+        int scale = 100;
+        BigInteger multiplier = new BigInteger((1f + attBuffValue) * scale);
+        damage = (damage * multiplier) / scale;
+
+        if (GetStatus() is PlayerStatus ps)
+        {
+            var critResult = CalcCrital(damage, ps);
+            damage = critResult.Item2;
+        }
+
+        float doubleHitChance = GetPWValue(SkillType.DoubleHit);
+        if (UnityEngine.Random.value < doubleHitChance)
+            damage += damage;
+
+        return damage;
+    }
 
 
     private (DamageType, BigInteger) CalcCrital(BigInteger damage, PlayerStatus playerStatus)

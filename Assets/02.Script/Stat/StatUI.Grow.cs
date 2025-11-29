@@ -46,8 +46,8 @@ public partial class StatUI
         var element = _statPointStatDict[stat];
         element.Q<Label>("StatLevel").text = $"Lv.{level}";
 
-        float current = ReinForceManager.instance.GetReinforceValueStatus(stat, level);
-        float next = ReinForceManager.instance.GetReinforceValueStatus(stat, level + 1);
+        float current = ReinforceManager.instance.GetReinforceValueStatus(stat, level);
+        float next = ReinforceManager.instance.GetReinforceValueStatus(stat, level + 1);
         element.Q<Label>("StatRise").text = GetStatPointStatRiseText(current, next, stat);
     }
 
@@ -56,11 +56,11 @@ public partial class StatUI
         switch (stat)
         {
             case StatusType.Power:
-                return $"공격력 +{currentValue} -> +{nextValue}";
+                return $"공격력 +{currentValue:F0} -> +{nextValue:F0}";
             case StatusType.MaxHp:
-                return $"체력 +{currentValue} -> +{nextValue}";
+                return $"체력 +{currentValue:F0} -> +{nextValue:F0}";
             case StatusType.HpRecover:
-                return $"체력 회복량 +{currentValue} -> +{nextValue}";
+                return $"체력 회복량 +{currentValue:F0} -> +{nextValue:F0}";
             case StatusType.CriticalDamage:
                 return $"치명타 공격력 +{currentValue * 100f:F0}% -> +{nextValue * 100f:F0}%";
             case StatusType.GoldAscend:
@@ -74,13 +74,5 @@ public partial class StatUI
     {
         _statPointLabel.text = $"STAT POINT : {_gameData.statPoint}";
     }
-
-    // ==============================
-    // 입력 처리 (PointerDown, Up 포함)
-    // ==============================
-
-
-
-
 
 }

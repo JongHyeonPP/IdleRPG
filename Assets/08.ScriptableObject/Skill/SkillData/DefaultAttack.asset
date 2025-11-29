@@ -31,7 +31,7 @@ MonoBehaviour:
   target: 1
   targetNum: 1
   preDelay: 0.2
-  postDelay: 1
+  postDelay: 2
   isAnim: 1
   visualEffectPrefab: {fileID: 0}
   isActiveSkill: 0

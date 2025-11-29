@@ -35,13 +35,11 @@ public class StageInfo : ScriptableObject, IListViewItem
     {
         //ÀÏ¹Ý¸÷°ú º¸½º¸÷ÀÌ °®´Â ½ºÅÈ
         public string maxHp;
-        public float resist;
     }
     [Serializable]
     public class ChestStatusFromStage
     {
         public string maxHp;
-        public float resist;
     }
     [Serializable]
     public class BossStatusFromStage

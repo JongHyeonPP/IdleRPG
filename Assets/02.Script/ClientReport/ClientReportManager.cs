@@ -21,6 +21,7 @@ public class ClientReportManager : MonoBehaviour
     private GameData _gameData;
 
     private CancellationTokenSource _cts;
+    private Task _verificationTask;
 
     private void Awake()
     {
@@ -35,15 +36,46 @@ public class ClientReportManager : MonoBehaviour
         NetworkBroker.StageClearVerification += StageClearVerificationAsync;
         NetworkBroker.SaveServerData += ForceVerificationNow;
 
-        _gameData = StartBroker.GetGameData();
+        // Story ↔ Battle 전환 시 루프 제어
+        BattleBroker.SwitchToStory += (_) => PauseVerificationLoop();
+        BattleBroker.SwitchToBattle += () => ResumeVerificationLoop();
 
-        _cts = new CancellationTokenSource();
-        _ = VerificationLoopAsync(_cts.Token);
+        _gameData = StartBroker.GetGameData();
     }
 
     private void OnDestroy()
     {
-        _cts?.Cancel();
+        PauseVerificationLoop();
+    }
+
+    /* ========================
+       스토리 전환 시 일시정지
+       ======================== */
+    private void PauseVerificationLoop()
+    {
+        if (_cts != null)
+        {
+            _cts.Cancel();
+            _cts.Dispose();
+            _cts = null;
+        }
+
+        _verificationTask = null;
+        Debug.Log("VerificationLoop 일시정지됨.");
+    }
+
+    /* ========================
+       배틀 복귀 시 다시 재개
+       ======================== */
+    private void ResumeVerificationLoop()
+    {
+        if (_cts != null)
+            return;
+
+        _cts = new CancellationTokenSource();
+        _verificationTask = VerificationLoopAsync(_cts.Token);
+
+        Debug.Log("VerificationLoop 다시 시작됨.");
     }
 
     private async void StageClearVerificationAsync()
@@ -54,7 +86,7 @@ public class ClientReportManager : MonoBehaviour
         );
     }
 
-    private void QueueResourceReport(int value,string id, Resource resource, Source source)
+    private void QueueResourceReport(int value, string id, Resource resource, Source source)
     {
         var newResourceReport = new ClientResourceReport(value, id, resource, source);
         _clientResourceReportList.Add(newResourceReport);
@@ -64,13 +96,9 @@ public class ClientReportManager : MonoBehaviour
     {
         string key = $"{type}_{additional}";
         if (_clientSpendReportDict.ContainsKey(key))
-        {
             _clientSpendReportDict[key] += amount;
-        }
         else
-        {
             _clientSpendReportDict.Add(key, amount);
-        }
     }
 
     [ContextMenu("SendTotalReport")]
@@ -92,7 +120,6 @@ public class ClientReportManager : MonoBehaviour
         isAcquireOfflineReward = false;
         _clientResourceReportList.Clear();
         _clientSpendReportDict.Clear();
-        
 
         ReportResult result = await CloudCodeService.Instance.CallModuleEndpointAsync<ReportResult>(
             "ClientVerification",
@@ -101,23 +128,30 @@ public class ClientReportManager : MonoBehaviour
         );
 
         if (result.isVerificationSuccess)
-            Debug.Log("서버에 저장됐음.");
+            Debug.Log("서버에 저장 완료.");
         else
-            Debug.Log($"서버에 저장 실패.. {result.failureFactor}");
+            Debug.Log($"서버 저장 실패: {result.failureFactor}");
     }
 
     private async Task VerificationLoopAsync(CancellationToken token)
     {
-        while (!token.IsCancellationRequested)
+        try
         {
-            await Task.Delay(1000, token);
-            _verificationElapsed += 1f;
-
-            if (_verificationElapsed >= _verificationInterval)
+            while (!token.IsCancellationRequested)
             {
-                _verificationElapsed = 0f;
-                SendTotalReport();
+                await Task.Delay(1000, token);
+                _verificationElapsed += 1f;
+
+                if (_verificationElapsed >= _verificationInterval)
+                {
+                    _verificationElapsed = 0f;
+                    SendTotalReport();
+                }
             }
+        }
+        catch (TaskCanceledException)
+        {
+            // 정상적인 취소
         }
     }
 

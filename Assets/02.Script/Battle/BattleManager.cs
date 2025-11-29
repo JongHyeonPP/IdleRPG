@@ -48,9 +48,6 @@ public class BattleManager : MonoBehaviour
     {
         instance ??= this;
         _gameData = StartBroker.GetGameData();
-        
-
-        
     }
 
     private void Start()
@@ -66,17 +63,35 @@ public class BattleManager : MonoBehaviour
         UIBroker.RefreshStageSelectUI();
 
         //Awake에서 해당 이벤트들이 연결된 이후 Start에서 실행
+        // 플레이어 무기
+        WeaponData playerWeapon = null;
         if (!string.IsNullOrEmpty(_gameData.playerWeaponId))
-            PlayerBroker.OnEquipWeapon(WeaponManager.instance.weaponDict[_gameData.playerWeaponId], WeaponType.Melee);
-        if (_gameData.companionWeaponIdArr != null)
         {
-            if (!string.IsNullOrEmpty(_gameData.companionWeaponIdArr[0]))
-                PlayerBroker.OnEquipWeapon(WeaponManager.instance.weaponDict[_gameData.companionWeaponIdArr[0]], WeaponType.Bow);
-            if (!string.IsNullOrEmpty(_gameData.companionWeaponIdArr[1]))
-                PlayerBroker.OnEquipWeapon(WeaponManager.instance.weaponDict[_gameData.companionWeaponIdArr[1]], WeaponType.Shield);
-            if (!string.IsNullOrEmpty(_gameData.companionWeaponIdArr[2]))
-                PlayerBroker.OnEquipWeapon(WeaponManager.instance.weaponDict[_gameData.companionWeaponIdArr[2]], WeaponType.Staff);
+            WeaponManager.instance.weaponDict.TryGetValue(_gameData.playerWeaponId, out playerWeapon);
         }
+        PlayerBroker.OnEquipWeapon(playerWeapon, WeaponType.Melee);
+
+        // 동료 무기 배열이 null 이거나 길이가 부족해도 항상 null 안전하게 처리
+        string[] arr = _gameData.companionWeaponIdArr;
+
+        // Bow
+        WeaponData bow = null;
+        if (arr != null && arr.Length > 0 && !string.IsNullOrEmpty(arr[0]))
+            WeaponManager.instance.weaponDict.TryGetValue(arr[0], out bow);
+        PlayerBroker.OnEquipWeapon(bow, WeaponType.Bow);
+
+        // Shield
+        WeaponData shield = null;
+        if (arr != null && arr.Length > 1 && !string.IsNullOrEmpty(arr[1]))
+            WeaponManager.instance.weaponDict.TryGetValue(arr[1], out shield);
+        PlayerBroker.OnEquipWeapon(shield, WeaponType.Shield);
+
+        // Staff
+        WeaponData staff = null;
+        if (arr != null && arr.Length > 2 && !string.IsNullOrEmpty(arr[2]))
+            WeaponManager.instance.weaponDict.TryGetValue(arr[2], out staff);
+        PlayerBroker.OnEquipWeapon(staff, WeaponType.Staff);
+
     }
 
     private void FixedUpdate()
@@ -205,7 +220,8 @@ public class BattleManager : MonoBehaviour
         BattleBroker.SwitchToDungeon += SwitchToDungeon;
         BattleBroker.SwitchToPromoteBattle += SwitchToPromoteBattle;
         BattleBroker.OnEnemyDead += OnEnemyDead;
-        PlayerBroker.OnPlayerDead +=  OnPlayerDead;
+        PlayerBroker.OnPlayerDead += OnPlayerDead;
+        BattleBroker.SwitchToStory += (_) => OnSwitchToStory();
 
         BattleBroker.GetBattleType += () => _battleType;
         BattleBroker.IsCanAttack += () => !_isMove && _controller.target != null;
@@ -220,22 +236,20 @@ public class BattleManager : MonoBehaviour
             _ => "0"
         });
 
-        EnemyBroker.GetEnemyResist = type => type switch
-        {
-            EnemyType.Enemy => _currentStageInfo.enemyStatusFromStage.resist,
-            EnemyType.Boss => _currentStageInfo.bossStatusFromStage.resist,
-            EnemyType.Chest => _currentStageInfo.chestStatusFromStage.resist,
-            _ => 0f
-        };
-
         EnemyBroker.GetEnemyPower = type => type switch
         {
             EnemyType.Boss => BigInteger.Parse(_currentStageInfo.bossStatusFromStage.power),
             _ => 0
         };
 
-        
+
         BattleBroker.GetEnemyArray += () => _enemies;
+    }
+
+    private void OnSwitchToStory()
+    {
+        ClearEnemies();
+        StopBattleEverything();
     }
 
     private void OnPlayerDead()
@@ -258,13 +272,37 @@ public class BattleManager : MonoBehaviour
             int storyIndex = -1;
             switch (_gameData.currentStageNum)
             {
-                case 1:
-                    storyIndex = 0;
-                    break;
-                case 21:
-                    storyIndex = 1;
-                    break;
+                case 1: storyIndex = 0; break;
+                case 11: storyIndex = 1; break;
+                case 21: storyIndex = 2; break;
+                case 31: storyIndex = 3; break;
+                case 41: storyIndex = 4; break;
+                case 51: storyIndex = 5; break;
+                case 61: storyIndex = 6; break;
+                case 71: storyIndex = 7; break;
+                case 81: storyIndex = 8; break;
+                case 91: storyIndex = 9; break;
+
+                case 101: storyIndex = 10; break;
+                case 111: storyIndex = 11; break;
+                case 121: storyIndex = 12; break;
+                case 141: storyIndex = 13; break;
+                case 161: storyIndex = 14; break;
+                case 181: storyIndex = 15; break;
+                case 191: storyIndex = 16; break;
+
+                    //case 201: storyIndex = 20; break;
+                    //case 211: storyIndex = 21; break;
+                    //case 221: storyIndex = 22; break;
+                    //case 231: storyIndex = 23; break;
+                    //case 241: storyIndex = 24; break;
+                    //case 251: storyIndex = 25; break;
+                    //case 261: storyIndex = 26; break;
+                    //case 271: storyIndex = 27; break;
+                    //case 281: storyIndex = 28; break;
+                    //case 291: storyIndex = 29; break;
             }
+
             if (storyIndex>=0)
             {
                 _isBattleActive = false;
@@ -299,6 +337,7 @@ public class BattleManager : MonoBehaviour
 
     private void SwitchToBattle()
     {
+        ResumeBattleEverything();
         _currentStageInfo = StageInfoManager.instance.GetNormalStageInfo(_gameData.currentStageNum);
         _battleType = BattleType.Default;
         StartBattle(_currentStageInfo);
@@ -650,6 +689,80 @@ public class BattleManager : MonoBehaviour
         _enemies = null;
     }
 
-    [ContextMenu("RestartBattle")]
-    public void RestartBattle() => SwitchToBattle();
+    public void StopBattleEverything()
+    {
+        _isBattleActive = false;
+        _isBattleRunning = false;
+        _isMove = false;
+        _isKnockback = false;
+
+        // 플레이어 정지
+        if (_controller != null)
+        {
+            _controller.StopAttack();
+            _controller.MoveState(false);
+        }
+
+        // 동료 정지
+        foreach (var comp in _companions)
+        {
+            if (comp == null) continue;
+
+            // 코루틴 정지
+            comp.StopAllCoroutines();
+
+            // 공격 루프 코루틴 정지 (CompanionController 내부 Stop 처리)
+            BattleBroker.ControllCompanionMove?.Invoke(0);
+        }
+
+        // 적 정지
+        if (_enemies != null)
+        {
+            foreach (var enemy in _enemies)
+            {
+                if (enemy == null) continue;
+
+                enemy.StopAllCoroutines();
+                enemy.StopAttack();
+                enemy.target = null;
+
+                if (enemy.anim != null)
+                    enemy.anim.speed = 0f;
+            }
+        }
+
+        // IMoveByPlayer 연동 오브젝트 정지
+        foreach (var mover in MediatorManager<IMoveByPlayer>.GetRegisteredObjects())
+            mover.MoveByPlayer(Vector2.zero);
+    }
+    public void ResumeBattleEverything()
+    {
+        _isBattleActive = true;
+        _isBattleRunning = true;
+        _isMove = true;
+        _isKnockback = false;
+
+        // 플레이어 이동 재개
+        if (_controller != null)
+            _controller.MoveState(true);
+
+        // COMPANION 재개 → 이동 상태로 복구
+        BattleBroker.ControllCompanionMove?.Invoke(1);
+
+        // 적 재개 (타겟만 다시 지정해주면 됨)
+        if (_enemies != null)
+        {
+            foreach (var enemy in _enemies)
+            {
+                if (enemy == null) continue;
+                if (!enemy.isDead)
+                    enemy.target = _controller;
+            }
+        }
+
+        // 이동 관련 시스템 재개
+        foreach (var mover in MediatorManager<IMoveByPlayer>.GetRegisteredObjects())
+            mover.MoveByPlayer(Vector2.zero);
+    }
+
 }
