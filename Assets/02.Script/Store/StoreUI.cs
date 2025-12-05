@@ -57,6 +57,7 @@ public class StoreUI : MonoBehaviour, IMenuUI
     {
         root.style.display = DisplayStyle.Flex;
         StoreManager.Instance.OpenStore();
+       // StoreManagerRe.Instance.OpenStore();
 
         // 상점 열릴 때 FX 및 애니메이션 실행
         ParticleFxManager.Instance.Play("StoreOpen");
