@@ -11,6 +11,7 @@ public class StageInfo : ScriptableObject, IListViewItem
     public string stageName;
     public Background background;
     public int recommendLevel;
+    public BattleType battleType;
 
     [Header("Drop Info")]
     public float goldBonusValue;    // ¿¹: 0.2f ¡æ +20%

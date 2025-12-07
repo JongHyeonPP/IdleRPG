@@ -434,7 +434,7 @@ public abstract class Attackable : MonoBehaviour
     protected abstract void OnReceiveSkill();
     protected virtual bool UseMP(SkillData skill) => true;
 
-    public float GetPWValue(SkillType type)//★이런식으로 해야함. 스킬 하나 당 메서드 하나 X, 호출하면 알잘딱으로 해당 수치 계산하는 메서드 하나만 사용 O
+    public float GetPWValue(SkillType type)//이런식으로 해야함. 스킬 하나 당 메서드 하나 X, 호출하면 알잘딱으로 해당 수치 계산하는 메서드 하나만 사용 O
     {
         List<SkillData> skilldatas = equipedSkillArr.Where(item => item != null).Where(item => item.skillData.isActiveSkill || item.skillData.type == type).Select(item => item.skillData).ToList();
         float sum = 0f;

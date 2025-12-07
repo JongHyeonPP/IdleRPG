@@ -1,4 +1,6 @@
 using DG.Tweening;
+using EnumCollection;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,26 +16,50 @@ public class StoryRunner : MonoBehaviour
         actions.Enqueue(action);
     }
 
-    public void Run()
+    public void Run(StageInfo stageInfo)
     {
-        StartCoroutine(RunSequence());
+        StartCoroutine(RunSequence(stageInfo));
     }
 
-    private IEnumerator RunSequence()
+    private IEnumerator RunSequence(StageInfo stageInfo)
     {
         while (actions.Count > 0)
             yield return StartCoroutine(actions.Dequeue());
 
-        // 스토리 → 배틀 전환
-        BattleBroker.SwitchToBattle();
+        if (stageInfo == null)
+        {
+            BattleBroker.SwitchToBattle();
+        }
+        else
+        {
+            switch (stageInfo.battleType)
+            {
+                case BattleType.CompanionTech:
+                    var companionInfo = stageInfo.companionTechInfo;
+                    BattleBroker.SwitchToCompanionBattle(companionInfo.companionNum, (companionInfo.techIndex_0, companionInfo.techIndex_1));
+                    break;
+                case BattleType.Adventure:
+                    var adventureInfo = stageInfo.adventrueInfo;
+                    BattleBroker.SwitchToAdventure(adventureInfo.adventureIndex_0, adventureInfo.adventureIndex_1);
+                    break;
+                case BattleType.Dungeon:
+                    var dungeonInfo = stageInfo.adventrueInfo;
+                    BattleBroker.SwitchToDungeon(dungeonInfo.adventureIndex_0, dungeonInfo.adventureIndex_1);
+                    break;
+                case BattleType.Promote:
+                    BattleBroker.SwitchToPromoteBattle(stageInfo.stageNum);
+                    break;
+            }
+        }
+
 
         // 페이드 실행 (코루틴 X)
         UIBroker.FadeInOut(0f, 0.5f, 2f);
 
-        // ★ fadeInOut 총 2.5초 직접 기다림
+        //  fadeInOut 총 2.5초 직접 기다림
         yield return new WaitForSeconds(0.5f + 2f);
 
-        // ★ 페이드 완전히 끝난 순간 - 모델 위치 원위치 복구
+        //  페이드 완전히 끝난 순간 - 모델 위치 원위치 복구
         StoryManager.instance.ResetAllModelPositionsAfterStory();
     }
 

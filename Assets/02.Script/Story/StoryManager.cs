@@ -7,7 +7,9 @@ public class StoryManager : MonoBehaviour
     public static StoryManager instance;
 
     [SerializeField] private StoryRunner runner;
-    [SerializeField] private StoryChapter[] chapters;
+    [SerializeField] private StoryChapter[] mainChapters;
+
+    [SerializeField] private StoryChapter[] promoteChapters;
 
     [Header("Camera References")]
     [SerializeField] private Camera mainCamera;
@@ -30,7 +32,7 @@ public class StoryManager : MonoBehaviour
     private Dictionary<StoryRenderType, StoryTalker> talkerMap;
     private Dictionary<StoryRenderType, GameObject> modelMap;
 
-    // ★ 원래 위치 저장
+    // 원래 위치 저장
     private Dictionary<GameObject, Vector3> originalPositions = new();
 
 
@@ -42,20 +44,14 @@ public class StoryManager : MonoBehaviour
 
         InitMaps();
 
-        // 모든 Chapter를 활성화시키되 본문은 꺼둔다
-        foreach (var c in chapters)
-        {
-            if (c != null)
-            {
-                c.gameObject.SetActive(true);
-                c.SetChapterActive(false);
-            }
-        }
+        // 모든 Chapter 를 활성화시키되 본문은 꺼둔다
+        InitChapters(mainChapters);
+        InitChapters(promoteChapters);
 
         // Local talker 전부 OFF
         DisableLocalTalkersOfAllChapters();
 
-        // ★ 원래 위치 저장 (동료 + 플레이어 + 챕터별 local 모델)
+        // 원래 위치 저장 동료 플레이어 챕터별 local 모델
         SaveOriginalPositions();
 
         PlayerBroker.OnPlayerAppearanceChange += ad =>
@@ -65,7 +61,11 @@ public class StoryManager : MonoBehaviour
         };
 
         BattleBroker.SwitchToStory += RunStory;
+        BattleBroker.SwitchToAdventure += (_,_)=>SwitchToBattle();
         BattleBroker.SwitchToBattle += SwitchToBattle;
+        BattleBroker.SwitchToCompanionBattle += (_,_) => SwitchToBattle();
+        BattleBroker.SwitchToDungeon += (_,_) => SwitchToBattle();
+        BattleBroker.SwitchToPromoteBattle += (_) => SwitchToBattle();
     }
 
     private void InitMaps()
@@ -84,16 +84,37 @@ public class StoryManager : MonoBehaviour
         modelMap[StoryRenderType.Companion2] = mageModel;
     }
 
+    private void InitChapters(StoryChapter[] chapters)
+    {
+        if (chapters == null) return;
+
+        foreach (var c in chapters)
+        {
+            if (c == null) continue;
+
+            c.gameObject.SetActive(true);
+            c.SetChapterActive(false);
+        }
+    }
+
     private void SaveOriginalPositions()
     {
-        // 플레이어 + 동료
+        // 플레이어 동료
         foreach (var kv in modelMap)
         {
             if (kv.Value != null)
                 originalPositions[kv.Value] = kv.Value.transform.position;
         }
 
-        // ★ 각 chapter의 local models도 저장
+        // 각 chapter 의 local models 도 저장
+        SaveLocalModelsFor(mainChapters);
+        SaveLocalModelsFor(promoteChapters);
+    }
+
+    private void SaveLocalModelsFor(StoryChapter[] chapters)
+    {
+        if (chapters == null) return;
+
         foreach (var c in chapters)
         {
             if (c == null) continue;
@@ -111,28 +132,56 @@ public class StoryManager : MonoBehaviour
 
     private void DisableLocalTalkersOfAllChapters()
     {
+        DisableLocalTalkersFor(mainChapters);
+        DisableLocalTalkersFor(promoteChapters);
+    }
+
+    private void DisableLocalTalkersFor(StoryChapter[] chapters)
+    {
+        if (chapters == null) return;
+
         foreach (var c in chapters)
         {
             var locals = c?.LocalTalkers;
             if (locals == null) continue;
 
             foreach (var t in locals)
+            {
                 if (t != null && t.talkerObject != null)
                     t.talkerObject.SetActive(false);
+            }
         }
     }
 
-    private void RunStory(int index)
+    private void RunStory(BattleType storyType, int[] index)
     {
-        if (index < 0 || index >= chapters.Length)
+        if (index == null || index.Length == 0)
+        {
+            Debug.LogError("RunStory 에 전달된 index 배열이 비어 있음");
             return;
+        }
+
+        switch (storyType)
+        {
+            case BattleType.Default:
+                activeChapter = mainChapters[index[0]];
+                break;
+
+            case BattleType.Promote:
+                activeChapter = promoteChapters[index[0]];
+                break;
+            default:
+                Debug.LogError("알 수 없는 StoryType");
+                return;
+        }
+
 
         DisableLocalTalkersOfAllChapters();
 
-        foreach (var c in chapters)
-            c.SetChapterActive(false);
+        // 모든 챕터 비활성화
+        SetAllChaptersActive(false);
 
-        activeChapter = chapters[index];
+        
         activeChapter.SetChapterActive(true);
 
         // Local talker ON
@@ -140,20 +189,33 @@ public class StoryManager : MonoBehaviour
         if (locals != null)
         {
             foreach (var t in locals)
+            {
                 if (t != null && t.talkerObject != null)
                     t.talkerObject.SetActive(true);
+            }
         }
 
         // 필요한 모델만 Enable
+        var requiredTypes = activeChapter.GetRequiredRenderTypes();
+
         foreach (var kv in modelMap)
         {
             bool needed = false;
 
-            foreach (var t in activeChapter.GetRequiredRenderTypes())
-                if (t == kv.Key)
-                    needed = true;
+            if (requiredTypes != null)
+            {
+                foreach (var t in requiredTypes)
+                {
+                    if (t == kv.Key)
+                    {
+                        needed = true;
+                        break;
+                    }
+                }
+            }
 
-            kv.Value.SetActive(needed);
+            if (kv.Value != null)
+                kv.Value.SetActive(needed);
         }
 
         mainCamera.enabled = false;
@@ -161,12 +223,29 @@ public class StoryManager : MonoBehaviour
 
         runner.ResetUI();
         activeChapter.BuildActions(runner);
-        runner.Run();
+        runner.Run(activeChapter.nextStage);
+    }
+
+    private void SetAllChaptersActive(bool active)
+    {
+        SetChaptersActive(mainChapters, active);
+        SetChaptersActive(promoteChapters, active);
+    }
+
+    private void SetChaptersActive(StoryChapter[] chapters, bool active)
+    {
+        if (chapters == null) return;
+
+        foreach (var c in chapters)
+        {
+            if (c != null)
+                c.SetChapterActive(active);
+        }
     }
 
     private void SwitchToBattle()
     {
-        // 챕터 종료 → fadeOut은 runner 내부에 있음 → fadeOut 완료 후 호출됨
+        // 챕터 종료 fadeOut 은 runner 내부에서 처리 후 호출됨
         ResetAllModelPositionsAfterStory();
 
         DisableLocalTalkersOfAllChapters();
@@ -179,13 +258,16 @@ public class StoryManager : MonoBehaviour
 
         // 모든 파티 모델은 다시 활성화
         foreach (var m in modelMap.Values)
-            m.SetActive(true);
+        {
+            if (m != null)
+                m.SetActive(true);
+        }
 
         storyCamera.enabled = false;
         mainCamera.enabled = true;
     }
 
-    // ★ 이 함수는 fadeOut 끝난 뒤 실행됨
+    // 이 함수는 fadeOut 끝난 뒤 실행됨
     public void ResetAllModelPositionsAfterStory()
     {
         foreach (var kv in originalPositions)
@@ -205,6 +287,7 @@ public class StoryManager : MonoBehaviour
 
         return null;
     }
+
     public GameObject GetModel(StoryRenderType type)
     {
         if (modelMap.TryGetValue(type, out var model))
@@ -212,5 +295,4 @@ public class StoryManager : MonoBehaviour
 
         return null;
     }
-
 }

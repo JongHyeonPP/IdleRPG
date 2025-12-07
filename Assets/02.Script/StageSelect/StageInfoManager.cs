@@ -364,9 +364,9 @@ public class StageInfoManager : MonoBehaviour
         }
     }
 
-    public StageInfo GetPromoteStageInfo(Rank rank)
+    public StageInfo GetPromoteStageInfo(int rank)
     {
-        return _promoteArr[(int)rank];
+        return _promoteArr[rank];
     }
 
     public (float goldBonusValue, float expBonusValue)GetBonusInfo(int stageNum)

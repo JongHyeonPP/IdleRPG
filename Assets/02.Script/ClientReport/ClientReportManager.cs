@@ -37,7 +37,7 @@ public class ClientReportManager : MonoBehaviour
         NetworkBroker.SaveServerData += ForceVerificationNow;
 
         // Story ↔ Battle 전환 시 루프 제어
-        BattleBroker.SwitchToStory += (_) => PauseVerificationLoop();
+        BattleBroker.SwitchToStory += (_,_) => PauseVerificationLoop();
         BattleBroker.SwitchToBattle += () => ResumeVerificationLoop();
 
         _gameData = StartBroker.GetGameData();

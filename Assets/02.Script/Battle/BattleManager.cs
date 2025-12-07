@@ -221,7 +221,7 @@ public class BattleManager : MonoBehaviour
         BattleBroker.SwitchToPromoteBattle += SwitchToPromoteBattle;
         BattleBroker.OnEnemyDead += OnEnemyDead;
         PlayerBroker.OnPlayerDead += OnPlayerDead;
-        BattleBroker.SwitchToStory += (_) => OnSwitchToStory();
+        BattleBroker.SwitchToStory += (_,_) => OnSwitchToStory();
 
         BattleBroker.GetBattleType += () => _battleType;
         BattleBroker.IsCanAttack += () => !_isMove && _controller.target != null;
@@ -303,10 +303,10 @@ public class BattleManager : MonoBehaviour
                     //case 291: storyIndex = 29; break;
             }
 
-            if (storyIndex>=0)
+            if (storyIndex >= 0)
             {
                 _isBattleActive = false;
-                BattleBroker.SwitchToStory?.Invoke(storyIndex);
+                BattleBroker.SwitchToStory?.Invoke(BattleType.Default, new int[] { storyIndex });
                 return;
             }
         }
@@ -376,7 +376,7 @@ public class BattleManager : MonoBehaviour
         _battleType = BattleType.Dungeon;
         StartBattle(_currentStageInfo, true);
     }
-    private void SwitchToPromoteBattle(Rank rank)
+    private void SwitchToPromoteBattle(int rank)
     {
         UIBroker.FadeInOut(0f, 0.5f, 2f);
         _currentStageInfo = StageInfoManager.instance.GetPromoteStageInfo(rank);

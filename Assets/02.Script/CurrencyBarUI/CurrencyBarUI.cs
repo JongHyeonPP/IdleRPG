@@ -2,7 +2,6 @@ using EnumCollection;
 using System;
 using System.Numerics;
 using UnityEngine;
-using UnityEngine.Playables;
 using UnityEngine.UIElements;
 
 public class CurrencyBarUI : MonoBehaviour, IGeneralUI
@@ -18,6 +17,13 @@ public class CurrencyBarUI : MonoBehaviour, IGeneralUI
     public VisualElement root { get; private set; }
     [SerializeField] SettingUI _settingUI;
     [SerializeField] PowerSavePanel _powerSavePanel;
+
+    VisualElement _nameChangePanel;
+    VisualElement _background;
+    TextField _nameInputField;
+    Button _nameApplyButton;
+
+    Label _placeHoldLabel;
 
     private void Awake()
     {
@@ -45,9 +51,55 @@ public class CurrencyBarUI : MonoBehaviour, IGeneralUI
         SetEmerald();
 
         VisualElement playerImage = root.Q<VisualElement>("PlayerImage");
+        VisualElement namePanel = root.Q<VisualElement>("NamePanel");
+
         _totalStatusUI.root.style.display = DisplayStyle.None;
 
         playerImage.RegisterCallback<ClickEvent>(evt => OpenTotalStatusUI());
+
+        _nameChangePanel = root.Q<VisualElement>("NameChangePanel");
+        _background = root.Q<VisualElement>("Background");
+
+        _nameChangePanel.style.display = DisplayStyle.None;
+        _background.style.display = DisplayStyle.None;
+
+        _nameInputField = root.Q<TextField>("NameInputField");
+        _nameApplyButton = root.Q<Button>("ChangeButton");
+
+        _placeHoldLabel = root.Q<Label>("PlaceHoldLabel");
+
+        _nameInputField.value = string.Empty;
+        _placeHoldLabel.text = "새로운 이름을 입력하세요.";
+
+        // 입력 중 placeholder 제거. 빈 문자열일 때는 placeholder 유지.
+        _nameInputField.RegisterValueChangedCallback(evt =>
+        {
+            string current = _nameInputField.value;
+
+            // 빈 문자열이면 placeholder 유지
+            if (string.IsNullOrEmpty(current))
+                return;
+
+            // 입력이 존재하면 placeholder 제거
+            _placeHoldLabel.text = string.Empty;
+        });
+
+        namePanel.RegisterCallback<ClickEvent>(evt => OpenNameChangePanel());
+
+        if (_nameApplyButton != null)
+            _nameApplyButton.RegisterCallback<ClickEvent>(evt => ApplyNameChange());
+
+        Button exitButton = root.Q<Button>("ExitButton");
+        if (exitButton != null)
+        {
+            exitButton.RegisterCallback<ClickEvent>(evt =>
+            {
+                SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+                CloseNameChangePanel();
+            });
+        }
+
+        _background.RegisterCallback<ClickEvent>(evt => CloseNameChangePanel());
 
         root.Q<Button>("SettingButton").RegisterCallback<ClickEvent>(evt => ActiveSettingUI());
         _powerSaveButton = root.Q<Button>("PowerSaveButton");
@@ -58,6 +110,61 @@ public class CurrencyBarUI : MonoBehaviour, IGeneralUI
     {
         SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
         _totalStatusUI.ActiveUI();
+    }
+
+    private void OpenNameChangePanel()
+    {
+        _nameInputField.value = string.Empty;
+        _placeHoldLabel.text = "새로운 이름을 입력하세요.";
+
+        _nameChangePanel.style.display = DisplayStyle.Flex;
+        _background.style.display = DisplayStyle.Flex;
+    }
+
+    private void CloseNameChangePanel()
+    {
+        _nameChangePanel.style.display = DisplayStyle.None;
+        _background.style.display = DisplayStyle.None;
+    }
+
+    private void ApplyNameChange()
+    {
+        SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
+
+        string newName = _nameInputField.value;
+
+        if (string.IsNullOrWhiteSpace(newName))
+        {
+            _placeHoldLabel.text = "이름은 비워둘 수 없습니다.";
+            return;
+        }
+
+        if (newName.Length > 7)
+        {
+            _nameInputField.value = string.Empty;
+            _placeHoldLabel.text = "이름은 7자를 넘을 수 없습니다.";
+            return;
+        }
+
+        foreach (char c in newName)
+        {
+            bool isKorean = c >= 44032 && c <= 55203;
+            bool isLower = c >= 'a' && c <= 'z';
+            bool isUpper = c >= 'A' && c <= 'Z';
+            bool isNumber = c >= '0' && c <= '9';
+
+            if (isKorean == false && isLower == false && isUpper == false && isNumber == false)
+            {
+                _nameInputField.value = string.Empty;
+                _placeHoldLabel.text = "잘못된 이름입니다.";
+                return;
+            }
+        }
+
+        _gameData.userName = newName;
+        PlayerBroker.OnSetName(newName);
+        CloseNameChangePanel();
+        NetworkBroker.SaveServerData();
     }
 
     private void ActivePowerSavePanel()
@@ -75,8 +182,8 @@ public class CurrencyBarUI : MonoBehaviour, IGeneralUI
     {
         float value = GetExpPercent();
         _expBar.value = value;
-        _expBar.title = $"{value * 100f:F2}%";
-        _levelLabel.text = $"Lv. {StartBroker.GetGameData().level}";
+        _expBar.title = string.Format("{0:F2}% ", value * 100f);
+        _levelLabel.text = string.Format("Lv. {0}", StartBroker.GetGameData().level);
     }
 
     public float GetExpPercent()
@@ -92,12 +199,25 @@ public class CurrencyBarUI : MonoBehaviour, IGeneralUI
 
     private void OnSetLevel(int level)
     {
-        _levelLabel.text = $"Lv. {level}";
+        _levelLabel.text = string.Format("Lv. {0}", level);
     }
 
     private void SetName(string name)
     {
         _nameLabel.text = _gameData.userName;
+
+        int length = name.Length;
+        if (length > 7)
+            length = 7;
+
+        float newSize = 35f;
+
+        if (length == 6)
+            newSize = 28f;
+        else if (length == 7)
+            newSize = 24f;
+
+        _nameLabel.style.fontSize = newSize;
     }
 
     private void SetEmerald()
@@ -116,27 +236,18 @@ public class CurrencyBarUI : MonoBehaviour, IGeneralUI
 
     private void AdjustFontSize(Label label, string text)
     {
-        // 기본 폰트 크기
         float baseFontSize = 44f;
-        float baseBorder = 2f; // 기본 테두리 두께
-        float basePadding = 6f; // 기본 패딩값
+        float baseBorder = 2f;
+        float basePadding = 6f;
 
-        // 폰트 크기 계산
         float newFontSize;
         if (text.Length > 4)
-        {
-            // 글자 수가 많을수록 폰트 축소 (최소 14)
             newFontSize = Mathf.Clamp(baseFontSize - (text.Length - 4) * 7f, 14f, baseFontSize);
-        }
         else
-        {
             newFontSize = baseFontSize;
-        }
 
-        // 축소 비율 계산 (1이면 원래 크기)
         float scale = newFontSize / baseFontSize;
 
-        // 스타일 적용
         label.style.fontSize = newFontSize;
         label.style.borderTopWidth = baseBorder * scale;
         label.style.borderBottomWidth = baseBorder * scale;
@@ -148,7 +259,6 @@ public class CurrencyBarUI : MonoBehaviour, IGeneralUI
         label.style.paddingLeft = basePadding * scale;
         label.style.paddingRight = basePadding * scale;
     }
-
 
     public void OnBattle()
     {
@@ -164,6 +274,7 @@ public class CurrencyBarUI : MonoBehaviour, IGeneralUI
 
     public void OnBoss()
     {
+        root.style.display = DisplayStyle.Flex;
         if (_powerSaveButton != null)
             _powerSaveButton.style.display = DisplayStyle.None;
     }

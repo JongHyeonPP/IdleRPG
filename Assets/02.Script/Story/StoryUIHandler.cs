@@ -4,7 +4,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class StoryUIHandler : MonoBehaviour
+public class StoryUIHandler : MonoBehaviour, IGeneralUI
 {
     [SerializeField] private float typeSpeed = 0.04f;
 
@@ -45,9 +45,6 @@ public class StoryUIHandler : MonoBehaviour
         fadePanel.style.opacity = 1f;
 
         rootChild.RegisterCallback<ClickEvent>(OnClick);
-
-        BattleBroker.SwitchToStory += index => root.style.display = DisplayStyle.Flex;
-        BattleBroker.SwitchToBattle += () => root.style.display = DisplayStyle.None;
     }
 
     // ============================================================
@@ -208,5 +205,20 @@ public class StoryUIHandler : MonoBehaviour
 
         for (int i = 0; i < companionRenderElement.Length; i++)
             companionRenderElement[i].style.display = DisplayStyle.None;
+    }
+
+    public void OnBattle()
+    {
+        root.style.display = DisplayStyle.None;
+    }
+
+    public void OnStory()
+    {
+        root.style.display = DisplayStyle.Flex;
+    }
+
+    public void OnBoss()
+    {
+        root.style.display = DisplayStyle.None;
     }
 }

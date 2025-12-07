@@ -121,5 +121,4 @@ namespace EnumCollection
     {
         Player, Companion0, Companion1, Companion2, Other
     }
-
 }

@@ -22,7 +22,7 @@ public static class BattleBroker
 
     public static Func<bool> IsCanAttack;
 
-    public static Action<int> SwitchToStory;
+    public static Action<BattleType, int[]> SwitchToStory;
     public static Action SwitchToBattle;
     public static Action SwitchToBoss;
     public static Action<int, int> SwitchToAdventure;
@@ -32,7 +32,7 @@ public static class BattleBroker
     public static Action<int> ControllCompanionMove;//0 : ¸ØÃã, 1 : ¿òÁ÷ÀÓ, 2 : °ø°Ý
     
     //½Â±Þ
-    public static Action<Rank> SwitchToPromoteBattle;
+    public static Action<int> SwitchToPromoteBattle;
 
     public static Func<BigInteger> GetNeedExp;
     public static Action<DropType, int, string> OnDrop;

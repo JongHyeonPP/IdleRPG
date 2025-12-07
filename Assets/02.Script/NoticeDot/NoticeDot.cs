@@ -26,7 +26,7 @@ public class NoticeDot
         InactiveNotice();
 
         BattleBroker.SwitchToBattle += () => PauseOrResume(false);
-        BattleBroker.SwitchToStory += (_) => PauseOrResume(true);
+        BattleBroker.SwitchToStory += (_,_) => PauseOrResume(true);
     }
 
     public void StartNotice()

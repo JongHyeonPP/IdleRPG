@@ -7,6 +7,6 @@
         <engine:VisualElement name="CenterAlign" style="flex-grow: 1; align-items: center; justify-content: center; bottom: auto; position: absolute; width: 100%; height: 100%;">
             <engine:Label text="Loading..." name="LoadingLabel" style="-unity-text-outline-width: 3px; font-size: 114px;" />
         </engine:VisualElement>
-        <engine:VisualElement style="flex-grow: 1; position: absolute; top: 290px; align-self: center; width: 1150px; height: 1081px; background-image: url(&quot;project://database/Assets/07.Texture/Start/StartLogo.png?fileID=2800000&amp;guid=5928ff1df3b733a4ab526b3fb0b38ff1&amp;type=3#StartLogo&quot;); -unity-background-image-tint-color: rgb(255, 255, 255);" />
+        <engine:VisualElement style="flex-grow: 1; position: absolute; top: 290px; align-self: center; width: 971px; height: 968px; background-image: url(&quot;project://database/Assets/07.Texture/Start/StartLogo.png?fileID=2800000&amp;guid=5928ff1df3b733a4ab526b3fb0b38ff1&amp;type=3#StartLogo&quot;); -unity-background-image-tint-color: rgb(255, 255, 255);" />
     </engine:VisualElement>
 </engine:UXML>

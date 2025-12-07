@@ -18,7 +18,7 @@ public class UIManager : MonoBehaviour
         .OfType<IGeneralUI>()
         .ToArray();
 
-        BattleBroker.SwitchToStory += OnStory;
+        BattleBroker.SwitchToStory +=(_,_)=>OnStory();
         BattleBroker.SwitchToBattle += OnBattle;
         BattleBroker.SwitchToBoss += OnBoss;
         BattleBroker.SwitchToCompanionBattle += (arg0, arg1) => OnBoss();
@@ -33,7 +33,7 @@ public class UIManager : MonoBehaviour
             x.OnBattle();
     }
 
-    private void OnStory(int storyNum)
+    private void OnStory()
     {
         foreach (var x in _uiArr)
             x.OnStory();

@@ -5,13 +5,7 @@ using System;
 using UnityEngine;
 using Unity.Services.RemoteConfig;
 
-public class ReinforceRule
-{
-    public float baseInc;
-    public int step;
-    public float stepInc;
-    public float startValue;
-}
+
 
 public class ReinforceManager : MonoBehaviour
 {

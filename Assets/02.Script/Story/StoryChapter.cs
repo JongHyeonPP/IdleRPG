@@ -4,7 +4,7 @@ using UnityEngine;
 public abstract class StoryChapter : MonoBehaviour
 {
    protected GameObject objectParent;
-
+    public StageInfo nextStage;
     public virtual StoryTalker[] LocalTalkers => null;
 
     // 이 챕터에서 사용하는 모델
