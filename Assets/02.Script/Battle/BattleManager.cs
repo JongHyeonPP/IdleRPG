@@ -168,7 +168,7 @@ public class BattleManager : MonoBehaviour
             _knockbackTimer = 0f;
             player.playerKnockback = false;
             _isMove = false;
-
+            _controller.StopAttack();
             if (_controller.target != null)
                 _controller.target = null;
         }
@@ -189,12 +189,12 @@ public class BattleManager : MonoBehaviour
             return;
         }
 
-        float playerSpeed = player.currentSpeed;
+        
+        float playerSpeed = 1f + player.GetPWValue(SkillType.MoveSpeed);//이동속도
         foreach (var mover in MediatorManager<IMoveByPlayer>.GetRegisteredObjects())
             mover.MoveByPlayer(_isMove ? _defaultSpeed * playerSpeed * Time.fixedDeltaTime * Vector2.left : Vector3.zero);
     }
    
-
     private void SetEvent()
     {
         BattleBroker.OnStageChange += OnStageChange;

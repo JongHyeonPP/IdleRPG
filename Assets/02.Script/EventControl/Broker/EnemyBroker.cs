@@ -8,4 +8,5 @@ public static class EnemyBroker
     public static Func<EnemyType, float> GetEnemyResist;
     public static Func<EnemyType, BigInteger> GetEnemyPower;
     public static Func<EnemyType, float> GetEnemyPenetration;
+    public static Func<EnemyType, float> GetEnemyKnockbackChance;
 }

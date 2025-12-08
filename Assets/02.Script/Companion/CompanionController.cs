@@ -173,6 +173,8 @@ public class CompanionController : MonoBehaviour
 
     public WeaponData GetWeapon()
     {
+        if (_weaponController == null) return null;
+        if (_weaponController.weaponData == null) return null;
         return _weaponController.weaponData;
     }
 }

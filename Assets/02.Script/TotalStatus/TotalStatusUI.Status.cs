@@ -107,7 +107,7 @@ public partial class TotalStatusUI
         _setDict[StatusType.MaxMp].text = _status.MaxMp.ToString("N0");
         _setDict[StatusType.MpRecover].text = _status.MpRecover.ToString("N0");
         _setDict[StatusType.AttBuff].text = '+' + playerController.GetPWValue(SkillType.AttBuff).ToString("N0") + '%';
-        _setDict[StatusType.DefBuff].text = '+' + playerController.GetPWValue(SkillType.DefBuff).ToString("N0") + '%';
+        _setDict[StatusType.DefBuff].text = '+' + playerController.GetPWValue(SkillType.Durability).ToString("N0") + '%';
         _setDict[StatusType.GoldAscend].text = (_status.GoldAscend * 100f).ToString("F1") + '%';
         _setDict[StatusType.ExpAscend].text = (_status.ExpAscend * 100f).ToString("F1") + '%';
     }

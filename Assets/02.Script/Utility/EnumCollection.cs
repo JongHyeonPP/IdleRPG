@@ -21,8 +21,9 @@ namespace EnumCollection
         Damage,
         //Passive
 
-        AttBuff, SpeedBuff,DefBuff,
-        healOnHit, DoubleHit, ExpPlus, Revive, Invincible, Paralyzation,SuperArmor, GoldPlus
+        AttBuff, SpeedBuff,Durability,
+        healOnHit, DoubleHit, ExpPlus, Revive, Invincible, Paralyzation,SuperArmor, GoldPlus,
+        MoveSpeed,AttackSpeed,MaxHpPer,MpRecover,MaxMP,Penetration
 
     }
     public enum SkillTarget

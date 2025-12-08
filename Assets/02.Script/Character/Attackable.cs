@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
 
@@ -23,6 +24,7 @@ public abstract class Attackable : MonoBehaviour
     public float currentSpeed { protected set; get; }
     public Dictionary<SkillType, bool> skillOnCooldown = new();
     public Dictionary<SkillType, bool> skillActive = new();
+    
     private void Awake()
     {
         //_gameData = StartBroker.GetGameData();
@@ -44,7 +46,7 @@ public abstract class Attackable : MonoBehaviour
     protected void SetDefaultAttack() => _defaultAttack = new();
 
     public void StartAttack() => attackCoroutine = StartCoroutine(AttackLoop());
-
+   
     public void StopAttack()
     {
         target = null;
@@ -77,7 +79,7 @@ public abstract class Attackable : MonoBehaviour
             {
                 yield break;
             }
-
+            
             EquipedSkill currentSkill = GetNextSkill();
             float attBuffValue = GetPWValue(SkillType.AttBuff);
             float speedBuffValue=GetPWValue(SkillType.SpeedBuff);
@@ -103,7 +105,6 @@ public abstract class Attackable : MonoBehaviour
             }
 
             SkillData skillData = currentSkill.skillData;
-
 
             if (skillData.castClip != null)
                 StartCoroutine(PlayDelayedSFX(skillData.castClip, 0.2f));
@@ -144,7 +145,6 @@ public abstract class Attackable : MonoBehaviour
                 if (UnityEngine.Random.value < doubleHitChance)
                     damage += damage;
 
-                // 힐 온 히트
                 float healPercent = GetPWValue(SkillType.healOnHit);
                 if (healPercent > 0)
                 {
@@ -152,7 +152,6 @@ public abstract class Attackable : MonoBehaviour
                     (this as PlayerController)?.Heal(healAmount);
                 }
 
-                // **데미지 적용**
                 tgt.ReceiveSkill(damage, skillData.type, damageType);
 
                 // 히트 사운드(지연 없음)
@@ -355,19 +354,28 @@ public abstract class Attackable : MonoBehaviour
         switch (skillType)
         {
             case SkillType.Damage:
-                float defBuffValue = GetPWValue(SkillType.DefBuff);
-                float damageMultiplier = Mathf.Max(0f, 1f - defBuffValue);
+                float durabilityValue = GetPWValue(SkillType.Durability);
+                float damageMultiplier = Mathf.Max(0f, 1f - durabilityValue);
                 int scale = 100;
-                BigInteger multiplier = new BigInteger(damageMultiplier * scale);
-                BigInteger finalDamage = (calcedValue * multiplier) / scale;
+
+                BigInteger finalDamage = (calcedValue * new BigInteger(damageMultiplier * scale)) / scale;
+
+                if (this is EnemyController enemy)
+                {
+                    float resist = ((EnemyStatus)enemy.GetStatus()).Resist;
+                    float penetration = GetPWValue(SkillType.Penetration);
+                    float effectiveResist = Mathf.Max(0f, resist * (1f - penetration));
+                    float enemyDamageMult = Mathf.Max(0f, 1f - effectiveResist);
+                    finalDamage = (finalDamage * new BigInteger(enemyDamageMult * scale)) / scale;
+                }
 
                 hp -= finalDamage;
                 if (hp < 0) hp = 0;
 
 
-                if (this is EnemyController enemy)
+                if (this is EnemyController hitEnemy)
                 {
-                    var status = (EnemyStatus)enemy.GetStatus();
+                    var status = (EnemyStatus)hitEnemy.GetStatus();
                     if (status.isMonster)
                         anim.SetTrigger("Hit");
                     else
@@ -406,6 +414,7 @@ public abstract class Attackable : MonoBehaviour
     }
 
 
+
     private IEnumerator FlashRed()
     {
         SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>();
@@ -430,20 +439,24 @@ public abstract class Attackable : MonoBehaviour
 
         skillActive[skill] = true;
         skillOnCooldown[skill] = true;
-        
+        float totalSpeed = currentSpeed;
         if (skill == SkillType.SpeedBuff)
-            currentSpeed += GetPWValue(SkillType.SpeedBuff);
+            totalSpeed += GetPWValue(SkillType.SpeedBuff);
 
         yield return new WaitForSeconds(duration);
         skillActive[skill] = false;
         
         if (skill == SkillType.SpeedBuff)
-            currentSpeed -= GetPWValue(SkillType.SpeedBuff);
+            totalSpeed -= GetPWValue(SkillType.SpeedBuff);
 
         yield return new WaitForSeconds(cooldown);
         skillOnCooldown[skill] = false;
     }
-
+    public float GetTotalAttackSpeed()
+    {
+        float passiveAttackSpeed = GetPWValue(SkillType.AttackSpeed);
+        return currentSpeed + passiveAttackSpeed;
+    }
 
     // ==========================
     //  Passive Damage
@@ -492,23 +505,22 @@ public abstract class Attackable : MonoBehaviour
                     sum += effect.value;
                 }
             }
+            var companionArr = GetCompanionsSafe();
 
-            if (BattleBroker.GetCompanionControllerArr() is CompanionController[] companionArr)
+            foreach (var companion in companionArr)
             {
-                foreach (var companion in companionArr)
-                {
-                    WeaponData cWeapon = companion.GetWeapon();
+                if (companion == null) continue; 
 
-                    if (cWeapon)
-                    {
-                        foreach (var effect in cWeapon._weaponEffects
-                                     .Where(item => item.type == type))
-                        {
-                            sum += effect.value;
-                        }
-                    }
+                WeaponData cWeapon = companion.GetWeapon();
+                if (cWeapon == null) continue;
+
+                foreach (var effect in cWeapon._weaponEffects
+                    .Where(item => item.type == type))
+                {
+                    sum += effect.value;
                 }
             }
+         
             switch (type)
             {
                 case SkillType.GoldPlus:
@@ -517,5 +529,20 @@ public abstract class Attackable : MonoBehaviour
             }
         }
         return sum;
+    }
+    private CompanionController[] GetCompanionsSafe()
+    {
+        if (BattleBroker.GetCompanionControllerArr == null)
+            return Array.Empty<CompanionController>();
+
+        object raw = BattleBroker.GetCompanionControllerArr.Invoke();
+
+        if (raw == null)
+            return Array.Empty<CompanionController>();
+
+        if (raw is CompanionController[] arr)
+            return arr;
+
+        return Array.Empty<CompanionController>();
     }
 }

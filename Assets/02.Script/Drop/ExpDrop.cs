@@ -28,5 +28,6 @@ public class ExpDrop : DropBase
     public override void SetValue()
     {
         value = CurrencyManager.instance.currentExpValue;
+        //value *= (int)PlayerBroker.GetPWValue(SkillType.ExpPlus);
     }
 }

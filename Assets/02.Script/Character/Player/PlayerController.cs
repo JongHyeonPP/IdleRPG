@@ -46,7 +46,7 @@ public class PlayerController : Attackable
 
     private void RefreshPlayerSpeed()
     {
-        currentSpeed = 1f + GetPWValue(SkillType.SpeedBuff);
+        currentSpeed = 0.1f+GetPWValue(SkillType.AttackSpeed);
         anim.speed = (1f + currentSpeed) / 2f;
     }
 
@@ -100,7 +100,7 @@ public class PlayerController : Attackable
     /// </summary>
     private void InitToBattle()
     {
-        hp = _status.MaxHp;
+        hp = GetMaxHp();
         _mp = 0;
         StopAttack();
         _isAbleRevive = GetPWValue(SkillType.Revive) > 0;
@@ -209,7 +209,7 @@ public class PlayerController : Attackable
         if (GetPWValue(SkillType.Revive)>0&&_isAbleRevive)
         {
             Debug.Log("부활");
-            hp = _status.MaxHp;
+            hp = GetMaxHp();
             isDead = false;
             PlayerBroker.OnPlayerHpChanged(1f);
             _isAbleRevive = false;
@@ -237,7 +237,7 @@ public class PlayerController : Attackable
         yield return new WaitForSeconds(2f);
         BattleBroker.SwitchToBattle();  // 전투 재시작
         isDead = false;
-        hp = _status.MaxHp;
+        hp = GetMaxHp();
         anim.SetTrigger("Revive");
     }
 
@@ -248,7 +248,7 @@ public class PlayerController : Attackable
     protected override void OnReceiveSkill()
     {
         double logValue1 = BigInteger.Log(hp);
-        double logValue2 = BigInteger.Log(_status.MaxHp);
+        double logValue2 = BigInteger.Log(GetMaxHp());
 
         double logDifference = logValue1 - logValue2;
         float ratio = (float)Math.Exp(logDifference);
@@ -264,12 +264,14 @@ public class PlayerController : Attackable
     {
         while (true)
         {
-            if (_mp < _status.MaxMp)
+            float maxMp = GetMaxMp();
+            float mpRecover = GetMpRecover();
+            if (_mp < maxMp)
             {
-                _mp += _status.MpRecover * Time.deltaTime;
-                _mp = Mathf.Min(_mp, _status.MaxMp);
+                _mp += mpRecover * Time.deltaTime;
+                _mp = Mathf.Min(_mp, maxMp);
 
-                PlayerBroker.OnPlayerMpChanged?.Invoke(_mp / _status.MaxMp);
+                PlayerBroker.OnPlayerMpChanged?.Invoke(_mp / maxMp);
             }
             yield return null;
         }
@@ -292,12 +294,25 @@ public class PlayerController : Attackable
         if (isDead) return;
 
         hp += amount;
-        if (hp > _status.MaxHp)
-            hp = _status.MaxHp;
+        if (hp > GetMaxHp())
+            hp = GetMaxHp();
     }
     public override BigInteger GetMaxHp()
     {
-        return _status.MaxHp;
+        float bonus = GetPWValue(SkillType.MaxHpPer);
+        double finalValue = (double)_status.MaxHp * (1.0 + bonus);
+
+        return new BigInteger(finalValue);
+    }
+    public float GetMaxMp()
+    {
+        float bonus = GetPWValue(SkillType.MaxMP);
+        return _status.MaxMp * (1f + bonus);
+    }
+    public float GetMpRecover()
+    {
+        float bonus = GetPWValue(SkillType.MpRecover); 
+        return _status.MpRecover + bonus;
     }
     protected override bool UseMP(SkillData skill)
     {
@@ -307,7 +322,7 @@ public class PlayerController : Attackable
         }
 
         _mp = Mathf.Max(0, _mp - skill.requireMp);
-        PlayerBroker.OnPlayerMpChanged?.Invoke(_mp / _status.MaxMp);
+        PlayerBroker.OnPlayerMpChanged?.Invoke(_mp / GetMaxMp());
         return true;
     }
 

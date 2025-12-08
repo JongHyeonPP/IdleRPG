@@ -58,4 +58,5 @@ public static class BattleBroker
 
     public static Action RefreshPlayerSpeed;
     public static Action<string> OnWeaponLevelChanged;
+
 }
