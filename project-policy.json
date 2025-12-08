@@ -1,0 +1,23 @@
+{
+  "statements": [
+    {
+      "Sid": "DenyAccessToAllServices",
+      "Action": [
+        "*"
+      ],
+      "Effect": "Allow",
+      "Principal": "Player",
+      "Resource": "urn:ugs:*",
+      "Version": "1.0.0"
+    },
+    {
+      "Sid": "DenyWriteToCloudSave",
+      "Action": [
+        "Write"
+      ],
+      "Effect": "Deny",
+      "Principal": "Player",
+      "Resource": "urn:ugs:cloud-save:*"
+    }
+  ]
+}

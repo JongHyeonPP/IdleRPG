@@ -12,13 +12,7 @@ public class WeaponController : MonoBehaviour
     {
         PlayerBroker.OnEquipWeapon += OnEquipWeapon;
     }
-    private void Start()
-    {
-        if (weaponData == null)
-        {
-            EquipDefaultWeapon();
-        }
-    }
+
     private void OnEquipWeapon(object obj, WeaponType weaponType) => EquipWeapon((WeaponData)obj, weaponType);
    
     private void EquipWeapon(WeaponData weaponData, WeaponType weaponType)
@@ -35,11 +29,6 @@ public class WeaponController : MonoBehaviour
         }
 
         weaponRenderer.sprite = weaponData.WeaponSprite;
-    }
-    private void EquipDefaultWeapon()
-    {
-        weaponRenderer.sprite = defaultWeaponSprite;
-        this.weaponData = null;
     }
     //»ö±òÀÌÆåÆ® ºÎ¿©
     [ContextMenu("600")]

@@ -11,3 +11,16 @@ C:\Users\JongHyeon\Documents\kiugi\ClientVerification\Project\obj\Debug\net6.0\C
 C:\Users\JongHyeon\Documents\kiugi\ClientVerification\Project\obj\Debug\net6.0\refint\ClientVerification.dll
 C:\Users\JongHyeon\Documents\kiugi\ClientVerification\Project\obj\Debug\net6.0\ClientVerification.pdb
 C:\Users\JongHyeon\Documents\kiugi\ClientVerification\Project\obj\Debug\net6.0\ref\ClientVerification.dll
+C:\Users\USER\Documents\kiugi\ClientVerification\Project\obj\Debug\net6.0\ClientVerification.csproj.AssemblyReference.cache
+C:\Users\USER\Documents\kiugi\ClientVerification\Project\obj\Debug\net6.0\ClientVerification.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\USER\Documents\kiugi\ClientVerification\Project\obj\Debug\net6.0\ClientVerification.AssemblyInfoInputs.cache
+C:\Users\USER\Documents\kiugi\ClientVerification\Project\obj\Debug\net6.0\ClientVerification.AssemblyInfo.cs
+C:\Users\USER\Documents\kiugi\ClientVerification\Project\obj\Debug\net6.0\ClientVerification.csproj.CoreCompileInputs.cache
+C:\Users\USER\Documents\kiugi\ClientVerification\Project\obj\Debug\net6.0\ClientVerification.sourcelink.json
+C:\Users\USER\Documents\kiugi\ClientVerification\Project\obj\Debug\net6.0\ClientVerification.dll
+C:\Users\USER\Documents\kiugi\ClientVerification\Project\obj\Debug\net6.0\refint\ClientVerification.dll
+C:\Users\USER\Documents\kiugi\ClientVerification\Project\obj\Debug\net6.0\ClientVerification.pdb
+C:\Users\USER\Documents\kiugi\ClientVerification\Project\bin\Debug\net6.0\ClientVerification.deps.json
+C:\Users\USER\Documents\kiugi\ClientVerification\Project\bin\Debug\net6.0\ClientVerification.dll
+C:\Users\USER\Documents\kiugi\ClientVerification\Project\bin\Debug\net6.0\ClientVerification.pdb
+C:\Users\USER\Documents\kiugi\ClientVerification\Project\obj\Debug\net6.0\ref\ClientVerification.dll

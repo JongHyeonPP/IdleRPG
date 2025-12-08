@@ -153,7 +153,7 @@ public class CompanionController : MonoBehaviour
         while (true)
         {
             anim.SetTrigger("Attack");
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(1.5f);
         }
     }
 

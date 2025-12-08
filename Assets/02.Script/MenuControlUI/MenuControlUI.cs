@@ -60,9 +60,6 @@ public class MenuControlUI : MonoBehaviour, IGeneralUI
         UIBroker.ChangeMenu += OnChangeMenu;
         UIBroker.OnMenuUINotice += OnMenuUINotice;
 
-        BattleBroker.SwitchToStory += index => root.style.display = DisplayStyle.None;
-        BattleBroker.SwitchToBattle += () => root.style.display = DisplayStyle.Flex;
-
         menuUiArr = new IMenuUI[] { _statUI, _weaponUI, _skillUI, _companionUI, _adventureUI, _storeUI };
 
         for (int i = 0; i < 6; i++)
@@ -234,5 +231,5 @@ public class MenuControlUI : MonoBehaviour, IGeneralUI
 
     public void OnBattle() => root.style.display = DisplayStyle.Flex;
     public void OnStory() => root.style.display = DisplayStyle.None;
-    public void OnBoss() { }
+    public void OnBoss() => root.style.display = DisplayStyle.Flex;
 }

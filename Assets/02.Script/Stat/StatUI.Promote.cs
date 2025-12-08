@@ -83,7 +83,7 @@ public partial class StatUI
         {
             SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
             SetCategori(0);
-            BattleBroker.SwitchToPromoteBattle(rank);
+            BattleBroker.SwitchToStory(BattleType.Promote, new int[] { (int)rank });
         };
     }
 

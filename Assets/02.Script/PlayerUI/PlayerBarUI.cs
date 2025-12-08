@@ -10,12 +10,14 @@ public class PlayerBarUI : MonoBehaviour, IGeneralUI
     private ProgressBar _delayedBar;
     private ProgressBar _mpBar;
     private Coroutine _delayedHpCoroutine;
+    private Camera _mainCamera;
     void Awake()
     {
         InitElement();
         InitEvent();
         UIBroker.SetPlayerBarPosition += SetBarPosition;
         root.style.display = DisplayStyle.None;
+        _mainCamera = Camera.main;
     }
 
     private void InitElement()
@@ -29,17 +31,18 @@ public class PlayerBarUI : MonoBehaviour, IGeneralUI
 
     private void SetBarPosition()
     {
-        VisualElement vertical = GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("Vertical");
         MonoBehaviour controller = (MonoBehaviour)BattleBroker.GetPlayerController();
+        if (!controller)
+            return;
+        VisualElement vertical = GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("Vertical");
 
         // 월드 좌표를 스크린 좌표로 변환
-        Vector3 screenPoint = Camera.main.WorldToScreenPoint(controller.transform.position);
+        Vector3 screenPoint = _mainCamera.WorldToScreenPoint(controller.transform.position);
 
         float left = screenPoint.x - 100f;
         float bottom = screenPoint.y - 105f;
         vertical.style.left = left;
         vertical.style.bottom = bottom;  // Y축 반전 제거
-        root.style.display = DisplayStyle.Flex;
     }
 
     private void OnStageEnter()
@@ -87,6 +90,7 @@ public class PlayerBarUI : MonoBehaviour, IGeneralUI
     public void OnBattle()
     {
         root.style.display = DisplayStyle.Flex;
+        //SetBarPosition();
     }
 
     public void OnStory()

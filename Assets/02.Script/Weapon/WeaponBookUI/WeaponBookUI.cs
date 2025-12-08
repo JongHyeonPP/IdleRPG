@@ -103,11 +103,8 @@ public class WeaponBookUI : MonoBehaviour
             if (slotIcon != null)
                 WeaponManager.instance.SetWeaponIconToVe(weapon, slotIcon);
 
-            
 
             string weaponId = weapon.UID;
-            if (!_weaponLevel.ContainsKey(weaponId))
-                Debug.LogWarning($"무기 레벨 정보 없음: {weaponId}");
             int level = _weaponLevel.ContainsKey(weaponId) ? _weaponLevel[weaponId] : 0;
             Levelsum += level;
             index ++;

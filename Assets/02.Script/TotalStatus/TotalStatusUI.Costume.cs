@@ -14,7 +14,6 @@ public partial class TotalStatusUI
     // 코스튬 정보 패널 설정 메서드
     private void SetupCostumeInfoPanel()
     {
-        // 정보 패널 컨테이너 찾기
         _costumeInfoPanel = root.Q<VisualElement>("CostumeInfoPanel");
         if (_costumeInfoPanel == null)
         {
@@ -22,41 +21,49 @@ public partial class TotalStatusUI
             return;
         }
 
-        // 라벨과 버튼 참조 가져오기
         _costumeInfoName = _costumeInfoPanel.Q<Label>("NameLabel");
         _costumeInfoDescription = _costumeInfoPanel.Q<Label>("DescriptionLabel");
         _costumeInfoEquipButton = _costumeInfoPanel.Q<Button>("EquipButton");
         _costumeInfoIcon = _costumeInfoPanel.Q<VisualElement>("IconSprite");
 
-        if (_costumeInfoName == null) Debug.LogError("NameLabel을 찾을 수 없습니다.");
-        if (_costumeInfoDescription == null) Debug.LogError("EffectLabel을 찾을 수 없습니다.");
-        if (_costumeInfoEquipButton == null) Debug.LogError("EquipButton을 찾을 수 없습니다.");
-        if (_costumeInfoIcon == null) Debug.LogError("InfoIconSprite를 찾을 수 없습니다.");
-
-        // 컬러 설정
         ColorUtility.TryParseHtmlString("#FF9C31", out _costumeBtnOn);
         ColorUtility.TryParseHtmlString("#4B4B4B", out _costumeBtnOff);
         ColorUtility.TryParseHtmlString("#B58525", out _costumeBtnFilterOn);
         ColorUtility.TryParseHtmlString("#956035", out _costumeBtnFilterOff);
         ColorUtility.TryParseHtmlString("#D23113", out _costumeBtnEquip);
 
-        // 버튼 클릭 이벤트 연결
         if (_costumeInfoEquipButton != null)
         {
-            _costumeInfoEquipButton.RegisterCallback<ClickEvent>(evt => {
-                if (_selectedCostume != null)
-                {
-                    EquipCostume(_selectedCostume);
-                    UpdateCostumeInfoPanel(_selectedCostume); // 정보 패널 갱신
-                    UpdateEquipButtonText(); // 버튼 텍스트 업데이트
+            _costumeInfoEquipButton.RegisterCallback<ClickEvent>(evt =>
+            {
+                if (_selectedCostume == null)
+                    return;
 
-                    // UI 갱신
-                    ScrollView costumeScrollView = root.Q<ScrollView>("CostumeScrollView");
-                    if (costumeScrollView != null) RefreshCostumeSlots(costumeScrollView);
+                var cm = CostumeManager.Instance;
+                if (!cm.IsOwned(_selectedCostume.Uid))
+                    return;
+
+                bool wasEquipped = cm.IsEquipped(_selectedCostume.Uid);
+
+                EquipCostume(_selectedCostume);
+
+                bool nowEquipped = cm.IsEquipped(_selectedCostume.Uid);
+
+                if (wasEquipped != nowEquipped)
+                {
+                    SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
                 }
+
+                UpdateCostumeInfoPanel(_selectedCostume);
+                UpdateEquipButtonText();
+
+                ScrollView costumeScrollView = root.Q<ScrollView>("CostumeScrollView");
+                if (costumeScrollView != null)
+                    RefreshCostumeSlots(costumeScrollView);
             });
         }
     }
+
 
     /// <summary>
     /// 외형 패널 초기화
@@ -270,6 +277,7 @@ public partial class TotalStatusUI
             CostumeItem costumeCopy = costume;
             costumeSlot.RegisterCallback<ClickEvent>(evt =>
             {
+                SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
                 ShowCostumeInfo(costumeCopy, costumeSlot);
             });
 
@@ -488,6 +496,7 @@ public partial class TotalStatusUI
     /// </summary>
     private void SetCostumeFilter(CostumeFilterType filterType)
     {
+        SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
         // 이미 같은 필터가 선택되어 있으면 무시
         if (_currentFilterType == filterType) return;
 

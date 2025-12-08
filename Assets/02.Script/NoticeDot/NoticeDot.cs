@@ -6,7 +6,6 @@ using UnityEngine.UIElements;
 public class NoticeDot
 {
     #region 사용해야할 메서드
-    //UI 관련 C# 스크립트에서 생성자를 통해 객체 생성
     public NoticeDot(VisualElement parentVe, MonoBehaviour parentMono)
     {
         _parentMono = parentMono;
@@ -25,24 +24,32 @@ public class NoticeDot
         _expand = root.Q<VisualElement>("Notice_Expand");
         _mainPanel = root.Q<VisualElement>("Notice_MainPanel");
         InactiveNotice();
-    }
-    //렌더링 순위를 UIDocument 내에서 최상위에 위치시키는 메서드
-    //DisplayStyle이 Flex인 시점에 호출해야 정상적으로 작동된다.
 
-    //Notice 띄울라면 이거 호출하면 됨
+        BattleBroker.SwitchToBattle += () => PauseOrResume(false);
+        BattleBroker.SwitchToStory += (_,_) => PauseOrResume(true);
+    }
+
     public void StartNotice()
     {
+        if (isPaused)
+        {
+            startRequestedWhilePaused = true;
+            return;
+        }
+
         if (isOperating)
             return;
+
         isOperating = true;
         root.style.visibility = Visibility.Visible;
         _parentMono.StartCoroutine(CoroutineWithHashSet(AnimateLoop()));
     }
-    //Notice 감출라면 이거 호출하면 됨
+
     public void StopNotice()
     {
         if (!isOperating)
             return;
+
         InactiveNotice();
     }
 
@@ -51,14 +58,32 @@ public class NoticeDot
         isOperating = false;
         root.style.visibility = Visibility.Hidden;
         foreach (var x in _coroutineSet)
-        {
             _parentMono.StopCoroutine(x);
-        }
+
         _expand.transform.scale = _mainPanel.transform.scale = Vector3.one;
         _coroutineSet.Clear();
     }
 
-    //SetparentToRoot를 발동하면 원래 부모의 좌표를 따라가지 않아서 별도로 위치 이동시킬 때 호출하면 됨
+    public void PauseOrResume(bool pause)
+    {
+        if (pause)
+        {
+            isPaused = true;
+            startRequestedWhilePaused = false; // Pause 직전 상태 초기화
+            StopNotice();
+        }
+        else
+        {
+            isPaused = false;
+
+            // Pause 중에 Start가 씹혀있었으면 강제로 Start
+            if (startRequestedWhilePaused)
+                StartNotice();
+
+            startRequestedWhilePaused = false;
+        }
+    }
+
     public void OnPositionSet(float xSet, float ySet)
     {
         root.style.left = xSet;
@@ -68,24 +93,25 @@ public class NoticeDot
 
     #region 몰라도 됨
     public VisualElement root;
-    private MonoBehaviour _parentMono;//코루틴 발동 매개체
-    //readonly=>생성자 초기화
+    private MonoBehaviour _parentMono;
     private readonly VisualElement _mainPanel;
     private readonly VisualElement _expand;
     private HashSet<Coroutine> _coroutineSet = new();
-    private bool isOperating;
-    //생성자를 이용해 사용해야 함. 게임 오브젝트 생성 X
-    // MainPanel 애니메이션 설정
-    private const float _bigScaleNum = 1.2f;
-    private const float _pulseScaleNum = 1.3f; // 짧은 커지는 효과의 크기
-    private const float _bigDuration = 1f;
-    private const float _pulseDuration = 0.2f; // 짧고 빠른 커짐
-    private const float _smallDuration = 0.5f;
-    private const float _easeExponent = 1f; // Ease-Out 파라미터
 
-    // Expand 애니메이션 설정
-    private const float _expandMin = 1f; // 최소 크기
-    private const float _expandMax = 5f; // 최대 크기
+    private bool isOperating;
+    private bool isPaused;
+    private bool startRequestedWhilePaused;
+
+    private const float _bigScaleNum = 1.2f;
+    private const float _pulseScaleNum = 1.3f;
+    private const float _bigDuration = 1f;
+    private const float _pulseDuration = 0.2f;
+    private const float _smallDuration = 0.5f;
+    private const float _easeExponent = 1f;
+
+    private const float _expandMin = 1f;
+    private const float _expandMax = 5f;
+
     private IEnumerator AnimateLoop()
     {
         while (true)
@@ -115,7 +141,7 @@ public class NoticeDot
         {
             elapsedTime += Time.deltaTime;
             float t = elapsedTime / _bigDuration;
-            t = 1f - Mathf.Pow(1f - t, _easeExponent); // Ease-Out 적용
+            t = 1f - Mathf.Pow(1f - t, _easeExponent);
             _mainPanel.transform.scale = Vector3.Lerp(startScale, targetScale, t);
             yield return null;
         }
@@ -132,7 +158,7 @@ public class NoticeDot
         {
             elapsedTime += Time.deltaTime;
             float t = elapsedTime / _pulseDuration;
-            t = 1f - Mathf.Pow(1f - t, 2f); // 강한 Ease-Out
+            t = 1f - Mathf.Pow(1f - t, 2f);
             _mainPanel.transform.scale = Vector3.Lerp(startScale, targetScale, t);
             yield return null;
         }
@@ -158,25 +184,22 @@ public class NoticeDot
     private IEnumerator ExpandUp()
     {
         float elapsedTime = 0f;
-        float totalDuration = _pulseDuration + _smallDuration; // Expand는 pulse 시작 → small 종료까지 커짐
+        float totalDuration = _pulseDuration + _smallDuration;
 
         while (elapsedTime < totalDuration)
         {
             elapsedTime += Time.deltaTime;
             float t = elapsedTime / totalDuration;
-            t = 1f - Mathf.Pow(1f - t, 2f); // Ease-Out 적용
+            t = 1f - Mathf.Pow(1f - t, 2f);
 
-            // 크기 변화 (1 → 5)
             _expand.transform.scale = Vector3.one * Mathf.Lerp(_expandMin, _expandMax, t);
-            // 알파값 변화 (1 → 0)
             _expand.style.opacity = 1f - t;
 
             yield return null;
         }
+
         _expand.transform.scale = Vector3.one * _expandMax;
         _expand.style.opacity = 0f;
-
-        // Expand 크기 즉시 1로 리셋 후 반복
         _expand.transform.scale = Vector3.one * _expandMin;
         _expand.style.opacity = 1f;
     }

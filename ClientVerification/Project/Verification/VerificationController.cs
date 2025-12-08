@@ -144,6 +144,7 @@ namespace ClientVerification.Verification
             server.equipedCostumes = new(client.equipedCostumes);
             server.ownedCostumes = new(client.ownedCostumes);
             server.playerRankIndex = client.playerRankIndex;
+            server.userName = client.userName;
             
         }
 

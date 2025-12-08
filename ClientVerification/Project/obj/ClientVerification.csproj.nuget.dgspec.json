@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\JongHyeon\\Documents\\kiugi\\ClientVerification\\Project\\ClientVerification.csproj": {}
+    "C:\\Users\\USER\\Documents\\kiugi\\ClientVerification\\Project\\ClientVerification.csproj": {}
   },
   "projects": {
-    "C:\\Users\\JongHyeon\\Documents\\kiugi\\ClientVerification\\Project\\ClientVerification.csproj": {
+    "C:\\Users\\USER\\Documents\\kiugi\\ClientVerification\\Project\\ClientVerification.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\JongHyeon\\Documents\\kiugi\\ClientVerification\\Project\\ClientVerification.csproj",
+        "projectUniqueName": "C:\\Users\\USER\\Documents\\kiugi\\ClientVerification\\Project\\ClientVerification.csproj",
         "projectName": "ClientVerification",
-        "projectPath": "C:\\Users\\JongHyeon\\Documents\\kiugi\\ClientVerification\\Project\\ClientVerification.csproj",
-        "packagesPath": "C:\\Users\\JongHyeon\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\JongHyeon\\Documents\\kiugi\\ClientVerification\\Project\\obj\\",
+        "projectPath": "C:\\Users\\USER\\Documents\\kiugi\\ClientVerification\\Project\\ClientVerification.csproj",
+        "packagesPath": "C:\\Users\\USER\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\USER\\Documents\\kiugi\\ClientVerification\\Project\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\JongHyeon\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\USER\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -79,7 +75,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306\\RuntimeIdentifierGraph.json"
         }
       }
     }

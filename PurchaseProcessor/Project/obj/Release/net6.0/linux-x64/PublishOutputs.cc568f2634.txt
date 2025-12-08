@@ -1,0 +1,13 @@
+C:\Users\USER\AppData\Local\Temp\PurchaseProcessor\module-compilation\PurchaseProcessor.dll
+C:\Users\USER\AppData\Local\Temp\PurchaseProcessor\module-compilation\PurchaseProcessor.deps.json
+C:\Users\USER\AppData\Local\Temp\PurchaseProcessor\module-compilation\PurchaseProcessor.pdb
+C:\Users\USER\AppData\Local\Temp\PurchaseProcessor\module-compilation\Unity.Services.CloudCode.Apis.dll
+C:\Users\USER\AppData\Local\Temp\PurchaseProcessor\module-compilation\Unity.Services.CloudCode.Core.dll
+C:\Users\USER\AppData\Local\Temp\PurchaseProcessor\module-compilation\Google.Protobuf.dll
+C:\Users\USER\AppData\Local\Temp\PurchaseProcessor\module-compilation\Grpc.Core.Api.dll
+C:\Users\USER\AppData\Local\Temp\PurchaseProcessor\module-compilation\Grpc.Net.Client.dll
+C:\Users\USER\AppData\Local\Temp\PurchaseProcessor\module-compilation\Grpc.Net.Common.dll
+C:\Users\USER\AppData\Local\Temp\PurchaseProcessor\module-compilation\JsonSubTypes.dll
+C:\Users\USER\AppData\Local\Temp\PurchaseProcessor\module-compilation\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\USER\AppData\Local\Temp\PurchaseProcessor\module-compilation\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\USER\AppData\Local\Temp\PurchaseProcessor\module-compilation\Newtonsoft.Json.dll

@@ -11,6 +11,7 @@ public class StageInfo : ScriptableObject, IListViewItem
     public string stageName;
     public Background background;
     public int recommendLevel;
+    public BattleType battleType;
 
     [Header("Drop Info")]
     public float goldBonusValue;    // ¿¹: 0.2f ¡æ +20%
@@ -35,13 +36,11 @@ public class StageInfo : ScriptableObject, IListViewItem
     {
         //ÀÏ¹Ý¸÷°ú º¸½º¸÷ÀÌ °®´Â ½ºÅÈ
         public string maxHp;
-        public float resist;
     }
     [Serializable]
     public class ChestStatusFromStage
     {
         public string maxHp;
-        public float resist;
     }
     [Serializable]
     public class BossStatusFromStage

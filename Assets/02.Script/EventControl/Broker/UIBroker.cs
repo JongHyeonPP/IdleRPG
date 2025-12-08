@@ -26,4 +26,5 @@ public static class UIBroker
     public static Action<bool> ActivePowerSaveCount;
 
     public static Action RefreshStageSelectUI;
+
 }

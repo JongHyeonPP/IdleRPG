@@ -11,3 +11,16 @@ C:\Users\JongHyeon\Documents\kiugi\PurchaseProcessor\Project\obj\Release\net6.0\
 C:\Users\JongHyeon\Documents\kiugi\PurchaseProcessor\Project\obj\Release\net6.0\linux-x64\refint\PurchaseProcessor.dll
 C:\Users\JongHyeon\Documents\kiugi\PurchaseProcessor\Project\obj\Release\net6.0\linux-x64\PurchaseProcessor.pdb
 C:\Users\JongHyeon\Documents\kiugi\PurchaseProcessor\Project\obj\Release\net6.0\linux-x64\ref\PurchaseProcessor.dll
+C:\Users\USER\Documents\kiugi\PurchaseProcessor\Project\bin\Release\net6.0\linux-x64\PurchaseProcessor.deps.json
+C:\Users\USER\Documents\kiugi\PurchaseProcessor\Project\bin\Release\net6.0\linux-x64\PurchaseProcessor.dll
+C:\Users\USER\Documents\kiugi\PurchaseProcessor\Project\bin\Release\net6.0\linux-x64\PurchaseProcessor.pdb
+C:\Users\USER\Documents\kiugi\PurchaseProcessor\Project\obj\Release\net6.0\linux-x64\PurchaseProcessor.csproj.AssemblyReference.cache
+C:\Users\USER\Documents\kiugi\PurchaseProcessor\Project\obj\Release\net6.0\linux-x64\PurchaseProcessor.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\USER\Documents\kiugi\PurchaseProcessor\Project\obj\Release\net6.0\linux-x64\PurchaseProcessor.AssemblyInfoInputs.cache
+C:\Users\USER\Documents\kiugi\PurchaseProcessor\Project\obj\Release\net6.0\linux-x64\PurchaseProcessor.AssemblyInfo.cs
+C:\Users\USER\Documents\kiugi\PurchaseProcessor\Project\obj\Release\net6.0\linux-x64\PurchaseProcessor.csproj.CoreCompileInputs.cache
+C:\Users\USER\Documents\kiugi\PurchaseProcessor\Project\obj\Release\net6.0\linux-x64\PurchaseProcessor.sourcelink.json
+C:\Users\USER\Documents\kiugi\PurchaseProcessor\Project\obj\Release\net6.0\linux-x64\PurchaseProcessor.dll
+C:\Users\USER\Documents\kiugi\PurchaseProcessor\Project\obj\Release\net6.0\linux-x64\refint\PurchaseProcessor.dll
+C:\Users\USER\Documents\kiugi\PurchaseProcessor\Project\obj\Release\net6.0\linux-x64\PurchaseProcessor.pdb
+C:\Users\USER\Documents\kiugi\PurchaseProcessor\Project\obj\Release\net6.0\linux-x64\ref\PurchaseProcessor.dll

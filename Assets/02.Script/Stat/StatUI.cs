@@ -91,9 +91,6 @@ public partial class StatUI : MonoBehaviour, IMenuUI
         }
     }
 
-    // ============================================================
-    //  ★ 여기만 변경됨: 같은 카테고리면 소리 X + 갱신 X
-    // ============================================================
     private void OnCategoriButtonClick(int index)
     {
         // 이미 활성화된 카테고리면 아무 동작도 안 함 (소리도 X)

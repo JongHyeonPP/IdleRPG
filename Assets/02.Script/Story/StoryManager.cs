@@ -1,211 +1,298 @@
-using EnumCollection;
-using NUnit.Framework.Interfaces;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using EnumCollection;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
+using System.Collections.Generic;
 
 public class StoryManager : MonoBehaviour
 {
-    public CameraController cameracontroller;
-    public List<StoryPrefabData> storyPrefabsList; 
-    private List<GameObject> activePrefabs = new List<GameObject>();
-    public Transform spawnPoint;
-    public StoryUI _storyUI;
-    public PlayerRendercamera _renderCamera;
-    private bool _isNextTriggered = false;
-    private AbstractStoryObjectController currentStoryController;
-    private Dictionary<int, AbstractStoryObjectController> _storyControllers = new Dictionary<int, AbstractStoryObjectController>();
-    private int _currentStoryIndex = 0;
+    public static StoryManager instance;
+
+    [SerializeField] private StoryRunner runner;
+    [SerializeField] private StoryChapter[] mainChapters;
+
+    [SerializeField] private StoryChapter[] promoteChapters;
+
+    [Header("Camera References")]
+    [SerializeField] private Camera mainCamera;
+    [SerializeField] private Camera storyCamera;
+
+    [Header("Talkers")]
+    [SerializeField] private StoryTalker protagonistTalker;
+    [SerializeField] private StoryTalker archerTalker;
+    [SerializeField] private StoryTalker warriorTalker;
+    [SerializeField] private StoryTalker mageTalker;
+
+    [Header("Models")]
+    [SerializeField] private GameObject protagonistModel;
+    [SerializeField] private GameObject archerModel;
+    [SerializeField] private GameObject warriorModel;
+    [SerializeField] private GameObject mageModel;
+
+    private StoryChapter activeChapter;
+
+    private Dictionary<StoryRenderType, StoryTalker> talkerMap;
+    private Dictionary<StoryRenderType, GameObject> modelMap;
+
+    // 원래 위치 저장
+    private Dictionary<GameObject, Vector3> originalPositions = new();
+
 
     private void Awake()
     {
-        TextReader.LoadData();
-     
-    }
-   
-    private void OnEnable()
-    {
-        BattleBroker.SwitchToPromoteBattle += OnChallengeRank;
-        BattleBroker.SwitchToBattle += ClearStoryPrefabs;
-    }
-    private void OnChallengeRank(Rank rank)
-    {
-       
+        instance = this;
+        if (mainCamera == null)
+            mainCamera = Camera.main;
 
-    }
+        InitMaps();
 
-    public void StoryStart(int i)
-    {
-       
-        LoadStoryPrefabs(i);
-       
-    }
-    private void ClearStoryPrefabs()
-    {
+        // 모든 Chapter 를 활성화시키되 본문은 꺼둔다
+        InitChapters(mainChapters);
+        InitChapters(promoteChapters);
 
-        foreach (var obj in activePrefabs)
+        // Local talker 전부 OFF
+        DisableLocalTalkersOfAllChapters();
+
+        // 원래 위치 저장 동료 플레이어 챕터별 local 모델
+        SaveOriginalPositions();
+
+        PlayerBroker.OnPlayerAppearanceChange += ad =>
         {
-            Destroy(obj);
+            protagonistModel.GetComponentInChildren<AppearanceController>()
+                ?.SetAppearance(ad);
+        };
+
+        BattleBroker.SwitchToStory += RunStory;
+        BattleBroker.SwitchToAdventure += (_,_)=>SwitchToBattle();
+        BattleBroker.SwitchToBattle += SwitchToBattle;
+        BattleBroker.SwitchToCompanionBattle += (_,_) => SwitchToBattle();
+        BattleBroker.SwitchToDungeon += (_,_) => SwitchToBattle();
+        BattleBroker.SwitchToPromoteBattle += (_) => SwitchToBattle();
+    }
+
+    private void InitMaps()
+    {
+        talkerMap = new();
+        modelMap = new();
+
+        talkerMap[StoryRenderType.Player] = protagonistTalker;
+        talkerMap[StoryRenderType.Companion0] = archerTalker;
+        talkerMap[StoryRenderType.Companion1] = warriorTalker;
+        talkerMap[StoryRenderType.Companion2] = mageTalker;
+
+        modelMap[StoryRenderType.Player] = protagonistModel;
+        modelMap[StoryRenderType.Companion0] = archerModel;
+        modelMap[StoryRenderType.Companion1] = warriorModel;
+        modelMap[StoryRenderType.Companion2] = mageModel;
+    }
+
+    private void InitChapters(StoryChapter[] chapters)
+    {
+        if (chapters == null) return;
+
+        foreach (var c in chapters)
+        {
+            if (c == null) continue;
+
+            c.gameObject.SetActive(true);
+            c.SetChapterActive(false);
         }
-        activePrefabs.Clear();
     }
-    private void LoadStoryPrefabs(int storyIndex)
+
+    private void SaveOriginalPositions()
     {
-        StoryPrefabData storyData = storyPrefabsList.Find(x => x.storyIndex == storyIndex);
-
-        foreach (var prefab in storyData.storyPrefabs)
+        // 플레이어 동료
+        foreach (var kv in modelMap)
         {
-            GameObject obj = Instantiate(prefab, spawnPoint.position, Quaternion.identity);
-            activePrefabs.Add(obj);
+            if (kv.Value != null)
+                originalPositions[kv.Value] = kv.Value.transform.position;
+        }
 
-            if (storyIndex == 1)
+        // 각 chapter 의 local models 도 저장
+        SaveLocalModelsFor(mainChapters);
+        SaveLocalModelsFor(promoteChapters);
+    }
+
+    private void SaveLocalModelsFor(StoryChapter[] chapters)
+    {
+        if (chapters == null) return;
+
+        foreach (var c in chapters)
+        {
+            if (c == null) continue;
+
+            var locals = c.LocalModels;
+            if (locals == null) continue;
+
+            foreach (var m in locals)
             {
-                currentStoryController = obj.GetComponent<FirstStoryController>();
+                if (m != null)
+                    originalPositions[m] = m.transform.position;
             }
         }
+    }
 
-        cameracontroller.SwitchToCamera(false);
-        
-        int startIndex = storyIndex * 1000 + 1;
-        _currentStoryIndex = storyIndex;
-        //if (storyIndex == 1)
-        //{
-        //    _storyControllers.Add(0, currentStoryController);
-        //    StartCoroutine(FirstStoryStart(startIndex));
-        //}
-        //if (storyIndex == 2)
-        //{
-        //    _storyControllers.Add(0, currentStoryController);
-        //    StartCoroutine(SecondStoryStart(startIndex));
-        //}
-        if (storyIndex == 1 || storyIndex == 2)
+    private void DisableLocalTalkersOfAllChapters()
+    {
+        DisableLocalTalkersFor(mainChapters);
+        DisableLocalTalkersFor(promoteChapters);
+    }
+
+    private void DisableLocalTalkersFor(StoryChapter[] chapters)
+    {
+        if (chapters == null) return;
+
+        foreach (var c in chapters)
         {
-            if (!_storyControllers.ContainsKey(storyIndex))
-                _storyControllers.Add(storyIndex, currentStoryController);
-            else
-                _storyControllers[storyIndex] = currentStoryController; // �����
+            var locals = c?.LocalTalkers;
+            if (locals == null) continue;
 
-            if (storyIndex == 1)
-                StartCoroutine(FirstStoryStart(startIndex));
-            else
-                StartCoroutine(SecondStoryStart(startIndex));
+            foreach (var t in locals)
+            {
+                if (t != null && t.talkerObject != null)
+                    t.talkerObject.SetActive(false);
+            }
         }
     }
 
-    private IEnumerator FirstStoryStart(int storyIndex)
+    private void RunStory(BattleType storyType, int[] index)
     {
-        RenderTexture renderTexture = _renderCamera.GetRenderTexture();
-        _storyUI.SetImage(renderTexture);
-
-        if (currentStoryController is FirstStoryController firstStory)
+        if (index == null || index.Length == 0)
         {
-            StartCoroutine(firstStory.Run(firstStory.protagonist));
-        }
-
-        _storyUI.SetStoryText("��", "�����...?", Color.black);
-        _renderCamera.SetCharacterDisplayTarget("��");
-        _storyUI.RegisterNextButtonClick(() => _isNextTriggered = true);
-
-        yield return new WaitUntil(() => _isNextTriggered);
-
-        _isNextTriggered = false;
-    }
-    private IEnumerator SecondStoryStart(int storyIndex)
-    {
-        RenderTexture renderTexture = _renderCamera.GetRenderTexture();
-        _storyUI.SetImage(renderTexture);
-
-        if (currentStoryController is FirstStoryController firstStory)
-        {
-            StartCoroutine(firstStory.Run(firstStory.protagonist));
-        }
-
-        _storyUI.SetStoryText("��", "�����...?", Color.black);
-        _renderCamera.SetCharacterDisplayTarget("��");
-        _storyUI.RegisterNextButtonClick(() => _isNextTriggered = true);
-
-        yield return new WaitUntil(() => _isNextTriggered);
-
-        _isNextTriggered = false;
-    }
-    public void NextStorySegment(int index)
-    {
-        int storyIndex = index / 1000 -1;
-        if (!_storyControllers.ContainsKey(storyIndex))
+            Debug.LogError("RunStory 에 전달된 index 배열이 비어 있음");
             return;
+        }
 
-        AbstractStoryObjectController currentStory = _storyControllers[storyIndex];
-
-        TextData textData = TextReader.GetTextData(index);
-        Color textColor = (textData.Talker == "����") ? Color.red : Color.black;
-        _storyUI.SetStoryText(textData.Talker, textData.Text, textColor);
-        _renderCamera.SetCharacterDisplayTarget(textData.Talker);
-
-        if (currentStory is FirstStoryController firstStory)
+        switch (storyType)
         {
-            if (index == 1003)
-            {
-                GameObject bigPig = firstStory.GetTargetObject("BigPig_Pink");
-                if (bigPig != null)
-                {
-                    StartCoroutine(firstStory.Run(bigPig));
-                }
-            }
-            else if (index == 1006)
-            {
-                GameObject pig = firstStory.GetTargetObject("Pig_Pink");
-                if (pig != null)
-                {
-                    StartCoroutine(firstStory.Run(pig));
-                }
+            case BattleType.Default:
+                activeChapter = mainChapters[index[0]];
+                break;
 
-                StartCoroutine(firstStory.RunAway(firstStory.protagonist));
-                StartCoroutine(_storyUI.FadeEffect(false));
+            case BattleType.Promote:
+                activeChapter = promoteChapters[index[0]];
+                break;
+            default:
+                Debug.LogError("알 수 없는 StoryType");
+                return;
+        }
 
-                EndStory();
+
+        DisableLocalTalkersOfAllChapters();
+
+        // 모든 챕터 비활성화
+        SetAllChaptersActive(false);
+
+        
+        activeChapter.SetChapterActive(true);
+
+        // Local talker ON
+        var locals = activeChapter.LocalTalkers;
+        if (locals != null)
+        {
+            foreach (var t in locals)
+            {
+                if (t != null && t.talkerObject != null)
+                    t.talkerObject.SetActive(true);
             }
         }
-        else if(currentStory is SecondStoryController secondstory)
+
+        // 필요한 모델만 Enable
+        var requiredTypes = activeChapter.GetRequiredRenderTypes();
+
+        foreach (var kv in modelMap)
         {
+            bool needed = false;
 
-            if (index == 2003)
+            if (requiredTypes != null)
             {
-                GameObject bigPig = secondstory.GetTargetObject("BigPig_Pink");
-                if (bigPig != null)
+                foreach (var t in requiredTypes)
                 {
-                    StartCoroutine(secondstory.Run(bigPig));
+                    if (t == kv.Key)
+                    {
+                        needed = true;
+                        break;
+                    }
                 }
             }
-            else if (index == 2006)
-            {
-                GameObject pig = secondstory.GetTargetObject("Pig_Pink");
-                if (pig != null)
-                {
-                    StartCoroutine(secondstory.Run(pig));
-                }
 
-                StartCoroutine(secondstory.RunAway(secondstory.protagonist));
-                StartCoroutine(_storyUI.FadeEffect(false));
-
-                EndStory();
-            }
+            if (kv.Value != null)
+                kv.Value.SetActive(needed);
         }
-       
+
+        mainCamera.enabled = false;
+        storyCamera.enabled = true;
+
+        runner.ResetUI();
+        activeChapter.BuildActions(runner);
+        runner.Run(activeChapter.nextStage);
     }
-    private void EndStory()
+
+    private void SetAllChaptersActive(bool active)
     {
-        _storyUI.ResetStoryUI();
-        _currentStoryIndex++; 
+        SetChaptersActive(mainChapters, active);
+        SetChaptersActive(promoteChapters, active);
     }
-    public int GetCurrentStoryIndex()
+
+    private void SetChaptersActive(StoryChapter[] chapters, bool active)
     {
-        return _currentStoryIndex;
+        if (chapters == null) return;
+
+        foreach (var c in chapters)
+        {
+            if (c != null)
+                c.SetChapterActive(active);
+        }
+    }
+
+    private void SwitchToBattle()
+    {
+        // 챕터 종료 fadeOut 은 runner 내부에서 처리 후 호출됨
+        ResetAllModelPositionsAfterStory();
+
+        DisableLocalTalkersOfAllChapters();
+
+        if (activeChapter != null)
+        {
+            activeChapter.SetChapterActive(false);
+            activeChapter = null;
+        }
+
+        // 모든 파티 모델은 다시 활성화
+        foreach (var m in modelMap.Values)
+        {
+            if (m != null)
+                m.SetActive(true);
+        }
+
+        storyCamera.enabled = false;
+        mainCamera.enabled = true;
+    }
+
+    // 이 함수는 fadeOut 끝난 뒤 실행됨
+    public void ResetAllModelPositionsAfterStory()
+    {
+        foreach (var kv in originalPositions)
+        {
+            GameObject model = kv.Key;
+            Vector3 pos = kv.Value;
+
+            if (model != null)
+                model.transform.position = pos;
+        }
+    }
+
+    public StoryTalker GetTalker(StoryRenderType type)
+    {
+        if (talkerMap.TryGetValue(type, out var talker))
+            return talker;
+
+        return null;
+    }
+
+    public GameObject GetModel(StoryRenderType type)
+    {
+        if (modelMap.TryGetValue(type, out var model))
+            return model;
+
+        return null;
     }
 }
-    
-
-
-

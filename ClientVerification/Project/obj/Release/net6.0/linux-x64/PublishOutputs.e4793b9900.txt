@@ -1,0 +1,13 @@
+C:\Users\USER\AppData\Local\Temp\ClientVerification\module-compilation\ClientVerification.dll
+C:\Users\USER\AppData\Local\Temp\ClientVerification\module-compilation\ClientVerification.deps.json
+C:\Users\USER\AppData\Local\Temp\ClientVerification\module-compilation\ClientVerification.pdb
+C:\Users\USER\AppData\Local\Temp\ClientVerification\module-compilation\Unity.Services.CloudCode.Apis.dll
+C:\Users\USER\AppData\Local\Temp\ClientVerification\module-compilation\Unity.Services.CloudCode.Core.dll
+C:\Users\USER\AppData\Local\Temp\ClientVerification\module-compilation\Google.Protobuf.dll
+C:\Users\USER\AppData\Local\Temp\ClientVerification\module-compilation\Grpc.Core.Api.dll
+C:\Users\USER\AppData\Local\Temp\ClientVerification\module-compilation\Grpc.Net.Client.dll
+C:\Users\USER\AppData\Local\Temp\ClientVerification\module-compilation\Grpc.Net.Common.dll
+C:\Users\USER\AppData\Local\Temp\ClientVerification\module-compilation\JsonSubTypes.dll
+C:\Users\USER\AppData\Local\Temp\ClientVerification\module-compilation\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\USER\AppData\Local\Temp\ClientVerification\module-compilation\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\USER\AppData\Local\Temp\ClientVerification\module-compilation\Newtonsoft.Json.dll

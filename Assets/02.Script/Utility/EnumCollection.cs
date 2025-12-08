@@ -118,4 +118,8 @@ namespace EnumCollection
         BGM,
         SFX
     }
+    public enum StoryRenderType
+    {
+        Player, Companion0, Companion1, Companion2, Other
+    }
 }

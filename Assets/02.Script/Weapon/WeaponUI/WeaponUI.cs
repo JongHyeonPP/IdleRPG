@@ -71,7 +71,7 @@ public class WeaponUI : MonoBehaviour, IMenuUI
     }
 
     // =====================================================================
-    // Main Panel Button 클릭 시 (★ 소리 조건 처리 완료 버전)
+    // Main Panel Button 클릭 시 ( 소리 조건 처리 완료 버전)
     // =====================================================================
     private void OnClickMainButton(int buttonIndex)
     {
@@ -114,7 +114,7 @@ public class WeaponUI : MonoBehaviour, IMenuUI
     }
 
     // =====================================================================
-    // Companion Panel Button 클릭 시 (★ 소리 조건 처리 완료 버전)
+    // Companion Panel Button 클릭 시 ( 소리 조건 처리 완료 버전)
     // =====================================================================
     private void OnClickCompanionButton(int buttonIndex)
     {
