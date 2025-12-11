@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5649e372f42bd3740b2d096fb0b450af, type: 3}
+  m_Name: Top_3006
+  m_EditorClassIdentifier: 
+  Uid: 3006
+  Name: "\uAE38\uC783\uC74C \uC548\uB0B4\uC154\uCE20"
+  Description: "\uC9C0\uB3C4\uB294 \uB9C8\uC74C\uC18D\uC5D0 \uC788\uC2B5\uB2C8\uB2E4"
+  IconTexture: {fileID: 2800000, guid: 3354456b42ee2384abbf680c98981555, type: 3}
+  IconXTexture: {fileID: 0}
+  IconColor: {r: 1, g: 1, b: 1, a: 1}
+  CostumeType: 3
+  Parts:
+  - Part: 4
+    CostumeSprite: {fileID: -7736556782503057505, guid: 3354456b42ee2384abbf680c98981555, type: 3}
+    CostumeColor: {r: 1, g: 1, b: 1, a: 1}
+  - Part: 6
+    CostumeSprite: {fileID: 1468843896871262044, guid: 3354456b42ee2384abbf680c98981555, type: 3}
+    CostumeColor: {r: 1, g: 1, b: 1, a: 1}
+  - Part: 5
+    CostumeSprite: {fileID: 6707769398717036949, guid: 3354456b42ee2384abbf680c98981555, type: 3}
+    CostumeColor: {r: 1, g: 1, b: 1, a: 1}
+  _costumeRarity: 0

@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5649e372f42bd3740b2d096fb0b450af, type: 3}
+  m_Name: Hair_1016
+  m_EditorClassIdentifier: 
+  Uid: 1016
+  Name: "\uCD08\uCF54\uB364\uB364\uCEF7"
+  Description: "\uBB34\uD45C\uC815\uC5D0 \uAC15\uD569\uB2C8\uB2E4"
+  IconTexture: {fileID: 2800000, guid: 4e00889c3808b2747b2734ca02d97ebb, type: 3}
+  IconXTexture: {fileID: 0}
+  IconColor: {r: 0.30588236, g: 0.20392157, b: 0.18039216, a: 1}
+  CostumeType: 0
+  Parts:
+  - Part: 2
+    CostumeSprite: {fileID: 21300000, guid: 4e00889c3808b2747b2734ca02d97ebb, type: 3}
+    CostumeColor: {r: 0.30588236, g: 0.20392157, b: 0.18039216, a: 1}
+  _costumeRarity: 0
