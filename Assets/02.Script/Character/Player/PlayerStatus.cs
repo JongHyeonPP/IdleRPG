@@ -25,6 +25,7 @@ public class PlayerStatus : MonoBehaviour, ICharacterStatus
     #endregion
     #region Property
     public BigInteger MaxHp { get =>  new( _maxHp_Gold + _maxHp_StatPoint); }
+
     public BigInteger Power { get => new ( _power_Gold + _power_StatPoint); }
     public BigInteger HpRecover { get => new(_hpRecover_Gold+_hpRecover_StatPoint); }
     public float Critical { get => _critical_Gold;  }

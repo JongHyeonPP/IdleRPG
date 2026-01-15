@@ -28,7 +28,7 @@ MonoBehaviour:
     maxHp: 10
   bossStatusFromStage:
     maxHp: 100
-    resist: 0
+    resist: 100
     power: 50
   chestStatusFromStage:
     maxHp: 

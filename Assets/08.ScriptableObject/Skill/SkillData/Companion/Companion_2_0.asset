@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef5ab10e5d7b96f44883280afb1d6071, type: 3}
   m_Name: Companion_2_0
   m_EditorClassIdentifier: 
-  skillName: Companion_2_0
-  uid: Companion_2_0
-  iconSprite: {fileID: 21300000, guid: 877922d02d835044dbd18274a3cf71c9, type: 3}
+  skillName: "\uB9C8\uB098\uD68C\uBCF5\uB7C9"
+  iconSprite: {fileID: 21300000, guid: 1345b73eee214c24780a0cca4eab8fd8, type: 3}
   simple: 
   complex: 
   rarity: 3
@@ -23,6 +22,9 @@ MonoBehaviour:
   cooltime: 3
   coolAttack: 0
   requireMp: 15
+  effectSpawnType: 1
+  projectileSpeed: 15
+  effectLifeTime: 5
   value:
   - 0
   - 0
@@ -35,7 +37,7 @@ MonoBehaviour:
   - 0
   - 0
   - 0
-  type: 1
+  type: 17
   target: 1
   targetNum: 1
   preDelay: 0.2
@@ -43,3 +45,5 @@ MonoBehaviour:
   isAnim: 1
   visualEffectPrefab: {fileID: 0}
   isActiveSkill: 0
+  castClip: {fileID: 0}
+  hitClip: {fileID: 0}

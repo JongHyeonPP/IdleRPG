@@ -16,6 +16,7 @@ MonoBehaviour:
   stageName: "\uAC08\uC0C9 \uB3FC\uC9C0 \uCC98\uCE58"
   background: 0
   recommendLevel: 0
+
   battleType: 4
   goldBonusValue: 0
   expBonusValue: 0
@@ -27,9 +28,11 @@ MonoBehaviour:
   enemyStatusFromStage:
     maxHp: 10
   bossStatusFromStage:
+
     maxHp: 100
     resist: 0
     power: 10
+
   chestStatusFromStage:
     maxHp: 
   companionTechInfo:

@@ -19,10 +19,9 @@ MonoBehaviour:
   _criticalDamage: 1
   _critical: 1
   _attackSpeed: 0
-
-  _weaponSprite: {fileID: 21300000, guid: 94f5e532a27fb4ec496f998c31e084ba, type: 3}
-  _textureSize: {x: 11, y: 21}
-  _textureScale: 1
+  _weaponSprite: {fileID: 0}
+  _textureSize: {x: 1, y: 1}
+  _textureScale: 0
   _uID: Melee_600
   _weaponName: "\uB9BC\uC2E0(\u6797\u795E)\uC758 \uAC80:\uB4DC\uB9AC\uC544\uB4DC"
   _powerPerUpgrade: 0
@@ -30,6 +29,5 @@ MonoBehaviour:
   _critPerUpgrade: 0
   _attackSpeedPerUpgrade: 0
   _weaponEffects:
-  - type: 9
-    value: 3
-
+  - type: 8
+    value: 1

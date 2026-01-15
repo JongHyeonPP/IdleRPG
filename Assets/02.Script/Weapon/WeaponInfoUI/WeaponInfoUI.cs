@@ -33,7 +33,7 @@ public class WeaponInfoUI : MonoBehaviour, IGeneralUI
 private static readonly Dictionary<SkillType, string> WeaponEffect = new()
 {
         {SkillType.AttBuff,"공격력 버프" },
-        {SkillType.DefBuff,"받는피해 10% 감소 버프" },
+        {SkillType.Durability,"받는피해 10% 감소 버프" },
         {SkillType.SpeedBuff,"공격속도 버프" },
         {SkillType.Revive,"부활(보스 전투중 한번 죽으면 체력100%회복)" },
         {SkillType.Invincible,"무적(3초지속,10초쿨타임)" },

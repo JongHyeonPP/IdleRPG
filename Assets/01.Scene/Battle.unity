@@ -49812,7 +49812,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3afab028fb401d4196844501d8f37d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _successEffect: {fileID: 0}
+  _successEffect: {fileID: 536266750082647943, guid: 769ad0f79cd56154ba437d4701c28e8b, type: 3}
   _spot: {fileID: 1409610171}
 --- !u!1 &637889715
 GameObject:
