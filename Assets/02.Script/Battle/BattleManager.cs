@@ -265,9 +265,9 @@ public class BattleManager : MonoBehaviour
 
     private void OnStageChange()
     {
-        if (_gameData.currentStageNum > _gameData.maxStageNum)
+        if (true/*_gameData.currentStageNum > _gameData.maxStageNum*/)
         {
-            _gameData.maxStageNum = _gameData.currentStageNum;
+            //_gameData.maxStageNum = _gameData.currentStageNum;
             UIBroker.RefreshStageSelectUI();
             int storyIndex = -1;
             switch (_gameData.currentStageNum)
