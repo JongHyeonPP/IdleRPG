@@ -1,4 +1,4 @@
-﻿%YAML 1.1
+%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!114 &11400000
 MonoBehaviour:
@@ -18,16 +18,15 @@ MonoBehaviour:
   _maxHp: 0
   _criticalDamage: 55
   _critical: 14
-  _resist: 0
-  _penetration: 0
+  _attackSpeed: 0
   _weaponSprite: {fileID: 21300000, guid: 9b10ebf041e94457c876bc36832bd105, type: 3}
   _textureSize: {x: 1, y: 1}
   _textureScale: 1
-  _uID: Bow_401
   _weaponName: "\uD638\uD06C\uC544\uC774"
   _powerPerUpgrade: 0
   _critDmgPerUpgrade: 0
   _critPerUpgrade: 0
+  _attackSpeedPerUpgrade: 0
   _weaponEffects:
   - type: 24
     value: 0.15
