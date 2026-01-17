@@ -1,18 +1,19 @@
 {
-    "name": "Store",
+    "name": "StoreUI",
     "rootNamespace": "",
     "references": [
-        "GUID:74e76e8859ef57e4390b860641e86449",
-        "GUID:61689c4e0b9d39d46afcb27de82ad45a",
-        "GUID:a5f4d33fede007b4bae1f2a9ec9da2ab",
-        "GUID:20b20c657697e4f478d6b5b4c5837706",
         "GUID:c1f3ac597cd61d64e994b094eaa1fa95",
         "GUID:c540aad5c5158cd439bc0b19ee85eea2",
+        "GUID:559e6dd08e3676043b897266942c83c3",
+        "GUID:74e76e8859ef57e4390b860641e86449",
+        "GUID:22baf27155bb4aa45b576b6ba0477c0e",
+        "GUID:a5f4d33fede007b4bae1f2a9ec9da2ab",
         "GUID:f220a277eefae4d3aa9e31c2b43bb307",
         "GUID:9d6c7830d9ab746a7a12f144bdeeee7c",
-        "GUID:229372793c77f8b45b09353bd57f3502",
         "GUID:78b91661590982649902888d656db98d",
-        "GUID:22baf27155bb4aa45b576b6ba0477c0e"
+        "GUID:61689c4e0b9d39d46afcb27de82ad45a",
+        "GUID:20b20c657697e4f478d6b5b4c5837706",
+        "GUID:229372793c77f8b45b09353bd57f3502"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

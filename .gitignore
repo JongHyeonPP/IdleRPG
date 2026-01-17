@@ -78,6 +78,7 @@ crashlytics-build.properties
 /.utmp
 /[Aa]ssets/Asset/
 /[Aa]ssets/GooglePlayGames/
+/[Aa]ssets/MobileDependencyResolver/
 /[Aa]ssets/GitLocks/
 /[Aa]ssets/GeneratedLocalRepo/
 /[Aa]ssets/Firebase/
