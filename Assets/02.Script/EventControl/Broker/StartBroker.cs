@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public static class StartBroker
@@ -12,4 +13,5 @@ public static class StartBroker
     public static Action LoadGoogleAuth;
     public static Action<string> SetUserId;
     public static Func<object> GetOfflineReward;
+    public static Func<string> GetIapStrings; // 재화 상품 정보 json
 }

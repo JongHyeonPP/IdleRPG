@@ -1,15 +1,22 @@
 using EnumCollection;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using Unity.Services.CloudCode;
 using Unity.Services.RemoteConfig;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
-using Newtonsoft.Json.Linq;
-using System.Linq;
+[Serializable]
+public struct ProductIconEntry
+{
+    public string key;        // productId 또는 사람이 읽는 이름
+    public Texture2D iconTex; // UI Toolkit에 바로 쓰는 Texture2D
+}
 
 public class StoreManager : MonoSingleton<StoreManager>
 {
@@ -88,8 +95,8 @@ public class StoreManager : MonoSingleton<StoreManager>
     #region Money
     // StoreManager
     [SerializeField] private StoreMoneyListController _moneyList; // ScrollView 컨트롤러
-    [SerializeField] private Texture2D starterIconTex;
-    [SerializeField] private Texture2D proIconTex;
+    [SerializeField] private List<ProductIconEntry> _iconEntries = new();
+    private Dictionary<string, Texture2D> _iconDic;
     #endregion
 
     #region Unity Lifecycle
@@ -163,6 +170,12 @@ public class StoreManager : MonoSingleton<StoreManager>
         var itemSlot0 = _root?.Q<VisualElement>("ItemSlot0");
         var storePanel0 = itemSlot0?.Q<VisualElement>("StorePanel_0");
         var storePanel1 = itemSlot0?.Q<VisualElement>("StorePanel_1");
+        var adBtn = storePanel1?.Q<Button>("AdBtn");
+        if (adBtn != null)
+        {
+            // 바꿔야함
+            adBtn.RegisterCallback<ClickEvent>(_ => TriggerProduct("diaad"));
+        }
 
         _weapon1Btn = storePanel0?.Q<Button>("StoreBtn");
         _weapon10Btn = storePanel1?.Q<Button>("StoreBtn");
@@ -184,6 +197,13 @@ public class StoreManager : MonoSingleton<StoreManager>
         var itemSlot1 = _root?.Q<VisualElement>("ItemSlot1");
         var storePanel0_1 = itemSlot1?.Q<VisualElement>("StorePanel_0");
         var storePanel1_1 = itemSlot1?.Q<VisualElement>("StorePanel_1");
+
+        var adBtn1 = storePanel1_1?.Q<Button>("AdBtn");
+        if (adBtn1 != null)
+        {
+            // 바꿔야함
+            adBtn1.RegisterCallback<ClickEvent>(_ => TriggerProduct("diaad"));
+        }
 
         _costume1Btn = storePanel0_1?.Q<Button>("StoreBtn");
         _costume10Btn = storePanel1_1?.Q<Button>("StoreBtn");
@@ -273,12 +293,12 @@ public class StoreManager : MonoSingleton<StoreManager>
     {
         _rarityOffsetMap.Clear();
 
-        _rarityOffsetMap[Rarity.Common] = new Vector2(-214f, 329f);
-        _rarityOffsetMap[Rarity.Uncommon] = new Vector2(-214f, -2f);
-        _rarityOffsetMap[Rarity.Rare] = new Vector2(-214f, -334f);
-        _rarityOffsetMap[Rarity.Unique] = new Vector2(-564f, 329f);
-        _rarityOffsetMap[Rarity.Legendary] = new Vector2(-564f, -2f);
-        _rarityOffsetMap[Rarity.Mythic] = new Vector2(-564f, -334f);
+        _rarityOffsetMap[Rarity.Common] = new Vector2(-294f, 276f);
+        _rarityOffsetMap[Rarity.Uncommon] = new Vector2(-294f, -2f);
+        _rarityOffsetMap[Rarity.Rare] = new Vector2(-294f, -284f);
+        _rarityOffsetMap[Rarity.Unique] = new Vector2(-573f, 276f); 
+        _rarityOffsetMap[Rarity.Legendary] = new Vector2(-573f, -2f);
+        _rarityOffsetMap[Rarity.Mythic] = new Vector2(-573f, -284f);
     }
     private void BuildSlotPool()
     {
@@ -307,37 +327,129 @@ public class StoreManager : MonoSingleton<StoreManager>
     #endregion
 
     #region Money
+    /*    private void RefreshStore()
+        {
+            if (_moneyList == null) return;
+
+            *//*        var items = new List<StoreMoneyItemData>
+                {
+                    new StoreMoneyItemData {
+                        Gold = "1000",
+                        GoldEx = "Clover",
+                        Money = prices.TryGetValue((GachaType.Weapon, 1), out var pW1) ? pW1.num.ToString() : "-",
+                        Icon = starterIconTex,
+                        OnClick = () => _ = OnClickGacha(GachaType.Weapon, 1)
+                    },
+                    new StoreMoneyItemData {
+                        Gold = "3000",
+                        GoldEx = "Gold",
+                        Money = prices.TryGetValue((GachaType.Weapon, 10), out var pW10) ? pW10.num.ToString() : "-",
+                        Icon = proIconTex,
+                        OnClick = () => _ = OnClickGacha(GachaType.Weapon, 10)
+                    },
+                            new StoreMoneyItemData {
+                        Gold = "5000",
+                        GoldEx = "Gold",
+                        Money = prices.TryGetValue((GachaType.Weapon, 10), out var pW30) ? pW30.num.ToString() : "-",
+                        Icon = proIconTex,
+                        OnClick = () => _ = OnClickGacha(GachaType.Weapon, 10)
+                    },
+                };*//*
+
+
+            //_moneyList.SetItems(items);
+        }*/
+
     private void RefreshStore()
     {
-        if (_moneyList == null) return;
+        if (_moneyList == null || PurchaseManager.Instance == null) return;
 
-        var items = new List<StoreMoneyItemData>
-    {
-        new StoreMoneyItemData {
-            Gold = "1000",
-            GoldEx = "Clover",
-            Money = prices.TryGetValue((GachaType.Weapon, 1), out var pW1) ? pW1.num.ToString() : "-",
-            Icon = starterIconTex,
-            OnClick = () => _ = OnClickGacha(GachaType.Weapon, 1)
-        },
-        new StoreMoneyItemData {
-            Gold = "3000",
-            GoldEx = "Gold",
-            Money = prices.TryGetValue((GachaType.Weapon, 10), out var pW10) ? pW10.num.ToString() : "-",
-            Icon = proIconTex,
-            OnClick = () => _ = OnClickGacha(GachaType.Weapon, 10)
-        },
-                new StoreMoneyItemData {
-            Gold = "5000",
-            GoldEx = "Gold",
-            Money = prices.TryGetValue((GachaType.Weapon, 10), out var pW30) ? pW30.num.ToString() : "-",
-            Icon = proIconTex,
-            OnClick = () => _ = OnClickGacha(GachaType.Weapon, 10)
-        },
-    };
+        var pm = PurchaseManager.Instance;
+        var items = new List<StoreMoneyItemData>();
+
+        var products = pm.GetProducts(includeAdvertise: true)
+            .OrderBy(p => CurrencyRank(p.grant.res))                     // 다이아 → 클로버 → 기타
+            .ThenBy(p => AdRank(pm.IsAdvertise(p.productId)))            // 광고 먼저
+            .ThenBy(p => PriceKey(p.priceString))                        //  같은 그룹 내 가격 오름차순
+            .ThenBy(p => p.grant.amt)                                    // 견고한 타이브레이커
+            .ToList();
+
+        foreach (var p in products)
+        {
+            string productId = p.productId;
+            string priceString = string.IsNullOrEmpty(p.priceString) ? "-" : p.priceString;
+            var grant = p.grant;
+
+            bool isAd = pm.IsAdvertise(productId) || p.source == "advertise";
+            string moneyLabel = isAd ? "광고보기" : priceString;
+
+            var icon = GetStoreIconTex(productId, grant);
+
+            items.Add(new StoreMoneyItemData
+            {
+                Gold = grant.amt.ToString(),
+                GoldEx = grant.res.ToString(),
+                Money = moneyLabel,
+                Icon = icon,
+                OnClick = () => TriggerProduct(productId)
+            });
+        }
 
         _moneyList.SetItems(items);
     }
+
+    private static decimal PriceKey(string priceString)
+    {
+        if (string.IsNullOrWhiteSpace(priceString)) return decimal.MaxValue;
+        var cleaned = new string(priceString.Where(c => char.IsDigit(c) || c == '.' || c == ',').ToArray());
+        cleaned = cleaned.Replace(",", ".");
+        return decimal.TryParse(cleaned, NumberStyles.Number, CultureInfo.InvariantCulture, out var v)
+            ? v : decimal.MaxValue;
+    }
+
+    // 한 곳에서 광고/구매 분기
+    private static void TriggerProduct(string productId)
+    {
+        var pm = PurchaseManager.Instance;
+        if (pm == null)
+        {
+            Debug.LogError("[Store] PurchaseManager.Instance is null");
+            return;
+        }
+
+        if (pm.IsAdvertise(productId)) // 광고
+        {
+            PlayerBroker.PurchaseCurrency.Invoke(productId);
+        }
+        else //일반
+        {
+            PlayerBroker.PurchaseCurrency.Invoke(productId);
+        }
+    }
+
+
+
+
+    private void RefreshStoreIcon()
+    {
+        if (_iconDic != null) return;
+        _iconDic = new Dictionary<string, Texture2D>(StringComparer.OrdinalIgnoreCase);
+        foreach (var e in _iconEntries)
+        {
+            if (string.IsNullOrWhiteSpace(e.key) || e.iconTex 
+                == null) continue;
+            _iconDic[e.key] = e.iconTex;
+        }
+    }
+
+    private Texture2D GetStoreIconTex(string productId, (Resource res, int amt) grant)
+    {
+        RefreshStoreIcon();
+        if (!string.IsNullOrEmpty(productId) && _iconDic.TryGetValue(productId, out var tex))
+            return tex;
+        return null;
+    }
+
 
     #endregion
 
@@ -441,7 +553,7 @@ public class StoreManager : MonoSingleton<StoreManager>
         try
         {
             var args = new Dictionary<string, object> {
-                { "gachaType", type.ToString() },
+                { "gachaType", type.ToString().ToLowerInvariant()  }, // 혹시 몰라 내림/..
                 { "gachaNum",  num }
             };
 
@@ -475,6 +587,9 @@ public class StoreManager : MonoSingleton<StoreManager>
                     if (string.IsNullOrWhiteSpace(id)) continue;
                     if (!_gameData.ownedCostumes.Contains(id)) _gameData.ownedCostumes.Add(id);
                 }
+                // OnClickGacha 코스튬 분기 안
+                Debug.Log($"[Gacha][Costume] raw items = [{string.Join(",", result.Items ?? new List<string>())}]");
+
             }
 
             return result;
@@ -544,11 +659,13 @@ public class StoreManager : MonoSingleton<StoreManager>
             else // Costume
             {
                 var list = result.Items
+                    .Select(raw => raw?.Split('_').Last())
                     .Select(id => CostumeManager.Instance.AllCostumeDatas.FirstOrDefault(c => c.Uid == id))
                     .Where(c => c != null).ToList();
 
                 SetPopupVisibility(true);
                 UpdateCostumeGridUI(list);
+                UpdateLogCostume(list); //코스튬 
             }
         }
         catch (Exception e)
@@ -634,15 +751,16 @@ public class StoreManager : MonoSingleton<StoreManager>
             if (i < n)
             {
                 var costume = costumes[i];
-                var icon = slot.Q<VisualElement>("WeaponIcon");
+
+                // 아이콘
+                var icon = slot.Q<VisualElement>("WeaponIcon") ?? slot.Q<VisualElement>("CostumeIcon");
                 if (icon != null && costume.IconTexture != null)
                 {
-
                     icon.style.backgroundImage = new StyleBackground(costume.IconTexture);
-
                 }
 
-                var nameLabel = slot.Q<Label>("WeaponName");
+                // 이름 라벨
+                var nameLabel = slot.Q<Label>("WeaponName") ?? slot.Q<Label>("CostumeName");
                 if (nameLabel != null)
                 {
                     nameLabel.text = WrapText(costume.Name, 7);
@@ -657,9 +775,9 @@ public class StoreManager : MonoSingleton<StoreManager>
             }
         }
 
-        // 등장 FX 실행
         PlayAppearFxForVisibleSlots();
     }
+
 
     private void HideAllSlots()
     {
@@ -671,6 +789,13 @@ public class StoreManager : MonoSingleton<StoreManager>
     {
         string log = "뽑기 결과:\n";
         foreach (var weapon in weapons) log += $"- {weapon.name} ({weapon.WeaponRarity})\n";
+        Debug.Log(log);
+    }
+
+    private void UpdateLogCostume(List<CostumeItem> costumes)
+    {
+        string log = "뽑기 결과(코스튬):\n";
+        foreach (var c in costumes) log += $"- {c.Name}\n";
         Debug.Log(log);
     }
 
@@ -774,6 +899,25 @@ public class StoreManager : MonoSingleton<StoreManager>
             s.style.translate = new StyleTranslate(new Translate(0, 0, 0));
         }
     }
+
+    // 상단 using 밑, StoreManager 클래스 안 아무 곳(예: Money region 위)에 헬퍼 추가
+    private static int CurrencyRank(EnumCollection.Resource r)
+    {
+        // 낮을수록 앞에 옴
+        switch (r)
+        {
+            case EnumCollection.Resource.Dia: return 0; // 다이아 최우선
+            case EnumCollection.Resource.Clover: return 1; // 그 다음 클로버
+            default: return 2; // 나머지
+        }
+    }
+
+    private static int AdRank(bool isAd)
+    {
+        // 광고가 더 앞: 광고=0, 일반=1
+        return isAd ? 0 : 1;
+    }
+
 
     #endregion
 

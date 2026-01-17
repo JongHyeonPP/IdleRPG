@@ -1,0 +1,52 @@
+/* WeaponGrid: 스크롤뷰 컨테이너 */
+#WeaponGrid {
+    display: grid; /* 그리드 레이아웃 사용 */
+    grid-template-columns: repeat(5, 1fr); /* 5개의 열 */
+    grid-auto-rows: 1fr; /* 자동으로 높이 조정 */
+    gap: 10px; /* 아이템 간 간격 */
+    padding: 10px; /* 그리드 내부 여백 */
+    width: 100%; /* 부모 크기에 맞게 확장 */
+    height: 500px; /* 내용에 맞게 높이 자동 조정 */
+    background-color: #f8f8f8; /* 배경색 */
+}
+
+/* WeaponSlot: 개별 슬롯 */
+#WeaponSlot {
+    width: 100%; /* 그리드 셀 크기에 맞춤 */
+    aspect-ratio: 1; /* 정사각형 유지 */
+    background-color: #d3d3d3; /* 슬롯 배경색 */
+    border-radius: 8px; /* 모서리를 둥글게 */
+    display: flex; /* 내부 콘텐츠 정렬 */
+    flex-direction: column; /* 세로 배치 */
+    justify-content: center; /* 세로 중앙 정렬 */
+    align-items: center; /* 가로 중앙 정렬 */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+    overflow: hidden; /* 내부 콘텐츠 넘침 방지 */
+}
+
+/* WeaponSlot 내부의 아이콘 */
+#WeaponSlot .WeaponIcon {
+    width: 80%; /* 아이콘 크기 */
+    height: 80%;
+    margin-bottom: 5px; /* 텍스트와 간격 */
+    background-size: contain; /* 아이콘 크기 조정 */
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* WeaponSlot 내부의 텍스트 */
+#WeaponSlot .WeaponName {
+    font-size: 12px; /* 텍스트 크기 */
+    color: #333; /* 텍스트 색상 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+    overflow: hidden; /* 텍스트 넘침 방지 */
+    text-overflow: ellipsis; /* 넘친 텍스트 생략 (...) */
+    white-space: nowrap; /* 한 줄로 표시 */
+}
+
+/* ScrollView 설정 */
+#WeaponScrollView {
+    max-height: 500px; /* 스크롤뷰 높이를 제한하여 스크롤 가능하게 설정 */
+    overflow-y: auto; /* 세로 스크롤 가능 */
+    padding: 0; /* 내부 여백 제거 */
+}

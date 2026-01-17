@@ -1,7 +1,6 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <engine:Template name="StorePanel" src="project://database/Assets/02.Script/Store/StorePanel.uxml?fileID=9197481963319205126&amp;guid=74a0c4eb100c1f94181a08f86a368822&amp;type=3#StorePanel" />
     <engine:VisualElement name="Mid" style="flex-grow: 0; flex-direction: row; width: 990px; max-height: 70%; flex-shrink: 0; align-items: center; height: 410px; background-image: none;">
-        <engine:Button text="Button" style="position: absolute; background-image: url(&quot;project://database/Assets/Store/Img/ADBtn.png?fileID=2800000&amp;guid=80f844391f575c946aca4dccb786504e&amp;type=3#ADBtn&quot;); height: 142px; width: 148px; top: -115px; left: 867px; color: rgba(27, 27, 27, 0); background-color: rgba(255, 255, 255, 0);" />
         <engine:VisualElement name="ItemImg" style="flex-grow: 0; flex-shrink: 0; width: 336px; height: 292px; justify-content: center; align-items: center; margin-right: 60px; margin-bottom: 55px;">
             <engine:VisualElement name="VisualElement" style="flex-grow: 1; position: absolute; height: 383px; width: 450px; display: flex; background-image: none; left: 3px; top: -26px;">
                 <engine:VisualElement name="VisualElement" style="flex-grow: 1; height: 250px; background-image: url(&quot;project://database/Assets/Asset/SPUM/Basic_Resources/UI/Rounded%20Circle.png?fileID=2800000&amp;guid=b1e2bb5a32fee96498075a860def4696&amp;type=3#Rounded Circle&quot;); -unity-background-image-tint-color: rgba(248, 237, 237, 0.4); background-size: 100% 100%; position: absolute; top: 60px; left: 104px; width: 250px;" />
@@ -12,6 +11,8 @@
         </engine:VisualElement>
         <engine:Instance template="StorePanel" name="StorePanel_0" />
         <engine:VisualElement name="Padding" style="flex-grow: 1; width: 71px;" />
-        <engine:Instance template="StorePanel" name="StorePanel_1" />
+        <engine:Instance template="StorePanel" name="StorePanel_1">
+            <engine:Button text="Button" name="AdBtn" style="position: absolute; background-image: url(&quot;project://database/Assets/Store/Img/ADBtn.png?fileID=2800000&amp;guid=80f844391f575c946aca4dccb786504e&amp;type=3#ADBtn&quot;); height: 100px; width: 100px; top: -94px; left: 208px; color: rgba(27, 27, 27, 0); background-color: rgba(255, 255, 255, 0);" />
+        </engine:Instance>
     </engine:VisualElement>
 </engine:UXML>

@@ -8,7 +8,7 @@ using Unity.Services.CloudCode;
 using Unity.Services.RemoteConfig;
 using EnumCollection;
 
-public class PurchaseManager : MonoSingleton<PurchaseManager>
+public class PurchaseManager : MonoBehaviour
 {
     private StoreController storeController;
     private bool isInitialized;
@@ -17,28 +17,18 @@ public class PurchaseManager : MonoSingleton<PurchaseManager>
     private Dictionary<string, string> productSources = new(); // productId -> source
     private Dictionary<string, (Resource resource, int amount)> productGrants = new(); // productId -> 보상 정보
 
-    // 스토어 전달 정보
-    private Dictionary<string, string> _priceStrings = new(); // productId -> localizedPriceString
-
-    public struct StoreProductInfo
-    {
-        public string productId;
-        public string source; // purchase or advertise
-        public string priceString; // 가격
-        public (Resource res, int amt) grant; // 보상
-    }
-
     private void Awake()
     {
         _ = InitializeProductsFromRc();
         PlayerBroker.PurchaseCurrency += PurchaseAsync;
         PlayerBroker.RequestGacha += CallGacha;
+        PlayerBroker.OnPurchaseCurrency += PurchaseCallBack;
     }
 
-    public bool IsAdvertise(string productId)
-    => productSources.TryGetValue(productId, out var src) && src == "advertise";
-
-
+    private void PurchaseCallBack(PurchaseResult result)
+    {
+        
+    }
 
     private async Task InitializeProductsFromRc()
     {
@@ -162,25 +152,6 @@ public class PurchaseManager : MonoSingleton<PurchaseManager>
             }
         }
 
-        _priceStrings.Clear();
-        foreach (var product in products)
-        {
-            string productId = product.definition.id;
-            string priceString = product.metadata?.localizedPriceString ?? "";
-            _priceStrings[productId] = priceString;
-        }
-
-        // 광고 상품은 표시용 가격 문자열을 기본값으로 채워둠
-        foreach (var kv in productSources)
-        {
-            if (kv.Value == "advertise" && !_priceStrings.ContainsKey(kv.Key))
-            {
-                _priceStrings[kv.Key] = "AD"; // 또는 "무료", "광고보기"
-            }
-        }
-
-
-
         Debug.Log(sb.ToString());
 
         storeController.FetchPurchases();
@@ -197,7 +168,7 @@ public class PurchaseManager : MonoSingleton<PurchaseManager>
         Debug.Log($"[IAP] 기존 주문 로드, 확정 {orders.ConfirmedOrders.Count}, 보류 {orders.PendingOrders.Count}");
     }
 
-    public void PurchaseAsync(string productId)
+    private void PurchaseAsync(string productId)
     {
         if (!productSources.TryGetValue(productId, out var source))
         {
@@ -387,29 +358,9 @@ public class PurchaseManager : MonoSingleton<PurchaseManager>
             });
         }
     }
-
-    // 스토어 정보 전달
-    public List<StoreProductInfo> GetProducts(bool includeAdvertise = false)
+    [ContextMenu("PurchaseTest")]
+    private void PurchaseTest()
     {
-        var list = new List<StoreProductInfo>();
-        foreach (var kv in productSources)
-        {
-            var id = kv.Key;
-            var src = kv.Value;
-
-            if (!includeAdvertise && src == "advertise") continue;
-
-            _priceStrings.TryGetValue(id, out var priceStr);
-            productGrants.TryGetValue(id, out var g);
-
-            list.Add(new StoreProductInfo
-            {
-                productId = id,
-                source = src,
-                priceString = priceStr,
-                grant = (g.resource, g.amount)
-            });
-        }
-        return list;
+        PlayerBroker.PurchaseCurrency("dia1");
     }
 }
