@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _weaponType: 2
   _weaponRarity: 3
-  _power: 1
+  _power: 50
   _maxHp: 0
-  _criticalDamage: 1
-  _critical: 1
+  _criticalDamage: 30
+  _critical: 7
   _resist: 0
   _penetration: 0
   _weaponSprite: {fileID: 21300000, guid: 466b1cc3852524f549e58e8916a4e7ce, type: 3}

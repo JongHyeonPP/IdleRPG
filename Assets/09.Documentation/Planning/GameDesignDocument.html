@@ -1,0 +1,4974 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>요미 키우기 - 게임 설계 문서</title>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.7;
+        }
+
+        /* 사이드바 목차 */
+        #sidebar-toc {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 220px;
+            height: 100vh;
+            overflow-y: auto;
+            background: #2c3e50;
+            padding: 20px 15px;
+            font-size: 0.85em;
+            z-index: 1000;
+        }
+
+        #sidebar-toc h3 {
+            color: #ecf0f1;
+            margin: 0 0 15px 0;
+            padding: 0;
+            border: none;
+            font-size: 1.1em;
+        }
+
+        #sidebar-toc ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #sidebar-toc li {
+            margin: 4px 0;
+        }
+
+        #sidebar-toc a {
+            color: #bdc3c7;
+            text-decoration: none;
+            display: block;
+            padding: 5px 8px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        #sidebar-toc a:hover {
+            background: #34495e;
+            color: #fff;
+        }
+
+        #sidebar-toc a.active {
+            background: #3498db;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        #sidebar-toc .sub {
+            padding-left: 15px;
+            font-size: 0.9em;
+        }
+
+        /* 메인 콘텐츠 */
+        #main-content {
+            margin-left: 220px;
+            max-width: 1100px;
+            padding: 20px 40px;
+        }
+
+        h1 {
+            border-bottom: 3px solid #333;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            border-bottom: 2px solid #666;
+            padding-bottom: 8px;
+            margin-top: 50px;
+            color: #333;
+            background: #f8f8f8;
+            padding: 10px;
+            scroll-margin-top: 20px;
+        }
+
+        h3 {
+            margin-top: 30px;
+            color: #444;
+            border-left: 4px solid #666;
+            padding-left: 10px;
+            scroll-margin-top: 20px;
+        }
+
+        h4 {
+            margin-top: 20px;
+            color: #555;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 15px 0;
+            font-size: 0.95em;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #e8e8e8;
+            font-weight: bold;
+        }
+
+        code {
+            background: #e0e0e0;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background: #f5f5f5;
+            padding: 12px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 0.9em;
+        }
+
+        .meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 30px;
+        }
+
+        .issue {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 10px 15px;
+            margin: 15px 0;
+        }
+
+        .note {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 10px 15px;
+            margin: 15px 0;
+        }
+
+        .info {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 10px 15px;
+            margin: 15px 0;
+        }
+
+        .toc {
+            display: none;
+            /* 기존 목차 숨김 */
+        }
+
+        .small {
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        .chart-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 반응형 */
+        @media (max-width: 900px) {
+            #sidebar-toc {
+                display: none;
+            }
+
+            #main-content {
+                margin-left: 0;
+            }
+
+            .toc {
+                display: block;
+            }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <!-- 사이드바 목차 -->
+    <nav id="sidebar-toc">
+        <h3>목차</h3>
+        <ul>
+            <li><a href="#sec0">0. 게임 개요</a></li>
+            <li><a href="#sec1">1. 전투 시스템</a></li>
+            <li><a href="#sec2">2. 스탯 시스템</a></li>
+            <li><a href="#sec3">3. 무기 시스템</a></li>
+            <li><a href="#sec4">4. 스킬 시스템</a></li>
+            <li><a href="#sec5">5. 승급/동료 시스템</a></li>
+            <li><a href="#sec6">6. 재화 시스템</a></li>
+            <li><a href="#sec7">7. 가챠/상점 시스템</a></li>
+            <li><a href="#sec8">8. 서버/인프라 시스템</a></li>
+            <li><a href="#sec9">9. 스테이지 밸런싱</a></li>
+            <li class="sub"><a href="#sec9-5">└ 9.5 시뮬레이터</a></li>
+            <li><a href="#sec10">10. 밸런싱 요소 목록</a></li>
+            <li><a href="#sec11">11. 문제점 및 개선사항</a></li>
+        </ul>
+    </nav>
+
+    <!-- 메인 콘텐츠 -->
+    <div id="main-content">
+
+        <h1>요미 키우기 - 게임 설계 문서</h1>
+        <p class="meta">버전: 3.0 | 최종 수정: 2026-01-17 | 컨셉 + 밸런싱 통합</p>
+
+        <div class="toc">
+            목차
+            <ul>
+                <li>0. 게임 개요</li>
+                <li>1. 전투 시스템</li>
+                <li>2. 스탯 시스템</li>
+                <li>3. 무기 시스템</li>
+                <li>4. 스킬 시스템</li>
+                <li>5. 승급/동료 시스템</li>
+                <li>6. 경제 시스템</li>
+                <li>7. 스테이지 밸런싱</li>
+                <li>8. 업계 리서치</li>
+                <li>9. 밸런싱 요소 전체 목록</li>
+                <li>10. 문제점 및 개선사항</li>
+            </ul>
+        </div>
+
+
+        <!-- ========== 섹션 0 ========== -->
+        <h2 id="sec0">0. 게임 개요</h2>
+
+        <h3>0.1 장르와 핵심 컨셉</h3>
+        <p>
+            요미 키우기는 모바일 방치형(Idle) RPG입니다.<br>
+            플레이어는 "요미"라는 캐릭터를 육성하며, 자동 전투 시스템을 통해 스테이지를 클리어합니다.
+            게임을 하지 않는 동안에도 오프라인 보상이 축적되어 진행이 이어집니다.
+        </p>
+
+        <h3>0.2 핵심 게임 루프</h3>
+        <pre>
+┌─────────────────────────────────────────────────────────────┐
+│  자동 전투 → 재화 획득 → 강화/가챠 → 더 강해짐 → 다음 스테이지  │
+└─────────────────────────────────────────────────────────────┘
+    </pre>
+        <table>
+            <tr>
+                <th>단계</th>
+                <th>내용</th>
+                <th>관련 요소</th>
+            </tr>
+            <tr>
+                <td>1. 전투</td>
+                <td>플레이어가 적을 자동 공격. 동료는 전투에 참여하지 않고 무기 효과만 제공</td>
+                <td>데미지 공식, 스킬 효과</td>
+            </tr>
+            <tr>
+                <td>2. 보상</td>
+                <td>적 처치 시 골드, EXP, 무기, 스킬 조각 드랍</td>
+                <td>드랍 확률, 레어도 보정</td>
+            </tr>
+            <tr>
+                <td>3. 성장</td>
+                <td>
+                    골드 강화 (Power, MaxHp, Critical 등 6종)<br>
+                    스탯 포인트 (레벨업 시 획득, 5가지 스탯 투자)<br>
+                    무기 장착 (기본 스탯 + 특수효과)<br>
+                    스킬 레벨업 (조각 소모, 효과 증가)<br>
+                    승급 (5단계, 스탯 배율 ×1~×15)<br>
+                    동료 테크트리 (4단계×2갈래 = 7노드/동료)<br>
+                    동료 무기 (해금 시 무기 효과 추가)
+                </td>
+                <td>강화 비용, 성장 곡선</td>
+            </tr>
+            <tr>
+                <td>4. 진행</td>
+                <td>스테이지 클리어 → 동료 해금 (20/40/60) → 승급 도전 → 특수 콘텐츠</td>
+                <td>적 HP 스케일링, 체크포인트</td>
+            </tr>
+        </table>
+
+
+        <h3>0.3 주요 시스템</h3>
+        <table>
+            <tr>
+                <th>시스템</th>
+                <th>설명</th>
+                <th>밸런싱 핵심</th>
+            </tr>
+            <tr>
+                <td>플레이어</td>
+                <td>주인공 요미. 근접 무기(Melee) 사용</td>
+                <td>Power, Critical, 스킬</td>
+            </tr>
+            <tr>
+                <td>동료</td>
+                <td>궁수/전사/법사 3종. Stage별 해금</td>
+                <td>무기 효과가 플레이어에 합산</td>
+            </tr>
+            <tr>
+                <td>무기</td>
+                <td>7단계 레어도 (Common~Ancient). 특수효과 보유</td>
+                <td>SkillType 26종</td>
+            </tr>
+            <tr>
+                <td>스킬</td>
+                <td>액티브/패시브 51개. 조각으로 레벨업</td>
+                <td>DPS 배율, 버프</td>
+            </tr>
+            <tr>
+                <td>스테이지</td>
+                <td>Normal 300 + 특수 143개 (Adventure 90, Dungeon 30, CompanionTech 18, Promote 5). 적 HP/저항 스케일링</td>
+                <td>진행 벽, 권장 레벨</td>
+            </tr>
+            <tr>
+                <td>경제</td>
+                <td>가차, 출석, 드랍, 오프라인 보상</td>
+                <td>수급/소비 균형</td>
+            </tr>
+        </table>
+
+        <h3>0.4 용어 정리</h3>
+        <table>
+            <tr>
+                <th>용어</th>
+                <th>설명</th>
+            </tr>
+            <tr>
+                <td>Power</td>
+                <td>공격력. 데미지 계산의 기본 스탯</td>
+            </tr>
+            <tr>
+                <td>특수효과</td>
+                <td>무기/스킬이 제공하는 추가 능력 (공격력 버프, 더블히트, 관통 등 26종)</td>
+            </tr>
+            <tr>
+                <td>효과 합산</td>
+                <td>플레이어와 동료 무기의 모든 특수효과가 합산되어 최종 수치 결정</td>
+            </tr>
+            <tr>
+                <td>레어도</td>
+                <td>무기/스킬의 등급 (Common → Uncommon → Rare → Unique → Legendary → Mythic → Ancient)</td>
+            </tr>
+            <tr>
+                <td>승급</td>
+                <td>Stone → Bronze → Iron → Silver → Gold 5단계. 스탯에 배율 적용</td>
+            </tr>
+            <tr>
+                <td>테크트리</td>
+                <td>동료별 성장 경로. 각 동료마다 4단계(0~3차) × 2갈래(0,1) 구성 = 7노드</td>
+            </tr>
+        </table>
+
+        <!-- ========== 섹션 1 ========== -->
+        <h2 id="sec1">1. 전투 시스템</h2>
+        <p>
+            전투는 플레이어만 직접 공격합니다. 동료는 전투에 참여하지 않으며, 무기 효과만 플레이어에게 제공합니다.
+            플레이어는 장착된 스킬을 순환하며 사용하고, 데미지는 공격력(Power), 치명타, 특수효과에 의해 결정됩니다.
+            모든 적을 처치하면 스테이지 클리어입니다.
+        </p>
+
+        <h3>1.1 전투 흐름</h3>
+        <pre>
+1. 스킬 시전 준비 (소리 재생)
+2. 선딜 대기 ← 공격속도에 따라 단축
+3. MP 소모 확인
+4. 가장 가까운 적 선택
+5. 데미지 계산 (Power × 스킬 배율 × 버프 × 크리티컬)
+6. 적에게 피해 적용
+7. 후딜 대기 ← 공격속도에 따라 단축
+8. 반복
+</pre>
+
+
+        <h3>1.2 데미지 계산 공식</h3>
+        <pre>
+1단계: 기본 데미지
+기본 데미지 = 스킬 배율 × 공격력(Power)
+
+2단계: 버프 적용
+데미지 = 기본 데미지 × (1 + AttBuff + Berserker + Rage)
+
+3단계: 크리티컬
+CritRate 발동 시 → 데미지 × CritDmg × (1 + CritDmgBuff)
+
+4단계: DoubleHit
+DoubleHit 발동 시 → 데미지 × 2
+
+5단계: Resist/Penetration
+유효 Resist = 적 Resist × (1 - Penetration)
+최종 데미지 = 데미지 × (1 - 유효 Resist)
+</pre>
+
+        <h3>1.3 종합 DPS 공식</h3>
+        <pre>
+총 공격력 = 골드 강화 + 스탯 포인트 + 승급 배율 + 무기 기본 스탯
+
+특수효과 합산 = 플레이어 스킬 효과 + 플레이어 무기 효과 + 동료들 무기 효과
+
+최종 DPS = 총 공격력 × 크리티컬 배율 × 버프 배율 × 더블히트 배율 × 공격속도 배율 × 저항 감소율
+</pre>
+        <div class="info">
+            동료 기여: 동료는 전투에 참여하지 않지만, 동료 무기의 특수효과가 플레이어에게 직접 합산됩니다.<br>
+            동료 해금(Stage 20/40/60) 시 무기 슬롯 +1 효과로 파워 스파이크가 발생합니다.
+        </div>
+
+        <h3>1.4 전투 타이밍 파라미터</h3>
+        <p>
+            실제 전투에서는 DPS 이론값 외에도 이동 시간, 공격 딜레이, 처치 후 딜레이 등이 킬 사이클에 영향을 미칩니다.
+            이 파라미터들은 <code>BattleManager.cs</code>, <code>Attackable.cs</code>, <code>SkillData.cs</code>에서 정의됩니다.
+        </p>
+
+        <h4>핵심 타이밍 상수</h4>
+        <table>
+            <tr>
+                <th>파라미터</th>
+                <th>기본값</th>
+                <th>소스</th>
+                <th>설명</th>
+            </tr>
+            <tr>
+                <td>_defaultSpeed</td>
+                <td>2.5</td>
+                <td>BattleManager</td>
+                <td>플레이어 이동 속도 기준 (m/s)</td>
+            </tr>
+            <tr>
+                <td>_enemySpace</td>
+                <td>1.0</td>
+                <td>BattleManager</td>
+                <td>적 간 간격 (m)</td>
+            </tr>
+            <tr>
+                <td>_enemyPlayerDistance</td>
+                <td>1.5</td>
+                <td>BattleManager</td>
+                <td>공격 시작 거리 (m)</td>
+            </tr>
+            <tr>
+                <td>preDelay</td>
+                <td>0.2초</td>
+                <td>SkillData</td>
+                <td>공격 전 대기 (공속 반비례)</td>
+            </tr>
+            <tr>
+                <td>postDelay</td>
+                <td>0.2초</td>
+                <td>SkillData</td>
+                <td>공격 후 대기 (공속 반비례)</td>
+            </tr>
+            <tr>
+                <td>TargetKill 딜레이</td>
+                <td>0.5초</td>
+                <td>Attackable</td>
+                <td>처치 후 타겟 해제 대기</td>
+            </tr>
+            <tr>
+                <td>MoveSpeed 보정</td>
+                <td>1 + GetPWValue</td>
+                <td>BattleManager</td>
+                <td>이동 속도 버프 적용</td>
+            </tr>
+            <tr>
+                <td><strong>보스 제한시간</strong></td>
+                <td><strong>20초</strong></td>
+                <td>BossTimerUI</td>
+                <td>시간 초과 시 전투 실패 (OnBossTimeLimit)</td>
+            </tr>
+            <tr>
+                <td>보스 HP 배율</td>
+                <td>×8.3</td>
+                <td>StageInfo</td>
+                <td>bossHp = enemyHp × 8.3</td>
+            </tr>
+        </table>
+
+        <h4>실제 킬 사이클 공식</h4>
+        <pre>
+실제 킬 시간 = DPS 이론 킬타임 + 이동 오버헤드 + 처치 후 딜레이
+
+이동 오버헤드 = _enemySpace / (_defaultSpeed × (1 + MoveSpeed))
+             = 1.0 / (2.5 × 1.0) = 0.4초 (기본값)
+
+공격 딜레이  = (preDelay + postDelay) / AttackSpeed
+             = (0.2 + 0.2) / 4.0 = 0.1초 (공속 4 기준)
+
+처치 후 딜레이 = 0.5초 (고정)
+
+예시: DPS 킬타임 2.0초 → 실제 킬타임 ≈ 2.0 + 0.4 + 0.5 = 2.9초
+        </pre>
+
+        <div class="info">
+            <strong>시뮬레이터:</strong> 밸런스 시뮬레이터는 위 타이밍 파라미터를 반영한 <em>실제 킬타임</em>을 계산합니다.
+            이동 속도, 공격 딜레이, 처치 후 딜레이가 모두 적용됩니다.
+        </div>
+
+
+        <!-- ========== 섹션 2 ========== -->
+        <h2 id="sec2">2. 스탯 시스템</h2>
+        <p>
+            플레이어의 전투 능력은 여러 스탯으로 구성됩니다. 각 스탯은 골드 강화, 스탯포인트 투자, 승급 등 다양한 방법으로 성장시킬 수 있으며,
+            각 강화 방법마다 비용과 효율이 다릅니다. 이 규형이 게임 경제와 진행 속도를 결정합니다.
+        </p>
+
+        <h3>2.1 스탯 종류 (StatusType)</h3>
+        <table>
+            <tr>
+                <th>스탯</th>
+                <th>설명</th>
+                <th>강화 방법</th>
+            </tr>
+            <tr>
+                <td>Power</td>
+                <td>공격력</td>
+                <td>골드, 스탯포인트, 승급</td>
+            </tr>
+            <tr>
+                <td>MaxHp</td>
+                <td>최대 체력</td>
+                <td>골드, 스탯포인트, 승급</td>
+            </tr>
+            <tr>
+                <td>HpRecover</td>
+                <td>초당 HP 회복</td>
+                <td>골드, 스탯포인트</td>
+            </tr>
+            <tr>
+                <td>Critical</td>
+                <td>치명타 확률</td>
+                <td>골드</td>
+            </tr>
+            <tr>
+                <td>CriticalDamage</td>
+                <td>치명타 피해량</td>
+                <td>골드, 스탯포인트, 승급</td>
+            </tr>
+            <tr>
+                <td>GoldAscend</td>
+                <td>골드 획득 증가%</td>
+                <td>스탯포인트</td>
+            </tr>
+        </table>
+
+        <h3>2.2 골드 강화 수치 (REINFORCE_VALUE_GOLD)</h3>
+        <table>
+            <tr>
+                <th>스탯</th>
+                <th>시작값</th>
+                <th>기본 증가</th>
+                <th>step</th>
+                <th>stepInc</th>
+            </tr>
+            <tr>
+                <td>MaxHp</td>
+                <td>100</td>
+                <td>4</td>
+                <td>100</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>Power</td>
+                <td>10</td>
+                <td>1</td>
+                <td>100</td>
+                <td>0.5</td>
+            </tr>
+            <tr>
+                <td>HpRecover</td>
+                <td>1</td>
+                <td>0.2</td>
+                <td>200</td>
+                <td>0.1</td>
+            </tr>
+            <tr>
+                <td>CriticalDamage</td>
+                <td>1.2</td>
+                <td>0.01</td>
+                <td>100</td>
+                <td>0.01</td>
+            </tr>
+        </table>
+
+        <h3>2.3 스탯포인트 강화</h3>
+        <p>
+            레벨업 시 <strong>스탯포인트 1점</strong>을 획득합니다. (사용 가능 = 레벨 - 1 - 사용량)<br>
+            골드 강화와 별도의 시스템으로, 다음 스탯을 강화할 수 있습니다.
+        </p>
+        <table>
+            <tr>
+                <th>스탯</th>
+                <th>효과</th>
+                <th>비고</th>
+            </tr>
+            <tr>
+                <td>Power</td>
+                <td>공격력 증가</td>
+                <td>골드로도 강화 가능</td>
+            </tr>
+            <tr>
+                <td>MaxHp</td>
+                <td>최대 HP 증가</td>
+                <td>골드로도 강화 가능</td>
+            </tr>
+            <tr>
+                <td>Critical</td>
+                <td>크리티컬 확률 증가</td>
+                <td>스탯포인트 전용</td>
+            </tr>
+            <tr>
+                <td>CriticalDamage</td>
+                <td>크리티컬 데미지 증가</td>
+                <td>골드로도 강화 가능</td>
+            </tr>
+            <tr>
+                <td>HpRecover</td>
+                <td>초당 HP 회복</td>
+                <td>골드로도 강화 가능</td>
+            </tr>
+        </table>
+
+        <h3>2.4 레벨업 경험치</h3>
+        <pre>필요 EXP = level² × 10 + level × 50</pre>
+        <table>
+            <tr>
+                <th>레벨</th>
+                <th>1→2</th>
+                <th>10→11</th>
+                <th>50→51</th>
+                <th>100→101</th>
+            </tr>
+            <tr>
+                <td>필요 EXP</td>
+                <td>60</td>
+                <td>1,500</td>
+                <td>27,500</td>
+                <td>105,000</td>
+            </tr>
+        </table>
+
+        <!-- ========== 섹션 3 ========== -->
+        <h2 id="sec3">3. 무기 시스템</h2>
+        <p>
+            무기는 기본 스탯(Power, CritDmg, Crit)와 특수효과(SkillType)를 제공합니다.
+            플레이어는 근접 무기(Melee)를, 동료들은 각각 Bow/Shield/Staff를 사용합니다.
+            레어도가 높을수록 기본 스탯이 강하고, 고티어 무기일수록 더 강력한 특수효과를 보유합니다.
+            동료의 무기 효과는 플레이어에게 직접 합산되므로, 동료 무기 선택도 중요한 전략 요소입니다.
+        </p>
+
+        <h3>3.1 무기 분류 (총 88개)</h3>
+        <table>
+            <tr>
+                <th>타입</th>
+                <th>사용자</th>
+                <th>개수</th>
+                <th>레어도 분포</th>
+            </tr>
+            <tr>
+                <td>Melee</td>
+                <td>Player</td>
+                <td>43개</td>
+                <td>C:10, U:12, R:7, Un:3, L:5, M:4, A:2</td>
+            </tr>
+            <tr>
+                <td>Bow</td>
+                <td>Companion</td>
+                <td>10개</td>
+                <td>C:2, U:1, R:2, Un:1, L:2, M:1, A:1</td>
+            </tr>
+            <tr>
+                <td>Shield</td>
+                <td>Companion</td>
+                <td>19개</td>
+                <td>C:2, U:3, R:2, Un:4, L:4, M:3, A:1</td>
+            </tr>
+            <tr>
+                <td>Staff</td>
+                <td>Companion</td>
+                <td>16개</td>
+                <td>C:1, U:3, R:1, Un:2, L:4, M:3, A:2</td>
+            </tr>
+        </table>
+
+        <h3>3.2 레어도별 기준 스탯</h3>
+        <table>
+            <tr>
+                <th>레어도</th>
+                <th>Power</th>
+                <th>CritDmg</th>
+                <th>Crit</th>
+                <th>효과 DPS</th>
+                <th>총점 목표</th>
+            </tr>
+            <tr>
+                <td>Common</td>
+                <td>5</td>
+                <td>5</td>
+                <td>1%</td>
+                <td>-</td>
+                <td>~5</td>
+            </tr>
+            <tr>
+                <td>Uncommon</td>
+                <td>12</td>
+                <td>10</td>
+                <td>2%</td>
+                <td>-</td>
+                <td>~10</td>
+            </tr>
+            <tr>
+                <td>Rare</td>
+                <td>25</td>
+                <td>18</td>
+                <td>4%</td>
+                <td>0%</td>
+                <td>~18</td>
+            </tr>
+            <tr>
+                <td>Unique</td>
+                <td>50</td>
+                <td>30</td>
+                <td>7%</td>
+                <td>5%</td>
+                <td>~30</td>
+            </tr>
+            <tr>
+                <td>Legendary</td>
+                <td>85-110</td>
+                <td>45-58</td>
+                <td>10-15%</td>
+                <td>8-18%</td>
+                <td>~40</td>
+            </tr>
+            <tr>
+                <td>Mythic</td>
+                <td>180-220</td>
+                <td>70-90</td>
+                <td>18-22%</td>
+                <td>15-30%</td>
+                <td>~65</td>
+            </tr>
+            <tr>
+                <td>Ancient</td>
+                <td>380-420</td>
+                <td>110-130</td>
+                <td>32-38%</td>
+                <td>25-40%</td>
+                <td>~100</td>
+            </tr>
+        </table>
+
+        <h3>3.3 트레이드오프 원칙</h3>
+        <pre>총 성능 점수 = (Power/10) + (CritDmg/5) + (Crit×2) + 효과DPS기여</pre>
+        <table>
+            <tr>
+                <th>유형</th>
+                <th>스탯</th>
+                <th>효과</th>
+                <th>플레이스타일</th>
+            </tr>
+            <tr>
+                <td>균형형</td>
+                <td>중간</td>
+                <td>중간</td>
+                <td>범용</td>
+            </tr>
+            <tr>
+                <td>공격형</td>
+                <td>높음 (Power +15)</td>
+                <td>약함 (-10%)</td>
+                <td>안정 딜러</td>
+            </tr>
+            <tr>
+                <td>특화형</td>
+                <td>낮음 (Power -15)</td>
+                <td>강함 (+15%)</td>
+                <td>조건부 폭딜</td>
+            </tr>
+        </table>
+
+        <h3>3.4 역할별 무기 설계 (Companion)</h3>
+        <table>
+            <tr>
+                <th>타입</th>
+                <th>역할</th>
+                <th>핵심 효과</th>
+            </tr>
+            <tr>
+                <td>Bow</td>
+                <td>딜러</td>
+                <td>AttackSpeed, DoubleHit, AreaDamage</td>
+            </tr>
+            <tr>
+                <td>Staff</td>
+                <td>서포터</td>
+                <td>healOnHit, Lifesteal, ExpPlus</td>
+            </tr>
+            <tr>
+                <td>Shield</td>
+                <td>유틸리티</td>
+                <td>GoldPlus, Durability, Thorns</td>
+            </tr>
+        </table>
+
+        <h3>3.5 무기 획득 및 강화</h3>
+
+        <h4>무기 획득 방법</h4>
+        <ul>
+            <li>전투 중 드랍 (스테이지별 확률)</li>
+            <li>가챠 (다이아 소모)</li>
+        </ul>
+
+        <h4>무기 강화 시스템</h4>
+        <p>
+            같은 무기를 재료로 소모하여 무기 레벨을 올립니다.
+        </p>
+        <table>
+            <tr>
+                <th>현재 레벨</th>
+                <th>필요 개수</th>
+                <th>레벨업 결과</th>
+            </tr>
+            <tr>
+                <td>0 → 1</td>
+                <td>1개</td>
+                <td>레벨 1</td>
+            </tr>
+            <tr>
+                <td>1 → 2</td>
+                <td>2개</td>
+                <td>레벨 2</td>
+            </tr>
+            <tr>
+                <td>2 → 3</td>
+                <td>3개</td>
+                <td>레벨 3</td>
+            </tr>
+            <tr>
+                <td>n → n+1</td>
+                <td>(n+1)개</td>
+                <td>레벨 n+1</td>
+            </tr>
+        </table>
+        <p class="note">예: +5 강화 = 1+2+3+4+5 = 15개, +10 강화 = 55개, +20 강화 = 210개 소모 (출처: WeaponInfoUI.cs:206)</p>
+
+        <h4>무기 획득 경로</h4>
+        <table>
+            <tr>
+                <th>획득 경로</th>
+                <th>확률/비용</th>
+                <th>비고</th>
+            </tr>
+            <tr>
+                <td>전투 드롭</td>
+                <td>1% (DROP_PROBABILITY.Weapon)</td>
+                <td>스테이지별 고정 무기 (4스테이지마다 새 무기)</td>
+            </tr>
+            <tr>
+                <td>가챠</td>
+                <td>300 다이아</td>
+                <td><a href="#sec10">→ 10. 가챠/상점 시스템 참조</a></td>
+            </tr>
+        </table>
+        <p class="note">가챠 세부 확률 및 경제 분석은 <a href="#sec10">10. 가챠/상점 시스템</a> 참조</p>
+
+        <h3>3.5 무기 도감 (Weapon Book)</h3>
+        <p>동일 세트의 무기를 <strong>획득</strong>할수록 공격력 보너스를 누적 획득합니다.</p>
+
+        <h4>등록 조건</h4>
+        <ul>
+            <li><strong>무기 획득 시 자동 카운트</strong> - 가챠/스테이지에서 무기 획득할 때마다 해당 세트 카운트 +1</li>
+            <li>중복 획득도 카운트됨 (같은 무기 10번 획득 = 10 카운트)</li>
+            <li>세트 내 총 획득 개수가 <code>upgradeLevels[n]</code>에 도달하면 해당 티어 보너스 획득</li>
+        </ul>
+
+        <h4>보너스 구조</h4>
+        <ul>
+            <li><code>upgradeLevels[]</code>: 각 티어 도달에 필요한 총 획득 개수</li>
+            <li><code>upgradeStats[]</code>: 각 티어에서 얻는 공격력 보너스 (누적 아님, 개별)</li>
+            <li>예: Light 세트 - [40, 80, 120, 160, 200, 240, 280, 320] 획득 시 [24, 40, 80, 160, 320, 320, 320, 320] 보너스</li>
+            <li>총 획득 200개 → 티어5 달성 → +24+40+80+160+320 = <strong>+624</strong></li>
+        </ul>
+
+        <h4>도감 세트 목록</h4>
+        <table>
+            <tr>
+                <th>세트 ID</th>
+                <th>무기 수</th>
+                <th>티어 수</th>
+                <th>완성 보너스</th>
+                <th>비고</th>
+            </tr>
+            <tr>
+                <td>Novice</td>
+                <td>2</td>
+                <td>2</td>
+                <td>+2</td>
+                <td>Common, 티어당 +1</td>
+            </tr>
+            <tr>
+                <td>New</td>
+                <td>5</td>
+                <td>5</td>
+                <td>+5</td>
+                <td>Common/Uncommon, 티어당 +1</td>
+            </tr>
+            <tr>
+                <td>Iron</td>
+                <td>8</td>
+                <td>8</td>
+                <td>+8</td>
+                <td>Uncommon/Rare, 티어당 +1</td>
+            </tr>
+            <tr>
+                <td><strong>Light</strong></td>
+                <td>8</td>
+                <td>8</td>
+                <td><strong>+1584</strong></td>
+                <td>Rare, 유일하게 의미있는 보너스</td>
+            </tr>
+            <tr>
+                <td>Speedy</td>
+                <td>7</td>
+                <td>7</td>
+                <td>+7</td>
+                <td>Rare/Unique, 티어당 +1</td>
+            </tr>
+            <tr>
+                <td>Savage</td>
+                <td>7</td>
+                <td>7</td>
+                <td>+7</td>
+                <td>Unique, 티어당 +1</td>
+            </tr>
+            <tr>
+                <td>Horror</td>
+                <td>6</td>
+                <td>6</td>
+                <td>+6</td>
+                <td>Legendary, 티어당 +1</td>
+            </tr>
+            <tr>
+                <td>Ancient</td>
+                <td>7</td>
+                <td>7</td>
+                <td>+7</td>
+                <td>Legendary/Mythic, 티어당 +1</td>
+            </tr>
+        </table>
+
+        <h4>관련 코드</h4>
+        <ul>
+            <li><code>WeaponBookUI.cs</code>: 도감 UI, 진행도 표시</li>
+            <li><code>WeaponBookData.cs</code>: ScriptableObject, 세트 정의</li>
+            <li><code>08.ScriptableObject/Weapon/WeaponBook/*.asset</code>: 세트별 데이터</li>
+        </ul>
+
+        <!-- ========== 섹션 4 ========== -->
+        <h2 id="sec4">4. 스킬 시스템</h2>
+
+        <h3>4.0 스킬 습득 및 강화</h3>
+
+        <h4>스킬 습득</h4>
+        <p>
+            플레이어 레벨에 따라 스킬이 해금됩니다. 해금된 스킬을 클릭하면 즉시 습득(skillLevel = 1)됩니다.
+        </p>
+        <ul>
+            <li>레벨당 액티브 스킬 1개 + 패시브 스킬 1개 해금</li>
+            <li>SkillAcquireInfo.acquireLevel로 해금 레벨 정의</li>
+        </ul>
+
+        <h4>스킬 해금 테이블</h4>
+        <table>
+            <tr>
+                <th>해금 레벨</th>
+                <th>액티브 스킬</th>
+                <th>레어도</th>
+                <th>패시브 스킬</th>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>Cut, Slash, PowerSlash</td>
+                <td>Common</td>
+                <td>Hunter (크리티컬 확률)</td>
+            </tr>
+            <tr>
+                <td>15</td>
+                <td>ReverseSlash</td>
+                <td>Uncommon</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>20</td>
+                <td>DarkSlash</td>
+                <td>Uncommon</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>25</td>
+                <td>FireSlash</td>
+                <td>Uncommon</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>30</td>
+                <td>Accelerator</td>
+                <td>Rare</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>35</td>
+                <td>DoomsDay</td>
+                <td>Rare</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>40</td>
+                <td>FlameSlash</td>
+                <td>Rare</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>60</td>
+                <td>MoonSlash, Fury, ClawSlash</td>
+                <td>Unique</td>
+                <td>Lifesteal (흡혈)</td>
+            </tr>
+            <tr>
+                <td>80</td>
+                <td>SpinningCut</td>
+                <td>Legendary</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>100</td>
+                <td>Hurricane</td>
+                <td>Legendary</td>
+                <td>Amplify (공격력 증폭)</td>
+            </tr>
+            <tr>
+                <td>120</td>
+                <td>Burst</td>
+                <td>Mythic</td>
+                <td>Double Strike (이중 타격)</td>
+            </tr>
+            <tr>
+                <td>150</td>
+                <td>Rune</td>
+                <td>Mythic</td>
+                <td>-</td>
+            </tr>
+        </table>
+        <p class="note">총 16개 액티브 스킬, 4개 패시브 스킬. 레어도별 배율: Common(1.0x) → Mythic(5.0x~12.0x)</p>
+
+
+        <h4>스킬 강화</h4>
+        <p>
+            스킬 조각(Fragment)을 소모하여 스킬 레벨을 1→10까지 올립니다.
+            레어도별 비용은 <code>PriceInfo.[rarity]SkillPrice[level]</code> 배열에서 정의됩니다.
+        </p>
+        <table>
+            <tr>
+                <th>레벨</th>
+                <th>1→2</th>
+                <th>2→3</th>
+                <th>3→4</th>
+                <th>4→5</th>
+                <th>5→6</th>
+                <th>6→7</th>
+                <th>7→8</th>
+                <th>8→9</th>
+                <th>9→10</th>
+                <th>누적</th>
+            </tr>
+            <tr>
+                <td>비용</td>
+                <td>0</td>
+                <td>2</td>
+                <td>4</td>
+                <td>8</td>
+                <td>16</td>
+                <td>32</td>
+                <td>64</td>
+                <td>128</td>
+                <td>256</td>
+                <td>510</td>
+            </tr>
+        </table>
+        <p class="note">Lv10 MAX까지 총 510개 동일 레어도 Fragment 필요 (상세 → 6.5 조각 참조)</p>
+
+        <h3>4.1 스킬 분류 (총 51개)</h3>
+
+        <table>
+            <tr>
+                <th>분류</th>
+                <th>개수</th>
+                <th>파일 패턴</th>
+            </tr>
+            <tr>
+                <td>Player Active</td>
+                <td>16개</td>
+                <td>Active_X00~X02 (X=0~5)</td>
+            </tr>
+            <tr>
+                <td>Player Passive</td>
+                <td>4개</td>
+                <td>Passive_X00 (X=0~3)</td>
+            </tr>
+            <tr>
+                <td>Companion Skill</td>
+                <td>9개</td>
+                <td>Companion_X_Y (X=0~2, Y=0~2)</td>
+            </tr>
+            <tr>
+                <td>Companion Effect (테크트리)</td>
+                <td>21개</td>
+                <td>CompanionEffect_X-Y_Z</td>
+            </tr>
+            <tr>
+                <td>DefaultAttack</td>
+                <td>1개</td>
+                <td>DefaultAttack.asset</td>
+            </tr>
+        </table>
+
+        <h4>동료 스킬 상세 (Companion Skill 9개)</h4>
+        <table>
+            <tr>
+                <th>동료</th>
+                <th>슬롯</th>
+                <th>스킬명</th>
+                <th>타입</th>
+                <th>Lv0 → Lv9</th>
+                <th>역할</th>
+            </tr>
+            <tr>
+                <td rowspan="3">동료 0<br>(Bow)</td>
+                <td>0</td>
+                <td>공격 속도</td>
+                <td>AttackSpeed (13)</td>
+                <td>2% → 10%</td>
+                <td>DPS 증가</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>이동 속도</td>
+                <td>MoveSpeed (12)</td>
+                <td>2% → 10%</td>
+                <td>이동 가속</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>골드 획득량</td>
+                <td>GoldPlus (11)</td>
+                <td>3% → 15%</td>
+                <td>파밍</td>
+            </tr>
+            <tr>
+                <td rowspan="3">동료 1<br>(Shield)</td>
+                <td>0</td>
+                <td>최대 생명력</td>
+                <td>MaxHpPer (14)</td>
+                <td>3% → 15%</td>
+                <td>생존력</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>공격력 증가</td>
+                <td>AttBuff (1)</td>
+                <td>5% → 22%</td>
+                <td>DPS 증가</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>관통력 증가</td>
+                <td>CritDmgBuff (19)</td>
+                <td>5% → 22%</td>
+                <td>크뎀 버프</td>
+            </tr>
+            <tr>
+                <td rowspan="3">동료 2<br>(Staff)</td>
+                <td>0</td>
+                <td>마나 회복량</td>
+                <td>Penetration (17)</td>
+                <td>8% → 32%</td>
+                <td>저항 무시</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>최대 마나 증가</td>
+                <td>Lifesteal (18)</td>
+                <td>8% → 32%</td>
+                <td>흡혈</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>내구도 증가</td>
+                <td>healOnHit (4)</td>
+                <td>12% → 50%</td>
+                <td>적중 회복</td>
+            </tr>
+        </table>
+        <p class="small">* 동료 2가 Penetration 유일 공급원 (후반 필수)</p>
+
+        <h3>4.2 SkillType 전체 목록 (26종)</h3>
+
+        <table>
+            <tr>
+                <th>Index</th>
+                <th>이름</th>
+                <th>분류</th>
+                <th>value 의미</th>
+                <th>DPS 기여</th>
+            </tr>
+            <tr>
+                <td>0</td>
+                <td>Damage</td>
+                <td>공격</td>
+                <td>데미지 계수</td>
+                <td>100%</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>AttBuff</td>
+                <td>버프</td>
+                <td>0.1 = +10%</td>
+                <td>100%</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>SpeedBuff</td>
+                <td>버프</td>
+                <td>속도 증가</td>
+                <td>~50%</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Durability</td>
+                <td>방어</td>
+                <td>0.1 = -10%피해</td>
+                <td>0%</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>healOnHit</td>
+                <td>생존</td>
+                <td>MaxHP%</td>
+                <td>0%</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>DoubleHit</td>
+                <td>공격</td>
+                <td>0.1 = 10%확률</td>
+                <td>100%</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>ExpPlus</td>
+                <td>수익</td>
+                <td>0.1 = +10%</td>
+                <td>0%</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>Revive</td>
+                <td>생존</td>
+                <td>>0 활성</td>
+                <td>0%</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>Invincible</td>
+                <td>방어</td>
+                <td>지속시간</td>
+                <td>0%</td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>SuperArmor</td>
+                <td>방어</td>
+                <td>>0 활성</td>
+                <td>0%</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>GoldPlus</td>
+                <td>수익</td>
+                <td>0.1 = +10%</td>
+                <td>0%</td>
+            </tr>
+            <tr>
+                <td>11</td>
+                <td>MoveSpeed</td>
+                <td>이동</td>
+                <td>속도 배율</td>
+                <td>0%</td>
+            </tr>
+            <tr>
+                <td>12</td>
+                <td>AttackSpeed</td>
+                <td>공격</td>
+                <td>+0.1 속도</td>
+                <td>100%</td>
+            </tr>
+            <tr>
+                <td>13</td>
+                <td>MaxHpPer</td>
+                <td>스탯</td>
+                <td>MaxHP%</td>
+                <td>0%</td>
+            </tr>
+            <tr>
+                <td>14</td>
+                <td>MpRecover</td>
+                <td>자원</td>
+                <td>초당 회복</td>
+                <td>0%</td>
+            </tr>
+            <tr>
+                <td>15</td>
+                <td>MaxMP</td>
+                <td>자원</td>
+                <td>최대 MP</td>
+                <td>0%</td>
+            </tr>
+            <tr>
+                <td>16</td>
+                <td>Penetration</td>
+                <td>공격</td>
+                <td>0.1 = 10%무시</td>
+                <td>가변</td>
+            </tr>
+            <tr>
+                <td>17</td>
+                <td>Lifesteal</td>
+                <td>생존</td>
+                <td>데미지%회복</td>
+                <td>0%</td>
+            </tr>
+            <tr>
+                <td>18</td>
+                <td>CritDmgBuff</td>
+                <td>버프</td>
+                <td>크뎀 +X</td>
+                <td>~25%</td>
+            </tr>
+            <tr>
+                <td>19</td>
+                <td>BossSlayer</td>
+                <td>조건부</td>
+                <td>보스 +X%</td>
+                <td>~50%</td>
+            </tr>
+            <tr>
+                <td>20</td>
+                <td>Thorns</td>
+                <td>방어</td>
+                <td>피격 반사%</td>
+                <td>0%</td>
+            </tr>
+            <tr>
+                <td>21</td>
+                <td>Berserker</td>
+                <td>조건부</td>
+                <td>HP50%↓ 버프</td>
+                <td>~50%</td>
+            </tr>
+            <tr>
+                <td>22</td>
+                <td>Execution</td>
+                <td>조건부</td>
+                <td>HP10%↓ 즉사</td>
+                <td>~3%</td>
+            </tr>
+            <tr>
+                <td>23</td>
+                <td>AreaDamage</td>
+                <td>상황적</td>
+                <td>킬 시 광역%</td>
+                <td>~30%</td>
+            </tr>
+            <tr>
+                <td>24</td>
+                <td>Rage</td>
+                <td>상황적</td>
+                <td>킬 시 3초버프</td>
+                <td>~30%</td>
+            </tr>
+        </table>
+
+        <h3>4.3 효과 등급 분류</h3>
+        <table>
+            <tr>
+                <th>등급</th>
+                <th>DPS 기여</th>
+                <th>효과</th>
+            </tr>
+            <tr>
+                <td>S</td>
+                <td>100%</td>
+                <td>AttBuff, DoubleHit, AttackSpeed</td>
+            </tr>
+            <tr>
+                <td>A</td>
+                <td>50%</td>
+                <td>BossSlayer, Berserker, Penetration</td>
+            </tr>
+            <tr>
+                <td>B</td>
+                <td>30%</td>
+                <td>Rage, AreaDamage, CritDmgBuff</td>
+            </tr>
+            <tr>
+                <td>C</td>
+                <td>0%</td>
+                <td>Lifesteal, Thorns, Durability, healOnHit</td>
+            </tr>
+        </table>
+
+        <!-- ========== 섹션 5 ========== -->
+        <h2 id="sec5">5. 승급/동료 시스템</h2>
+
+        <h3>5.1 승급 시스템 (Promote)</h3>
+        <table>
+            <tr>
+                <th>랭크</th>
+                <th>배율</th>
+                <th>권장 스테이지</th>
+                <th>StageInfo</th>
+            </tr>
+            <tr>
+                <td>Stone</td>
+                <td>x1</td>
+                <td>1</td>
+                <td>0_Stone.asset</td>
+            </tr>
+            <tr>
+                <td>Bronze</td>
+                <td>x1.5</td>
+                <td>30</td>
+                <td>1_Bronze.asset</td>
+            </tr>
+            <tr>
+                <td>Iron</td>
+                <td>x3</td>
+                <td>60</td>
+                <td>2_Iron.asset</td>
+            </tr>
+            <tr>
+                <td>Silver</td>
+                <td>x8</td>
+                <td>120</td>
+                <td>3_Silver.asset</td>
+            </tr>
+            <tr>
+                <td>Gold</td>
+                <td>x15</td>
+                <td>200</td>
+                <td>4_Gold.asset</td>
+            </tr>
+        </table>
+
+        <h3>5.2 동료 시스템 (Companion)</h3>
+        <p>동료는 장착한 무기의 효과를 플레이어에게 합산 제공합니다 (GetPWValue).</p>
+        <table>
+            <tr>
+                <th>동료</th>
+                <th>이름</th>
+                <th>무기 타입</th>
+                <th>해금 스테이지</th>
+                <th>제공 버프</th>
+            </tr>
+            <tr>
+                <td>Companion 0</td>
+                <td>궁수요미</td>
+                <td>Bow</td>
+                <td>Stage 20</td>
+                <td>CritDmg, AttSpeed, Penetration</td>
+            </tr>
+            <tr>
+                <td>Companion 1</td>
+                <td>전사요미</td>
+                <td>Shield</td>
+                <td>Stage 40</td>
+                <td>MaxHP, DefBuff, Durability</td>
+            </tr>
+            <tr>
+                <td>Companion 2</td>
+                <td>법사요미</td>
+                <td>Staff</td>
+                <td>Stage 60</td>
+                <td>AttBuff, HpRecover, Power</td>
+            </tr>
+        </table>
+
+        <h3>5.3 동료 효과 슬롯 시스템</h3>
+        <p>각 동료마다 5개의 효과 슬롯이 있으며, 전직 진행에 따라 해금됩니다.</p>
+        <table>
+            <tr>
+                <th>슬롯</th>
+                <th>해금 조건</th>
+            </tr>
+            <tr>
+                <td>슬롯 0, 1</td>
+                <td>기본 해금</td>
+            </tr>
+            <tr>
+                <td>슬롯 2</td>
+                <td>1차 전직 완료</td>
+            </tr>
+            <tr>
+                <td>슬롯 3</td>
+                <td>2차 전직 완료</td>
+            </tr>
+            <tr>
+                <td>슬롯 4</td>
+                <td>3차 전직 완료</td>
+            </tr>
+        </table>
+
+        <h4>효과 타입 (9종, 균등 확률)</h4>
+        <table>
+            <tr>
+                <th>타입</th>
+                <th>설명</th>
+            </tr>
+            <tr>
+                <td>AttBuff</td>
+                <td>공격력 증가</td>
+            </tr>
+            <tr>
+                <td>DefBuff</td>
+                <td>피해 감소</td>
+            </tr>
+            <tr>
+                <td>CriticalDamage</td>
+                <td>치명타 피해량</td>
+            </tr>
+            <tr>
+                <td>MaxHp</td>
+                <td>최대 체력</td>
+            </tr>
+            <tr>
+                <td>HpRecover</td>
+                <td>체력 회복량</td>
+            </tr>
+            <tr>
+                <td>MaxMp</td>
+                <td>최대 마나</td>
+            </tr>
+            <tr>
+                <td>MpRecover</td>
+                <td>마나 회복량</td>
+            </tr>
+            <tr>
+                <td>GoldAscend</td>
+                <td>골드 획득량</td>
+            </tr>
+            <tr>
+                <td>ExpAscend</td>
+                <td>경험치 획득량</td>
+            </tr>
+        </table>
+
+        <h4>레어도 확률 분포</h4>
+        <table>
+            <tr>
+                <th>레어도</th>
+                <th>확률</th>
+            </tr>
+            <tr>
+                <td>Common</td>
+                <td>23%</td>
+            </tr>
+            <tr>
+                <td>Uncommon</td>
+                <td>20%</td>
+            </tr>
+            <tr>
+                <td>Rare</td>
+                <td>30%</td>
+            </tr>
+            <tr>
+                <td>Unique</td>
+                <td>20%</td>
+            </tr>
+            <tr>
+                <td>Legendary</td>
+                <td>5%</td>
+            </tr>
+            <tr>
+                <td>Mythic</td>
+                <td>2%</td>
+            </tr>
+        </table>
+
+        <h4>레어도별 효과 수치</h4>
+        <table>
+            <tr>
+                <th>효과</th>
+                <th>Common</th>
+                <th>Uncommon</th>
+                <th>Rare</th>
+                <th>Unique</th>
+                <th>Legendary</th>
+                <th>Mythic</th>
+            </tr>
+            <tr>
+                <td>Power, GoldAscend</td>
+                <td>3%</td>
+                <td>4%</td>
+                <td>6%</td>
+                <td>9%</td>
+                <td>14%</td>
+                <td>20%</td>
+            </tr>
+            <tr>
+                <td>CriticalDmg, MaxHp, HpRecover</td>
+                <td>5%</td>
+                <td>7%</td>
+                <td>10%</td>
+                <td>15%</td>
+                <td>24%</td>
+                <td>35%</td>
+            </tr>
+            <tr>
+                <td>MaxMp, MpRecover, AttBuff, DefBuff</td>
+                <td>3%</td>
+                <td>4%</td>
+                <td>5%</td>
+                <td>8%</td>
+                <td>10%</td>
+                <td>15%</td>
+            </tr>
+            <tr>
+                <td>ExpAscend</td>
+                <td>1%</td>
+                <td>2%</td>
+                <td>3%</td>
+                <td>4%</td>
+                <td>5%</td>
+                <td>8%</td>
+            </tr>
+        </table>
+
+        <h3>5.4 CompanionTech 난이도</h3>
+        <p>각 동료별 3단계 전직이 있으며, 각 단계마다 2개 분기가 있습니다 (총 18개).<br>
+            클리어 시 해당 동료의 techSkill이 해금됩니다.</p>
+
+        <table>
+            <tr>
+                <th>동료</th>
+                <th>테크</th>
+                <th>보스 HP</th>
+                <th>Resist</th>
+                <th>보스 Power</th>
+            </tr>
+            <tr>
+                <td rowspan="3">Companion 0 (궁수)</td>
+                <td>1차</td>
+                <td>118,275</td>
+                <td>6%</td>
+                <td>96</td>
+            </tr>
+            <tr>
+                <td>2차</td>
+                <td>170,407</td>
+                <td>12%</td>
+                <td>132</td>
+            </tr>
+            <tr>
+                <td>3차</td>
+                <td>227,212</td>
+                <td>18%</td>
+                <td>168</td>
+            </tr>
+            <tr>
+                <td rowspan="3">Companion 1 (전사)</td>
+                <td>1차</td>
+                <td>135,132</td>
+                <td>8%</td>
+                <td>108</td>
+            </tr>
+            <tr>
+                <td>2차</td>
+                <td>188,825</td>
+                <td>14%</td>
+                <td>144</td>
+            </tr>
+            <tr>
+                <td>3차</td>
+                <td>247,182</td>
+                <td>20%</td>
+                <td>180</td>
+            </tr>
+            <tr>
+                <td rowspan="3">Companion 2 (법사)</td>
+                <td>1차</td>
+                <td>152,512</td>
+                <td>10%</td>
+                <td>120</td>
+            </tr>
+            <tr>
+                <td>2차</td>
+                <td>207,757</td>
+                <td>16%</td>
+                <td>156</td>
+            </tr>
+            <tr>
+                <td>3차</td>
+                <td>267,675</td>
+                <td>22%</td>
+                <td>192</td>
+            </tr>
+        </table>
+
+        <h4>클리어 난이도 분석</h4>
+        <p>Normal 스테이지 HP 공식: <code>250 + stage×150 + (stage/40)²×500</code></p>
+        <table>
+            <tr>
+                <th>스테이지</th>
+                <th>Normal HP</th>
+                <th>비교 가능 CompanionTech</th>
+            </tr>
+            <tr>
+                <td>Stage 100</td>
+                <td>~42,075</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>Stage 150</td>
+                <td>~71,019</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>Stage 200</td>
+                <td>~105,600</td>
+                <td>Companion 0 Tech 1 (118K)</td>
+            </tr>
+            <tr>
+                <td>Stage 250</td>
+                <td>~148,113</td>
+                <td>Companion 1 Tech 1 (135K)</td>
+            </tr>
+            <tr>
+                <td>Stage 300</td>
+                <td>~191,675</td>
+                <td>Companion 0 Tech 2 (170K), Companion 1 Tech 2 (189K)</td>
+            </tr>
+        </table>
+
+        <h3>5.5 코스튬 시스템</h3>
+        <p>플레이어 외형을 변경하는 시스템입니다.</p>
+        <table>
+            <tr>
+                <th>항목</th>
+                <th>설명</th>
+            </tr>
+            <tr>
+                <td>획득 방법</td>
+                <td>가챠</td>
+            </tr>
+            <tr>
+                <td>효과</td>
+                <td>외형 변경만 (스탯 보너스 없음)</td>
+            </tr>
+            <tr>
+                <td>부위</td>
+                <td>Top, Bottom, Face, Hair, Helmet 등</td>
+            </tr>
+        </table>
+
+        <!-- ========== 섹션 6: 재화 시스템 ========== -->
+        <h2 id="sec6">6. 재화 시스템</h2>
+        <p>게임 내 모든 재화의 획득/소모 경로와 시간당 수입을 Remote Config 기반으로 정리합니다.</p>
+
+        <h3>6.1 다이아 (Diamond)</h3>
+        <table>
+            <tr>
+                <th>획득 경로</th>
+                <th>수량</th>
+                <th>조건</th>
+                <th>출처</th>
+            </tr>
+            <tr>
+                <td>출석 보상</td>
+                <td>1,000 ~ 2,000/일</td>
+                <td>매일 접속</td>
+                <td>ATTENDANCE_INFO</td>
+            </tr>
+            <tr>
+                <td>오프라인 보상</td>
+                <td>0.01/초 = 36/시간</td>
+                <td>최소 5분, 최대 8시간</td>
+                <td>OFFLINE_REWARD_INFO.Dia</td>
+            </tr>
+            <tr>
+                <td>어드벤처 클리어</td>
+                <td>100 ~ 1,000/회</td>
+                <td>스테이지별 상이</td>
+                <td>ADVENTURE_REWARD.DiaIncrease</td>
+            </tr>
+            <tr>
+                <td>동료 획득/전직</td>
+                <td>1,000 ~ 2,000/회</td>
+                <td>최초 획득, 전직 완료</td>
+                <td>COMPANION_REWARD</td>
+            </tr>
+        </table>
+        <p class="note">일일 예상 수입: 출석 1,500 + 오프라인 288 (8h) + 어드벤처 500 ≈ <strong>2,300 다이아/일</strong></p>
+
+        <h4>다이아 소모처</h4>
+        <table>
+            <tr>
+                <th>소모처</th>
+                <th>비용</th>
+                <th>출처</th>
+            </tr>
+            <tr>
+                <td>무기 가챠</td>
+                <td>300 다이아/회</td>
+                <td>GACHA_INFO.weapon</td>
+            </tr>
+            <tr>
+                <td>코스튬 가챠</td>
+                <td>1 다이아</td>
+                <td>GACHA_INFO.costume.single</td>
+            </tr>
+        </table>
+
+        <h3>6.2 골드 (Gold)</h3>
+        <table>
+            <tr>
+                <th>획득 경로</th>
+                <th>공식/수량</th>
+                <th>출처</th>
+            </tr>
+            <tr>
+                <td>전투 드롭 (50%)</td>
+                <td><code>stageNum × 5 + stageNum² × 0.1</code></td>
+                <td>GOLD_DROP_FORMULA</td>
+            </tr>
+            <tr>
+                <td>던전 (Dungeon_0)</td>
+                <td>Lv0: 100, Lv1: 200, ... Lv9: 51,200</td>
+                <td>DUNGEON_REWARD.Dungeon_0</td>
+            </tr>
+            <tr>
+                <td>오프라인 보상</td>
+                <td><code>second × maxStageNum × 0.1</code></td>
+                <td>OFFLINE_REWARD_INFO.Gold</td>
+            </tr>
+        </table>
+        <p class="small">Stage 50 기준 전투 드롭: 50×5 + 2500×0.1 = 500 골드/회, 시간당 ~72,000 골드 (약 2.5초 킬타임)</p>
+
+        <h4>골드 소모처</h4>
+        <table>
+            <tr>
+                <th>소모처</th>
+                <th>비용</th>
+                <th>출처</th>
+            </tr>
+            <tr>
+                <td>스탯 강화 (Power/MaxHP/CritDmg/Crit)</td>
+                <td><code>강화Lv × 20</code></td>
+                <td>PriceInfo.asset</td>
+            </tr>
+        </table>
+
+        <h3>6.3 클로버 (Clover)</h3>
+        <table>
+            <tr>
+                <th>획득 경로</th>
+                <th>수량</th>
+                <th>출처</th>
+            </tr>
+            <tr>
+                <td>오프라인 보상</td>
+                <td>0.005/초 = 18/시간</td>
+                <td>OFFLINE_REWARD_INFO.Clover</td>
+            </tr>
+            <tr>
+                <td>어드벤처 클리어</td>
+                <td>20 ~ 100/회</td>
+                <td>ADVENTURE_REWARD.CloverIncrease</td>
+            </tr>
+            <tr>
+                <td>던전 (Dungeon_2)</td>
+                <td>Lv0: 10, Lv1: 20, ... Lv9: 100</td>
+                <td>DUNGEON_REWARD.Dungeon_2</td>
+            </tr>
+        </table>
+
+        <h4>클로버 소모처</h4>
+        <table>
+            <tr>
+                <th>소모처</th>
+                <th>비용</th>
+                <th>출처</th>
+            </tr>
+            <tr>
+                <td>플레이어 승급 효과 재굴림</td>
+                <td><code>5 × (1 + 잠금 슬롯 수)</code> = 5~25 클로버</td>
+                <td>PromoteAbilityUI.cs (PROMOTE_EFFECT_CHANGE_PRICE)</td>
+            </tr>
+            <tr>
+                <td>동료 승급 효과 재굴림</td>
+                <td><code>5 × (1 + 잠금 슬롯 수)</code> = 5~25 클로버</td>
+                <td>CompanionInfoUI.cs (PROMOTE_EFFECT_CHANGE_PRICE)</td>
+            </tr>
+            <tr>
+                <td>동료 스킬 강화</td>
+                <td>레벨별 상이 (PriceInfo.CompanionSkillPrice.clover)</td>
+                <td>PriceInfo.asset</td>
+            </tr>
+        </table>
+
+        <h3>6.4 두루마리 (Scroll)</h3>
+        <table>
+            <tr>
+                <th>항목</th>
+                <th>값</th>
+                <th>출처</th>
+            </tr>
+            <tr>
+                <td>자동 충전</td>
+                <td>3분당 1개 = <strong>20개/시간</strong></td>
+                <td>AdventureUI.DefaultRegenIntervalSec = 180</td>
+            </tr>
+            <tr>
+                <td>최대 보유량</td>
+                <td>100개</td>
+                <td>AdventureUI._maxScroll</td>
+            </tr>
+            <tr>
+                <td>던전 입장 비용</td>
+                <td>20 Scroll</td>
+                <td>DUNGEON_REWARD.EntranceFee</td>
+            </tr>
+            <tr>
+                <td>어드벤처 입장 비용</td>
+                <td>10 Scroll</td>
+                <td>ADVENTURE_REWARD.EntranceFee</td>
+            </tr>
+        </table>
+        <p class="note">1시간 = 20 Scroll = 던전 1회 또는 어드벤처 2회</p>
+
+        <h3>6.5 조각 (Fragment)</h3>
+        <table>
+            <tr>
+                <th>획득 경로</th>
+                <th>보상</th>
+                <th>출처</th>
+            </tr>
+            <tr>
+                <td>던전 (Dungeon_1)</td>
+                <td>Lv0: Common 10개, Lv1: Common 15개, Lv2: Uncommon 10개...</td>
+                <td>DUNGEON_REWARD.Dungeon_1</td>
+            </tr>
+            <tr>
+                <td>전투 드롭 (0.1%)</td>
+                <td><code>1 + (stageNum / 30)</code>, 3스테이지마다</td>
+                <td>FRAGMENT_DROP_FORMULA</td>
+            </tr>
+        </table>
+
+        <h4>조각 소모처 (스킬 강화)</h4>
+        <table>
+            <tr>
+                <th>레벨</th>
+                <th>1→2</th>
+                <th>2→3</th>
+                <th>3→4</th>
+                <th>4→5</th>
+                <th>5→6</th>
+                <th>6→7</th>
+                <th>7→8</th>
+                <th>8→9</th>
+                <th>9→10</th>
+                <th>누적</th>
+            </tr>
+            <tr>
+                <td>비용</td>
+                <td>0</td>
+                <td>2</td>
+                <td>4</td>
+                <td>8</td>
+                <td>16</td>
+                <td>32</td>
+                <td>64</td>
+                <td>128</td>
+                <td>256</td>
+                <td>510</td>
+            </tr>
+        </table>
+        <p class="note">Lv10 MAX까지 총 510개 동일 레어도 Fragment 필요</p>
+
+        <h3>6.6 시간별 재화 수입 추정</h3>
+        <table>
+            <tr>
+                <th>플레이 시간</th>
+                <th>다이아</th>
+                <th>골드</th>
+                <th>Scroll</th>
+                <th>던전 횟수</th>
+                <th>Fragment</th>
+                <th>스킬 레벨</th>
+            </tr>
+            <tr>
+                <td>1h</td>
+                <td>~2,300</td>
+                <td>~72K</td>
+                <td>20</td>
+                <td>1회</td>
+                <td>10개</td>
+                <td>Lv4</td>
+            </tr>
+            <tr>
+                <td>4h</td>
+                <td>~9,200</td>
+                <td>~288K</td>
+                <td>80</td>
+                <td>4회</td>
+                <td>40개</td>
+                <td>Lv6</td>
+            </tr>
+            <tr>
+                <td>12h</td>
+                <td>~27,600</td>
+                <td>~864K</td>
+                <td>240</td>
+                <td>12회</td>
+                <td>120개</td>
+                <td>Lv7</td>
+            </tr>
+            <tr>
+                <td>48h</td>
+                <td>~110K</td>
+                <td>~3.5M</td>
+                <td>960</td>
+                <td>48회</td>
+                <td>480개</td>
+                <td>Lv9</td>
+            </tr>
+            <tr>
+                <td>100h</td>
+                <td>~230K</td>
+                <td>~7.2M</td>
+                <td>2,000</td>
+                <td>100회</td>
+                <td>1,000개</td>
+                <td>Lv10 MAX</td>
+            </tr>
+            <tr>
+                <td>200h</td>
+                <td>~460K</td>
+                <td>~14.4M</td>
+                <td>4,000</td>
+                <td>200회</td>
+                <td>2,000개</td>
+                <td>Lv10 MAX (모든 스킬)</td>
+            </tr>
+        </table>
+        <p class="small">가챠 기준: 100h에서 76회 가챠 (230K / 3K), 200h에서 153회 가챠 → Unique급 무기 획득 가능</p>
+
+        <h4>오프라인 vs 온라인 보상 효율 비교</h4>
+        <p>Remote Config 공식 기반 수학적 비교:</p>
+
+        <table>
+            <tr>
+                <th>재화</th>
+                <th>온라인 공식</th>
+                <th>오프라인 공식</th>
+                <th>Stage 50 기준 비교</th>
+            </tr>
+            <tr>
+                <td>골드</td>
+                <td><code>stage×5 + stage²×0.1</code><br>= 50×5 + 2500×0.1 = <strong>500/처치</strong></td>
+                <td><code>second × maxStage × 0.1</code><br>= 1초 × 50 × 0.1 = <strong>5/초</strong></td>
+                <td>킬타임 3초 가정: 166.7/초<br><strong>온라인 33배 효율</strong></td>
+            </tr>
+            <tr>
+                <td>경험치</td>
+                <td><code>stage×3 + stage²×0.05</code><br>= 50×3 + 2500×0.05 = <strong>275/처치</strong></td>
+                <td><code>second × maxStage × 0.05</code><br>= 1초 × 50 × 0.05 = <strong>2.5/초</strong></td>
+                <td>킬타임 3초 가정: 91.7/초<br><strong>온라인 37배 효율</strong></td>
+            </tr>
+            <tr>
+                <td>다이아</td>
+                <td>출석/던전/광고 등 고정</td>
+                <td><code>second × 0.01</code><br>= 36/시간</td>
+                <td>오프라인만 지급</td>
+            </tr>
+            <tr>
+                <td>클로버</td>
+                <td>던전/어드벤처 등 고정</td>
+                <td><code>second × 0.005</code><br>= 18/시간</td>
+                <td>오프라인만 지급</td>
+            </tr>
+        </table>
+
+        <p class="note">
+            <strong>결론:</strong> 온라인 플레이가 오프라인 대비 골드/경험치 30~40배 효율적.<br>
+            오프라인 보상은 "귀환 보너스" 성격으로, 핵심 성장은 온라인 플레이 필수.<br>
+            오프라인 최대 누적: 8시간 (RequireOfflineSecond=300초, MaxAccumulatedTime=28800초)
+        </p>
+
+        <!-- ========== 섹션 7 ========== -->
+        <h2 id="sec7">7. 가챠/상점 시스템</h2>
+
+        <h3>7.1 가챠 시스템</h3>
+        <p>무기와 코스튬을 다이아로 뽑을 수 있습니다.</p>
+
+        <h4>가챠 종류</h4>
+        <table>
+            <tr>
+                <th>종류</th>
+                <th>1회 비용</th>
+                <th>10회 비용</th>
+                <th>비고</th>
+            </tr>
+            <tr>
+                <td>무기 가챠</td>
+                <td>300 다이아</td>
+                <td>3,000 다이아</td>
+                <td>레어도별 확률 (티어제)</td>
+            </tr>
+            <tr>
+                <td>코스튬 가챠</td>
+                <td>1 다이아</td>
+                <td>10 다이아</td>
+                <td>전체 코스튬 균등 확률</td>
+            </tr>
+        </table>
+
+        <h4>무기 가챠 확률 (GACHA_INFO)</h4>
+        <table>
+            <tr>
+                <th>티어 (누적 횟수)</th>
+                <th>Common</th>
+                <th>Uncommon</th>
+                <th>Rare</th>
+                <th>Unique</th>
+                <th>Legendary</th>
+                <th>Mythic</th>
+            </tr>
+            <tr>
+                <td>0 (0회~)</td>
+                <td>70%</td>
+                <td>20%</td>
+                <td>8%</td>
+                <td>1.8%</td>
+                <td>0.2%</td>
+                <td>0%</td>
+            </tr>
+            <tr>
+                <td>5 (70회~)</td>
+                <td>44.2%</td>
+                <td>22.9%</td>
+                <td>14.9%</td>
+                <td>9.3%</td>
+                <td>8.7%</td>
+                <td>0%</td>
+            </tr>
+            <tr>
+                <td>7 (200회~)</td>
+                <td>25%</td>
+                <td>25%</td>
+                <td>20%</td>
+                <td>15%</td>
+                <td>15%</td>
+                <td>0%</td>
+            </tr>
+            <tr>
+                <td>8 (280회~)</td>
+                <td>23%</td>
+                <td>24%</td>
+                <td>20%</td>
+                <td>15%</td>
+                <td>17.5%</td>
+                <td>0.5%</td>
+            </tr>
+            <tr>
+                <td>11 (520회~)</td>
+                <td>19%</td>
+                <td>22%</td>
+                <td>19.5%</td>
+                <td>15%</td>
+                <td>22.5%</td>
+                <td>2%</td>
+            </tr>
+        </table>
+        <p class="note">Mythic은 280회 이상 가챠 시 0.5%로 등장. 520회 이상에서 2%.</p>
+
+        <h4>관련 코드</h4>
+        <ul>
+            <li><code>StoreManager.cs</code>: 가챠 UI, 구매 처리</li>
+            <li><code>GachaSystem.cs</code>: 가챠 확률 계산</li>
+            <li><code>GachaInfo.cs</code>: 가챠 정보 구조체</li>
+            <li>가격은 Remote Config <code>GACHA_INFO</code>에서 로드</li>
+        </ul>
+
+        <h3>7.2 상점 시스템</h3>
+        <p>가챠, 재화 구매, 광고 보상을 통합 관리하는 스토어 UI입니다.</p>
+
+        <h4>상점 구조</h4>
+        <ul>
+            <li><strong>가챠 탭</strong>: 무기/코스튬 1회/10회 뽑기
+                <ul>
+                    <li>가격은 Remote Config <code>GACHA_INFO.cost</code>에서 로드</li>
+                    <li>뽑기 결과는 CloudCode <code>PurchaseProcessor.ProcessGacha</code>에서 처리</li>
+                    <li>결과 팝업에 최대 10개 슬롯 + 등급별 이펙트 표시</li>
+                </ul>
+            </li>
+            <li><strong>재화 탭</strong>: 현금 결제 패키지
+                <ul>
+                    <li>Starter Pack: 1000 Clover</li>
+                    <li>Gold Pack: 3000 Gold</li>
+                    <li>Pro Pack: 5000 Gold</li>
+                </ul>
+            </li>
+            <li><strong>광고 탭</strong>: 리워드 광고 시청 → 다이아/클로버 보상</li>
+        </ul>
+
+        <h4>UI 요소</h4>
+        <ul>
+            <li><strong>햄스터 NPC</strong>: 상점 마스코트, 상태별 멘트 표시 ("어서오세요!", "돌리는 중...", "앗!")</li>
+            <li><strong>결과 팝업</strong>: 2행×5열 슬롯, 등급별 配色/오프셋, 등장 애니(팝+보브)</li>
+            <li><strong>에러 팝업</strong>: 서버 오류/재화 부족 시 표시</li>
+        </ul>
+
+        <h4>등급별 슬롯 오프셋</h4>
+        <table>
+            <tr>
+                <th>등급</th>
+                <th>Offset (top, left)</th>
+            </tr>
+            <tr>
+                <td>Common</td>
+                <td>(-214, 329)</td>
+            </tr>
+            <tr>
+                <td>Uncommon</td>
+                <td>(-214, -2)</td>
+            </tr>
+            <tr>
+                <td>Rare</td>
+                <td>(-214, -334)</td>
+            </tr>
+            <tr>
+                <td>Unique</td>
+                <td>(-564, 329)</td>
+            </tr>
+            <tr>
+                <td>Legendary</td>
+                <td>(-564, -2)</td>
+            </tr>
+            <tr>
+                <td>Mythic</td>
+                <td>(-564, -334)</td>
+            </tr>
+        </table>
+
+        <h4>관련 코드</h4>
+        <ul>
+            <li><code>StoreManager.cs</code>: 상점 전체 로직 (829줄)</li>
+            <li><code>StoreUI.cs</code>: UI 관리</li>
+            <li><code>StoreMoneyListController.cs</code>: 재화 구매 목록 스크롤</li>
+            <li><code>StoreMoneyItemData.cs</code>: 구매 아이템 모델</li>
+        </ul>
+
+
+        <h2 id="sec8">8. 서버/인프라 시스템</h2>
+
+        <h3>8.1 CloudCode 모듈</h3>
+
+        <p>
+            게임의 핵심 로직은 Unity Cloud Code에서 처리됩니다.
+            프로젝트 루트에 있는 별도 C# 솔루션들이 CloudCode 모듈입니다.
+            클라이언트는 결과만 받아 UI에 반영합니다.
+        </p>
+
+        <h4>ClientVerification (21개 스크립트)</h4>
+        <p>클라이언트 데이터 검증 및 치팅 방지 시스템입니다.</p>
+        <table>
+            <tr>
+                <th>컴포넌트</th>
+                <th>기능</th>
+            </tr>
+            <tr>
+                <td>VerificationController</td>
+                <td>
+                    - 클라이언트 GameData와 서버 GameData 비교<br>
+                    - ResourceReport/SpendReport 검증<br>
+                    - 3회 이상 검증 실패 시 차단<br>
+                    - 검증 성공 시 오프라인 보상 적용
+                </td>
+            </tr>
+            <tr>
+                <td>ResourceVerifier</td>
+                <td>
+                    - 출석 보상 검증<br>
+                    - 코어 케이스(스테이지 클리어, 적 처치) 검증<br>
+                    - 리소스 획득량 타당성 확인
+                </td>
+            </tr>
+            <tr>
+                <td>SpendVerifier</td>
+                <td>소비 리포트 검증 (강화, 가챠 등)</td>
+            </tr>
+            <tr>
+                <td>ScrollController</td>
+                <td>
+                    - 스크롤 3분마다 1개 자동 충전<br>
+                    - 최대 100개 제한<br>
+                    - 다음 충전까지 남은 시간 반환
+                </td>
+            </tr>
+            <tr>
+                <td>AccountResetController</td>
+                <td>계정 초기화 처리</td>
+            </tr>
+        </table>
+
+        <h4>OfflineTimer (4개 스크립트)</h4>
+        <p>오프라인 시간 계산 및 보상 시간 관리입니다.</p>
+        <table>
+            <tr>
+                <th>컴포넌트</th>
+                <th>기능</th>
+            </tr>
+            <tr>
+                <td>TimerController</td>
+                <td>
+                    - 마지막 체크 시간(lastChecked)에서 현재까지 경과 시간 계산<br>
+                    - Remote Config에서 최소(60초)/최대(36000초) 시간 로드<br>
+                    - 누적 시간이 조건 충족 시 OfflineRewardResult 반환
+                </td>
+            </tr>
+            <tr>
+                <td>TimerSystem</td>
+                <td>Remote Config 값 로드 유틸리티</td>
+            </tr>
+        </table>
+
+        <h4>PurchaseProcessor (10개 스크립트)</h4>
+        <p>인앱 결제 및 가챠 처리입니다.</p>
+        <table>
+            <tr>
+                <th>컴포넌트</th>
+                <th>기능</th>
+            </tr>
+            <tr>
+                <td>GachaController</td>
+                <td>가챠 뽑기 처리, 확률 계산</td>
+            </tr>
+            <tr>
+                <td>CurrencyController</td>
+                <td>재화 지급/차감 처리</td>
+            </tr>
+            <tr>
+                <td>PurchaseSystem</td>
+                <td>Remote Config에서 상품 정보 로드</td>
+            </tr>
+        </table>
+
+        <h4>CloudCode 함수 목록</h4>
+        <table>
+            <tr>
+                <th>함수명</th>
+                <th>용도</th>
+                <th>호출 시점</th>
+            </tr>
+            <tr>
+                <td>VerificationReport</td>
+                <td>클라이언트 데이터 검증</td>
+                <td>게임 저장 시</td>
+            </tr>
+            <tr>
+                <td>RegenerateScroll</td>
+                <td>스크롤 충전</td>
+                <td>게임 시작, 던전 입장</td>
+            </tr>
+            <tr>
+                <td>CheckOfflineReward</td>
+                <td>오프라인 보상 확인</td>
+                <td>게임 시작</td>
+            </tr>
+        </table>
+
+
+        <!-- ========== 섹션 8 ========== -->
+        <h2 id="sec9">9. 스테이지 밸런싱</h2>
+
+        <h3>8.1 스테이지 구성 (총 443개)</h3>
+        <table>
+            <tr>
+                <th>타입</th>
+                <th>개수</th>
+                <th>해금 조건</th>
+                <th>HP 공식</th>
+            </tr>
+            <tr>
+                <td>Normal</td>
+                <td>300개</td>
+                <td>이전 스테이지 클리어<br><code>maxStageNum >= stageNum</code></td>
+                <td><code>250 + stage×150 + (stage/40)²×500</code></td>
+            </tr>
+            <tr>
+                <td>Adventure</td>
+                <td>90개</td>
+                <td>Normal 20스테이지마다 1챕터<br><code>maxStageNum / 20</code></td>
+                <td>챕터별 effectiveStage 기반</td>
+            </tr>
+            <tr>
+                <td>Dungeon</td>
+                <td>30개</td>
+                <td>랭크 기반 (index+3 이상)<br><code>playerRankIndex >= index + 3</code></td>
+                <td>층별 effectiveStage 기반</td>
+            </tr>
+            <tr>
+                <td>Promote</td>
+                <td>5개</td>
+                <td>스테이지 도달 (30/60/120/200)</td>
+                <td>랭크별 고정</td>
+            </tr>
+            <tr>
+                <td>CompanionTech</td>
+                <td>18개</td>
+                <td>이전 테크 클리어<br><code>techDataIndex + 1 == techIndex_0</code></td>
+                <td>테크별 effectiveStage 기반</td>
+            </tr>
+        </table>
+
+        <h3>7.2 Normal 스테이지 수치 예시</h3>
+        <table>
+            <tr>
+                <th>Stage</th>
+                <th>적 HP</th>
+                <th>보스 HP</th>
+                <th>저항</th>
+                <th>난이도</th>
+            </tr>
+            <tr>
+                <td>50</td>
+                <td>8,531</td>
+                <td>70,807</td>
+                <td>0%</td>
+                <td>입문</td>
+            </tr>
+            <tr>
+                <td>100</td>
+                <td>19,125</td>
+                <td>158,737</td>
+                <td>10%</td>
+                <td>중급</td>
+            </tr>
+            <tr>
+                <td>150</td>
+                <td>32,281</td>
+                <td>267,932</td>
+                <td>20%</td>
+                <td>상급</td>
+            </tr>
+            <tr>
+                <td>200</td>
+                <td>48,000</td>
+                <td>398,400</td>
+                <td>30%</td>
+                <td>고급</td>
+            </tr>
+            <tr>
+                <td>300</td>
+                <td>87,125</td>
+                <td>723,137</td>
+                <td>40%</td>
+                <td>극한</td>
+            </tr>
+        </table>
+
+        <h3>7.3 진행 체크포인트</h3>
+        <table>
+            <tr>
+                <th>스테이지</th>
+                <th>권장 레벨</th>
+                <th>핵심 언락</th>
+            </tr>
+            <tr>
+                <td>1-30</td>
+                <td>1-15</td>
+                <td>기본 시스템, 첫 동료</td>
+            </tr>
+            <tr>
+                <td>30-50</td>
+                <td>15-25</td>
+                <td>무기 강화, 던전</td>
+            </tr>
+            <tr>
+                <td>50-100</td>
+                <td>25-40</td>
+                <td>승급 시스템, 어드벤처</td>
+            </tr>
+            <tr>
+                <td>100-200</td>
+                <td>40-60</td>
+                <td>테크트리, 고급 무기</td>
+            </tr>
+            <tr>
+                <td>200-300</td>
+                <td>60-80</td>
+                <td>엔드게임 콘텐츠</td>
+            </tr>
+        </table>
+
+        <h3>7.4 동료 파워 스파이크 반영 적 HP 공식</h3>
+        <p>
+            동료 해금 시 플레이어 파워가 급격히 증가합니다. 이를 적 HP에 반영하여 난이도 균형을 맞춥니다.
+        </p>
+        <pre>
+기존 공식: EnemyHP = 250 + stage×150 + (stage/40)²×500
+
+개선 공식: EnemyHP = BaseHP × CompanionMultiplier
+
+BaseHP = 250 + stage×150 + (stage/40)²×500
+CompanionMultiplier:
+  - Stage 1-19:  ×1.0 (동료 없음)
+  - Stage 20-39: ×1.4 (궁수 해금, +40%)
+  - Stage 40-59: ×1.8 (전사 해금, +80%)
+  - Stage 60+:   ×2.2 (법사 해금, +120%)
+</pre>
+
+        <h3>7.5 스테이지별 파워 곡선 분석</h3>
+        <p>
+            플레이어 파워와 적 HP의 균형을 시각화합니다. 곡선이 교차하는 지점이 벽 구간입니다.
+        </p>
+
+        <h4>파워 곡선 데이터</h4>
+        <table>
+            <tr>
+                <th>Stage</th>
+                <th>플레이어 Power</th>
+                <th>적 HP</th>
+                <th>처치 시간</th>
+                <th>이벤트</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>50</td>
+                <td>400</td>
+                <td>2.0초</td>
+                <td>시작</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>150</td>
+                <td>1,781</td>
+                <td>2.4초</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>20</td>
+                <td>400</td>
+                <td>4,733</td>
+                <td>3.0초</td>
+                <td>궁수 해금</td>
+            </tr>
+            <tr>
+                <td>30</td>
+                <td>700</td>
+                <td>7,043</td>
+                <td>2.5초</td>
+                <td>Bronze 승급</td>
+            </tr>
+            <tr>
+                <td>40</td>
+                <td>1,200</td>
+                <td>12,150</td>
+                <td>3.0초</td>
+                <td>전사 해금</td>
+            </tr>
+            <tr>
+                <td>50</td>
+                <td>1,800</td>
+                <td>15,356</td>
+                <td>2.2초</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>60</td>
+                <td>3,000</td>
+                <td>22,825</td>
+                <td>3.0초</td>
+                <td>법사 해금, Iron 승급</td>
+            </tr>
+            <tr>
+                <td>80</td>
+                <td>4,500</td>
+                <td>31,350</td>
+                <td>2.3초</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>100</td>
+                <td>7,000</td>
+                <td>42,075</td>
+                <td>2.0초</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>120</td>
+                <td>10,000</td>
+                <td>52,800</td>
+                <td>2.3초</td>
+                <td>Silver 승급</td>
+            </tr>
+            <tr>
+                <td>150</td>
+                <td>15,000</td>
+                <td>71,019</td>
+                <td>2.3초</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>200</td>
+                <td>30,000</td>
+                <td>105,600</td>
+                <td>2.5초</td>
+                <td>Gold 승급</td>
+            </tr>
+            <tr>
+                <td>300</td>
+                <td>80,000</td>
+                <td>191,675</td>
+                <td>2.4초</td>
+                <td>엔드게임</td>
+            </tr>
+        </table>
+
+        <div class="note">
+            동료 해금 스테이지(20, 40, 60)에서 처치 시간이 3초로 상승하여 벽 구간이 형성됨.
+            강화/레벨업 후 다시 2초대로 복귀.
+            - 강화/레벨업 후 다시 2.0초 수준으로 복귀<br>
+            - 플레이어가 성장 보상을 체감할 수 있음
+        </div>
+
+        <h4>플레이어 Power vs 적 HP 차트</h4>
+        <div class="chart-container">
+            <canvas id="powerCurveChart"></canvas>
+        </div>
+        <script>
+            const ctx = document.getElementById('powerCurveChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [1, 10, 20, 30, 40, 50, 60, 80, 100, 150, 200, 300],
+                    datasets: [
+                        {
+                            label: '플레이어 Power',
+                            data: [50, 150, 400, 700, 1200, 1800, 3000, 4500, 7000, 15000, 30000, 80000],
+                            borderColor: '#4CAF50',
+                            backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                            fill: true,
+                            tension: 0.3,
+                            pointRadius: 5,
+                            pointHoverRadius: 8
+                        },
+                        {
+                            label: '적 HP',
+                            data: [400, 1781, 4733, 7043, 12150, 15356, 22825, 31350, 42075, 71019, 105600, 191675],
+                            borderColor: '#FF9800',
+                            backgroundColor: 'rgba(255, 152, 0, 0.1)',
+                            fill: true,
+                            tension: 0.3,
+                            pointRadius: 5,
+                            pointHoverRadius: 8
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: '스테이지별 플레이어 Power vs 적 HP',
+                            font: { size: 16 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                afterLabel: function (context) {
+                                    const stage = context.label;
+                                    if (stage == 20) return '궁수 해금';
+                                    if (stage == 30) return 'Bronze 승급';
+                                    if (stage == 40) return '전사 해금';
+                                    if (stage == 60) return '법사 해금 + Iron 승급';
+                                    if (stage == 120) return 'Silver 승급';
+                                    if (stage == 200) return 'Gold 승급';
+                                    return '';
+                                }
+                            }
+                        },
+                        annotation: {
+                            annotations: {
+                                line1: { type: 'line', xMin: 20, xMax: 20, borderColor: '#FFC107', borderWidth: 2 },
+                                line2: { type: 'line', xMin: 40, xMax: 40, borderColor: '#FFC107', borderWidth: 2 },
+                                line3: { type: 'line', xMin: 60, xMax: 60, borderColor: '#FFC107', borderWidth: 2 }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'Stage' }
+                        },
+                        y: {
+                            type: 'logarithmic',
+                            title: { display: true, text: 'Power / HP (log)' },
+                            ticks: {
+                                callback: function (value) {
+                                    if (value >= 1000) return (value / 1000) + 'k';
+                                    return value;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        </script>
+
+        <h3>7.6 밸런싱 시각화 대시보드</h3>
+
+        <!-- 차트 2: 플레이 타임 vs 스테이지 -->
+        <h4>플레이 타임 vs 스테이지 도달</h4>
+        <p>플레이어가 특정 스테이지에 도달하는 데 걸리는 예상 시간입니다.</p>
+        <div class="chart-container">
+            <canvas id="playtimeChart"></canvas>
+        </div>
+        <script>
+            new Chart(document.getElementById('playtimeChart').getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: ['1시간', '4시간', '12시간', '1일', '3일', '1주', '2주', '3주'],
+                    datasets: [{
+                        label: '도달 스테이지',
+                        data: [10, 30, 60, 100, 150, 200, 250, 300],
+                        borderColor: '#2196F3',
+                        backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 6,
+                        pointBackgroundColor: '#2196F3'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: { display: true, text: '플레이 타임에 따른 스테이지 진행', font: { size: 14 } },
+                        tooltip: {
+                            callbacks: {
+                                afterLabel: function (ctx) {
+                                    const events = {
+                                        1: 'Bronze 승급 (Stage 30)',
+                                        2: 'Iron 승급 (Stage 60)',
+                                        4: 'Silver 승급 (Stage 120)',
+                                        5: 'Gold 승급 (Stage 200)',
+                                        7: '엔드게임 (Stage 300)'
+                                    };
+                                    return events[ctx.dataIndex] || '';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: '플레이 시간' } },
+                        y: { title: { display: true, text: 'Stage' }, min: 0, max: 320 }
+                    }
+                }
+            });
+        </script>
+
+        <!-- 차트 3: 골드 수입/지출 균형 -->
+        <h4>골드 수입 vs 지출 균형</h4>
+        <p>경제 시스템의 균형을 검증합니다. 수입이 지출보다 약간 높아야 진행이 원활합니다.</p>
+        <div class="chart-container">
+            <canvas id="goldBalanceChart"></canvas>
+        </div>
+        <script>
+            new Chart(document.getElementById('goldBalanceChart').getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: [10, 30, 50, 80, 100, 150, 200, 250, 300],
+                    datasets: [
+                        {
+                            label: '누적 골드 수입',
+                            data: [1000, 8000, 25000, 80000, 150000, 400000, 800000, 1500000, 2500000],
+                            borderColor: '#4CAF50',
+                            backgroundColor: 'rgba(76, 175, 80, 0.2)',
+                            fill: true,
+                            tension: 0.3
+                        },
+                        {
+                            label: '누적 강화 비용',
+                            data: [500, 6000, 20000, 70000, 130000, 350000, 720000, 1350000, 2300000],
+                            borderColor: '#f44336',
+                            backgroundColor: 'rgba(244, 67, 54, 0.2)',
+                            fill: true,
+                            tension: 0.3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: { display: true, text: '스테이지별 골드 수입/지출 누적', font: { size: 14 } }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: 'Stage' } },
+                        y: {
+                            type: 'logarithmic',
+                            title: { display: true, text: '골드 (log)' },
+                            ticks: {
+                                callback: function (v) {
+                                    if (v >= 1000000) return (v / 1000000) + 'M';
+                                    if (v >= 1000) return (v / 1000) + 'k';
+                                    return v;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        </script>
+
+        <!-- 차트 4: DPS 구성 비율 -->
+        <h4>DPS 구성 비율 변화</h4>
+        <p>스테이지 진행에 따라 DPS를 구성하는 요소의 비율이 어떻게 변하는지 보여줍니다.</p>
+        <div class="chart-container">
+            <canvas id="dpsCompositionChart"></canvas>
+        </div>
+        <script>
+            new Chart(document.getElementById('dpsCompositionChart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['Stage 1', 'Stage 20', 'Stage 60', 'Stage 100', 'Stage 200', 'Stage 300'],
+                    datasets: [
+                        { label: '기본 스탯', data: [80, 50, 30, 20, 15, 10], backgroundColor: '#607D8B' },
+                        { label: '무기', data: [20, 30, 25, 20, 15, 15], backgroundColor: '#FF9800' },
+                        { label: '스킬', data: [0, 15, 20, 25, 30, 35], backgroundColor: '#9C27B0' },
+                        { label: '동료', data: [0, 5, 25, 35, 40, 40], backgroundColor: '#03A9F4' }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: { display: true, text: 'DPS 기여 요소 비율 (%)', font: { size: 14 } }
+                    },
+                    scales: {
+                        x: { stacked: true },
+                        y: { stacked: true, max: 100, title: { display: true, text: '비율 (%)' } }
+                    }
+                }
+            });
+        </script>
+
+        <!-- 차트 5: 처치 시간 일관성 -->
+        <h4>처치 시간 일관성 검증</h4>
+        <p>모든 스테이지에서 적 처치 시간이 목표 범위(2~3초) 내에 있는지 확인합니다.</p>
+        <div class="chart-container">
+            <canvas id="killTimeChart"></canvas>
+        </div>
+        <script>
+            new Chart(document.getElementById('killTimeChart').getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: [1, 10, 20, 30, 40, 50, 60, 80, 100, 150, 200, 250, 300],
+                    datasets: [
+                        {
+                            label: '예상 처치 시간',
+                            data: [2.0, 2.4, 3.0, 2.5, 3.0, 2.2, 3.0, 2.3, 2.0, 2.3, 2.5, 2.6, 2.4],
+                            borderColor: '#673AB7',
+                            backgroundColor: 'rgba(103, 58, 183, 0.1)',
+                            fill: true,
+                            tension: 0.3,
+                            pointRadius: 5
+                        },
+                        {
+                            label: '목표 상한 (3초)',
+                            data: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+                            borderColor: '#f44336',
+                            borderDash: [5, 5],
+                            pointRadius: 0,
+                            fill: false
+                        },
+                        {
+                            label: '목표 하한 (2초)',
+                            data: [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+                            borderColor: '#4CAF50',
+                            borderDash: [5, 5],
+                            pointRadius: 0,
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: { display: true, text: '스테이지별 적 처치 시간 (초)', font: { size: 14 } }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: 'Stage' } },
+                        y: { min: 0, max: 5, title: { display: true, text: '처치 시간 (초)' } }
+                    }
+                }
+            });
+        </script>
+
+        <!-- 차트 6: 레벨업 속도 곡선 -->
+        <h4>레벨업 속도 곡선</h4>
+        <p>레벨업에 필요한 경험치와 스테이지당 획득 경험치를 비교합니다.</p>
+        <div class="chart-container">
+            <canvas id="levelUpChart"></canvas>
+        </div>
+        <script>
+            new Chart(document.getElementById('levelUpChart').getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: [1, 5, 10, 15, 20, 30, 40, 50, 60, 80],
+                    datasets: [
+                        {
+                            label: '레벨업 필요 Exp',
+                            data: [60, 300, 1500, 3750, 5000, 11000, 19000, 27500, 39000, 68000],
+                            borderColor: '#E91E63',
+                            backgroundColor: 'rgba(233, 30, 99, 0.1)',
+                            fill: true,
+                            tension: 0.3,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: '해당 레벨 스테이지 Exp 획득',
+                            data: [8, 28, 55, 85, 115, 180, 250, 325, 400, 560],
+                            borderColor: '#00BCD4',
+                            borderDash: [3, 3],
+                            tension: 0.3,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: { display: true, text: '레벨별 필요 Exp vs 획득 Exp', font: { size: 14 } }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: '레벨' } },
+                        y: {
+                            type: 'logarithmic',
+                            position: 'left',
+                            title: { display: true, text: '필요 Exp (log)' }
+                        },
+                        y1: {
+                            position: 'right',
+                            title: { display: true, text: '스테이지당 획득 Exp' },
+                            grid: { drawOnChartArea: false }
+                        }
+                    }
+                }
+            });
+        </script>
+
+        <!-- ========== 시뮬레이터 섹션 ========== -->
+        <h3 id="sec9-5">9.5 밸런스 시뮬레이터</h3>
+
+        <!-- 데이터 없음 경고 -->
+        <div id="simNoData"
+            style="background:#fff3cd; border:1px solid #ffc107; border-radius:8px; padding:20px; margin:16px 0; text-align:center;">
+            <p style="margin:0; font-size:14px; color:#856404;">
+                <strong>데이터 없음:</strong> Unity에서 <code>Tools > Balance > Export Balance Data</code>를 실행하세요.
+            </p>
+        </div>
+
+        <!-- 시뮬레이터 본체 (데이터 로드 후 표시) -->
+        <div id="simContainer" style="display:none;">
+            <div
+                style="background:#fff; border:1px solid #e0e0e0; border-radius:4px; padding:16px; margin:16px 0; box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+                <!-- 상단: 프리셋 + 실행 버튼 -->
+                <div
+                    style="display:flex; align-items:center; gap:6px; margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid #eee;">
+                    <span style="font-weight:600; color:#333; font-size:12px;">프리셋:</span>
+                    <button onclick="loadPreset('1h')"
+                        style="padding:4px 8px; background:#f5f5f5; border:1px solid #ccc; border-radius:3px; cursor:pointer; font-size:11px;">1h</button>
+                    <button onclick="loadPreset('4h')"
+                        style="padding:4px 8px; background:#f5f5f5; border:1px solid #ccc; border-radius:3px; cursor:pointer; font-size:11px;">4h</button>
+                    <button onclick="loadPreset('12h')"
+                        style="padding:4px 8px; background:#f5f5f5; border:1px solid #ccc; border-radius:3px; cursor:pointer; font-size:11px;">12h</button>
+                    <button onclick="loadPreset('48h')"
+                        style="padding:4px 8px; background:#f5f5f5; border:1px solid #ccc; border-radius:3px; cursor:pointer; font-size:11px;">48h</button>
+                    <button onclick="loadPreset('100h')"
+                        style="padding:4px 8px; background:#f5f5f5; border:1px solid #ccc; border-radius:3px; cursor:pointer; font-size:11px;">100h</button>
+                    <button onclick="loadPreset('200h')"
+                        style="padding:4px 8px; background:#f5f5f5; border:1px solid #ccc; border-radius:3px; cursor:pointer; font-size:11px;">200h</button>
+                    <div style="flex:1;"></div>
+                    <button onclick="runSimulator()"
+                        style="padding:5px 16px; background:#1976d2; color:white; border:none; border-radius:3px; cursor:pointer; font-weight:600; font-size:12px;">실행</button>
+                </div>
+
+                <!-- 기본 설정 -->
+                <details open style="margin-bottom:8px;">
+                    <summary
+                        style="font-weight:600; cursor:pointer; padding:6px 10px; background:#f5f5f5; border:1px solid #e0e0e0; border-radius:3px; font-size:12px; color:#333;">
+                        1. 기본 설정</summary>
+                    <div
+                        style="display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; font-size:13px; padding:12px;">
+                        <label style="display:flex; align-items:center; gap:6px;">스테이지<input type="number" id="simStage"
+                                value="50" min="1" max="300" style="width:60px;" onchange="updateAutoCalc()"></label>
+                        <label style="display:flex; align-items:center; gap:6px;">레벨<input type="number" id="simLevel"
+                                value="50" min="1" max="300" style="width:60px;" onchange="updateAutoCalc()"></label>
+                        <label style="display:flex; align-items:center; gap:6px;">승급
+                            <select id="simRank" onchange="updateAutoCalc()">
+                                <option value="0">Stone (1x)</option>
+                                <option value="1">Bronze (1.5x)</option>
+                                <option value="2">Iron (3x)</option>
+                                <option value="3">Silver (8x)</option>
+                                <option value="4">Gold (15x)</option>
+                            </select>
+                        </label>
+                        <label style="display:flex; align-items:center; gap:4px;"><input type="checkbox" id="simBoss">보스
+                            스테이지</label>
+                    </div>
+                </details>
+
+                <!-- 스탯 강화 (골드 + 스탯포인트) -->
+                <details style="margin-bottom:8px;" open>
+                    <summary
+                        style="font-weight:600; cursor:pointer; padding:6px 10px; background:#f5f5f5; border:1px solid #e0e0e0; border-radius:3px; font-size:12px; color:#333;">
+                        2. 스탯 강화</summary>
+                    <div style="padding:12px;">
+                        <!-- 골드 강화 -->
+                        <div style="font-size:12px; font-weight:600; color:#e65100; margin-bottom:6px;">골드 강화 레벨</div>
+                        <div
+                            style="display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; font-size:13px; margin-bottom:14px;">
+                            <label style="display:flex; align-items:center; gap:6px;">Power<input type="number"
+                                    id="simPowerLv" value="100" min="0" style="width:60px;"></label>
+                            <label style="display:flex; align-items:center; gap:6px;">MaxHp<input type="number"
+                                    id="simMaxHpLv" value="50" min="0" style="width:60px;"></label>
+                            <label style="display:flex; align-items:center; gap:6px;">CritDmg<input type="number"
+                                    id="simCritDmgLv" value="30" min="0" style="width:60px;"></label>
+                            <label style="display:flex; align-items:center; gap:6px;">Critical<input type="number"
+                                    id="simCritLv" value="20" min="0" style="width:60px;"></label>
+                        </div>
+
+                        <!-- 스탯포인트 강화 -->
+                        <div style="font-size:12px; font-weight:600; color:#1565c0; margin-bottom:4px;">스탯포인트 강화
+                            <span id="simSPRemaining"
+                                style="font-weight:normal; font-size:11px; color:#1976d2; margin-left:8px;">남은: 0</span>
+                        </div>
+                        <div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:16px; font-size:13px;">
+                            <label style="display:flex; align-items:center; gap:6px;">Power<input type="number"
+                                    id="simSPPower" value="0" min="0" style="width:50px;"></label>
+                            <label style="display:flex; align-items:center; gap:6px;">MaxHp<input type="number"
+                                    id="simSPMaxHp" value="0" min="0" style="width:50px;"></label>
+                            <label style="display:flex; align-items:center; gap:6px;">Crit%<input type="number"
+                                    id="simSPCrit" value="0" min="0" style="width:50px;"></label>
+                            <label style="display:flex; align-items:center; gap:6px;">CritDmg<input type="number"
+                                    id="simSPCritDmg" value="0" min="0" style="width:50px;"></label>
+                            <label style="display:flex; align-items:center; gap:6px;">HpRec<input type="number"
+                                    id="simSPHpRec" value="0" min="0" style="width:50px;"></label>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- 무기 -->
+                <details style="margin-bottom:8px;">
+                    <summary
+                        style="font-weight:600; cursor:pointer; padding:6px 10px; background:#f5f5f5; border:1px solid #e0e0e0; border-radius:3px; font-size:12px; color:#333;">
+                        3. 무기 (플레이어 + 동료)</summary>
+                    <div
+                        style="display:grid; grid-template-columns:repeat(2, 1fr); gap:10px; font-size:13px; padding:12px;">
+                        <div style="display:flex; align-items:center; gap:4px;">
+                            <span style="width:80px;">플레이어</span>
+                            <select id="simWeaponPlayer" style="flex:1;"></select>
+                            <span>Lv</span><input type="number" id="simWeaponPlayerLv" value="0" min="0" max="10"
+                                style="width:40px;">
+                        </div>
+                        <div id="companionWeapon0" style="display:flex; align-items:center; gap:4px; opacity:0.4;">
+                            <span style="width:80px;">궁수요미</span>
+                            <select id="simWeaponBow" style="flex:1;" disabled></select>
+                            <span>Lv</span><input type="number" id="simWeaponBowLv" value="0" min="0" max="10"
+                                style="width:40px;" disabled>
+                        </div>
+                        <div id="companionWeapon1" style="display:flex; align-items:center; gap:4px; opacity:0.4;">
+                            <span style="width:80px;">전사요미</span>
+                            <select id="simWeaponShield" style="flex:1;" disabled></select>
+                            <span>Lv</span><input type="number" id="simWeaponShieldLv" value="0" min="0" max="10"
+                                style="width:40px;" disabled>
+                        </div>
+                        <div id="companionWeapon2" style="display:flex; align-items:center; gap:4px; opacity:0.4;">
+                            <span style="width:80px;">법사요미</span>
+                            <select id="simWeaponStaff" style="flex:1;" disabled></select>
+                            <span>Lv</span><input type="number" id="simWeaponStaffLv" value="0" min="0" max="10"
+                                style="width:40px;" disabled>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- 스킬 (5슬롯, 액티브/패시브 혼합) -->
+                <details style="margin-bottom:8px;">
+                    <summary
+                        style="font-weight:600; cursor:pointer; padding:6px 10px; background:#f5f5f5; border:1px solid #e0e0e0; border-radius:3px; font-size:12px; color:#333;">
+                        4. 장착 스킬 (5슬롯)</summary>
+                    <div style="padding:12px;">
+                        <div style="font-size:12px; color:#666; margin-bottom:8px;">액티브/패시브 구분 없이 5개 슬롯에 자유롭게 장착</div>
+                        <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:8px; font-size:13px;">
+                            <div style="display:flex; gap:4px;"><select id="simSkill0" style="flex:1;"></select><input
+                                    type="number" id="simSkill0Lv" value="1" min="1" max="10" style="width:40px;"></div>
+                            <div style="display:flex; gap:4px;"><select id="simSkill1" style="flex:1;"></select><input
+                                    type="number" id="simSkill1Lv" value="1" min="1" max="10" style="width:40px;"></div>
+                            <div style="display:flex; gap:4px;"><select id="simSkill2" style="flex:1;"></select><input
+                                    type="number" id="simSkill2Lv" value="1" min="1" max="10" style="width:40px;"></div>
+                            <div style="display:flex; gap:4px;"><select id="simSkill3" style="flex:1;"></select><input
+                                    type="number" id="simSkill3Lv" value="1" min="1" max="10" style="width:40px;"></div>
+                            <div style="display:flex; gap:4px;"><select id="simSkill4" style="flex:1;"></select><input
+                                    type="number" id="simSkill4Lv" value="1" min="1" max="10" style="width:40px;"></div>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- 동료 승급효과 -->
+                <details style="margin-bottom:8px;">
+                    <summary
+                        style="font-weight:600; cursor:pointer; padding:6px 10px; background:#f5f5f5; border:1px solid #e0e0e0; border-radius:3px; font-size:12px; color:#333;">
+                        5. 동료 승급효과</summary>
+                    <div style="padding:12px; font-size:12px;">
+                        <div
+                            style="background:#f9f9f9; padding:6px 10px; border-radius:3px; margin-bottom:10px; font-size:11px; color:#666; border:1px solid #eee;">
+                            <b>슬롯 해금:</b> 0차=2슬롯, 1차=3, 2차=4, 3차=5 | 효과×등급 선택 시 수치 표시
+                        </div>
+
+                        <!-- 궁수요미 -->
+                        <div id="companionSpec0"
+                            style="margin-bottom:8px; padding:10px; background:#fafafa; border:1px solid #e0e0e0; border-radius:3px; opacity:0.4;">
+                            <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                                <span style="font-weight:700; font-size:12px;">궁수요미</span>
+                                <span
+                                    style="font-size:9px; color:#888; background:#fff; padding:2px 6px; border-radius:10px;">Stage
+                                    20+</span>
+                                <select id="simComp0Tech" style="width:45px; font-size:10px;" disabled
+                                    onchange="updateCompanionSlots(0)">
+                                    <option value="0">0차</option>
+                                    <option value="1">1차</option>
+                                    <option value="2">2차</option>
+                                    <option value="3">3차</option>
+                                </select>
+                            </div>
+                            <div id="comp0Slots" style="display:grid; grid-template-columns:repeat(5, 1fr); gap:6px;">
+                            </div>
+                        </div>
+
+                        <!-- 전사요미 -->
+                        <div id="companionSpec1"
+                            style="margin-bottom:8px; padding:10px; background:#fafafa; border:1px solid #e0e0e0; border-radius:3px; opacity:0.4;">
+                            <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                                <span style="font-weight:700; font-size:12px;">전사요미</span>
+                                <span
+                                    style="font-size:9px; color:#888; background:#fff; padding:2px 6px; border-radius:10px;">Stage
+                                    40+</span>
+                                <select id="simComp1Tech" style="width:45px; font-size:10px;" disabled
+                                    onchange="updateCompanionSlots(1)">
+                                    <option value="0">0차</option>
+                                    <option value="1">1차</option>
+                                    <option value="2">2차</option>
+                                    <option value="3">3차</option>
+                                </select>
+                            </div>
+                            <div id="comp1Slots" style="display:grid; grid-template-columns:repeat(5, 1fr); gap:6px;">
+                            </div>
+                        </div>
+
+                        <!-- 법사요미 -->
+                        <div id="companionSpec2"
+                            style="padding:10px; background:#fafafa; border:1px solid #e0e0e0; border-radius:3px; opacity:0.4;">
+                            <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                                <span style="font-weight:700; font-size:12px;">법사요미</span>
+                                <span
+                                    style="font-size:9px; color:#888; background:#fff; padding:2px 6px; border-radius:10px;">Stage
+                                    60+</span>
+                                <select id="simComp2Tech" style="width:45px; font-size:10px;" disabled
+                                    onchange="updateCompanionSlots(2)">
+                                    <option value="0">0차</option>
+                                    <option value="1">1차</option>
+                                    <option value="2">2차</option>
+                                    <option value="3">3차</option>
+                                </select>
+                            </div>
+                            <div id="comp2Slots" style="display:grid; grid-template-columns:repeat(5, 1fr); gap:6px;">
+                            </div>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- 6. 도감/승급 효과 -->
+                <details style="margin-bottom:8px;">
+                    <summary
+                        style="font-weight:600; cursor:pointer; padding:6px 10px; background:#f5f5f5; border:1px solid #e0e0e0; border-radius:3px; font-size:12px; color:#333;">
+                        6. 도감/승급 효과</summary>
+                    <div style="padding:12px; font-size:12px;">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                            <!-- 무기 도감 보너스 -->
+                            <div style="background:#f9f9f9; padding:10px; border:1px solid #e0e0e0; border-radius:3px;">
+                                <div style="font-weight:600; font-size:11px; margin-bottom:8px;">무기 도감 보너스</div>
+                                <div style="font-size:10px; color:#666; margin-bottom:6px;">획득 무기 기반 자동 계산</div>
+                                <div id="weaponBookList"
+                                    style="display:grid; gap:4px; max-height:150px; overflow-y:auto;"></div>
+                                <div
+                                    style="margin-top:6px; padding-top:6px; border-top:1px solid #e0e0e0; font-size:11px;">
+                                    합계 공격력+: <strong id="simBookPowerTotal">0</strong>
+                                </div>
+                            </div>
+                            <!-- 승급 효과 -->
+                            <div style="background:#f9f9f9; padding:10px; border:1px solid #e0e0e0; border-radius:3px;">
+                                <div style="font-weight:600; font-size:11px; margin-bottom:8px;">승급 효과</div>
+                                <div style="font-size:10px; color:#666; margin-bottom:6px;">5슬롯 각각 효과x등급 선택</div>
+                                <div id="promoteSlotList" style="display:grid; gap:4px;">
+                                    <!-- JS에서 동적 생성 -->
+                                </div>
+                                <div
+                                    style="margin-top:6px; padding-top:6px; border-top:1px solid #e0e0e0; font-size:10px;">
+                                    <div>Power%: <strong id="simPromotePowerTotal">0</strong></div>
+                                    <div>CritDmg%: <strong id="simPromoteCritDmgTotal">0</strong></div>
+                                    <div>MaxHp%: <strong id="simPromoteMaxHpTotal">0</strong></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </details>
+            </div>
+
+            <!-- 결과 카드 -->
+            <div id="simResult" style="display:none; margin:16px 0;">
+                <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:12px;" id="simResultCards"></div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="simKillTimeChart"></canvas>
+            </div>
+        </div>
+
+        <!-- 인라인 데이터 로드 (file:// 프로토콜 지원) -->
+        <script src="balance_data.js" onerror="console.log('balance_data.js not found')"></script>
+
+        <script>
+            // ===== 전역 데이터 =====
+            let BALANCE_DATA = null;
+            let isSimulatorInitialized = false;
+
+            // ===== 데이터 로드 =====
+            async function loadBalanceData() {
+                // 먼저 인라인 데이터 확인 (balance_data.js가 먼저 로드된 경우)
+                if (typeof BALANCE_DATA_INLINE !== 'undefined') {
+                    BALANCE_DATA = BALANCE_DATA_INLINE;
+                    initSimulator();
+                    return;
+                }
+
+                // fetch 시도 (로컬 서버에서 실행하는 경우)
+                try {
+                    const response = await fetch('balance_data.json');
+                    if (!response.ok) throw new Error('Not found');
+                    BALANCE_DATA = await response.json();
+                    initSimulator();
+                } catch (e) {
+                    console.log('Balance data not found. Run Unity: Tools > Balance > Export Balance Data');
+                    document.getElementById('simNoData').style.display = 'block';
+                    document.getElementById('simContainer').style.display = 'none';
+                }
+            }
+
+            // ===== Rarity 정렬 순서 =====
+            const RARITY_ORDER = ['Common', 'Uncommon', 'Rare', 'Unique', 'Legendary', 'Mythic', 'Ancient'];
+            function sortByRarity(items) {
+                return [...items].sort((a, b) =>
+                    RARITY_ORDER.indexOf(a.rarity) - RARITY_ORDER.indexOf(b.rarity)
+                );
+            }
+
+            // ===== 시뮬레이터 초기화 =====
+            function initSimulator() {
+                document.getElementById('simNoData').style.display = 'none';
+                document.getElementById('simContainer').style.display = 'block';
+
+                // 무기 드롭다운 채우기 (타입별)
+                const weapons = BALANCE_DATA.weapons;
+
+                // 플레이어 무기 (Melee)
+                const meleeWeapons = sortByRarity(weapons.filter(w => w.type === 'Melee'));
+                document.getElementById('simWeaponPlayer').innerHTML =
+                    meleeWeapons.map(w => `<option value="${w.id}">[${w.rarity}] ${w.name}</option>`).join('');
+
+                // 궁수요미 무기 (Bow)
+                const bowWeapons = sortByRarity(weapons.filter(w => w.type === 'Bow'));
+                document.getElementById('simWeaponBow').innerHTML =
+                    bowWeapons.map(w => `<option value="${w.id}">[${w.rarity}] ${w.name}</option>`).join('');
+
+                // 전사요미 무기 (Shield)
+                const shieldWeapons = sortByRarity(weapons.filter(w => w.type === 'Shield'));
+                document.getElementById('simWeaponShield').innerHTML =
+                    shieldWeapons.map(w => `<option value="${w.id}">[${w.rarity}] ${w.name}</option>`).join('');
+
+                // 법사요미 무기 (Staff)
+                const staffWeapons = sortByRarity(weapons.filter(w => w.type === 'Staff'));
+                document.getElementById('simWeaponStaff').innerHTML =
+                    staffWeapons.map(w => `<option value="${w.id}">[${w.rarity}] ${w.name}</option>`).join('');
+
+                // 스킬 드롭다운 (플레이어용 - 액티브+패시브 통합)
+                const allSkills = BALANCE_DATA.skills.filter(s => s.isPlayerSkill);
+                const skillOptions = '<option value="">- 선택 -</option>' +
+                    allSkills.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+                for (let i = 0; i < 5; i++) {
+                    document.getElementById(`simSkill${i}`).innerHTML = skillOptions;
+                }
+
+
+                // 동료 승급효과 슬롯 초기화
+                initCompanionSlots();
+
+                // 도감/승급 효과 UI 초기화
+                initWeaponBooks();
+                initPromoteSlots();
+
+                // 초기 자동 계산 업데이트
+                updateAutoCalc();
+
+                // 1h 프리셋을 기본값으로 로드
+                loadPreset('1h');
+
+                isSimulatorInitialized = true;
+            }
+
+            // ===== 스테이지 기반 자동 계산 =====
+            function updateAutoCalc() {
+                const stage = parseInt(document.getElementById('simStage').value) || 1;
+
+                // 동료 해금 (Stage 20, 40, 60)
+                const companionCount = (stage >= 60 ? 3 : stage >= 40 ? 2 : stage >= 20 ? 1 : 0);
+
+                // 동료 무기 활성화/비활성화
+                const companions = [
+                    { weaponId: 'companionWeapon0', specId: 'companionSpec0', stage: 20, selectId: 'simWeaponBow', lvId: 'simWeaponBowLv' },
+                    { weaponId: 'companionWeapon1', specId: 'companionSpec1', stage: 40, selectId: 'simWeaponShield', lvId: 'simWeaponShieldLv' },
+                    { weaponId: 'companionWeapon2', specId: 'companionSpec2', stage: 60, selectId: 'simWeaponStaff', lvId: 'simWeaponStaffLv' }
+                ];
+                companions.forEach((c, idx) => {
+                    const unlocked = stage >= c.stage;
+                    // 무기 UI
+                    document.getElementById(c.weaponId).style.opacity = unlocked ? '1' : '0.4';
+                    document.getElementById(c.selectId).disabled = !unlocked;
+                    document.getElementById(c.lvId).disabled = !unlocked;
+                    // 스펙 UI
+                    const specEl = document.getElementById(c.specId);
+                    specEl.style.opacity = unlocked ? '1' : '0.4';
+                    specEl.querySelectorAll('select').forEach(el => el.disabled = !unlocked);
+                    // 슬롯 해금 업데이트
+                    if (unlocked) updateCompanionSlots(idx);
+                });
+
+                // 스탯포인트 남은 포인트 업데이트
+                updateStatPointRemaining();
+            }
+
+            // ===== 스탯포인트 남은 포인트 계산 =====
+            function updateStatPointRemaining() {
+                const level = parseInt(document.getElementById('simLevel').value) || 1;
+                const maxPoints = level - 1;
+                const used = (parseInt(document.getElementById('simSPPower').value) || 0)
+                    + (parseInt(document.getElementById('simSPMaxHp').value) || 0)
+                    + (parseInt(document.getElementById('simSPCrit').value) || 0)
+                    + (parseInt(document.getElementById('simSPCritDmg').value) || 0)
+                    + (parseInt(document.getElementById('simSPHpRec').value) || 0);
+                const remaining = maxPoints - used;
+                const el = document.getElementById('simSPRemaining');
+                el.textContent = `남은: ${remaining}/${maxPoints}`;
+                el.style.color = remaining < 0 ? '#f44336' : '#1976d2';
+            }
+
+            // ===== Remote Config 데이터 =====
+            const RC = {
+                REINFORCE_VALUE_GOLD: {
+                    Power: { baseInc: 1, step: 100, stepInc: 0.5, startValue: 10 },
+                    MaxHp: { baseInc: 4, step: 100, stepInc: 1, startValue: 100 },
+                    CritDmg: { baseInc: 0.01, step: 100, stepInc: 0.01, startValue: 1.2 }
+                },
+                // 승급 배율: Stone(0), Bronze(1), Iron(2), Silver(3), Gold(4)
+                RANK_MULTIPLIERS: [1, 1.5, 3, 8, 15],
+                // 동료 효과 수치 (레어도별: 0=None, 1=C, 2=U, 3=R, 4=Un, 5=L, 6=M)
+                COMPANION_EFFECT_VALUES: {
+                    // 그룹 A: Power, GoldAscend
+                    AttBuff: [0, 0.03, 0.04, 0.05, 0.08, 0.10, 0.15],
+                    DefBuff: [0, 0.03, 0.04, 0.05, 0.08, 0.10, 0.15],
+                    GoldAscend: [0, 0.03, 0.04, 0.06, 0.09, 0.14, 0.20],
+                    // 그룹 B: CritDmg, MaxHp, HpRecover  
+                    CriticalDamage: [0, 0.05, 0.07, 0.10, 0.15, 0.24, 0.35],
+                    MaxHp: [0, 0.05, 0.07, 0.10, 0.15, 0.24, 0.35],
+                    HpRecover: [0, 0.05, 0.07, 0.10, 0.15, 0.24, 0.35],
+                    MaxMp: [0, 0.03, 0.04, 0.05, 0.08, 0.10, 0.15],
+                    MpRecover: [0, 0.03, 0.04, 0.05, 0.08, 0.10, 0.15],
+                    // 그룹 C: ExpAscend
+                    ExpAscend: [0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.08]
+                },
+                COMPANION_RARITY_NAMES: ['-', 'C', 'U', 'R', 'Un', 'L', 'M'],
+                COMPANION_EFFECT_TYPES: ['', 'AttBuff', 'DefBuff', 'CriticalDamage', 'MaxHp', 'HpRecover', 'MaxMp', 'MpRecover', 'GoldAscend', 'ExpAscend'],
+                // 전투 타이밍 상수 (BattleManager, Attackable, SkillData 기반)
+                COMBAT_TIMING: {
+                    defaultSpeed: 2.5,        // 기본 이동 속도 (m/s)
+                    enemySpace: 1.0,          // 적 간 간격 (m)
+                    enemyPlayerDistance: 1.5, // 공격 시작 거리 (m)
+                    preDelay: 0.2,            // 공격 전 딜레이 (초, 공속 반비례)
+                    postDelay: 0.2,           // 공격 후 딜레이 (초, 공속 반비례)
+                    targetKillDelay: 0.5      // 처치 후 딜레이 (초, 고정)
+                }
+            };
+
+            // 동료 슬롯 초기화 함수 (전문 UI)
+            function initCompanionSlots() {
+                const slotColors = ['#f5f5f5', '#f0f0f0', '#ebebeb', '#e6e6e6', '#e0e0e0'];
+                for (let c = 0; c < 3; c++) {
+                    const container = document.getElementById(`comp${c}Slots`);
+                    if (!container) continue;
+                    container.innerHTML = '';
+                    for (let s = 0; s < 5; s++) {
+                        const slotDiv = document.createElement('div');
+                        slotDiv.style.cssText = `
+                            display:flex; flex-direction:column; gap:2px; padding:6px; 
+                            background:${slotColors[s]}; border-radius:4px; border:1px solid #ddd;
+                            min-width:70px; text-align:center;
+                        `;
+                        slotDiv.innerHTML = `
+                            <div style="font-size:9px; color:#666; font-weight:600;">슬롯 ${s + 1}</div>
+                            <select id="simComp${c}Type${s}" style="font-size:10px; padding:2px;" disabled onchange="updateSlotPreview(${c},${s})">
+                                <option value="">- 효과 -</option>
+                                <option value="AttBuff">공격력%</option>
+                                <option value="DefBuff">방어력%</option>
+                                <option value="CriticalDamage">크리뎀%</option>
+                                <option value="MaxHp">체력%</option>
+                                <option value="HpRecover">회복%</option>
+                                <option value="GoldAscend">골드%</option>
+                                <option value="ExpAscend">경험치%</option>
+                            </select>
+                            <select id="simComp${c}Rarity${s}" style="font-size:10px; padding:2px;" disabled onchange="updateSlotPreview(${c},${s})">
+                                <option value="0">- 등급 -</option>
+                                <option value="1" style="color:#888;">Common</option>
+                                <option value="2" style="color:#4CAF50;">Uncommon</option>
+                                <option value="3" style="color:#2196F3;">Rare</option>
+                                <option value="4" style="color:#9C27B0;">Unique</option>
+                                <option value="5" style="color:#FF9800;">Legend</option>
+                                <option value="6" style="color:#f44336;">Mythic</option>
+                            </select>
+                            <div id="slotPreview${c}${s}" style="font-size:10px; font-weight:bold; color:#1976d2; min-height:14px;"></div>
+                        `;
+                        container.appendChild(slotDiv);
+                    }
+                }
+            }
+
+            // ===== 무기 도감 초기화 =====
+            // 난이도 순 정렬 순서
+            const BOOK_ORDER = ['Novice', 'New', 'Iron', 'Light', 'Speedy', 'Savage', 'Horror', 'Ancient'];
+            function initWeaponBooks() {
+                const container = document.getElementById('weaponBookList');
+                if (!container || !BALANCE_DATA.weaponBooks) {
+                    container.innerHTML = '<div style="color:#888;">도감 데이터 없음</div>';
+                    return;
+                }
+                container.innerHTML = '';
+                // 난이도 순 정렬
+                const sortedBooks = [...BALANCE_DATA.weaponBooks].sort((a, b) =>
+                    BOOK_ORDER.indexOf(a.bookId) - BOOK_ORDER.indexOf(b.bookId)
+                );
+                sortedBooks.forEach(book => {
+                    const levels = book.upgradeLevels || [];
+                    const maxLevel = levels.length > 0 ? levels[levels.length - 1] : 0;
+                    const stats = book.upgradeStats || [];
+                    const setBonus = stats.reduce((sum, v) => sum + v, 0);
+                    const row = document.createElement('div');
+                    row.style.cssText = 'display:flex; align-items:center; gap:6px; font-size:11px;';
+                    row.innerHTML = `
+                        <span style="width:55px; font-weight:600;">${book.bookId || 'N/A'}</span>
+                        <input type="number" id="simBook_${book.bookId}" value="0" min="0" max="${maxLevel}"
+                            style="width:50px; font-size:11px;" onchange="updateBookBonus()">
+                        <span style="color:#666; font-size:10px;">/ ${maxLevel} (완성=+${setBonus})</span>
+                    `;
+                    container.appendChild(row);
+                });
+                updateBookBonus();
+            }
+
+            // 도감 보너스 계산 (점진적)
+            function updateBookBonus() {
+                if (!BALANCE_DATA.weaponBooks) return;
+                let totalPower = 0;
+                BALANCE_DATA.weaponBooks.forEach(book => {
+                    const input = document.getElementById(`simBook_${book.bookId}`);
+                    const owned = parseInt(input?.value) || 0;
+                    const levels = book.upgradeLevels || [];
+                    const stats = book.upgradeStats || [];
+                    for (let i = 0; i < levels.length; i++) {
+                        if (owned >= levels[i]) {
+                            totalPower += stats[i] || 0;
+                        }
+                    }
+                });
+                document.getElementById('simBookPowerTotal').textContent = totalPower.toFixed(0);
+                if (isSimulatorInitialized) runSimulator();
+            }
+
+            // ===== 승급 효과 슬롯 초기화 =====
+            const PROMOTE_EFFECTS = ['Power', 'CriticalDamage', 'MaxHp', 'Critical', 'HpRecover', 'GoldAscend', 'Resist', 'Penetration'];
+            const PROMOTE_GRADES = [
+                { name: '-', mult: 0 },
+                { name: 'C', mult: 1 },
+                { name: 'U', mult: 2 },
+                { name: 'R', mult: 3 },
+                { name: 'Un', mult: 5 },
+                { name: 'L', mult: 8 },
+                { name: 'M', mult: 12 }
+            ];
+
+            function initPromoteSlots() {
+                const container = document.getElementById('promoteSlotList');
+                if (!container) return;
+                container.innerHTML = '';
+                for (let i = 0; i < 5; i++) {
+                    const row = document.createElement('div');
+                    row.style.cssText = 'display:flex; align-items:center; gap:4px; font-size:10px;';
+                    row.innerHTML = `
+                        <span style="width:30px; color:#666;">슬롯${i + 1}</span>
+                        <select id="simPromoteType${i}" style="flex:1; font-size:10px;" onchange="updatePromoteTotal()">
+                            <option value="">-효과-</option>
+                            ${PROMOTE_EFFECTS.map(e => `<option value="${e}">${e}</option>`).join('')}
+                        </select>
+                        <select id="simPromoteGrade${i}" style="width:40px; font-size:10px;" onchange="updatePromoteTotal()">
+                            ${PROMOTE_GRADES.map((g, idx) => `<option value="${idx}">${g.name}</option>`).join('')}
+                        </select>
+                    `;
+                    container.appendChild(row);
+                }
+                updatePromoteTotal();
+            }
+
+            // 승급 효과 합계 계산
+            function updatePromoteTotal() {
+                const totals = { Power: 0, CriticalDamage: 0, MaxHp: 0 };
+                for (let i = 0; i < 5; i++) {
+                    const type = document.getElementById(`simPromoteType${i}`)?.value;
+                    const grade = parseInt(document.getElementById(`simPromoteGrade${i}`)?.value) || 0;
+                    if (type && grade > 0) {
+                        const value = PROMOTE_GRADES[grade].mult;
+                        if (totals[type] !== undefined) totals[type] += value;
+                    }
+                }
+                document.getElementById('simPromotePowerTotal').textContent = totals.Power.toFixed(0);
+                document.getElementById('simPromoteCritDmgTotal').textContent = totals.CriticalDamage.toFixed(0);
+                document.getElementById('simPromoteMaxHpTotal').textContent = totals.MaxHp.toFixed(0);
+                if (isSimulatorInitialized) runSimulator();
+            }
+
+            // 슬롯 효과 미리보기 업데이트
+            function updateSlotPreview(compIdx, slotIdx) {
+                const type = document.getElementById(`simComp${compIdx}Type${slotIdx}`)?.value;
+                const rarity = parseInt(document.getElementById(`simComp${compIdx}Rarity${slotIdx}`)?.value) || 0;
+                const previewEl = document.getElementById(`slotPreview${compIdx}${slotIdx}`);
+                if (!previewEl) return;
+
+                if (!type || rarity === 0) {
+                    previewEl.textContent = '';
+                    return;
+                }
+
+                const value = RC.COMPANION_EFFECT_VALUES[type]?.[rarity] || 0;
+                previewEl.textContent = `+${(value * 100).toFixed(0)}%`;
+            }
+
+            // 동료 슬롯 해금 업데이트 (테크에 따라)
+            function updateCompanionSlots(compIdx) {
+                const tech = parseInt(document.getElementById(`simComp${compIdx}Tech`).value) || 0;
+                const unlockedSlots = 2 + tech; // 0차=2, 1차=3, 2차=4, 3차=5
+                for (let s = 0; s < 5; s++) {
+                    const typeEl = document.getElementById(`simComp${compIdx}Type${s}`);
+                    const rarityEl = document.getElementById(`simComp${compIdx}Rarity${s}`);
+                    if (typeEl && rarityEl) {
+                        const enabled = s < unlockedSlots;
+                        typeEl.disabled = !enabled;
+                        rarityEl.disabled = !enabled;
+                        typeEl.parentElement.style.opacity = enabled ? '1' : '0.3';
+                    }
+                }
+            }
+
+            // 동료 효과 합산 계산
+            function calcCompanionEffects(stage) {
+                const effects = { AttBuff: 0, DefBuff: 0, CriticalDamage: 0, MaxHp: 0, HpRecover: 0, GoldAscend: 0, ExpAscend: 0 };
+                const unlocked = [stage >= 20, stage >= 40, stage >= 60];
+
+                for (let c = 0; c < 3; c++) {
+                    if (!unlocked[c]) continue;
+                    const tech = parseInt(document.getElementById(`simComp${c}Tech`)?.value) || 0;
+                    const slots = 2 + tech;
+                    for (let s = 0; s < slots; s++) {
+                        const type = document.getElementById(`simComp${c}Type${s}`)?.value;
+                        const rarity = parseInt(document.getElementById(`simComp${c}Rarity${s}`)?.value) || 0;
+                        if (type && rarity > 0 && RC.COMPANION_EFFECT_VALUES[type]) {
+                            effects[type] += RC.COMPANION_EFFECT_VALUES[type][rarity] || 0;
+                        }
+                    }
+                }
+                return effects;
+            }
+
+            // ===== 프리셋 정의 (시간 단위) =====
+            // compTech: [궁수, 전사, 법사] 테크 레벨 (0~3)
+            // skillLv: 스킬 레벨 (1~10)
+            // weaponIdx: 무기 인덱스 (드롭다운 순서)
+            // rankIndex: 0=Stone, 1=Bronze(30+), 2=Iron(60+), 3=Silver(120+), 4=Gold(200+)
+            // skills: 장착 스킬 인덱스 배열 [slot0, slot1, slot2, slot3, slot4]
+            // compSlots: 동료 승급효과 [동료0[슬롯0-4], 동료1[슬롯0-4], 동료2[슬롯0-4]]
+            //   각 슬롯 = {type: 효과 타입, rarity: 1-6(C/U/R/Un/L/M)}
+            const PRESETS = {
+                '1h': {  // 1시간 플레이 - 동료 없음
+                    stage: 12, level: 14, rankIndex: 0, // Stone
+                    powerLv: 8, maxHpLv: 4, critDmgLv: 2, critLv: 2,
+                    sp: { power: 8, maxHp: 4, crit: 1, critDmg: 0, hpRec: 0 },
+                    compTech: [0, 0, 0],
+                    skillLv: 4, weaponIdx: 3, weaponLv: 2,  // Scroll 20 → 던전 1회 → Fragment 10개 → Lv4
+                    compWeaponLv: [0, 0, 0],  // 동료 무기 레벨
+                    skills: [0, 0, 0, 0, 0],  // 스킬 없음
+                    compSlots: [[], [], []],  // 동료 없음
+                    bonus: { bookPower: 0, promotePower: 0, promoteCritDmg: 0 }
+                },
+                '4h': {  // 4시간 플레이 - 궁수 해금
+                    stage: 28, level: 33, rankIndex: 0, // Stone (Stage<30)
+                    powerLv: 25, maxHpLv: 12, critDmgLv: 6, critLv: 5,
+                    sp: { power: 18, maxHp: 9, crit: 3, critDmg: 2, hpRec: 0 },
+                    compTech: [0, 0, 0],
+                    skillLv: 6, weaponIdx: 5, weaponLv: 3,  // Scroll 80 → 던전 4회 → Fragment 40개 → Lv6
+                    compWeaponLv: [1, 0, 0],  // 궁수 무기 +1 (Stage 24부터 드랍)
+                    skills: [1, 0, 0, 0, 0],  // 첫 스킬 장착
+                    compSlots: [
+                        [{ type: 'AttBuff', rarity: 1 }, { type: 'MaxHp', rarity: 1 }],  // 궁수: 2슬롯
+                        [], []
+                    ],
+                    // 도감: 4h 기준 ~60무기, Novice 완성 가능
+                    weaponBooks: { Novice: 20, New: 30, Iron: 10, Light: 0, Speedy: 0, Savage: 0, Horror: 0, Ancient: 0 },
+                    bonus: { bookPower: 2, promotePower: 0, promoteCritDmg: 0 }  // Novice 완성=+2
+                },
+                '12h': {  // 12시간 플레이 - 전사 해금, Bronze 승급
+                    stage: 55, level: 65, rankIndex: 1, // Bronze (Stage>30)
+                    powerLv: 60, maxHpLv: 30, critDmgLv: 15, critLv: 12,
+                    sp: { power: 35, maxHp: 18, crit: 6, critDmg: 4, hpRec: 1 },
+                    compTech: [1, 0, 0],
+                    skillLv: 7, weaponIdx: 12, weaponLv: 3,
+                    compWeaponLv: [2, 1, 0],
+                    skills: [1, 2, 0, 0, 0],
+                    compSlots: [
+                        [{ type: 'AttBuff', rarity: 3 }, { type: 'CriticalDamage', rarity: 2 }, { type: 'MaxHp', rarity: 2 }],
+                        [{ type: 'DefBuff', rarity: 2 }, { type: 'MaxHp', rarity: 2 }],
+                        []
+                    ],
+                    // 도감: 12h~180무기, Novice/New 완성, Iron 진행중
+                    weaponBooks: { Novice: 20, New: 125, Iron: 35, Light: 0, Speedy: 0, Savage: 0, Horror: 0, Ancient: 0 },
+                    bonus: { bookPower: 7, promotePower: 15, promoteCritDmg: 8 },  // Novice+New 완성=+7
+                    promoteSlots: [
+                        { type: 'Power', grade: 3 },
+                        { type: 'CriticalDamage', grade: 2 },
+                        { type: 'MaxHp', grade: 2 },
+                        { type: '', grade: 0 },
+                        { type: '', grade: 0 }
+                    ]
+                },
+                '48h': {  // 48시간 플레이 - 법사 해금, Iron 승급
+                    stage: 105, level: 120, rankIndex: 2, // Iron (Stage>60)
+                    powerLv: 140, maxHpLv: 70, critDmgLv: 40, critLv: 25,
+                    sp: { power: 60, maxHp: 32, crit: 14, critDmg: 10, hpRec: 3 },
+                    compTech: [2, 1, 0],
+                    skillLv: 9, weaponIdx: 24, weaponLv: 5,
+                    compWeaponLv: [3, 2, 1],
+                    skills: [1, 2, 3, 0, 0],
+                    compSlots: [
+                        [{ type: 'AttBuff', rarity: 4 }, { type: 'CriticalDamage', rarity: 3 }, { type: 'MaxHp', rarity: 3 }, { type: 'GoldAscend', rarity: 2 }],
+                        [{ type: 'DefBuff', rarity: 3 }, { type: 'MaxHp', rarity: 3 }, { type: 'AttBuff', rarity: 2 }],
+                        [{ type: 'AttBuff', rarity: 2 }, { type: 'MaxHp', rarity: 2 }]
+                    ],
+                    // 도감: 48h~720무기, Novice/New/Iron 완성, Light 2티어
+                    weaponBooks: { Novice: 20, New: 125, Iron: 320, Light: 80, Speedy: 35, Savage: 0, Horror: 0, Ancient: 0 },
+                    bonus: { bookPower: 79, promotePower: 25, promoteCritDmg: 12 },  // +2+5+8+64(Light 2티어)
+                    promoteSlots: [
+                        { type: 'Power', grade: 4 },
+                        { type: 'CriticalDamage', grade: 3 },
+                        { type: 'MaxHp', grade: 3 },
+                        { type: 'Power', grade: 2 },
+                        { type: '', grade: 0 }
+                    ]
+                },
+                '100h': {  // 100시간 플레이 - Silver 승급
+                    stage: 160, level: 180, rankIndex: 3, // Silver (Stage>120)
+                    powerLv: 250, maxHpLv: 125, critDmgLv: 70, critLv: 40,
+                    sp: { power: 90, maxHp: 48, crit: 22, critDmg: 15, hpRec: 4 },
+                    compTech: [3, 2, 1],
+                    skillLv: 10, weaponIdx: 26, weaponLv: 7,
+                    compWeaponLv: [5, 4, 3],
+                    skills: [1, 2, 3, 4, 0],
+                    compSlots: [
+                        [{ type: 'AttBuff', rarity: 5 }, { type: 'CriticalDamage', rarity: 4 }, { type: 'MaxHp', rarity: 4 }, { type: 'GoldAscend', rarity: 3 }, { type: 'ExpAscend', rarity: 2 }],
+                        [{ type: 'DefBuff', rarity: 4 }, { type: 'MaxHp', rarity: 4 }, { type: 'AttBuff', rarity: 3 }, { type: 'CriticalDamage', rarity: 2 }],
+                        [{ type: 'AttBuff', rarity: 3 }, { type: 'MaxHp', rarity: 3 }, { type: 'DefBuff', rarity: 2 }]
+                    ],
+                    // 도감: 100h~1500무기, Light 4티어(160), Speedy 진행중
+                    weaponBooks: { Novice: 20, New: 125, Iron: 320, Light: 160, Speedy: 70, Savage: 35, Horror: 0, Ancient: 0 },
+                    bonus: { bookPower: 360, promotePower: 40, promoteCritDmg: 20 },  // Light 4티어=+304 누적
+                    promoteSlots: [
+                        { type: 'Power', grade: 5 },
+                        { type: 'CriticalDamage', grade: 4 },
+                        { type: 'MaxHp', grade: 4 },
+                        { type: 'Power', grade: 3 },
+                        { type: 'CriticalDamage', grade: 2 }
+                    ]
+                },
+                '200h': {  // 200시간 플레이 - Gold 승급
+                    stage: 220, level: 250, rankIndex: 4, // Gold (Stage>200)
+                    powerLv: 400, maxHpLv: 200, critDmgLv: 110, critLv: 60,
+                    sp: { power: 125, maxHp: 66, crit: 30, critDmg: 22, hpRec: 6 },
+                    compTech: [3, 3, 2],
+                    skillLv: 10, weaponIdx: 30, weaponLv: 1,
+                    compWeaponLv: [6, 5, 4],
+                    skills: [1, 2, 3, 4, 5],
+                    compSlots: [
+                        [{ type: 'AttBuff', rarity: 5 }, { type: 'CriticalDamage', rarity: 5 }, { type: 'MaxHp', rarity: 4 }, { type: 'GoldAscend', rarity: 4 }, { type: 'ExpAscend', rarity: 3 }],
+                        [{ type: 'DefBuff', rarity: 5 }, { type: 'MaxHp', rarity: 4 }, { type: 'AttBuff', rarity: 4 }, { type: 'CriticalDamage', rarity: 3 }, { type: 'GoldAscend', rarity: 2 }],
+                        [{ type: 'AttBuff', rarity: 4 }, { type: 'MaxHp', rarity: 4 }, { type: 'DefBuff', rarity: 3 }, { type: 'CriticalDamage', rarity: 2 }]
+                    ],
+                    // 도감: 200h~3000무기, Light 6티어(240), Speedy/Savage 진행중
+                    weaponBooks: { Novice: 20, New: 125, Iron: 320, Light: 240, Speedy: 140, Savage: 70, Horror: 30, Ancient: 0 },
+                    bonus: { bookPower: 988, promotePower: 60, promoteCritDmg: 30 },  // Light 6티어=+944 누적
+                    promoteSlots: [
+                        { type: 'Power', grade: 5 },
+                        { type: 'CriticalDamage', grade: 5 },
+                        { type: 'MaxHp', grade: 4 },
+                        { type: 'Power', grade: 4 },
+                        { type: 'CriticalDamage', grade: 3 }
+                    ]
+                }
+            };
+
+            function loadPreset(name) {
+                const p = PRESETS[name];
+                if (!p) return;
+                document.getElementById('simStage').value = p.stage;
+                document.getElementById('simLevel').value = p.level;
+                document.getElementById('simRank').value = p.rankIndex || 0;
+                document.getElementById('simPowerLv').value = p.powerLv;
+                document.getElementById('simMaxHpLv').value = p.maxHpLv;
+                document.getElementById('simCritDmgLv').value = p.critDmgLv;
+                document.getElementById('simCritLv').value = p.critLv || 20;
+                // 스탯포인트
+                if (p.sp) {
+                    document.getElementById('simSPPower').value = p.sp.power || 0;
+                    document.getElementById('simSPMaxHp').value = p.sp.maxHp || 0;
+                    document.getElementById('simSPCrit').value = p.sp.crit || 0;
+                    document.getElementById('simSPCritDmg').value = p.sp.critDmg || 0;
+                    document.getElementById('simSPHpRec').value = p.sp.hpRec || 0;
+                }
+                // 동료 테크 레벨
+                if (p.compTech) {
+                    for (let c = 0; c < 3; c++) {
+                        const techEl = document.getElementById(`simComp${c}Tech`);
+                        if (techEl) {
+                            techEl.value = p.compTech[c] || 0;
+                            updateCompanionSlots(c);
+                        }
+                    }
+                }
+                // 장착 스킬
+                if (p.skills) {
+                    for (let i = 0; i < 5; i++) {
+                        const skillEl = document.getElementById(`simSkill${i}`);
+                        if (skillEl && skillEl.options.length > p.skills[i]) {
+                            skillEl.selectedIndex = p.skills[i];
+                        }
+                        // 스킬 레벨도 설정
+                        const skillLvEl = document.getElementById(`simSkill${i}Lv`);
+                        if (skillLvEl) skillLvEl.value = p.skillLv || 1;
+                    }
+                }
+                // 동료 승급효과 슬롯
+                if (p.compSlots) {
+                    for (let c = 0; c < 3; c++) {
+                        const slots = p.compSlots[c] || [];
+                        for (let s = 0; s < slots.length && s < 5; s++) {
+                            const slot = slots[s];
+                            const typeEl = document.getElementById(`simComp${c}Type${s}`);
+                            const rarityEl = document.getElementById(`simComp${c}Rarity${s}`);
+                            if (typeEl && slot.type) typeEl.value = slot.type;
+                            if (rarityEl && slot.rarity) rarityEl.value = slot.rarity;
+                        }
+                    }
+                }
+                // 무기 선택 및 강화 레벨
+                if (p.weaponIdx !== undefined) {
+                    const weaponEl = document.getElementById('simWeaponPlayer');
+                    if (weaponEl && weaponEl.options.length > p.weaponIdx) {
+                        weaponEl.selectedIndex = p.weaponIdx;
+                    }
+                }
+                if (p.weaponLv !== undefined) {
+                    const weaponLvEl = document.getElementById('simWeaponPlayerLv');
+                    if (weaponLvEl) weaponLvEl.value = p.weaponLv;
+                }
+                // 동료 무기 강화 레벨
+                if (p.compWeaponLv) {
+                    const compWeaponIds = ['simWeaponBowLv', 'simWeaponShieldLv', 'simWeaponStaffLv'];
+                    compWeaponIds.forEach((id, i) => {
+                        const el = document.getElementById(id);
+                        if (el) el.value = p.compWeaponLv[i] || 0;
+                    });
+                }
+                // 보너스 스탯 (무기 도감 + 승급 효과)
+                if (p.weaponBooks) {
+                    Object.entries(p.weaponBooks).forEach(([bookId, count]) => {
+                        const el = document.getElementById(`simBook_${bookId}`);
+                        if (el) el.value = count;
+                    });
+                    updateBookBonus();
+                }
+                if (p.promoteSlots) {
+                    for (let i = 0; i < 5; i++) {
+                        const slot = p.promoteSlots[i] || {};
+                        const typeEl = document.getElementById(`simPromoteType${i}`);
+                        const gradeEl = document.getElementById(`simPromoteGrade${i}`);
+                        if (typeEl) typeEl.value = slot.type || '';
+                        if (gradeEl) gradeEl.value = slot.grade || 0;
+                    }
+                    updatePromoteTotal();
+                }
+                document.getElementById('simBoss').checked = false;
+                updateAutoCalc();
+                runSimulator();
+            }
+
+            // 강화 값 계산
+            function calcReinforce(rule, level) {
+                let total = rule.startValue, inc = rule.baseInc;
+                for (let i = 1; i <= level; i++) {
+                    total += inc;
+                    if (i % rule.step === 0) inc += rule.stepInc;
+                }
+                return total;
+            }
+
+            // 적 HP (밸런스 조정 v3: 초반 2초대, 중후반 유지)
+            // 업계 표준: 킬타임 1~3초, KPM 15~40
+            function calcEnemyHp(stage, isBoss) {
+                // v3 공식: 30 + 25*stage + max(0, stage-40)*50 + (stage/55)²×450
+                // Stage 1~30: 매우 낮음 (킬타임 1~2초)
+                // Stage 30~60: 완만 상승 (킬타임 2~3초)
+                // Stage 60+: 점진적 상승 유지
+                // 
+                // 예상 HP:
+                //   Stage 12 (1h):  330 → 킬타임 ~1.3초
+                //   Stage 28 (4h):  730 → 킬타임 ~2.0초
+                //   Stage 55 (12h): 2463 → 킬타임 ~2.5초
+                //   Stage 105 (48h): 7583 → 킬타임 ~2.0초
+                //   Stage 160 (100h): 15130 → 킬타임 ~1.3초
+                //   Stage 220 (200h): 27325 → 킬타임 ~1.3초
+                let hp = 30 + stage * 25 + Math.max(0, stage - 40) * 50 + (stage / 55) * (stage / 55) * 450;
+                return isBoss ? hp * 8.3 : hp;
+            }
+
+            // 저항
+            function calcResist(stage) {
+                return Math.min(0.4, Math.max(0, (stage - 50) * 0.002));
+            }
+
+            // 시뮬레이션 (AttackLoop 로직 기반)
+            function simulate(params) {
+                const { stage, level, powerLv, critDmgLv, critLv, weapon, weaponLv, skills, skillLevels, companions, promoteMult, isBoss,
+                    compPower, compAttBuff, critDmgBuff, doubleHit,
+                    spPower, spMaxHp, spCrit, spCritDmg, spHpRec,
+                    companionWeapons,
+                    bookPower, promotePower, promoteCritDmg, promoteMaxHp } = params;
+
+                // === 무기 효과 합산 (플레이어 + 동료) ===
+                const allEffects = {
+                    AttBuff: 0, DoubleHit: 0, AttackSpeed: 0, Penetration: 0, CritDmgBuff: 0,
+                    BossSlayer: 0, Berserker: 0, SpeedBuff: 0, Durability: 0, MoveSpeed: 0,
+                    Execution: 0, AreaDamage: 0, Lifesteal: 0, Thorns: 0, Rage: 0
+                };
+
+                // 플레이어 무기 효과
+                if (weapon.effects) {
+                    weapon.effects.forEach(eff => {
+                        if (allEffects.hasOwnProperty(eff.skillTypeName)) {
+                            allEffects[eff.skillTypeName] += eff.value;
+                        }
+                    });
+                }
+
+                // 동료 무기 효과 (해금된 동료만)
+                if (companionWeapons) {
+                    companionWeapons.forEach(cw => {
+                        if (cw && cw.effects) {
+                            cw.effects.forEach(eff => {
+                                if (allEffects.hasOwnProperty(eff.skillTypeName)) {
+                                    allEffects[eff.skillTypeName] += eff.value;
+                                }
+                            });
+                        }
+                    });
+                }
+
+                // === 5개 스킬 효과 합산 ===
+                // 스킬 effectType: AttBuff, DoubleHit, AttackSpeed, Penetration, CritDmgBuff 등
+                // 스킬 values[level-1]: 해당 레벨의 효과 수치
+                let skillAttBuff = 0, skillDoubleHit = 0, skillAttSpeed = 0;
+                let skillPenetration = 0, skillCritDmgBuff = 0;
+                let avgSkillMult = 1.0; // 액티브 스킬 평균 배율 (데미지 스킬)
+                let activeSkillCount = 0;
+
+                if (skills && skills.length > 0) {
+                    skills.forEach((skill, idx) => {
+                        const lvIndex = Math.max(0, ((skillLevels && skillLevels[idx]) || 1) - 1);
+                        const effectValue = skill.values ? (skill.values[lvIndex] || skill.values[0]) : 0;
+
+                        // 스킬 타입별 효과 합산
+                        const effType = skill.effectType || '';
+                        if (effType === 'AttBuff') skillAttBuff += effectValue;
+                        else if (effType === 'DoubleHit') skillDoubleHit += effectValue;
+                        else if (effType === 'AttackSpeed') skillAttSpeed += effectValue;
+                        else if (effType === 'Penetration') skillPenetration += effectValue;
+                        else if (effType === 'CritDmgBuff') skillCritDmgBuff += effectValue;
+                        else if (effType === 'MoveSpeed') allEffects.MoveSpeed += effectValue;
+                        else if (effType === 'SpeedBuff') allEffects.SpeedBuff += effectValue;
+                        else if (skill.damageScale && skill.damageScale > 1) {
+                            // 액티브 데미지 스킬 (damageScale이 있는 경우)
+                            avgSkillMult += skill.damageScale - 1;
+                            activeSkillCount++;
+                        }
+                    });
+                }
+
+                // 스킬 효과를 무기 효과에 합산
+                allEffects.AttBuff += skillAttBuff;
+                allEffects.DoubleHit += skillDoubleHit;
+                allEffects.AttackSpeed += skillAttSpeed;
+                allEffects.Penetration += skillPenetration;
+                allEffects.CritDmgBuff += skillCritDmgBuff;
+
+                // 무기 데이터에서 값 가져오기 (업그레이드 적용)
+                const weaponPower = weapon.power * (1 + (weaponLv || 0) * (weapon.powerPerUpgrade || 0.1));
+                const weaponCrit = weapon.critical;
+                const weaponCritDmg = weapon.critDamage;
+                let atkSpeed = (weapon.attackSpeed || 1.0) + allEffects.AttackSpeed;
+
+                // 평균 스킬 배율 (액티브 스킬 기여도)
+                const skillDamageMult = activeSkillCount > 0 ? (1 + (avgSkillMult - 1) * 0.3) : 1.0; // 30% 기여도
+                const preDelay = 0.2, postDelay = 0.2;
+
+                // Power 계산 (골드 강화 + 스탯포인트 강화 + 동료 효과 + 무기 도감)
+                const powerFromGold = calcReinforce(RC.REINFORCE_VALUE_GOLD.Power, powerLv);
+                const powerFromSP = (spPower || 0) * 2;
+                const powerFromComp = compPower || 0;
+                const powerFromLevel = level * 2;  // 밸런스 조정: 레벨당 +1 → +2
+                const companionBonus = companions * 20;
+                const powerFromBook = bookPower || 0;  // 무기 도감 보너스
+                const basePowerFlat = 20;  // 밸런스 조정: 기본 Power +20 추가
+                const basePower = basePowerFlat + powerFromGold + powerFromSP + powerFromComp + powerFromLevel + weaponPower + companionBonus + powerFromBook;
+
+
+                // AttBuff 적용 (무기 효과 + 동료 승급효과 + BossSlayer + 승급 Power%)
+                const promoteAttBuff = (promotePower || 0) / 100;  // 클로버 승급 Power%
+                const attBuffMult = 1 + allEffects.AttBuff + (compAttBuff || 0) + (isBoss ? allEffects.BossSlayer : 0) + promoteAttBuff;
+                const totalPower = basePower * promoteMult * attBuffMult;
+
+                // 크리티컬 계산 (+ 승급 CritDmg%)
+                const critDmgFromGold = calcReinforce(RC.REINFORCE_VALUE_GOLD.CritDmg, critDmgLv);
+                const critDmgFromSP = (spCritDmg || 0) * 0.02;
+                const critDmgFromWeaponEff = allEffects.CritDmgBuff;
+                const critDmgFromPromote = (promoteCritDmg || 0) / 100;  // 클로버 승급 CritDmg%
+                const critDmg = critDmgFromGold + critDmgFromSP + (weaponCritDmg / 100) + (critDmgBuff || 0) + critDmgFromWeaponEff + critDmgFromPromote;
+
+                const critFromSP = (spCrit || 0) * 0.5;
+                const critRate = Math.min(100, weaponCrit + (critLv || 0) * 0.5 + critFromSP);
+                const avgCritMult = 1 + (critRate / 100) * (critDmg - 1);
+
+                // 기본 데미지 (스킬 배율 적용)
+                const baseDamage = skillDamageMult * totalPower;
+
+                // DoubleHit 적용 (무기 효과 + 동료 효과)
+                const doubleHitTotal = (doubleHit || 0) + allEffects.DoubleHit;
+                const doubleHitMult = 1 + doubleHitTotal;
+                const finalDamage = baseDamage * avgCritMult * doubleHitMult;
+
+                // 적 저항 계산 (Penetration 적용)
+                const baseResist = calcResist(stage);
+                const effectiveResist = baseResist * (1 - allEffects.Penetration);
+                const enemyHp = calcEnemyHp(stage, isBoss);
+                const effectiveDamage = finalDamage * (1 - effectiveResist);
+
+                // 킬타임 계산
+                const attacksToKill = Math.ceil(enemyHp / effectiveDamage);
+                const attackCycle = (preDelay + postDelay) / Math.max(0.5, atkSpeed);
+                const killTime = attacksToKill * attackCycle;
+                const dps = effectiveDamage * atkSpeed / (preDelay + postDelay);
+                const killsPerMin = 60 / killTime;
+
+                // ===== 실제 킬타임 계산 (정밀 보정) =====
+                const timing = RC.COMBAT_TIMING;
+                // MoveSpeed = SpeedBuff + MoveSpeed 스킬 효과 (BattleManager:206 동일)
+                const moveSpeedBuff = (allEffects.SpeedBuff || 0) + (allEffects.MoveSpeed || 0);
+                const actualMoveSpeed = timing.defaultSpeed * (1 + moveSpeedBuff);
+                const moveOverhead = timing.enemySpace / actualMoveSpeed; // 적 간 이동 시간
+                const targetKillDelay = timing.targetKillDelay; // 처치 후 딜레이
+                const realKillTime = killTime + moveOverhead + targetKillDelay;
+                const realKillsPerMin = 60 / realKillTime;
+
+                return {
+                    enemyHp: Math.floor(enemyHp),
+                    resist: (effectiveResist * 100).toFixed(1),
+                    penetration: (allEffects.Penetration * 100).toFixed(0),
+                    totalPower: Math.floor(totalPower),
+                    critRate: critRate.toFixed(1),
+                    critDmg: (critDmg * 100).toFixed(0),
+                    baseDamage: Math.floor(baseDamage),
+                    finalDamage: Math.floor(finalDamage),
+                    dps: Math.floor(dps),
+                    attacksToKill,
+                    killTime: killTime.toFixed(2),
+                    killsPerMin: killsPerMin.toFixed(1),
+                    // 실제 킬타임 (정밀 보정)
+                    realKillTime: realKillTime.toFixed(2),
+                    realKillsPerMin: realKillsPerMin.toFixed(1),
+                    moveOverhead: moveOverhead.toFixed(2),
+                    moveSpeedBuff: (moveSpeedBuff * 100).toFixed(0),
+                    // 무기 효과 요약
+                    effects: {
+                        AttBuff: (allEffects.AttBuff * 100).toFixed(0),
+                        DoubleHit: (doubleHitTotal * 100).toFixed(0),
+                        AttackSpeed: allEffects.AttackSpeed.toFixed(2),
+                        Penetration: (allEffects.Penetration * 100).toFixed(0),
+                        CritDmgBuff: (allEffects.CritDmgBuff * 100).toFixed(0),
+                        BossSlayer: (allEffects.BossSlayer * 100).toFixed(0),
+                        Execution: (allEffects.Execution * 100).toFixed(0),
+                        AreaDamage: (allEffects.AreaDamage * 100).toFixed(0),
+                        Lifesteal: (allEffects.Lifesteal * 100).toFixed(0)
+                    },
+                    status: realKillTime <= 3 ? '양호' : realKillTime <= 5 ? '느림' : '정체',
+                    statusColor: realKillTime <= 3 ? '#4CAF50' : realKillTime <= 5 ? '#FF9800' : '#f44336'
+                };
+            }
+
+            let simChart = null;
+
+            function runSimulator() {
+                if (!BALANCE_DATA) return;
+
+                const stage = parseInt(document.getElementById('simStage').value) || 50;
+
+                // 플레이어 무기
+                const playerWeaponId = document.getElementById('simWeaponPlayer').value;
+                const playerWeapon = BALANCE_DATA.weapons.find(w => w.id === playerWeaponId);
+                const playerWeaponLv = parseInt(document.getElementById('simWeaponPlayerLv').value) || 0;
+
+                // 5개 장착 스킬 수집
+                const equipedSkills = [];
+                const skillLevels = [];
+                for (let i = 0; i < 5; i++) {
+                    const skillId = document.getElementById(`simSkill${i}`).value;
+                    const skill = BALANCE_DATA.skills.find(s => s.id === skillId);
+                    const skillLv = parseInt(document.getElementById(`simSkill${i}Lv`).value) || 1;
+                    if (skill) {
+                        equipedSkills.push(skill);
+                        skillLevels.push(skillLv);
+                    }
+                }
+
+                if (!playerWeapon) return;
+
+                // 스테이지 기반 자동 계산 (동료)
+                const companionCount = (stage >= 60 ? 3 : stage >= 40 ? 2 : stage >= 20 ? 1 : 0);
+
+                // 승급 배율 (UI 선택값)
+                const rankIndex = parseInt(document.getElementById('simRank').value) || 0;
+                const promoteMult = RC.RANK_MULTIPLIERS[rankIndex] || 1;
+
+                // 동료 승급효과 합산 (슬롯 기반)
+                const compEffects = calcCompanionEffects(stage);
+                const compPowerSum = 0; // 슬롯에서 Power 직접 증가 없음 (AttBuff%로 처리)
+                const compCritDmgSum = compEffects.CriticalDamage || 0;
+                const compDoubleHitSum = 0; // 슬롯에 DoubleHit 없음
+                const compDefBuffSum = compEffects.DefBuff || 0;
+                const compMaxHpSum = compEffects.MaxHp || 0;
+                const compAttBuffSum = compEffects.AttBuff || 0;
+
+                // 동료 무기 수집
+                const companionWeapons = [];
+                if (stage >= 20) {
+                    const bowId = document.getElementById('simWeaponBow').value;
+                    companionWeapons.push(BALANCE_DATA.weapons.find(w => w.id === bowId));
+                }
+                if (stage >= 40) {
+                    const shieldId = document.getElementById('simWeaponShield').value;
+                    companionWeapons.push(BALANCE_DATA.weapons.find(w => w.id === shieldId));
+                }
+                if (stage >= 60) {
+                    const staffId = document.getElementById('simWeaponStaff').value;
+                    companionWeapons.push(BALANCE_DATA.weapons.find(w => w.id === staffId));
+                }
+
+                const params = {
+                    stage,
+                    level: parseInt(document.getElementById('simLevel').value) || 50,
+                    powerLv: parseInt(document.getElementById('simPowerLv').value) || 100,
+                    critDmgLv: parseInt(document.getElementById('simCritDmgLv').value) || 30,
+                    critLv: parseInt(document.getElementById('simCritLv').value) || 20,
+                    weapon: playerWeapon,
+                    weaponLv: playerWeaponLv,
+                    // 5개 스킬 배열
+                    skills: equipedSkills,
+                    skillLevels: skillLevels,
+                    companions: companionCount,
+                    promoteMult,
+                    isBoss: document.getElementById('simBoss').checked,
+                    // 동료 승급효과 (슬롯 기반)
+                    compPower: compPowerSum,
+                    compAttBuff: compAttBuffSum, // 동료 승급효과 AttBuff%
+                    critDmgBuff: compCritDmgSum, // 이미 비율
+                    doubleHit: compDoubleHitSum,
+                    // 동료 무기
+                    companionWeapons,
+                    // 스탯포인트 강화
+                    spPower: parseInt(document.getElementById('simSPPower').value) || 0,
+                    spMaxHp: parseInt(document.getElementById('simSPMaxHp').value) || 0,
+                    spCrit: parseInt(document.getElementById('simSPCrit').value) || 0,
+                    spCritDmg: parseInt(document.getElementById('simSPCritDmg').value) || 0,
+                    spHpRec: parseInt(document.getElementById('simSPHpRec').value) || 0,
+                    // 보너스 스탯 (무기 도감 + 승급 효과) - 새 UI에서 합계 가져오기
+                    bookPower: parseInt(document.getElementById('simBookPowerTotal')?.textContent) || 0,
+                    promotePower: parseInt(document.getElementById('simPromotePowerTotal')?.textContent) || 0,
+                    promoteCritDmg: parseInt(document.getElementById('simPromoteCritDmgTotal')?.textContent) || 0,
+                    promoteMaxHp: parseInt(document.getElementById('simPromoteMaxHpTotal')?.textContent) || 0
+                };
+
+                const result = simulate(params);
+
+                // 결과 카드
+                document.getElementById('simResult').style.display = 'block';
+                document.getElementById('simResultCards').innerHTML = `
+                    <div style="background:${result.statusColor}; color:white; padding:16px; border-radius:8px; text-align:center;">
+                        <div style="font-size:24px; font-weight:bold;">${result.realKillTime}초</div>
+                        <div>실제 킬타임 (${result.status})</div>
+                    </div>
+                    <div style="background:#2196F3; color:white; padding:16px; border-radius:8px; text-align:center;">
+                        <div style="font-size:24px; font-weight:bold;">${result.dps.toLocaleString()}</div>
+                        <div>DPS</div>
+                    </div>
+                    <div style="background:#9C27B0; color:white; padding:16px; border-radius:8px; text-align:center;">
+                        <div style="font-size:24px; font-weight:bold;">${result.realKillsPerMin}</div>
+                        <div>처치/분 (실제)</div>
+                    </div>
+                    <div style="background:#607D8B; color:white; padding:16px; border-radius:8px; text-align:center;">
+                        <div style="font-size:24px; font-weight:bold;">${result.attacksToKill}</div>
+                        <div>필요 공격 횟수</div>
+                    </div>
+                    <div style="background:#FFF3E0; padding:12px; border-radius:8px; border:1px solid #FFB74D;">
+                        <div style="font-weight:600; color:#E65100; margin-bottom:4px;">타이밍 보정</div>
+                        <div><strong>이론 킬타임:</strong> ${result.killTime}초</div>
+                        <div><strong>이동 오버헤드:</strong> +${result.moveOverhead}초</div>
+                        <div><strong>처치 후 딜레이:</strong> +0.50초</div>
+                    </div>
+                    <div style="background:#f5f5f5; padding:12px; border-radius:8px;">
+                        <div><strong>적 HP:</strong> ${result.enemyHp.toLocaleString()}</div>
+                        <div><strong>저항:</strong> ${result.resist}%</div>
+                    </div>
+                    <div style="background:#f5f5f5; padding:12px; border-radius:8px;">
+                        <div><strong>총 Power:</strong> ${result.totalPower.toLocaleString()}</div>
+                        <div><strong>기본 뎀:</strong> ${result.baseDamage.toLocaleString()}</div>
+                    </div>
+                    <div style="background:#f5f5f5; padding:12px; border-radius:8px;">
+                        <div><strong>크리 확률:</strong> ${result.critRate}%</div>
+                        <div><strong>크리 뎀:</strong> ${result.critDmg}%</div>
+                    </div>
+                    <div style="background:#f5f5f5; padding:12px; border-radius:8px;">
+                        <div><strong>평균 뎀:</strong> ${result.finalDamage.toLocaleString()}</div>
+                        <div><strong>무기:</strong> ${playerWeapon.name} (+${playerWeaponLv})</div>
+                    </div>
+                    <div style="background:#E8EAF6; padding:12px; border-radius:8px; grid-column: span 2;">
+                        <div style="font-weight:600; margin-bottom:4px;">무기 효과 합산</div>
+                        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:4px; font-size:12px;">
+                            <span>AttBuff: ${result.effects.AttBuff}%</span>
+                            <span>DoubleHit: ${result.effects.DoubleHit}%</span>
+                            <span>AtkSpd: +${result.effects.AttackSpeed}</span>
+                            <span>Penetration: ${result.effects.Penetration}%</span>
+                            <span>CritDmgBuff: ${result.effects.CritDmgBuff}%</span>
+                            <span>BossSlayer: ${result.effects.BossSlayer}%</span>
+                            <span>Execution: ${result.effects.Execution}%</span>
+                            <span>AreaDamage: ${result.effects.AreaDamage}%</span>
+                            <span>Lifesteal: ${result.effects.Lifesteal}%</span>
+                        </div>
+                    </div>
+                `;
+
+                // 스테이지 범위 차트
+                const stages = [];
+                const killTimes = [];
+                for (let s = Math.max(1, params.stage - 30); s <= Math.min(300, params.stage + 30); s += 5) {
+                    const r = simulate({ ...params, stage: s });
+                    stages.push(s);
+                    killTimes.push(parseFloat(r.killTime));
+                }
+
+                if (simChart) simChart.destroy();
+                simChart = new Chart(document.getElementById('simKillTimeChart').getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: stages,
+                        datasets: [{
+                            label: '예상 킬타임',
+                            data: killTimes,
+                            borderColor: '#673AB7',
+                            backgroundColor: 'rgba(103, 58, 183, 0.1)',
+                            fill: true, tension: 0.3
+                        }, {
+                            label: '목표 상한 (3초)',
+                            data: stages.map(() => 3),
+                            borderColor: '#f44336',
+                            borderDash: [5, 5], pointRadius: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { title: { display: true, text: '스테이지별 예상 킬타임', font: { size: 14 } } },
+                        scales: {
+                            x: { title: { display: true, text: 'Stage' } },
+                            y: { title: { display: true, text: '킬타임 (초)' }, min: 0, max: 10 }
+                        }
+                    }
+                });
+            }
+
+            function resetSimulator() {
+                document.getElementById('simStage').value = 50;
+                document.getElementById('simLevel').value = 50;
+                document.getElementById('simPowerLv').value = 100;
+                document.getElementById('simMaxHpLv').value = 50;
+                document.getElementById('simCritDmgLv').value = 30;
+                document.getElementById('simCritRate').value = 5;
+                document.getElementById('simWeaponPower').value = 50;
+                document.getElementById('simSkillMult').value = 1.5;
+                document.getElementById('simAtkSpeed').value = 1.5;
+                document.getElementById('simCompanions').value = 3;
+                document.getElementById('simPromote').value = 3;
+                document.getElementById('simBoss').checked = false;
+                localStorage.removeItem('sim_params_v2');
+                document.getElementById('simResult').style.display = 'none';
+                if (simChart) { simChart.destroy(); simChart = null; }
+            }
+
+            // 페이지 로드 시 저장된 값 복원
+            window.addEventListener('load', () => {
+                // 시뮬레이터 데이터 로드
+                loadBalanceData();
+
+                const saved = localStorage.getItem('sim_params_v2');
+                if (saved) {
+                    const p = JSON.parse(saved);
+                    if (p.stage) document.getElementById('simStage').value = p.stage;
+                    if (p.level) document.getElementById('simLevel').value = p.level;
+                    if (p.powerLv) document.getElementById('simPowerLv').value = p.powerLv;
+                    if (p.maxHpLv) document.getElementById('simMaxHpLv').value = p.maxHpLv;
+                    if (p.critDmgLv) document.getElementById('simCritDmgLv').value = p.critDmgLv;
+                    if (p.critRate) document.getElementById('simCritRate').value = p.critRate;
+                    if (p.weaponPower) document.getElementById('simWeaponPower').value = p.weaponPower;
+                    if (p.skillMult) document.getElementById('simSkillMult').value = p.skillMult;
+                    if (p.atkSpeed) document.getElementById('simAtkSpeed').value = p.atkSpeed;
+                    if (p.companions) document.getElementById('simCompanions').value = p.companions;
+                    if (p.promoteMult) document.getElementById('simPromote').value = p.promoteMult;
+                    if (p.isBoss) document.getElementById('simBoss').checked = p.isBoss;
+                }
+            });
+        </script>
+
+        <!-- ========== 섹션 8 ========== -->
+        <h2 id="sec8">8. 업계 리서치</h2>
+        <p>
+            게임 밸런싱 수치를 설계할 때, 검증된 상용 게임들의 공식과 GDC 발표 자료를 참고했습니다.
+            아래는 참고한 내용과 본 게임에 실제로 적용한 결과입니다.
+        </p>
+
+        <h3>8.1 참고한 모바일 RPG → 본 게임 적용</h3>
+
+        <table>
+            <tr>
+                <th>참고 게임</th>
+                <th>참고한 개념</th>
+                <th>공식/메커니즘</th>
+                <th>본 게임 적용</th>
+            </tr>
+            <tr>
+                <td>Summoners War</td>
+                <td>방어력 감소 곡선</td>
+                <td>
+                    Defense가 높아질수록 피해 감소율 증가폭이 줄어듦<br>
+                    <code>DamageReduction = DEF / (DEF + 1000)</code><br>
+                    → DEF 1000일 때 50% 감소, 2000일 때 66% (체감 한계)
+                </td>
+                <td>Durability 최대 50% 피해 감소로 캡 설정</td>
+            </tr>
+            <tr>
+                <td>Epic Seven</td>
+                <td>크리티컬 시스템</td>
+                <td>
+                    CritRate와 CritDamage를 별도 스탯으로 분리<br>
+                    기본 CritDmg 150%, 장비로 250~300%까지 상승<br>
+                    엔드게임에서 CritRate 100%가 필수 (DPS 계산 기준)
+                </td>
+                <td>CritRate + CritDmg 분리 설계, 무기/스킬에서 공급</td>
+            </tr>
+            <tr>
+                <td>AFK Arena</td>
+                <td>방치형 경제</td>
+                <td>
+                    AFK 보상 = 캠페인 스테이지 진행도에 비례<br>
+                    최대 12시간 누적 (VIP 레벨로 증가 가능)<br>
+                    자원 병목: EXP/Gold가 레벨업 비용의 2차함수적 증가
+                </td>
+                <td>오프라인 보상 8시간 캡, 스테이지 기반 보상 공식</td>
+            </tr>
+            <tr>
+                <td>Genshin Impact</td>
+                <td>데미지 공식</td>
+                <td>
+                    <code>Damage = ATK × Talent% × (1 + DmgBonus)</code><br>
+                    <code>× DEF_Mult × RES_Mult × Crit_Mult</code><br><br>
+                    DEF_Mult = <code>(100 + CharLv) / (200 + CharLv + EnemyLv)</code><br>
+                    → 같은 레벨일 때 ~50% 피해 관통<br><br>
+                    RES_Mult: 저항 0%일 때 100%, 마이너스 저항은 효과 절반
+                </td>
+                <td>레벨 기반 방어 계산 공식 참고</td>
+            </tr>
+            <tr>
+                <td>Honkai: Star Rail</td>
+                <td>방어력 공식</td>
+                <td>
+                    <code>DEF_Mult = 1 - DEF / (DEF + 200 + 10 × Level)</code><br>
+                    → 레벨 80, DEF 1000일 때 ~50% 피해 감소<br><br>
+                    방어 감소와 방어 관통은 가산 적용<br>
+                    합계 100% 도달 시 방어 무효화 (캡 존재)
+                </td>
+                <td>Durability 피해 감소 공식 설계 참고</td>
+            </tr>
+        </table>
+
+        <h3>8.2 GDC 발표에서 얻은 교훈</h3>
+        <p>
+            GDC(Game Developers Conference)는 게임 개발자 컨퍼런스입니다.<br>
+            전투 시간, HP 설정, 방치형 수익화에 관한 발표를 참고했습니다.
+        </p>
+        <table>
+            <tr>
+                <th>발표</th>
+                <th>핵심 내용</th>
+                <th>이 게임에 적용한 점</th>
+            </tr>
+            <tr>
+                <td>GDC 2016 "It's About Time"<br>(Scopely)</td>
+                <td>
+                    "한 대 더 쳐야 하면 이탈률이 올라간다"<br>
+                    전투 시간이 너무 길면 플레이어가 지루해함<br>
+                    모바일에서 세션당 평균 3분
+                </td>
+                <td>일반 적은 3초, 보스는 25초 내 처치 목표</td>
+            </tr>
+            <tr>
+                <td>GDC "Boss Battle Design"</td>
+                <td>
+                    패턴이 없는 보스는 2분 이하로<br>
+                    HP만 높은 적은 지루함을 유발<br>
+                    "의미 있는 선택지" 없으면 시간 낭비로 체감
+                </td>
+                <td>방치형 특성상 보스도 25초 이내로 설정</td>
+            </tr>
+            <tr>
+                <td>GDC 2015 "Mechanics and Monetization of Idle Games"<br>(Kongregate/Anthony Pecorella)</td>
+                <td>
+                    방치형 게임의 핵심 루프:<br>
+                    1. 생산자(Generator) 구매 → 자원 생성<br>
+                    2. 업그레이드 구매 → 생산 배율 증가<br>
+                    3. 프레스티지(Prestige) → 영구 보너스로 리셋<br><br>
+                    리텐션이 높은 이유: 오프라인에서도 진행됨<br>
+                    수익화: 광고 시청으로 배율 버프
+                </td>
+                <td>
+                    오프라인 보상 시스템<br>
+                    광고 시청 = 10연차 보상
+                </td>
+            </tr>
+            <tr>
+                <td>GDC 2016 "Math of Idle Games"<br>(Anthony Pecorella)</td>
+                <td>
+                    생산 속도와 비용 모두 지수적 증가:<br>
+                    <code>Cost(n) = Base × 1.15^n</code><br>
+                    <code>Production(n) = Base × 1.1^n</code><br><br>
+                    비용 증가율 > 생산 증가율 → 자연스러운 진행 벽<br>
+                    배율 업그레이드(×2, ×3)로 벽 돌파
+                </td>
+                <td>
+                    강화 비용: 2차 다항식 (stepInc×level²)<br>
+                    배율 업그레이드: 승급 시스템 (×1.5~×15)
+                </td>
+            </tr>
+        </table>
+
+
+        <h3>8.3 방치형 게임 경제 설계 원칙</h3>
+        <p>방치형 게임의 경제는 "지수적 성장"과 "진행 벽"의 균형이 핵심입니다.</p>
+
+        <h4>핵심 설계 원칙</h4>
+        <table>
+            <tr>
+                <th>원칙</th>
+                <th>설명</th>
+                <th>본 게임 적용</th>
+            </tr>
+            <tr>
+                <td>비용 증가율 > 수입 증가율</td>
+                <td>
+                    업그레이드 비용이 수입보다 빠르게 증가해야<br>
+                    자연스러운 "진행 벽" 형성<br>
+                    예: 비용 ×1.15배/레벨, 수입 ×1.1배/레벨
+                </td>
+                <td>
+                    강화 비용: 2차 다항식 (level² 계수)<br>
+                    골드 수입: 1차 + 약한 2차항
+                </td>
+            </tr>
+            <tr>
+                <td>배율 업그레이드로 벽 돌파</td>
+                <td>
+                    ×2, ×3 등의 배율 업그레이드가<br>
+                    진행 벽을 넘는 열쇠 역할<br>
+                    구매 시 급격한 파워 스파이크 발생
+                </td>
+                <td>
+                    승급 시스템: ×1.5 → ×3 → ×8 → ×15<br>
+                    동료 해금: Stage 20/40/60에서 파워 스파이크
+                </td>
+            </tr>
+            <tr>
+                <td>오프라인 수입 = 온라인의 일부</td>
+                <td>
+                    오프라인 보상은 온라인의 5~20%가 적정<br>
+                    너무 높으면 플레이 동기 감소<br>
+                    너무 낮으면 복귀 시 좌절감
+                </td>
+                <td>
+                    오프라인: 온라인 대비 5~10%<br>
+                    최대 8시간 누적
+                </td>
+            </tr>
+            <tr>
+                <td>캡(상한선) 설정</td>
+                <td>
+                    무한 누적 방지 → 주기적 접속 유도<br>
+                    AFK Arena: 12시간 캡<br>
+                    Clicker Heroes: 8시간 캡
+                </td>
+                <td>MaxAccumulatedTime: 8시간 (28,800초)</td>
+            </tr>
+        </table>
+
+        <h4>공식 적용 비교</h4>
+        <table>
+            <tr>
+                <th>요소</th>
+                <th>업계 일반 패턴</th>
+                <th>본 게임 구현</th>
+            </tr>
+            <tr>
+                <td>강화 비용</td>
+                <td>
+                    지수 증가: <code>Base × 1.15^Level</code><br>
+                    장점: 급격한 스케일링<br>
+                    단점: 후반 비용 폭발
+                </td>
+                <td>
+                    2차 다항식: <code>basePrice + step×L + stepInc×L²</code><br>
+                    지수보다 완만, 예측 가능
+                </td>
+            </tr>
+            <tr>
+                <td>골드 수입</td>
+                <td>
+                    선형: <code>Base + Level × Rate</code><br>
+                    또는 지수: <code>Base × 1.1^Level</code>
+                </td>
+                <td>
+                    1차+2차 혼합: <code>stage×5 + stage²×0.1</code><br>
+                    초반 선형, 후반 가속
+                </td>
+            </tr>
+            <tr>
+                <td>적 HP</td>
+                <td>
+                    다항식: <code>Base + aL + bL²</code><br>
+                    특정 구간에서 벽 형성
+                </td>
+                <td>
+                    기본: <code>250 + stage×150 + (stage/40)²×500</code><br>
+                    동료 해금 보정:<br>
+                    - Stage 20: ×1.5<br>
+                    - Stage 40: ×1.8<br>
+                    - Stage 60: ×2.0
+                </td>
+            </tr>
+            <tr>
+                <td>프레스티지(승급)</td>
+                <td>
+                    전체 리셋 + 영구 배율<br>
+                    <code>PrestigeMult = 1 + (TotalEarnings/Threshold)^0.5</code>
+                </td>
+                <td>
+                    부분 승급: 스탯만 배율 적용<br>
+                    Stone → Bronze → Iron → Silver → Gold<br>
+                    × 1 → × 1.5 → × 3 → × 8 → × 15
+                </td>
+            </tr>
+        </table>
+
+        <!-- ========== 섹션 9 ========== -->
+        <h2>9. 밸런싱 요소 전체 목록</h2>
+
+        <h3>9.1 스탯 공급원</h3>
+        <table>
+            <tr>
+                <th>분류</th>
+                <th>요소</th>
+                <th>영향 스탯</th>
+                <th>소스</th>
+            </tr>
+            <tr>
+                <td rowspan="2">강화</td>
+                <td>골드 강화</td>
+                <td>Power, CritDmg, Crit, MaxHP, HpRecover</td>
+                <td>REINFORCE_VALUE_GOLD</td>
+            </tr>
+            <tr>
+                <td>스탯포인트</td>
+                <td>Power, CritDmg, MaxHP, HpRecover, GoldAscend</td>
+                <td>REINFORCE_VALUE_STATUS</td>
+            </tr>
+            <tr>
+                <td>승급</td>
+                <td>Promote (5랭크)</td>
+                <td>스탯 배율 (×1~×25)</td>
+                <td>StageInfo/Promote</td>
+            </tr>
+            <tr>
+                <td rowspan="2">장비</td>
+                <td>무기 기본 (88개)</td>
+                <td>Power, CritDmg, Crit, AttSpeed</td>
+                <td>WeaponData.asset</td>
+            </tr>
+            <tr>
+                <td>무기 특수효과</td>
+                <td>SkillType 26종</td>
+                <td>_weaponEffects</td>
+            </tr>
+            <tr>
+                <td>동료</td>
+                <td>Companion ×3</td>
+                <td>무기 효과 합산 (GetPWValue)</td>
+                <td>CompanionData + WeaponData</td>
+            </tr>
+            <tr>
+                <td>스킬</td>
+                <td>스킬 (51개)</td>
+                <td>다양한 효과</td>
+                <td>SkillData.asset</td>
+            </tr>
+        </table>
+
+        <h3>9.2 적 스탯</h3>
+        <table>
+            <tr>
+                <th>요소</th>
+                <th>공식</th>
+                <th>소스</th>
+            </tr>
+            <tr>
+                <td>일반 적 HP</td>
+                <td><code>30 + stage×25 + max(0, stage-40)×50 + (stage/55)²×450</code></td>
+                <td>StageInfo 계산 (v3)</td>
+            </tr>
+            <tr>
+                <td>보스 HP</td>
+                <td>일반 HP × 8.3</td>
+                <td>StageInfo 계산</td>
+            </tr>
+            <tr>
+                <td>보스 저항</td>
+                <td><code>min(0.4, max(0, (stage-50)×0.002))</code></td>
+                <td>StageInfo 계산</td>
+            </tr>
+            <tr>
+                <td>보스 Power</td>
+                <td>stage × 1.2</td>
+                <td>StageInfo 계산</td>
+            </tr>
+        </table>
+
+        <h3>9.3 경제 요소</h3>
+        <table>
+            <tr>
+                <th>요소</th>
+                <th>재화</th>
+                <th>Remote Config 키</th>
+                <th>비고</th>
+            </tr>
+            <tr>
+                <td>가챠 가격</td>
+                <td>다이아</td>
+                <td>GACHA_INFO.cost</td>
+                <td>300/3000</td>
+            </tr>
+            <tr>
+                <td>가챠 확률</td>
+                <td>-</td>
+                <td>⚠️ 하드코딩</td>
+                <td>GachaSystem.cs</td>
+            </tr>
+            <tr>
+                <td>출석 보상</td>
+                <td>다이아</td>
+                <td>ATTENDANCE_INFO</td>
+                <td>20일 24,000</td>
+            </tr>
+            <tr>
+                <td>드랍 확률</td>
+                <td>골드/EXP/무기/조각</td>
+                <td>DROP_PROBABILITY</td>
+                <td>50/50/1/0.1%</td>
+            </tr>
+            <tr>
+                <td>강화 비용</td>
+                <td>골드</td>
+                <td>REINFORCE_PRICE_GOLD</td>
+                <td>step 방식</td>
+            </tr>
+            <tr>
+                <td>오프라인 보상</td>
+                <td>전체</td>
+                <td>OFFLINE_REWARD_INFO</td>
+                <td>최대 10시간</td>
+            </tr>
+        </table>
+
+        <!-- ========== 섹션 9 ========== -->
+        <h2 id="sec10">10. 밸런싱 요소 목록</h2>
+        <p>게임 내 주요 밸런싱 요소들의 전체 목록입니다. 시뮬레이터 개발 시 고려해야 할 파라미터들입니다.</p>
+
+        <h3>9.1 플레이어 스탯</h3>
+        <ul>
+            <li>Power, MaxHp, CritDmg, Critical (골드 강화)</li>
+            <li>레벨당 기본 스탯 증가</li>
+            <li>승급 배율</li>
+        </ul>
+
+        <h3>9.2 무기 (플레이어 + 동료 3)</h3>
+        <ul>
+            <li>플레이어 무기: 선택 + 강화레벨</li>
+            <li>궁수요미(Bow): 무기 선택 + 강화레벨</li>
+            <li>전사요미(Shield): 무기 선택 + 강화레벨</li>
+            <li>법사요미(Staff): 무기 선택 + 강화레벨</li>
+        </ul>
+
+        <h3>9.3 스킬</h3>
+        <ul>
+            <li>장착 액티브 스킬 (최대 4개)</li>
+            <li>장착 패시브 스킬 (최대 4개)</li>
+            <li>각 스킬 레벨</li>
+        </ul>
+
+        <h3>9.4 동료 효과</h3>
+        <ul>
+            <li>각 동료 전직 단계 (0~3차)</li>
+            <li>각 슬롯 효과 타입 및 레어도</li>
+        </ul>
+
+        <h3>9.5 데이터 소스 정리 (Remote Config vs ScriptableObject)</h3>
+        <p>밸런싱 파라미터가 어디에 정의되어 있는지 정리한 표입니다. 수정 시 올바른 위치를 참조하세요.</p>
+
+        <h4>Remote Config (Unity Remote Config 대시보드)</h4>
+        <table>
+            <tr>
+                <th>키</th>
+                <th>내용</th>
+                <th>주요 파라미터</th>
+            </tr>
+            <tr>
+                <td><code>REINFORCE_VALUE_GOLD</code></td>
+                <td>골드 강화 스탯</td>
+                <td>Power.startValue=10, Power.baseInc=1</td>
+            </tr>
+            <tr>
+                <td><code>REINFORCE_VALUE_STATUS</code></td>
+                <td>스탯포인트 강화</td>
+                <td>Power.baseInc=1</td>
+            </tr>
+            <tr>
+                <td><code>REINFORCE_PRICE_GOLD</code></td>
+                <td>골드 강화 비용</td>
+                <td>Power.startValue=150</td>
+            </tr>
+            <tr>
+                <td><code>GOLD_DROP_FORMULA</code></td>
+                <td>골드 드롭 공식</td>
+                <td><code>{stageNum}*5 + {stageNum}²×0.1</code></td>
+            </tr>
+            <tr>
+                <td><code>EXP_DROP_FORMULA</code></td>
+                <td>경험치 드롭 공식</td>
+                <td><code>{stageNum}*3 + {stageNum}²×0.05</code></td>
+            </tr>
+            <tr>
+                <td><code>GACHA_INFO</code></td>
+                <td>가챠 확률/비용</td>
+                <td>weapon.single.amount=<strong>300 다이아</strong>, costume.single.amount=1 다이아</td>
+            </tr>
+            <tr>
+                <td><code>DUNGEON_REWARD</code></td>
+                <td>던전 보상</td>
+                <td>EntranceFee=20</td>
+            </tr>
+            <tr>
+                <td><code>DROP_PROBABILITY</code></td>
+                <td>드롭 확률</td>
+                <td>Weapon=0.01, Fragment=0.001</td>
+            </tr>
+        </table>
+
+        <h4>ScriptableObject (Unity 에셋)</h4>
+        <table>
+            <tr>
+                <th>폴더</th>
+                <th>에셋</th>
+                <th>주요 파라미터</th>
+            </tr>
+            <tr>
+                <td><code>08.ScriptableObject/StageInfo/Normal/</code></td>
+                <td>Stage_1~300.asset</td>
+                <td>enemyStatusFromStage.maxHp, bossStatusFromStage.maxHp/power/resist</td>
+            </tr>
+            <tr>
+                <td><code>08.ScriptableObject/PriceInfo/</code></td>
+                <td>PriceInfo.asset</td>
+                <td>스킬 강화 비용 (commonSkillPrice 등)</td>
+            </tr>
+            <tr>
+                <td><code>08.ScriptableObject/Skill/SkillAcquireInfo/</code></td>
+                <td>SkillAcquireInfo_0~15.asset</td>
+                <td>스킬 해금 레벨/스테이지</td>
+        </table>
+
+        <!-- ========== 섹션 11 ========== -->
+        <h2 id="sec11">11. 문제점 및 개선사항</h2>
+
+
+        <h3>11.1 발견된 문제</h3>
+        <table>
+            <tr>
+                <th>중요도</th>
+                <th>유형</th>
+                <th>문제</th>
+                <th>위치</th>
+                <th>설명</th>
+                <th>권장 조치</th>
+            </tr>
+            <!-- 상: 코드 버그 (미구현) -->
+            <tr>
+                <td style="color:#e53935; font-weight:bold;">상</td>
+                <td>버그</td>
+                <td>무기 도감 보너스 미적용</td>
+                <td>PlayerStatus.cs</td>
+                <td>Power 계산에 도감 보너스 누락 → 완성해도 전투력 0 증가</td>
+                <td>_power_Book 필드 추가</td>
+            </tr>
+            <tr>
+                <td style="color:#e53935; font-weight:bold;">상</td>
+                <td>버그</td>
+                <td>승급 효과(Power) 미적용</td>
+                <td>PlayerStatus.cs</td>
+                <td>_power_Promote 값 있으나 Power 계산 누락 → 승급해도 전투력 0 증가</td>
+                <td>Power 계산식 수정</td>
+            </tr>
+            <tr>
+                <td style="color:#e53935; font-weight:bold;">상</td>
+                <td>버그</td>
+                <td>코스튬 가챠 비용 1다이아</td>
+                <td>CostumeUI.cs</td>
+                <td>1다이아로 설정됨 (의도치 않은 값) → 경제 붕괴</td>
+                <td>100~300 다이아로 수정</td>
+            </tr>
+            <tr>
+                <td style="color:#e53935; font-weight:bold;">상</td>
+                <td>버그</td>
+                <td>동료 해금 조건 미적용</td>
+                <td>동료 시스템</td>
+                <td>스테이지별 해금 조건 있으나 시작부터 모든 동료 해금됨 → 해금 로직 미작동</td>
+                <td>해금 조건 체크 로직 수정</td>
+            </tr>
+            <tr>
+                <td style="color:#e53935; font-weight:bold;">상</td>
+                <td>버그</td>
+                <td>가챠 확률 중복 정의</td>
+                <td>GachaSystem.cs</td>
+                <td>RC에 tiers 값 있으나 코드에 하드코딩도 존재 → 어느 값이 적용되는지 불명확</td>
+                <td>하드코딩 제거, RC 값만 사용</td>
+            </tr>
+            <!-- 중: 밸런스 조정 -->
+            <tr>
+                <td style="color:#FF9800; font-weight:bold;">중</td>
+                <td>밸런스</td>
+                <td>고등급 도감 완성 불가</td>
+                <td>GACHA_INFO</td>
+                <td>Legendary/Mythic 확률 0.2~8.7% → 200h로 고등급 세트 완성 불가</td>
+                <td>확률 상향, 천장 시스템</td>
+            </tr>
+            <tr>
+                <td style="color:#FF9800; font-weight:bold;">중</td>
+                <td>밸런스</td>
+                <td>Mythic 확률 극악</td>
+                <td>GACHA_INFO</td>
+                <td>280회 이후 0.5% → 과금 없이 최종 무기 획득 불가</td>
+                <td>티어 구간 완화</td>
+            </tr>
+
+            <tr>
+                <td style="color:#FF9800; font-weight:bold;">중</td>
+                <td>밸런스</td>
+                <td>장기 잉여 무기 소모처 부재</td>
+                <td>무기/가챠 시스템</td>
+                <td>세트 완성 후 잉여 무기 용도 없음 → 저등급 누적 시 손실 회피·보상 무가치화 심리로 가챠 동기 저하</td>
+                <td>① 저등급 N개 합성→고등급 1개, ② 잉여 무기 판매/분해 시스템</td>
+            </tr>
+            <tr>
+                <td style="color:#FF9800; font-weight:bold;">중</td>
+                <td>밸런스</td>
+                <td>도감 세트 보너스 불균형</td>
+                <td>WeaponBook SO</td>
+                <td>Light만 의미있는 보너스(+1584), 나머지 세트는 티어당 +1 → 7세트 무의미, 도감 동기 편중</td>
+                <td>전 세트 보너스 밸런싱 또는 세트별 차별화된 효과 부여</td>
+            </tr>
+            <!-- 하: 개선사항 -->
+            <tr>
+                <td style="color:#4CAF50; font-weight:bold;">하</td>
+                <td>개선</td>
+                <td>승급 효과 하드코딩</td>
+                <td>StatUI.Promote.cs</td>
+                <td>배율 값 하드코딩 → 변경 시 앱 재배포 필요</td>
+                <td>RC 또는 SO 분리</td>
+            </tr>
+            <tr>
+                <td style="color:#4CAF50; font-weight:bold;">하</td>
+                <td>개선</td>
+                <td>코스튬 스탯 없음</td>
+                <td>TotalStatusUI.Costume.cs</td>
+                <td>외형만 변경 → 가챠 유인 부족</td>
+                <td>스탯 보너스 추가</td>
+            </tr>
+            <tr>
+                <td style="color:#4CAF50; font-weight:bold;">하</td>
+                <td>개선</td>
+                <td>후반 스킬 콘텐츠 부족</td>
+                <td>SkillAcquireInfo</td>
+                <td>Lv100 이후 스킬 2개만 → 후반 성장 목표 없음</td>
+                <td>스킬 진화 시스템: 새 스킬 습득 시 기존 스킬 진화, 효과/배율 상향</td>
+            </tr>
+        </table>
+
+    </div><!-- #main-content 끝 -->
+
+    <!-- 스크롤 스파이 JavaScript -->
+    <script>
+        (function () {
+            const sections = ['sec0', 'sec1', 'sec2', 'sec3', 'sec4', 'sec5', 'sec6', 'sec7', 'sec8', 'sec9', 'sec9-5', 'sec10', 'sec11'];
+            const links = document.querySelectorAll('#sidebar-toc a');
+
+            function updateActiveLink() {
+                let current = '';
+
+                for (const id of sections) {
+                    const section = document.getElementById(id);
+                    if (section) {
+                        const rect = section.getBoundingClientRect();
+                        if (rect.top <= 100) {
+                            current = id;
+                        }
+                    }
+                }
+
+                links.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+
+            // 스크롤 이벤트 (throttle)
+            let ticking = false;
+            window.addEventListener('scroll', function () {
+                if (!ticking) {
+                    window.requestAnimationFrame(function () {
+                        updateActiveLink();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+
+            // 초기 실행
+            updateActiveLink();
+
+            // 클릭 시 부드러운 스크롤
+            links.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const target = document.getElementById(targetId);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+        })();
+    </script>
+
+</body>
+
+</html>

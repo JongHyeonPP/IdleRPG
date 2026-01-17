@@ -62,8 +62,7 @@ public class BattleManager : MonoBehaviour
         BattleBroker.OnStageChange();
         UIBroker.RefreshStageSelectUI();
 
-        //Awake¿¡¼­ ÇØ´ç ÀÌº¥Æ®µéÀÌ ¿¬°áµÈ ÀÌÈÄ Start¿¡¼­ ½ÇÇà
-        // ÇÃ·¹ÀÌ¾î ¹«±â
+
         WeaponData playerWeapon = null;
         if (!string.IsNullOrEmpty(_gameData.playerWeaponId))
         {
@@ -71,7 +70,6 @@ public class BattleManager : MonoBehaviour
         }
         PlayerBroker.OnEquipWeapon(playerWeapon, WeaponType.Melee);
 
-        // µ¿·á ¹«±â ¹è¿­ÀÌ null ÀÌ°Å³ª ±æÀÌ°¡ ºÎÁ·ÇØµµ Ç×»ó null ¾ÈÀüÇÏ°Ô Ã³¸®
         string[] arr = _gameData.companionWeaponIdArr;
 
         // Bow
@@ -205,7 +203,7 @@ public class BattleManager : MonoBehaviour
         }
 
         
-        float playerSpeed = 1f + player.GetPWValue(SkillType.MoveSpeed);//ÀÌµ¿¼Óµµ
+        float playerSpeed = 1f + player.GetPWValue(SkillType.MoveSpeed);//ï¿½Ìµï¿½ï¿½Óµï¿½
         foreach (var mover in MediatorManager<IMoveByPlayer>.GetRegisteredObjects())
             mover.MoveByPlayer(_isMove ? _defaultSpeed * playerSpeed * Time.fixedDeltaTime * Vector2.left : Vector3.zero);
     }
@@ -241,6 +239,14 @@ public class BattleManager : MonoBehaviour
             EnemyType.Boss => BigInteger.Parse(_currentStageInfo.bossStatusFromStage.power),
             _ => 0
         };
+
+    EnemyBroker.GetEnemyResist = type => type switch
+    {
+        EnemyType.Boss => _currentStageInfo.bossStatusFromStage.resist,
+        _ => 0f
+    };
+
+    EnemyBroker.GetEnemyPenetration = type => 0f; // ì ì€ ê¸°ë³¸ì ìœ¼ë¡œ ê´€í†µë ¥ ì—†ìŒ
 
 
         BattleBroker.GetEnemyArray += () => _enemies;
@@ -562,7 +568,7 @@ public class BattleManager : MonoBehaviour
                         Debug.LogWarning("DungeonReward is null or invalid.");
                     }
 
-                    // ´ÙÀ½ ÀüÅõ ¼³Á¤
+                    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                     //if (BattleBroker.GetDungeonRetry())
                     //{
                     //    _nextBattleType = BattleType.Dungeon;
@@ -589,39 +595,39 @@ public class BattleManager : MonoBehaviour
     {
         DropBase drop;
 
-        // µå·Ó È®·ü ¿øº» (Remote Config¿¡¼­ °¡Á®¿À±â)
+        // ï¿½ï¿½ï¿½ È®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (Remote Configï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
         string probJson = RemoteConfigService.Instance.appConfig.GetJson("DROP_PROBABILITY", "None");
         var fullProbDict = JsonConvert.DeserializeObject<Dictionary<string, float>>(probJson);
 
-        // µå·Ó ´ë»ó ¹× °¡ÁßÄ¡ ¸®½ºÆ® ±¸¼º
+        // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
         List<(string type, float weight)> dropCandidates = new()
         {
             ("Gold", fullProbDict["Gold"]),
             ("Exp", fullProbDict["Exp"])
         };
 
-        // Fragment Á¶°Ç È®ÀÎ
+        // Fragment ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
         if (CurrencyManager.instance.currentFragmentValue.count > 0)
             dropCandidates.Add(("Fragment", fullProbDict["Fragment"]));
 
-        // Weapon Á¶°Ç È®ÀÎ
+        // Weapon ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
         if (!string.IsNullOrEmpty(CurrencyManager.instance.currentWeaponValue))
             dropCandidates.Add(("Weapon", fullProbDict["Weapon"]));
 
-        // ÀüÃ¼ °¡ÁßÄ¡ ÇÕ°è °è»ê
+        // ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½Ä¡ ï¿½Õ°ï¿½ ï¿½ï¿½ï¿½
         float totalWeight = 0f;
         foreach (var candidate in dropCandidates)
             totalWeight += candidate.weight;
 
-        // Á¤±ÔÈ­µÈ È®·ü ¸®½ºÆ® »ý¼º
+        // ï¿½ï¿½ï¿½ï¿½È­ï¿½ï¿½ È®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
         List<float> normalizedWeights = new();
         foreach (var candidate in dropCandidates)
             normalizedWeights.Add(candidate.weight / totalWeight);
 
-        // È®·ü ±â¹Ý ÀÎµ¦½º ¼±ÅÃ
+        // È®ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         int selectedIndex = UtilityManager.AllocateProbability(normalizedWeights.ToArray());
 
-        // ¼±ÅÃµÈ µå·Ó Å¸ÀÔ¿¡ µû¶ó µå·Ó »ý¼º
+        // ï¿½ï¿½ï¿½Ãµï¿½ ï¿½ï¿½ï¿½ Å¸ï¿½Ô¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         string selectedType = dropCandidates[selectedIndex].type;
         switch (selectedType)
         {
@@ -696,26 +702,26 @@ public class BattleManager : MonoBehaviour
         _isMove = false;
         _isKnockback = false;
 
-        // ÇÃ·¹ÀÌ¾î Á¤Áö
+        // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (_controller != null)
         {
             _controller.StopAttack();
             _controller.MoveState(false);
         }
 
-        // µ¿·á Á¤Áö
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         foreach (var comp in _companions)
         {
             if (comp == null) continue;
 
-            // ÄÚ·çÆ¾ Á¤Áö
+            // ï¿½Ú·ï¿½Æ¾ ï¿½ï¿½ï¿½ï¿½
             comp.StopAllCoroutines();
 
-            // °ø°Ý ·çÇÁ ÄÚ·çÆ¾ Á¤Áö (CompanionController ³»ºÎ Stop Ã³¸®)
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ú·ï¿½Æ¾ ï¿½ï¿½ï¿½ï¿½ (CompanionController ï¿½ï¿½ï¿½ï¿½ Stop Ã³ï¿½ï¿½)
             BattleBroker.ControllCompanionMove?.Invoke(0);
         }
 
-        // Àû Á¤Áö
+        // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (_enemies != null)
         {
             foreach (var enemy in _enemies)
@@ -731,7 +737,6 @@ public class BattleManager : MonoBehaviour
             }
         }
 
-        // IMoveByPlayer ¿¬µ¿ ¿ÀºêÁ§Æ® Á¤Áö
         foreach (var mover in MediatorManager<IMoveByPlayer>.GetRegisteredObjects())
             mover.MoveByPlayer(Vector2.zero);
     }
@@ -742,14 +747,11 @@ public class BattleManager : MonoBehaviour
         _isMove = true;
         _isKnockback = false;
 
-        // ÇÃ·¹ÀÌ¾î ÀÌµ¿ Àç°³
         if (_controller != null)
             _controller.MoveState(true);
 
-        // COMPANION Àç°³ ¡æ ÀÌµ¿ »óÅÂ·Î º¹±¸
         BattleBroker.ControllCompanionMove?.Invoke(1);
 
-        // Àû Àç°³ (Å¸°Ù¸¸ ´Ù½Ã ÁöÁ¤ÇØÁÖ¸é µÊ)
         if (_enemies != null)
         {
             foreach (var enemy in _enemies)
@@ -760,7 +762,6 @@ public class BattleManager : MonoBehaviour
             }
         }
 
-        // ÀÌµ¿ °ü·Ã ½Ã½ºÅÛ Àç°³
         foreach (var mover in MediatorManager<IMoveByPlayer>.GetRegisteredObjects())
             mover.MoveByPlayer(Vector2.zero);
     }

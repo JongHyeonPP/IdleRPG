@@ -1,4 +1,4 @@
-%YAML 1.1
+﻿%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!114 &11400000
 MonoBehaviour:
@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _weaponType: 0
   _weaponRarity: 5
-  _power: 1
+  _power: 190
   _maxHp: 0
-  _criticalDamage: 1
-  _critical: 1
+  _criticalDamage: 85
+  _critical: 21
   _resist: 0
   _penetration: 0
   _weaponSprite: {fileID: 21300000, guid: c2eb9757e20bf40ea855e70321a2f2d4, type: 3}
@@ -25,6 +25,11 @@ MonoBehaviour:
   _textureScale: 1
   _uID: Melee_502
   _weaponName: "\uD64D\uC5FC"
-  _powerPerUpgrade: 0
-  _critDmgPerUpgrade: 0
-  _critPerUpgrade: 0
+  _powerPerUpgrade: 30
+  _critDmgPerUpgrade: 12
+  _critPerUpgrade: 3
+  _weaponEffects:
+  - type: 22
+    value: 0.4
+  - type: 25
+    value: 0.3

@@ -1,0 +1,2188 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>요미 키우기 - 개발자 레퍼런스</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --bg-highlight: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-purple: #a78bfa;
+            --accent-green: #4ade80;
+            --accent-orange: #fb923c;
+            --border: #475569;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Noto Sans KR', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 15px;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: var(--bg-card);
+            padding: 24px 16px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            border-right: 1px solid var(--border);
+        }
+
+        .sidebar h1 {
+            font-size: 18px;
+            color: var(--accent-blue);
+            margin-bottom: 24px;
+        }
+
+        .nav-section {
+            margin-bottom: 18px;
+        }
+
+        .nav-section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            padding-left: 8px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 8px 12px;
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: all 0.15s;
+        }
+
+        .nav-link:hover {
+            background: var(--bg-highlight);
+            color: var(--accent-blue);
+        }
+
+        .main {
+            flex: 1;
+            margin-left: 260px;
+            padding: 40px 60px;
+            max-width: 1100px;
+        }
+
+        h2 {
+            font-size: 24px;
+            color: var(--accent-blue);
+            margin: 48px 0 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        h2:first-of-type {
+            margin-top: 0;
+        }
+
+        h3 {
+            font-size: 18px;
+            color: var(--accent-purple);
+            margin: 28px 0 12px;
+        }
+
+        h4 {
+            font-size: 15px;
+            color: var(--accent-orange);
+            margin: 18px 0 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 24px;
+            background: var(--bg-card);
+            border-radius: 6px;
+            overflow: hidden;
+            font-size: 14px;
+        }
+
+        th,
+        td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--bg-highlight);
+            color: var(--accent-blue);
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        code {
+            background: var(--bg-highlight);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+            font-size: 13px;
+            color: var(--accent-green);
+        }
+
+        .path {
+            font-family: 'Consolas', monospace;
+            font-size: 13px;
+            color: var(--accent-purple);
+            margin-bottom: 8px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 16px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <nav class="sidebar">
+            <h1>Developer Reference</h1>
+
+            <div class="nav-section">
+                <div class="nav-section-title">데이터</div>
+                <a href="#gamedata" class="nav-link">GameData</a>
+                <a href="#enums" class="nav-link">Enum</a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">캐릭터</div>
+                <a href="#character" class="nav-link">Character</a>
+                <a href="#companion" class="nav-link">Companion</a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">성장</div>
+                <a href="#stat" class="nav-link">Stat 강화</a>
+                <a href="#skill" class="nav-link">Skill</a>
+                <a href="#weapon" class="nav-link">Weapon</a>
+                <a href="#reinforce" class="nav-link">ReinForce</a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">콘텐츠</div>
+                <a href="#game" class="nav-link">Game / Battle</a>
+                <a href="#stage" class="nav-link">Stage</a>
+                <a href="#adventure" class="nav-link">Adventure</a>
+                <a href="#story" class="nav-link">Story</a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">경제</div>
+                <a href="#drop" class="nav-link">Drop</a>
+                <a href="#currency" class="nav-link">Currency</a>
+                <a href="#store" class="nav-link">Store / Gacha</a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">수익화</div>
+                <a href="#ad" class="nav-link">광고 (Ad)</a>
+                <a href="#purchase" class="nav-link">인앱구매 (IAP)</a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">보상</div>
+                <a href="#offline" class="nav-link">오프라인 보상</a>
+                <a href="#attendance" class="nav-link">출석 체크</a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">UI</div>
+                <a href="#ui" class="nav-link">UI Manager</a>
+                <a href="#totalstatus" class="nav-link">TotalStatus</a>
+                <a href="#appearance" class="nav-link">Appearance</a>
+                <a href="#noticedot" class="nav-link">NoticeDot</a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">시스템</div>
+                <a href="#setting" class="nav-link">Setting</a>
+                <a href="#sound" class="nav-link">Sound</a>
+                <a href="#powersave" class="nav-link">PowerSave</a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">인프라</div>
+                <a href="#network" class="nav-link">Network / Data</a>
+                <a href="#remoteconfig" class="nav-link">Remote Config</a>
+                <a href="#broker" class="nav-link">Broker</a>
+                <a href="#utility" class="nav-link">Utility</a>
+                <a href="#debugger" class="nav-link">TotalDebugger</a>
+                <a href="#editortools" class="nav-link">Editor Tools</a>
+                <a href="#managers" class="nav-link">Manager 목록</a>
+            </div>
+        </nav>
+
+        <main class="main">
+            <!-- ==================== GAMEDATA ==================== -->
+            <h2 id="gamedata">GameData</h2>
+            <p class="path">GameData/GameData.cs</p>
+
+            <div class="grid">
+                <div>
+                    <h4>재화</h4>
+                    <table>
+                        <tr>
+                            <th>필드</th>
+                            <th>타입</th>
+                        </tr>
+                        <tr>
+                            <td><code>gold</code></td>
+                            <td>BigInteger</td>
+                        </tr>
+                        <tr>
+                            <td><code>exp</code></td>
+                            <td>BigInteger</td>
+                        </tr>
+                        <tr>
+                            <td><code>level</code></td>
+                            <td>int</td>
+                        </tr>
+                        <tr>
+                            <td><code>dia</code></td>
+                            <td>int</td>
+                        </tr>
+                        <tr>
+                            <td><code>clover</code></td>
+                            <td>int</td>
+                        </tr>
+                        <tr>
+                            <td><code>scroll</code></td>
+                            <td>int</td>
+                        </tr>
+                    </table>
+                </div>
+                <div>
+                    <h4>스탯 강화</h4>
+                    <table>
+                        <tr>
+                            <th>필드</th>
+                            <th>설명</th>
+                        </tr>
+                        <tr>
+                            <td><code>statLevel_Gold</code></td>
+                            <td>골드 강화 레벨</td>
+                        </tr>
+                        <tr>
+                            <td><code>statLevel_StatPoint</code></td>
+                            <td>스탯P 강화 레벨</td>
+                        </tr>
+                        <tr>
+                            <td><code>statPoint</code></td>
+                            <td>사용 가능 포인트</td>
+                        </tr>
+                        <tr>
+                            <td><code>stat_Promote</code></td>
+                            <td>승급 스탯</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <h4>스킬</h4>
+            <table>
+                <tr>
+                    <th>필드</th>
+                    <th>타입</th>
+                    <th>설명</th>
+                </tr>
+                <tr>
+                    <td><code>equipedSkillArr</code></td>
+                    <td>string[5]</td>
+                    <td>장착 스킬 ID (5슬롯)</td>
+                </tr>
+                <tr>
+                    <td><code>skillLevel</code></td>
+                    <td>Dict&lt;string, int&gt;</td>
+                    <td>스킬별 레벨</td>
+                </tr>
+                <tr>
+                    <td><code>skillFragment</code></td>
+                    <td>Dict&lt;Rarity, int&gt;</td>
+                    <td>스킬 조각</td>
+                </tr>
+            </table>
+
+            <h4>무기</h4>
+            <table>
+                <tr>
+                    <th>필드</th>
+                    <th>타입</th>
+                    <th>설명</th>
+                </tr>
+                <tr>
+                    <td><code>playerWeaponId</code></td>
+                    <td>string</td>
+                    <td>플레이어 무기</td>
+                </tr>
+                <tr>
+                    <td><code>companionWeaponIdArr</code></td>
+                    <td>string[3]</td>
+                    <td>동료 무기</td>
+                </tr>
+                <tr>
+                    <td><code>weaponLevel</code></td>
+                    <td>Dict&lt;string, int&gt;</td>
+                    <td>무기 강화 레벨</td>
+                </tr>
+                <tr>
+                    <td><code>weaponCount</code></td>
+                    <td>Dict&lt;string, int&gt;</td>
+                    <td>무기 보유 수량</td>
+                </tr>
+            </table>
+
+            <h4>승급 / 동료</h4>
+            <table>
+                <tr>
+                    <th>필드</th>
+                    <th>타입</th>
+                    <th>설명</th>
+                </tr>
+                <tr>
+                    <td><code>playerRankIndex</code></td>
+                    <td>int</td>
+                    <td>플레이어 승급 (0~4)</td>
+                </tr>
+                <tr>
+                    <td><code>playerPromoteEffect</code></td>
+                    <td>Dict&lt;int, (StatusType, Rarity)&gt;</td>
+                    <td>플레이어 승급 효과</td>
+                </tr>
+                <tr>
+                    <td><code>companionPromoteEffect[3]</code></td>
+                    <td>Dict[]</td>
+                    <td>동료별 승급 효과</td>
+                </tr>
+                <tr>
+                    <td><code>companionPromoteTech[3][2]</code></td>
+                    <td>int[][]</td>
+                    <td>동료별 전직 기술</td>
+                </tr>
+            </table>
+
+            <h4>진행</h4>
+            <table>
+                <tr>
+                    <th>필드</th>
+                    <th>타입</th>
+                    <th>설명</th>
+                </tr>
+                <tr>
+                    <td><code>currentStageNum</code></td>
+                    <td>int</td>
+                    <td>현재 스테이지</td>
+                </tr>
+                <tr>
+                    <td><code>maxStageNum</code></td>
+                    <td>int</td>
+                    <td>최대 클리어</td>
+                </tr>
+                <tr>
+                    <td><code>adventureProgress[9]</code></td>
+                    <td>int[]</td>
+                    <td>모험 진행도 (9개 챕터)</td>
+                </tr>
+                <tr>
+                    <td><code>dungeonProgress[3]</code></td>
+                    <td>int[]</td>
+                    <td>던전 진행도 (3개 던전)</td>
+                </tr>
+                <tr>
+                    <td><code>gachaThreshold</code></td>
+                    <td>int</td>
+                    <td>가챠 천장</td>
+                </tr>
+            </table>
+
+            <h4>외형</h4>
+            <table>
+                <tr>
+                    <th>필드</th>
+                    <th>타입</th>
+                    <th>설명</th>
+                </tr>
+                <tr>
+                    <td><code>equipedCostumes</code></td>
+                    <td>List&lt;string&gt;</td>
+                    <td>장착 코스튬</td>
+                </tr>
+                <tr>
+                    <td><code>ownedCostumes</code></td>
+                    <td>List&lt;string&gt;</td>
+                    <td>보유 코스튬</td>
+                </tr>
+            </table>
+
+            <!-- ==================== ENUM ==================== -->
+            <h2 id="enums">Enum</h2>
+            <p class="path">Utility/EnumCollection.cs</p>
+            <table>
+                <tr>
+                    <th>Enum</th>
+                    <th>값</th>
+                </tr>
+                <tr>
+                    <td><code>StatusType</code></td>
+                    <td>MaxHp, Power, HpRecover, Critical, CriticalDamage, GoldAscend, ExpAscend, MaxMp, MpRecover,
+                        AttBuff, DefBuff</td>
+                </tr>
+                <tr>
+                    <td><code>SkillType</code></td>
+                    <td>Damage, AttBuff, SpeedBuff, DoubleHit, Penetration, Lifesteal, CritDmgBuff, BossSlayer,
+                        Berserker, Execution, AreaDamage, Rage</td>
+                </tr>
+                <tr>
+                    <td><code>SkillCoolType</code></td>
+                    <td>ByAtt, ByTime, Passive</td>
+                </tr>
+                <tr>
+                    <td><code>Rarity</code></td>
+                    <td>Common, Uncommon, Rare, Unique, Legendary, Mythic, Ancient</td>
+                </tr>
+                <tr>
+                    <td><code>WeaponType</code></td>
+                    <td>Melee, Bow, Shield, Staff</td>
+                </tr>
+                <tr>
+                    <td><code>Rank</code></td>
+                    <td>Stone(0), Bronze(1), Iron(2), Silver(3), Gold(4)</td>
+                </tr>
+                <tr>
+                    <td><code>BattleType</code></td>
+                    <td>Default, Boss, CompanionTech, Adventure, Dungeon, Promote</td>
+                </tr>
+                <tr>
+                    <td><code>DropType</code></td>
+                    <td>Gold, Exp, Fragment, Weapon</td>
+                </tr>
+                <tr>
+                    <td><code>EnemyType</code></td>
+                    <td>Enemy, Boss, Chest</td>
+                </tr>
+            </table>
+
+            <!-- ==================== CHARACTER ==================== -->
+            <h2 id="character">Character</h2>
+            <table>
+                <tr>
+                    <th>파일</th>
+                    <th>경로</th>
+                    <th>주요 역할</th>
+                </tr>
+                <tr>
+                    <td><code>Attackable.cs</code></td>
+                    <td>Character/</td>
+                    <td>공격 가능 캐릭터 베이스, 공격루프, 데미지계산, 스킬실행 <strong>(30KB)</strong></td>
+                </tr>
+                <tr>
+                    <td><code>ICharacterStatus.cs</code></td>
+                    <td>Character/</td>
+                    <td>캐릭터 스탯 인터페이스</td>
+                </tr>
+                <tr>
+                    <td><code>DamageText.cs</code></td>
+                    <td>Character/</td>
+                    <td>데미지 텍스트 표시</td>
+                </tr>
+                <tr>
+                    <td><code>DamageTextPool.cs</code></td>
+                    <td>Character/</td>
+                    <td>데미지 텍스트 풀링</td>
+                </tr>
+            </table>
+
+            <h4>Attackable 핵심 메서드 (30KB)</h4>
+            <table>
+                <tr>
+                    <th>메서드</th>
+                    <th>설명</th>
+                </tr>
+                <tr>
+                    <td><code>AttackLoop()</code></td>
+                    <td>메인 공격 루프 - 타겟 있는 동안 스킬 순차 사용</td>
+                </tr>
+                <tr>
+                    <td><code>CalculateDamageFull(skill, skillData)</code></td>
+                    <td>최종 데미지 계산 (모든 버프/디버프 적용)</td>
+                </tr>
+                <tr>
+                    <td><code>CalcCritical(damage, playerStatus)</code></td>
+                    <td>크리티컬 판정 및 데미지 계산</td>
+                </tr>
+                <tr>
+                    <td><code>GetNextSkill()</code></td>
+                    <td>쿨다운 완료된 다음 스킬 결정</td>
+                </tr>
+                <tr>
+                    <td><code>ReceiveSkill(calcedValue, skillType, damageType)</code></td>
+                    <td>스킬 피격 처리 (데미지/힐 등)</td>
+                </tr>
+                <tr>
+                    <td><code>GetTargets(range, targetNum)</code></td>
+                    <td>공격 대상 목록 획득</td>
+                </tr>
+                <tr>
+                    <td><code>VisualEffectToTarget(targets, skilldata)</code></td>
+                    <td>타겟에게 스킬 시각 효과 표시</td>
+                </tr>
+                <tr>
+                    <td><code>StartAttack() / StopAttack()</code></td>
+                    <td>공격 루프 시작/중지</td>
+                </tr>
+            </table>
+
+            <h4>Character/Player/</h4>
+            <table>
+                <tr>
+                    <th>파일</th>
+                    <th>주요 역할</th>
+                </tr>
+                <tr>
+                    <td><code>PlayerController.cs</code></td>
+                    <td>플레이어 컨트롤러, 장착 스킬/무기 관리</td>
+                </tr>
+                <tr>
+                    <td><code>PlayerStatus.cs</code></td>
+                    <td>플레이어 스탯 계산 (ICharacterStatus 구현)</td>
+                </tr>
+            </table>
+
+            <h4>PlayerStatus 스탯 계산</h4>
+            <table>
+                <tr>
+                    <th>Property</th>
+                    <th>계산식</th>
+                    <th>소스</th>
+                </tr>
+                <tr>
+                    <td><code>MaxHp</code></td>
+                    <td><code>_maxHp_Gold + _maxHp_StatPoint</code></td>
+                    <td>골드강화 + 스탯P강화</td>
+                </tr>
+                <tr>
+                    <td><code>Power</code></td>
+                    <td><code>_power_Gold + _power_StatPoint</code></td>
+                    <td>골드강화 + 스탯P강화</td>
+                </tr>
+                <tr>
+                    <td><code>HpRecover</code></td>
+                    <td><code>_hpRecover_Gold + _hpRecover_StatPoint</code></td>
+                    <td>골드강화 + 스탯P강화</td>
+                </tr>
+                <tr>
+                    <td><code>Critical</code></td>
+                    <td><code>_critical_Gold</code></td>
+                    <td>골드강화</td>
+                </tr>
+                <tr>
+                    <td><code>CriticalDamage</code></td>
+                    <td><code>_criticalDamage_Gold + _criticalDamage_StatPoint</code></td>
+                    <td>골드강화 + 스탯P강화</td>
+                </tr>
+                <tr>
+                    <td><code>GoldAscend</code></td>
+                    <td><code>_goldAscend_StatPoint</code></td>
+                    <td>스탯P강화</td>
+                </tr>
+            </table>
+            <p style="font-size:12px; color:var(--accent-orange); margin:8px 0;">
+                ⚠️ 현재 <code>_Promote</code> 필드들이 Property에 합산되지 않음 (알려진 이슈)
+            </p>
+
+            <h4>Character/Enemy/</h4>
+            <table>
+                <tr>
+                    <th>파일</th>
+                    <th>주요 역할</th>
+                </tr>
+                <tr>
+                    <td><code>EnemyController.cs</code></td>
+                    <td>적 AI, 스탯</td>
+                </tr>
+                <tr>
+                    <td><code>EnemyManager.cs</code></td>
+                    <td>적 스폰, 풀링</td>
+                </tr>
+                <tr>
+                    <td><code>EnemyData.cs</code></td>
+                    <td>적 ScriptableObject</td>
+                </tr>
+            </table>
+
+            <!-- ==================== COMPANION ==================== -->
+            <h2 id="companion">Companion</h2>
+            <table>
+                <tr>
+                    <th>파일</th>
+                    <th>주요 역할</th>
+                </tr>
+                <tr>
+                    <td><code>CompanionController.cs</code></td>
+                    <td>동료 AI, 전투 <strong>(6KB)</strong></td>
+                </tr>
+                <tr>
+                    <td><code>CompanionManager.cs</code></td>
+                    <td>동료 관리, 버프 합산 (GetPWValue) <strong>(5KB)</strong></td>
+                </tr>
+                <tr>
+                    <td><code>CompanionInfo.cs</code></td>
+                    <td>동료 정보 데이터</td>
+                </tr>
+                <tr>
+                    <td><code>CompanionPromoteData.cs</code></td>
+                    <td>동료 승급 데이터</td>
+                </tr>
+                <tr>
+                    <td><code>CompanionTechController.cs</code></td>
+                    <td>전직 기술 컨트롤</td>
+                </tr>
+                <tr>
+                    <td><code>CompanionTechData.cs</code></td>
+                    <td>전직 기술 ScriptableObject</td>
+                </tr>
+            </table>
+
+            <h4>Companion 하위 폴더</h4>
+            <table>
+                <tr>
+                    <th>폴더</th>
+                    <th>주요 파일</th>
+                    <th>용도</th>
+                </tr>
+                <tr>
+                    <td>CompanionInfoUI/</td>
+                    <td>CompanionInfoUI.cs</td>
+                    <td>동료 정보 UI</td>
+                </tr>
+                <tr>
+                    <td>CompanionPromoteInfoUI/</td>
+                    <td>CompanionPromoteInfoUI.cs</td>
+                    <td>동료 승급 정보 UI</td>
+                </tr>
+                <tr>
+                    <td>CompanionTechUI/</td>
+                    <td>CompanionTechUI.cs</td>
+                    <td>전직 UI</td>
+                </tr>
+                <tr>
+                    <td>CompanionUI/</td>
+                    <td>CompanionUI.cs</td>
+                    <td>동료 메인 UI</td>
+                </tr>
+            </table>
+
+            <!-- ==================== STAT ==================== -->
+            <h2 id="stat">Stat 강화</h2>
+            <table>
+                <tr>
+                    <th>파일</th>
+                    <th>주요 역할</th>
+                </tr>
+                <tr>
+                    <td><code>StatUI.cs</code></td>
+                    <td>스탯 UI 메인, 탭 전환 <strong>(8KB)</strong></td>
+                </tr>
+                <tr>
+                    <td><code>StatUI.Enhance.cs</code></td>
+                    <td>골드 강화 탭 (statLevel_Gold)</td>
+                </tr>
+                <tr>
+                    <td><code>StatUI.Grow.cs</code></td>
+                    <td>스탯포인트 강화 탭 (statLevel_StatPoint)</td>
+                </tr>
+                <tr>
+                    <td><code>StatUI.Promote.cs</code></td>
+                    <td>승급 시스템 <strong>(4.5KB)</strong></td>
+                </tr>
+                <tr>
+                    <td><code>PromoteAbilityUI.cs</code></td>
+                    <td>승급 효과 상세 <strong>(9KB)</strong></td>
+                </tr>
+            </table>
+
+            <!-- ==================== SKILL ==================== -->
+            <h2 id="skill">Skill</h2>
+            <table>
+                <tr>
+                    <th>파일</th>
+                    <th>주요 역할</th>
+                </tr>
+                <tr>
+                    <td><code>SkillData.cs</code></td>
+                    <td>스킬 ScriptableObject</td>
+                </tr>
+                <tr>
+                    <td><code>SkillManager.cs</code></td>
+                    <td>스킬 데이터 관리 <strong>(3KB)</strong></td>
+                </tr>
+                <tr>
+                    <td><code>SkillEffectPoolManager.cs</code></td>
+                    <td>스킬 이펙트 풀링</td>
+                </tr>
+            </table>
+
+            <h4>Skill 하위 폴더</h4>
+            <table>
+                <tr>
+                    <th>폴더</th>
+                    <th>주요 파일</th>
+                    <th>용도</th>
+                </tr>
+                <tr>
+                    <td>Acquire/</td>
+                    <td>SkillAcquireUI.cs</td>
+                    <td>스킬 획득/레벨업</td>
+                </tr>
+                <tr>
+                    <td>Equiped/</td>
+                    <td>EquipedSkillUI.cs</td>
+                    <td>스킬 장착 UI (5슬롯)</td>
+                </tr>
+                <tr>
+                    <td>Info/</td>
+                    <td>SkillInfoUI.cs</td>
+                    <td>스킬 상세 정보</td>
+                </tr>
+                <tr>
+                    <td>SkillUI/</td>
+                    <td>SkillUI.cs</td>
+                    <td>스킬 메인 UI</td>
+                </tr>
+            </table>
+
+            <!-- ==================== WEAPON ==================== -->
+            <h2 id="weapon">Weapon</h2>
+            <table>
+                <tr>
+                    <th>파일</th>
+                    <th>주요 역할</th>
+                </tr>
+                <tr>
+                    <td><code>WeaponData.cs</code></td>
+                    <td>무기 ScriptableObject <strong>(2.8KB)</strong></td>
+                </tr>
+                <tr>
+                    <td><code>WeaponManager.cs</code></td>
+                    <td>무기 관리, 장착 <strong>(4.8KB)</strong></td>
+                </tr>
+                <tr>
+                    <td><code>WeaponController.cs</code></td>
+                    <td>무기 오브젝트 컨트롤</td>
+                </tr>
+                <tr>
+                    <td><code>WeaponEffectManager.cs</code></td>
+                    <td>무기 특수 효과</td>
+                </tr>
+            </table>
+
+            <h4>Weapon 하위 폴더</h4>
+            <table>
+                <tr>
+                    <th>폴더</th>
+                    <th>주요 파일</th>
+                    <th>용도</th>
+                </tr>
+                <tr>
+                    <td>WeaponBookUI/</td>
+                    <td>WeaponBookUI.cs</td>
+                    <td>무기 도감</td>
+                </tr>
+                <tr>
+                    <td>WeaponInfoUI/</td>
+                    <td>WeaponInfoUI.cs</td>
+                    <td>무기 상세 정보</td>
+                </tr>
+                <tr>
+                    <td>WeaponUI/</td>
+                    <td>WeaponUI.cs</td>
+                    <td>무기 메인 UI</td>
+                </tr>
+            </table>
+
+            <!-- ==================== REINFORCE ==================== -->
+            <h2 id="reinforce">ReinForce</h2>
+            <table>
+                <tr>
+                    <th>파일</th>
+                    <th>주요 역할</th>
+                </tr>
+                <tr>
+                    <td><code>ReinForceManager.cs</code></td>
+                    <td>강화 로직 관리 <strong>(3.8KB)</strong></td>
+                </tr>
+                <tr>
+                    <td><code>ReinforceRule.cs</code></td>
+                    <td>강화 규칙 정의</td>
+                </tr>
+            </table>
+
+            <!-- ==================== GAME ==================== -->
+            <h2 id="game">Game / Battle</h2>
+            <table>
+                <tr>
+                    <th>파일</th>
+                    <th>경로</th>
+                    <th>주요 역할</th>
+                </tr>
+                <tr>
+                    <td><code>GameManager.cs</code></td>
+                    <td>Game/</td>
+                    <td>게임 초기화, GameData 로드/저장</td>
+                </tr>
+                <tr>
+                    <td><code>GameProgress.cs</code></td>
+                    <td>Game/</td>
+                    <td>게임 진행 상태 추적</td>
+                </tr>
+                <tr>
+                    <td><code>BattleManager.cs</code></td>
+                    <td>Battle/</td>
+                    <td>전투 관리, 적 스폰</td>
+                </tr>
+                <tr>
+                    <td><code>BackgroundPiece.cs</code></td>
+                    <td>Battle/</td>
+                    <td>배경 스크롤</td>
+                </tr>
+                <tr>
+                    <td><code>BossTimerUI.cs</code></td>
+                    <td>BossTimer/</td>
+                    <td>보스 제한 시간</td>
+                </tr>
+            </table>
+
+            <h4>BattleManager 핵심 메서드 (29KB)</h4>
+            <table>
+                <tr>
+                    <th>메서드</th>
+                    <th>설명</th>
+                </tr>
+                <tr>
+                    <td><code>BattleLoop()</code></td>
+                    <td>메인 전투 루프 (FixedUpdate)</td>
+                </tr>
+                <tr>
+                    <td><code>OnStageChange(int stage)</code></td>
+                    <td>스테이지 변경 처리 (적 스폰, 배경 등)</td>
+                </tr>
+                <tr>
+                    <td><code>SwitchToBattle() / SwitchToBoss()</code></td>
+                    <td>일반 전투 / 보스 전투 모드 전환</td>
+                </tr>
+                <tr>
+                    <td><code>SwitchToAdventure() / SwitchToDungeon()</code></td>
+                    <td>모험 / 던전 모드 전환</td>
+                </tr>
+                <tr>
+                    <td><code>MakeDefaultEnemies()</code></td>
+                    <td>일반 적 생성</td>
+                </tr>
+                <tr>
+                    <td><code>MakeBoss()</code></td>
+                    <td>보스 생성</td>
+                </tr>
+                <tr>
+                    <td><code>OnEnemyDead(EnemyController)</code></td>
+                    <td>적 사망 처리 (드랍, 스테이지 진행)</td>
+                </tr>
+                <tr>
+                    <td><code>DropItem(DropType, position)</code></td>
+                    <td>아이템 드랍 처리</td>
+                </tr>
+                <tr>
+                    <td><code>StopBattleEverything() / ResumeBattleEverything()</code></td>
+                    <td>전투 일시정지 / 재개</td>
+                </tr>
+            </table>
+
+            <!-- ==================== STAGE ==================== -->
+            <h2 id="stage">Stage</h2>
+            <p class="path">StageSelect/</p>
+            <table>
+                <tr>
+                    <th>파일</th>
+                    <th>주요 역할</th>
+                </tr>
+                <tr>
+                    <td><code>StageInfo.cs</code></td>
+                    <td>스테이지 ScriptableObject (Normal 300 + Adventure 143)</td>
+                </tr>
+                <tr>
+                    <td><code>StageInfoManager.cs</code></td>
+                    <td>스테이지 데이터 관리</td>
+                </tr>
+                <tr>
+                    <td><code>StageSelectUI.cs</code></td>
+                    <td>스테이지 선택 UI</td>
+                </tr>
+            </table>
+
+            <h4>StageInfo 구조</h4>
+            <table>
+                <tr>
+                    <th>필드</th>
+                    <th>타입</th>
+                    <th>설명</th>
+                </tr>
+                <tr>
+                    <td><code>stageNum</code></td>
+                    <td>int</td>
+                    <td>스테이지 번호</td>
+                </tr>
+                <tr>
+                    <td><code>stageName</code></td>
+                    <td>string</td>
+                    <td>스테이지 이름</td>
+                </tr>
+                <tr>
+                    <td><code>background</code></td>
+                    <td>Background</td>
+                    <td>배경 enum</td>
+                </tr>
+                <tr>
+                    <td><code>battleType</code></td>
+                    <td>BattleType</td>
+                    <td>Default, Boss, Adventure 등</td>
+                </tr>
+                <tr>
+                    <td><code>enemyStatusFromStage.maxHp</code></td>
+                    <td>string</td>
+                    <td>일반 적 HP</td>
+                </tr>
+                <tr>
+                    <td><code>bossStatusFromStage.maxHp</code></td>
+                    <td>string</td>
+                    <td>보스 HP</td>
+                </tr>
+                <tr>
+                    <td><code>bossStatusFromStage.resist</code></td>
+                    <td>float</td>
+                    <td>보스 저항 (0~0.4)</td>
+                </tr>
+            </table>
+
+            <h4>적 HP 공식 (v3)</h4>
+            <table>
+                <tr>
+                    <th>요소</th>
+                    <th>공식</th>
+                </tr>
+                <tr>
+                    <td>일반 적 HP</td>
+                    <td><code>30 + stage×25 + max(0, stage-40)×50 + (stage/55)²×450</code></td>
+                </tr>
+                <tr>
+                    <td>보스 HP</td>
+                    <td><code>일반 HP × 8.3</code></td>
+                </tr>
+                <tr>
+                    <td>보스 저항</td>
+                    <td><code>min(0.4, max(0, (stage-50)×0.002))</code></td>
+                </tr>
+            </table>
+            <p style="font-size:12px; color:var(--text-secondary); margin:8px 0;">
+                에디터에서 <code>Tools > Balance > Update Stage HP</code>로 전체 에셋 일괄 업데이트 가능
+            </p>
+
+
+            <!-- ==================== ADVENTURE ==================== -->
+            <h2 id="adventure">Adventure / Dungeon</h2>
+            <table>
+                <tr>
+                    <th>파일</th>
+                    <th>주요 역할</th>
+                </tr>
+                <tr>
+                    <td><code>AdventureUI.cs</code></td>
+                    <td>모험 메인 UI <strong>(15KB)</strong></td>
+                </tr>
+                <tr>
+                    <td><code>AdventureSlot.cs</code></td>
+                    <td>모험 슬롯</td>
+                </tr>
+                <tr>
+                    <td><code>DungeonSlot.cs</code></td>
+                    <td>던전 슬롯</td>
+                </tr>
+            </table>
+
+            <h4>Adventure 하위 폴더</h4>
+            <table>
+                <tr>
+                    <th>폴더</th>
+                    <th>용도</th>
+                </tr>
+                <tr>
+                    <td>AdventureInfo/</td>
+                    <td>모험 상세 정보 UI</td>
+                </tr>
+                <tr>
+                    <td>DungeonInfo/</td>
+                    <td>던전 상세 정보 UI</td>
+                </tr>
+            </table>
+
+            <!-- ==================== STORY ==================== -->
+            <h2 id="story">Story</h2>
+            <table>
+                <tr>
+                    <th>파일</th>
+                    <th>주요 역할</th>
+                </tr>
+                <tr>
+                    <td><code>StoryManager.cs</code></td>
+                    <td>스토리 관리 <strong>(8.5KB)</strong></td>
+                </tr>
+                <tr>
+                    <td><code>StoryRunner.cs</code></td>
+                    <td>스토리 실행 <strong>(4KB)</strong></td>
+                </tr>
+                <tr>
+                    <td><code>StoryUIHandler.cs</code></td>
+                    <td>스토리 UI 핸들러 <strong>(6.7KB)</strong></td>
+                </tr>
+                <tr>
+                    <td><code>StoryChapter.cs</code></td>
+                    <td>스토리 챕터 데이터</td>
+                </tr>
+                <tr>
+                    <td><code>StoryTalker.cs</code></td>
+                    <td>대화 캐릭터</td>
+                </tr>
+            </table>
+
+            <h4>Story 하위 폴더</h4>
+            <table>
+                <tr>
+                    <th>폴더</th>
+                    <th>파일 수</th>
+                    <th>용도</th>
+                </tr>
+                <tr>
+                    <td>MainChapter/</td>
+                    <td>62개</td>
+                    <td>메인 시나리오</td>
+                </tr>
+                <tr>
+                    <td>PromoteChapter/</td>
+                    <td>10개</td>
+                    <td>승급 시나리오</td>
+                </tr>
+            </table>
+
+            <!-- ==================== DROP ==================== -->
+            <h2 id="drop">Drop</h2>
+            <table>
+                <tr>
+                    <th>파일</th>
+                    <th>주요 역할</th>
+                </tr>
+                <tr>
+                    <td><code>DropBase.cs</code></td>
+                    <td>드랍 아이템 베이스</td>
+                </tr>
+                <tr>
+                    <td><code>DropPool.cs</code></td>
+                    <td>드랍 오브젝트 풀링 <strong>(4.7KB)</strong></td>
+                </tr>
+                <tr>
+                    <td><code>GoldDrop.cs</code></td>
+                    <td>골드 드랍 <strong>(2.5KB)</strong></td>
+                </tr>
+                <tr>
+                    <td><code>ExpDrop.cs</code></td>
+                    <td>경험치 드랍</td>
+                </tr>
+                <tr>
+                    <td><code>FragmentDrop.cs</code></td>
+                    <td>스킬 조각 드랍</td>
+                </tr>
+                <tr>
+                    <td><code>WeaponDrop.cs</code></td>
+                    <td>무기 드랍</td>
+                </tr>
+            </table>
+
+            <!-- ==================== CURRENCY ==================== -->
+            <h2 id="currency">Currency</h2>
+            <p class="path">Currency/</p>
+            <table>
+                <tr>
+                    <th>파일</th>
+                    <th>주요 역할</th>
+                </tr>
+                <tr>
+                    <td><code>CurrencyManager.cs</code></td>
+                    <td>재화 관리, 드랍 공식 계산 <strong>(16KB)</strong></td>
+                </tr>
+                <tr>
+                    <td><code>CurrencyAbsorbEffect.cs</code></td>
+                    <td>재화 흡수 이펙트</td>
+                </tr>
+            </table>
+
+            <h4>CurrencyManager 주요 메서드</h4>
+            <table>
+                <tr>
+                    <th>메서드</th>
+                    <th>설명</th>
+                </tr>
+                <tr>
+                    <td><code>LoadGoldFormula()</code></td>
+                    <td>골드 드랍 공식 로드 (RemoteConfig)</td>
+                </tr>
+                <tr>
+                    <td><code>LoadExpFormula()</code></td>
+                    <td>경험치 드랍 공식 로드</td>
+                </tr>
+                <tr>
+                    <td><code>LoadFragmentFormula()</code></td>
+                    <td>스킬 조각 드랍 공식 로드</td>
+                </tr>
+                <tr>
+                    <td><code>LoadWeaponTable()</code></td>
+                    <td>무기 드랍 확률 테이블 로드</td>
+                </tr>
+                <tr>
+                    <td><code>OnDrop(DropType, int stage)</code></td>
+                    <td>드랍 이벤트 처리</td>
+                </tr>
+                <tr>
+                    <td><code>GetGoldByDrop(int stage)</code></td>
+                    <td>스테이지별 골드 드랍량 계산</td>
+                </tr>
+                <tr>
+                    <td><code>GetExpByDrop(int stage)</code></td>
+                    <td>스테이지별 경험치 드랍량 계산</td>
+                </tr>
+                <tr>
+                    <td><code>GetNeedExp(int level)</code></td>
+                    <td>레벨업 필요 경험치 계산</td>
+                </tr>
+                <tr>
+                    <td><code>GetRequireFragment_Skill(Rarity)</code></td>
+                    <td>스킬 레벨업 필요 조각 수</td>
+                </tr>
+                <tr>
+                    <td><code>GetRequireWeaponCount(Rarity)</code></td>
+                    <td>무기 강화 필요 수량</td>
+                </tr>
+            </table>
+
+            <!-- ==================== STORE ==================== -->
+            <h2 id="store">Store / Gacha</h2>
+            <table>
+                <tr>
+                    <th>파일</th>
+                    <th>주요 역할</th>
+                </tr>
+                <tr>
+                    <td><code>StoreManager.cs</code></td>
+                    <td>상점 관리 <strong>(29KB 핵심)</strong></td>
+                </tr>
+                <tr>
+                    <td><code>StoreUI.cs</code></td>
+                    <td>상점 UI <strong>(4.4KB)</strong></td>
+                </tr>
+                <tr>
+                    <td><code>GachaSystem.cs</code></td>
+                    <td>가챠 시스템 <strong>(3.2KB)</strong></td>
+                </tr>
+                <tr>
+                    <td><code>GachaInfo.cs</code></td>
+                    <td>가챠 결과 정보</td>
+                </tr>
+                <tr>
+                    <td><code>StoreMoneyListController.cs</code></td>
+                    <td>인앱 상품 리스트 <strong>(4.4KB)</strong></td>
+                </tr>
+            </table>
+
+            <!-- ==================== UI ==================== -->
+            <h2 id="ui">UI Manager</h2>
+            <table>
+                <tr>
+                    <th>파일</th>
+                    <th>경로</th>
+                    <th>주요 역할</th>
+                </tr>
+                <tr>
+                    <td><code>UIManager.cs</code></td>
+                    <td>DefaultUI/</td>
+                    <td>UI 전체 관리</td>
+                </tr>
+                <tr>
+                    <td><code>FadeInOutPanel.cs</code></td>
+                    <td>DefaultUI/</td>
+                    <td>페이드 효과</td>
+                </tr>
+                <tr>
+                    <td><code>TranslucentBackground.cs</code></td>
+                    <td>DefaultUI/</td>
+                    <td>반투명 배경</td>
+                </tr>
+                <tr>
+                    <td><code>MediatorManager.cs</code></td>
+                    <td>EventControl/</td>
+                    <td>이벤트 중재자</td>
+                </tr>
+            </table>
+
+            <!-- ==================== TOTALSTATUS ==================== -->
+            <h2 id="totalstatus">TotalStatus</h2>
+            <table>
+                <tr>
+                    <th>파일</th>
+                    <th>주요 역할</th>
+                </tr>
+                <tr>
+                    <td><code>TotalStatusUI.cs</code></td>
+                    <td>전체 스탯 UI 메인 <strong>(4.8KB)</strong></td>
+                </tr>
+                <tr>
+                    <td><code>TotalStatusUI.Status.cs</code></td>
+                    <td>스탯 표시 <strong>(4.9KB)</strong></td>
+                </tr>
+                <tr>
+                    <td><code>TotalStatusUI.Costume.cs</code></td>
+                    <td>코스튬 관리 <strong>(24KB 핵심)</strong></td>
+                </tr>
+            </table>
+
+            <!-- ==================== APPEARANCE ==================== -->
+            <h2 id="appearance">Appearance</h2>
+            <table>
+                <tr>
+                    <th>파일</th>
+                    <th>주요 역할</th>
+                </tr>
+                <tr>
+                    <td><code>AppearanceController.cs</code></td>
+                    <td>외형 관리 <strong>(8KB)</strong></td>
+                </tr>
+                <tr>
+                    <td><code>AppearanceData.cs</code></td>
+                    <td>외형 ScriptableObject</td>
+                </tr>
+            </table>
+
+            <!-- ==================== NOTICEDOT ==================== -->
+            <h2 id="noticedot">NoticeDot</h2>
+            <table>
+                <tr>
+                    <th>파일</th>
+                    <th>주요 역할</th>
+                </tr>
+                <tr>
+                    <td><code>NoticeDot.cs</code></td>
+                    <td>알림 뱃지 시스템 <strong>(6.2KB)</strong></td>
+                </tr>
+            </table>
+
+            <!-- ==================== AD ==================== -->
+            <h2 id="ad">광고 (Ad)</h2>
+            <p class="path">Ad/</p>
+            <table>
+                <tr>
+                    <th>파일</th>
+                    <th>주요 역할</th>
+                </tr>
+                <tr>
+                    <td><code>AdInitializer.cs</code></td>
+                    <td>Unity Ads SDK 초기화</td>
+                </tr>
+                <tr>
+                    <td><code>InterstitialAdManager.cs</code></td>
+                    <td>전면 광고 로드/표시, 보상 지급 <strong>(3.7KB)</strong></td>
+                </tr>
+            </table>
+
+            <h4>InterstitialAdManager 주요 메서드</h4>
+            <table>
+                <tr>
+                    <th>메서드</th>
+                    <th>설명</th>
+                </tr>
+                <tr>
+                    <td><code>LoadAd((Resource, int) reward)</code></td>
+                    <td>광고 로드, 보상 타입/수량 지정</td>
+                </tr>
+                <tr>
+                    <td><code>ShowAd()</code></td>
+                    <td>광고 표시</td>
+                </tr>
+                <tr>
+                    <td><code>OnUnityAdsShowComplete()</code></td>
+                    <td>광고 완료 시 보상 지급 (Dia/Clover)</td>
+                </tr>
+            </table>
+
+            <!-- ==================== PURCHASE ==================== -->
+            <h2 id="purchase">인앱구매 (IAP)</h2>
+            <p class="path">Purchase/</p>
+            <table>
+                <tr>
+                    <th>파일</th>
+                    <th>주요 역할</th>
+                </tr>
+                <tr>
+                    <td><code>PurchaseManager.cs</code></td>
+                    <td>인앱구매 관리, CloudCode 연동 <strong>(12.6KB)</strong></td>
+                </tr>
+                <tr>
+                    <td><code>ProductIds.cs</code></td>
+                    <td>상품 ID 상수 정의</td>
+                </tr>
+            </table>
+
+            <h4>PurchaseManager 주요 메서드</h4>
+            <table>
+                <tr>
+                    <th>메서드</th>
+                    <th>설명</th>
+                </tr>
+                <tr>
+                    <td><code>InitializeProductsFromRc()</code></td>
+                    <td>RemoteConfig에서 상품 정보 로드</td>
+                </tr>
+                <tr>
+                    <td><code>InitializeIapAsync()</code></td>
+                    <td>Unity IAP 비동기 초기화</td>
+                </tr>
+                <tr>
+                    <td><code>PurchaseAsync(string productId)</code></td>
+                    <td>구매 요청 (CloudCode 영수증 검증)</td>
+                </tr>
+                <tr>
+                    <td><code>HandlePendingOrderAsync()</code></td>
+                    <td>펜딩 주문 처리</td>
+                </tr>
+                <tr>
+                    <td><code>CallGacha(Resource result, int count)</code></td>
+                    <td>가챠 결과 처리</td>
+                </tr>
+            </table>
+
+            <!-- ==================== OFFLINE REWARD ==================== -->
+            <h2 id="offline">오프라인 보상</h2>
+            <p class="path">OfflineReward/</p>
+            <table>
+                <tr>
+                    <th>파일</th>
+                    <th>주요 역할</th>
+                </tr>
+                <tr>
+                    <td><code>OfflineRewardUi.cs</code></td>
+                    <td>오프라인 보상 UI, 시간 계산 <strong>(6.3KB)</strong></td>
+                </tr>
+                <tr>
+                    <td><code>OfflineRewardReceive.cs</code></td>
+                    <td>보상 수령 처리 <strong>(3.2KB)</strong></td>
+                </tr>
+                <tr>
+                    <td><code>RewardResult.cs</code></td>
+                    <td>보상 결과 데이터 클래스</td>
+                </tr>
+            </table>
+
+            <!-- ==================== ATTENDANCE ==================== -->
+            <h2 id="attendance">출석 체크</h2>
+            <p class="path">Attendance/</p>
+            <table>
+                <tr>
+                    <th>파일</th>
+                    <th>주요 역할</th>
+                </tr>
+                <tr>
+                    <td><code>AttendanceUI.cs</code></td>
+                    <td>출석 체크 메인 UI <strong>(8.8KB)</strong></td>
+                </tr>
+                <tr>
+                    <td><code>AttendanceSlot.cs</code></td>
+                    <td>출석 슬롯 UI 컴포넌트</td>
+                </tr>
+            </table>
+
+            <!-- ==================== SETTING ==================== -->
+            <h2 id="setting">Setting</h2>
+            <p class="path">Setting/</p>
+            <table>
+                <tr>
+                    <th>파일</th>
+                    <th>주요 역할</th>
+                </tr>
+                <tr>
+                    <td><code>SettingManager.cs</code></td>
+                    <td>설정 관리 (볼륨, 진동 등)</td>
+                </tr>
+                <tr>
+                    <td><code>SettingUI.cs</code></td>
+                    <td>설정 UI <strong>(7.2KB)</strong></td>
+                </tr>
+            </table>
+
+            <!-- ==================== SOUND ==================== -->
+            <h2 id="sound">Sound</h2>
+            <p class="path">Sound/</p>
+            <table>
+                <tr>
+                    <th>파일</th>
+                    <th>주요 역할</th>
+                </tr>
+                <tr>
+                    <td><code>SoundManager.cs</code></td>
+                    <td>BGM / SFX 재생 관리 <strong>(3.7KB)</strong></td>
+                </tr>
+                <tr>
+                    <td><code>SoundPath.cs</code></td>
+                    <td>사운드 리소스 경로 상수</td>
+                </tr>
+            </table>
+
+            <!-- ==================== POWERSAVE ==================== -->
+            <h2 id="powersave">PowerSave</h2>
+            <p class="path">PowerSave/</p>
+            <table>
+                <tr>
+                    <th>파일</th>
+                    <th>주요 역할</th>
+                </tr>
+                <tr>
+                    <td><code>PowerSaveManager.cs</code></td>
+                    <td>절전 모드 관리</td>
+                </tr>
+                <tr>
+                    <td><code>PowerSaveUI.cs</code></td>
+                    <td>절전 모드 UI</td>
+                </tr>
+            </table>
+
+            <!-- ==================== NETWORK ==================== -->
+            <h2 id="network">Network / Data</h2>
+            <table>
+                <tr>
+                    <th>파일</th>
+                    <th>경로</th>
+                    <th>주요 역할</th>
+                </tr>
+                <tr>
+                    <td><code>DataManager.cs</code></td>
+                    <td>Data/</td>
+                    <td>데이터 로드/저장</td>
+                </tr>
+                <tr>
+                    <td><code>StartManager.cs</code></td>
+                    <td>Start/</td>
+                    <td>게임 시작 씬</td>
+                </tr>
+                <tr>
+                    <td><code>OfflineRewardUi.cs</code></td>
+                    <td>OfflineReward/</td>
+                    <td>오프라인 보상 UI <strong>(6.3KB)</strong></td>
+                </tr>
+                <tr>
+                    <td><code>OfflineRewardReceive.cs</code></td>
+                    <td>OfflineReward/</td>
+                    <td>오프라인 보상 수령 <strong>(3.2KB)</strong></td>
+                </tr>
+                <tr>
+                    <td><code>ClientReportManager.cs</code></td>
+                    <td>ClientReport/</td>
+                    <td>클라이언트 리포트</td>
+                </tr>
+            </table>
+
+            <!-- ==================== REMOTE CONFIG ==================== -->
+            <h2 id="remoteconfig">Remote Config</h2>
+            <table>
+                <tr>
+                    <th>키</th>
+                    <th>타입</th>
+                    <th>용도</th>
+                </tr>
+                <tr>
+                    <td><code>REINFORCE_VALUE_GOLD</code></td>
+                    <td>JSON</td>
+                    <td>골드 강화 공식</td>
+                </tr>
+                <tr>
+                    <td><code>REINFORCE_VALUE_STATPOINT</code></td>
+                    <td>JSON</td>
+                    <td>스탯포인트 강화 공식</td>
+                </tr>
+                <tr>
+                    <td><code>REINFORCE_PRICE_GOLD</code></td>
+                    <td>JSON</td>
+                    <td>강화 비용</td>
+                </tr>
+                <tr>
+                    <td><code>goldDropFormula</code></td>
+                    <td>JSON</td>
+                    <td>골드 드랍 계산식</td>
+                </tr>
+                <tr>
+                    <td><code>expDropFormula</code></td>
+                    <td>JSON</td>
+                    <td>경험치 드랍 계산식</td>
+                </tr>
+                <tr>
+                    <td><code>WEAPON_BASE_STAT</code></td>
+                    <td>JSON</td>
+                    <td>무기 기본 스탯</td>
+                </tr>
+                <tr>
+                    <td><code>PROMOTE_RANKS</code></td>
+                    <td>JSON</td>
+                    <td>승급 등급 정보</td>
+                </tr>
+                <tr>
+                    <td><code>OFFLINE_REWARD_MIN</code></td>
+                    <td>int</td>
+                    <td>오프라인 보상 최소시간</td>
+                </tr>
+                <tr>
+                    <td><code>OFFLINE_REWARD_MAX</code></td>
+                    <td>int</td>
+                    <td>오프라인 보상 최대시간</td>
+                </tr>
+                <tr>
+                    <td><code>SCROLL_REGEN_INTERVAL</code></td>
+                    <td>int</td>
+                    <td>스크롤 충전 간격</td>
+                </tr>
+            </table>
+
+            <!-- ==================== BROKER ==================== -->
+            <h2 id="broker">Broker 시스템</h2>
+            <p class="path">EventControl/Broker/</p>
+
+            <h3>PlayerBroker</h3>
+            <p style="font-size:12px; color:var(--text-secondary); margin-bottom:8px;">플레이어 상태/재화/장비 변경 이벤트</p>
+            <div class="grid">
+                <div>
+                    <h4>재화 변경</h4>
+                    <table>
+                        <tr>
+                            <th>이벤트</th>
+                            <th>파라미터</th>
+                        </tr>
+                        <tr>
+                            <td><code>OnGoldSet</code></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td><code>OnDiaSet</code></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td><code>OnCloverSet</code></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td><code>OnScrollSet</code></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td><code>OnStatPointSet</code></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td><code>OnLevelExpSet</code></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td><code>OnFragmentSet</code></td>
+                            <td>-</td>
+                        </tr>
+                    </table>
+                </div>
+                <div>
+                    <h4>스탯 강화</h4>
+                    <table>
+                        <tr>
+                            <th>이벤트</th>
+                            <th>파라미터</th>
+                        </tr>
+                        <tr>
+                            <td><code>OnGoldStatusLevelSet</code></td>
+                            <td>StatusType, int</td>
+                        </tr>
+                        <tr>
+                            <td><code>OnStatPointStatusLevelSet</code></td>
+                            <td>StatusType, int</td>
+                        </tr>
+                        <tr>
+                            <td><code>OnPromoteRankSet</code></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td><code>OnPromoteStatusSet</code></td>
+                            <td>StatusType, float</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="grid">
+                <div>
+                    <h4>장비/스킬</h4>
+                    <table>
+                        <tr>
+                            <th>이벤트</th>
+                            <th>파라미터</th>
+                        </tr>
+                        <tr>
+                            <td><code>OnEquipWeapon</code></td>
+                            <td>WeaponData, WeaponType</td>
+                        </tr>
+                        <tr>
+                            <td><code>OnWeaponLevelSet</code></td>
+                            <td>string, int</td>
+                        </tr>
+                        <tr>
+                            <td><code>OnWeaponCountSet</code></td>
+                            <td>string, int</td>
+                        </tr>
+                        <tr>
+                            <td><code>OnSkillChanged</code></td>
+                            <td>string, int</td>
+                        </tr>
+                        <tr>
+                            <td><code>OnSkillLevelSet</code></td>
+                            <td>string, int</td>
+                        </tr>
+                    </table>
+                </div>
+                <div>
+                    <h4>동료/외형</h4>
+                    <table>
+                        <tr>
+                            <th>이벤트</th>
+                            <th>파라미터</th>
+                        </tr>
+                        <tr>
+                            <td><code>OnCompanionExpSet</code></td>
+                            <td>int</td>
+                        </tr>
+                        <tr>
+                            <td><code>OnCompanionPromoteEffectSet</code></td>
+                            <td>int, int, (StatusType, Rarity)?</td>
+                        </tr>
+                        <tr>
+                            <td><code>OnCompanionPromoteTechSet</code></td>
+                            <td>int, int, int</td>
+                        </tr>
+                        <tr>
+                            <td><code>OnCompanionAppearanceChange</code></td>
+                            <td>int, AppearanceData</td>
+                        </tr>
+                        <tr>
+                            <td><code>OnPlayerAppearanceChange</code></td>
+                            <td>AppearanceData</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <h4>플레이어 상태</h4>
+            <table>
+                <tr>
+                    <th>이벤트</th>
+                    <th>파라미터</th>
+                    <th>설명</th>
+                </tr>
+                <tr>
+                    <td><code>OnPlayerHpChanged</code></td>
+                    <td>float</td>
+                    <td>HP 비율 변경</td>
+                </tr>
+                <tr>
+                    <td><code>OnPlayerMpChanged</code></td>
+                    <td>float</td>
+                    <td>MP 비율 변경</td>
+                </tr>
+                <tr>
+                    <td><code>OnPlayerDead</code></td>
+                    <td>-</td>
+                    <td>플레이어 사망</td>
+                </tr>
+                <tr>
+                    <td><code>OnMaxStageSet</code></td>
+                    <td>-</td>
+                    <td>최대 스테이지 변경</td>
+                </tr>
+                <tr>
+                    <td><code>OnSetName</code></td>
+                    <td>string</td>
+                    <td>닉네임 변경</td>
+                </tr>
+                <tr>
+                    <td><code>OnEnemyKilled</code></td>
+                    <td>-</td>
+                    <td>적 처치 시</td>
+                </tr>
+            </table>
+            <h4>Func (값 조회)</h4>
+            <table>
+                <tr>
+                    <th>Func</th>
+                    <th>반환</th>
+                    <th>설명</th>
+                </tr>
+                <tr>
+                    <td><code>GetResourceSprite</code></td>
+                    <td>Sprite</td>
+                    <td>재화 아이콘</td>
+                </tr>
+                <tr>
+                    <td><code>GetFragmentSprite</code></td>
+                    <td>Sprite</td>
+                    <td>조각 아이콘</td>
+                </tr>
+                <tr>
+                    <td><code>GetPWValue</code></td>
+                    <td>float</td>
+                    <td>패시브 스킬 값</td>
+                </tr>
+            </table>
+
+            <h3>BattleBroker</h3>
+            <p style="font-size:12px; color:var(--text-secondary); margin-bottom:8px;">전투 로직/스테이지/적/동료 제어 이벤트</p>
+            <div class="grid">
+                <div>
+                    <h4>스테이지/전투</h4>
+                    <table>
+                        <tr>
+                            <th>이벤트</th>
+                            <th>파라미터</th>
+                        </tr>
+                        <tr>
+                            <td><code>OnStageChange</code></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td><code>OnBossTimeLimit</code></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td><code>OnBossClear</code></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td><code>OnBossHpChanged</code></td>
+                            <td>float</td>
+                        </tr>
+                        <tr>
+                            <td><code>OnEnemyDead</code></td>
+                            <td>Vector3</td>
+                        </tr>
+                        <tr>
+                            <td><code>OnDrop</code></td>
+                            <td>DropType, int, string</td>
+                        </tr>
+                    </table>
+                </div>
+                <div>
+                    <h4>배틀 전환</h4>
+                    <table>
+                        <tr>
+                            <th>Action</th>
+                            <th>파라미터</th>
+                        </tr>
+                        <tr>
+                            <td><code>SwitchToStory</code></td>
+                            <td>BattleType, int[]</td>
+                        </tr>
+                        <tr>
+                            <td><code>SwitchToBattle</code></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td><code>SwitchToBoss</code></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td><code>SwitchToAdventure</code></td>
+                            <td>int, int</td>
+                        </tr>
+                        <tr>
+                            <td><code>SwitchToDungeon</code></td>
+                            <td>int, int</td>
+                        </tr>
+                        <tr>
+                            <td><code>SwitchToCompanionBattle</code></td>
+                            <td>int, (int,int)</td>
+                        </tr>
+                        <tr>
+                            <td><code>SwitchToPromoteBattle</code></td>
+                            <td>int</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <h4>동료/카메라/데미지</h4>
+            <table>
+                <tr>
+                    <th>이벤트</th>
+                    <th>파라미터</th>
+                    <th>설명</th>
+                </tr>
+                <tr>
+                    <td><code>ControllCompanionMove</code></td>
+                    <td>int</td>
+                    <td>0=대기, 1=이동, 2=공격</td>
+                </tr>
+                <tr>
+                    <td><code>SetCameraExpand/Shrink</code></td>
+                    <td>-</td>
+                    <td>카메라 확대/축소</td>
+                </tr>
+                <tr>
+                    <td><code>ShowDamageText</code></td>
+                    <td>Vector3, string, DamageType</td>
+                    <td>데미지 텍스트</td>
+                </tr>
+                <tr>
+                    <td><code>OnThornsDamage</code></td>
+                    <td>BigInteger</td>
+                    <td>가시 반사 데미지</td>
+                </tr>
+                <tr>
+                    <td><code>OnAreaDamage</code></td>
+                    <td>Vector3, float</td>
+                    <td>광역 데미지</td>
+                </tr>
+                <tr>
+                    <td><code>RefreshPlayerSpeed</code></td>
+                    <td>-</td>
+                    <td>이동속도 갱신</td>
+                </tr>
+                <tr>
+                    <td><code>OnWeaponLevelChanged</code></td>
+                    <td>string</td>
+                    <td>무기 레벨 변경</td>
+                </tr>
+            </table>
+            <h4>Func (값 조회)</h4>
+            <table>
+                <tr>
+                    <th>Func</th>
+                    <th>반환</th>
+                    <th>설명</th>
+                </tr>
+                <tr>
+                    <td><code>GetBattleType</code></td>
+                    <td>BattleType</td>
+                    <td>현재 배틀 타입</td>
+                </tr>
+                <tr>
+                    <td><code>IsCanAttack</code></td>
+                    <td>bool</td>
+                    <td>공격 가능 여부</td>
+                </tr>
+                <tr>
+                    <td><code>GetNeedExp</code></td>
+                    <td>BigInteger</td>
+                    <td>필요 경험치</td>
+                </tr>
+                <tr>
+                    <td><code>GetCompanionReward</code></td>
+                    <td>(int, int)</td>
+                    <td>동료 전투 보상</td>
+                </tr>
+                <tr>
+                    <td><code>GetAdventureReward</code></td>
+                    <td>(int, int)</td>
+                    <td>모험 보상</td>
+                </tr>
+                <tr>
+                    <td><code>GetDungeonReward</code></td>
+                    <td>object</td>
+                    <td>던전 보상</td>
+                </tr>
+                <tr>
+                    <td><code>GetPlayerController</code></td>
+                    <td>object</td>
+                    <td>플레이어 컨트롤러</td>
+                </tr>
+                <tr>
+                    <td><code>GetEnemyArray</code></td>
+                    <td>object</td>
+                    <td>적 배열</td>
+                </tr>
+                <tr>
+                    <td><code>GetCompanionControllerArr</code></td>
+                    <td>object</td>
+                    <td>동료 컨트롤러 배열</td>
+                </tr>
+            </table>
+
+            <h3>EnemyBroker</h3>
+            <table>
+                <tr>
+                    <th>이벤트</th>
+                    <th>설명</th>
+                </tr>
+                <tr>
+                    <td><code>OnEnemyDeath</code></td>
+                    <td>적 사망 이벤트</td>
+                </tr>
+                <tr>
+                    <td><code>OnBossDeath</code></td>
+                    <td>보스 사망 이벤트</td>
+                </tr>
+            </table>
+
+            <h3>기타 Broker</h3>
+            <table>
+                <tr>
+                    <th>Broker</th>
+                    <th>역할</th>
+                </tr>
+                <tr>
+                    <td><code>StartBroker</code></td>
+                    <td>게임 시작, GameData 접근 (GetGameData)</td>
+                </tr>
+                <tr>
+                    <td><code>NetworkBroker</code></td>
+                    <td>네트워크 상태, 저장/로드 이벤트</td>
+                </tr>
+                <tr>
+                    <td><code>UIBroker</code></td>
+                    <td>UI 표시/숨김 이벤트</td>
+                </tr>
+            </table>
+
+            <!-- ==================== MANAGER 목록 ==================== -->
+            <!-- ==================== UTILITY ==================== -->
+            <h2 id="utility">Utility</h2>
+            <p class="path">Utility/</p>
+            <table>
+                <tr>
+                    <th>파일</th>
+                    <th>주요 역할</th>
+                </tr>
+                <tr>
+                    <td><code>EnumCollection.cs</code></td>
+                    <td>모든 Enum 정의 (StatusType, SkillType, Rarity 등) <strong>(2.8KB)</strong></td>
+                </tr>
+                <tr>
+                    <td><code>MonoSingleton.cs</code></td>
+                    <td>싱글톤 패턴 베이스 클래스 <strong>(2.9KB)</strong></td>
+                </tr>
+                <tr>
+                    <td><code>PriceInfo.cs</code></td>
+                    <td>가격 정보 클래스</td>
+                </tr>
+                <tr>
+                    <td><code>UtilityManager.cs</code></td>
+                    <td>공용 유틸리티 메서드</td>
+                </tr>
+            </table>
+
+            <!-- ==================== DEBUGGER ==================== -->
+            <h2 id="debugger">TotalDebugger</h2>
+            <p class="path">TotalDebugger/</p>
+            <table>
+                <tr>
+                    <th>파일</th>
+                    <th>주요 역할</th>
+                </tr>
+                <tr>
+                    <td><code>TotalDebugger.cs</code></td>
+                    <td>종합 디버깅 도구 (데이터 조회/수정, 치트) <strong>(46KB)</strong></td>
+                </tr>
+            </table>
+            <p style="margin:12px 0; color:var(--text-secondary); font-size:13px;">
+                개발 빌드에서 사용 가능한 종합 디버깅 UI. <br>
+                GameData 직접 조작, 재화 추가, 스테이지 이동, 스킬/무기 획득 등 테스트 기능 제공.
+            </p>
+
+            <!-- ==================== EDITOR TOOLS ==================== -->
+            <h2 id="editortools">Editor Tools</h2>
+            <p class="path">Assets/Editor/</p>
+            <table>
+                <tr>
+                    <th>파일</th>
+                    <th>메뉴 경로</th>
+                    <th>주요 역할</th>
+                </tr>
+                <tr>
+                    <td><code>BalanceDataExporter.cs</code></td>
+                    <td>Tools > Balance > Export Balance Data</td>
+                    <td>시뮬레이터용 데이터 JSON 추출 <strong>(16KB)</strong></td>
+                </tr>
+                <tr>
+                    <td><code>StageHpUpdater.cs</code></td>
+                    <td>Tools > Balance > Update Stage HP</td>
+                    <td>스테이지 HP 일괄 업데이트 (v3 공식) <strong>(4.9KB)</strong></td>
+                </tr>
+                <tr>
+                    <td><code>HairCostumeImporter.cs</code></td>
+                    <td>Tools > Import Hair Costumes</td>
+                    <td>헤어 코스튬 리소스 일괄 임포트</td>
+                </tr>
+            </table>
+
+            <h4>BalanceDataExporter 출력 항목</h4>
+            <table>
+                <tr>
+                    <th>데이터</th>
+                    <th>설명</th>
+                </tr>
+                <tr>
+                    <td><code>weapons[]</code></td>
+                    <td>무기 88개 (스탯, 효과, 도감 정보)</td>
+                </tr>
+                <tr>
+                    <td><code>skills[]</code></td>
+                    <td>스킬 51개 (타입, 쿨다운, 레벨별 수치)</td>
+                </tr>
+                <tr>
+                    <td><code>stages[]</code></td>
+                    <td>스테이지 300개 (HP, 저항, 보너스)</td>
+                </tr>
+                <tr>
+                    <td><code>skillAcquire[]</code></td>
+                    <td>스킬 해금 조건</td>
+                </tr>
+                <tr>
+                    <td><code>weaponBooks[]</code></td>
+                    <td>무기 도감 보너스</td>
+                </tr>
+                <tr>
+                    <td><code>remoteConfig{}</code></td>
+                    <td>강화 공식, 승급 배율 등</td>
+                </tr>
+            </table>
+
+            <h4>StageHpUpdater 기능</h4>
+            <table>
+                <tr>
+                    <th>기능</th>
+                    <th>설명</th>
+                </tr>
+                <tr>
+                    <td>미리보기</td>
+                    <td>변경될 HP 값을 Console에 출력 (실제 수정 안함)</td>
+                </tr>
+                <tr>
+                    <td>Normal 스테이지 HP 업데이트</td>
+                    <td>v3 공식으로 Stage_1 ~ Stage_300 일괄 수정</td>
+                </tr>
+                <tr>
+                    <td>Adventure 스테이지 HP 업데이트</td>
+                    <td>v3 공식으로 Adventure 143개 일괄 수정</td>
+                </tr>
+            </table>
+
+
+            <h2 id="managers">Manager 목록</h2>
+            <table>
+                <tr>
+                    <th>Manager</th>
+                    <th>경로</th>
+                    <th>역할</th>
+                </tr>
+                <tr>
+                    <td><code>GameManager</code></td>
+                    <td>Game/</td>
+                    <td>게임 루프, 상태 관리</td>
+                </tr>
+                <tr>
+                    <td><code>BattleManager</code></td>
+                    <td>Battle/</td>
+                    <td>전투 로직, 적 스폰</td>
+                </tr>
+                <tr>
+                    <td><code>DataManager</code></td>
+                    <td>Data/</td>
+                    <td>데이터 저장/로드</td>
+                </tr>
+                <tr>
+                    <td><code>CurrencyManager</code></td>
+                    <td>Currency/</td>
+                    <td>재화 추가/차감</td>
+                </tr>
+                <tr>
+                    <td><code>CompanionManager</code></td>
+                    <td>Companion/</td>
+                    <td>동료 데이터, 승급</td>
+                </tr>
+                <tr>
+                    <td><code>SkillManager</code></td>
+                    <td>Skill/</td>
+                    <td>스킬 데이터, 장착</td>
+                </tr>
+                <tr>
+                    <td><code>WeaponManager</code></td>
+                    <td>Weapon/</td>
+                    <td>무기 데이터, 장착</td>
+                </tr>
+                <tr>
+                    <td><code>ReinForceManager</code></td>
+                    <td>ReinForce/</td>
+                    <td>강화 규칙/계산</td>
+                </tr>
+                <tr>
+                    <td><code>StoryManager</code></td>
+                    <td>Story/</td>
+                    <td>스토리 진행, 챕터</td>
+                </tr>
+                <tr>
+                    <td><code>StoreManager</code></td>
+                    <td>Store/</td>
+                    <td>상점, 가챠</td>
+                </tr>
+                <tr>
+                    <td><code>UIManager</code></td>
+                    <td>DefaultUI/</td>
+                    <td>공용 UI, 페이드</td>
+                </tr>
+                <tr>
+                    <td><code>SoundManager</code></td>
+                    <td>Sound/</td>
+                    <td>BGM, SFX</td>
+                </tr>
+                <tr>
+                    <td><code>FirebaseManager</code></td>
+                    <td>Network/</td>
+                    <td>Firebase 인증/저장</td>
+                </tr>
+                <tr>
+                    <td><code>MediatorManager</code></td>
+                    <td>EventControl/</td>
+                    <td>이벤트 중재</td>
+                </tr>
+            </table>
+
+            <p style="margin-top:30px; color:var(--text-secondary); font-size:9px; text-align:center;">
+                최종 업데이트: 2026-01-18 | 02.Script/ 기준
+            </p>
+        </main>
+    </div>
+</body>
+
+</html>

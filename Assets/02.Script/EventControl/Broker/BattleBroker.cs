@@ -1,21 +1,21 @@
-using EnumCollection;
+ï»¿using EnumCollection;
 using System;
 using System.Numerics;
 using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
 public static class BattleBroker
 {
-    //ÀûÀÌ Á×¾úÀ» ¶§ ¾ÆÀÌÅÛ µå¶ø. <Àû À§Ä¡>
+    //ï¿½ï¿½ï¿½ï¿½ ï¿½×¾ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½. <ï¿½ï¿½ ï¿½ï¿½Ä¡>
     public static Action<Vector3> OnEnemyDead;
-    //½ºÅ×ÀÌÁö º¯°æ
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public static Action OnStageChange;
-    //º¸½º ½ºÅ×ÀÌÁö ½Ã°£ ÃÊ°ú ½Ã
+    //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ ï¿½Ê°ï¿½ ï¿½ï¿½
     public static Action OnBossTimeLimit;
-    //º¸½º ½ºÅ×ÀÌÁö Å¬¸®¾î ½Ã
+    //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
     public static Action OnBossClear;
-    //BattleManager¿¡ ÀÖ´Â BattleTypeÀ» ¾ò´Â´Ù
+    //BattleManagerï¿½ï¿½ ï¿½Ö´ï¿½ BattleTypeï¿½ï¿½ ï¿½ï¿½Â´ï¿½
     public static Func<BattleType> GetBattleType;
-    //º¸½º HP º¯°æ ½Ã ºñÀ² Àü´Þ
+    //ï¿½ï¿½ï¿½ï¿½ HP ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public static Action<float> OnBossHpChanged;
 
     
@@ -28,10 +28,10 @@ public static class BattleBroker
     public static Action<int, int> SwitchToAdventure;
     public static Action<int, int> SwitchToDungeon;
     public static Action<int, (int,int)> SwitchToCompanionBattle;
-    //µ¿·á
-    public static Action<int> ControllCompanionMove;//0 : ¸ØÃã, 1 : ¿òÁ÷ÀÓ, 2 : °ø°Ý
+    //ï¿½ï¿½ï¿½ï¿½
+    public static Action<int> ControllCompanionMove;//0 : ï¿½ï¿½ï¿½ï¿½, 1 : ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, 2 : ï¿½ï¿½ï¿½ï¿½
     
-    //½Â±Þ
+    //ï¿½Â±ï¿½
     public static Action<int> SwitchToPromoteBattle;
 
     public static Func<BigInteger> GetNeedExp;
@@ -59,4 +59,6 @@ public static class BattleBroker
     public static Action RefreshPlayerSpeed;
     public static Action<string> OnWeaponLevelChanged;
 
+    public static Action<BigInteger> OnThornsDamage;
+    public static Action<UnityEngine.Vector3, float> OnAreaDamage;
 }

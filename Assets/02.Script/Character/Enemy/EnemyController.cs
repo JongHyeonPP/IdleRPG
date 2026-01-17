@@ -1,4 +1,4 @@
-using EnumCollection;
+ï»¿using EnumCollection;
 using System;
 using System.Collections;
 using System.Numerics;
@@ -6,25 +6,25 @@ using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
 
 /// <summary>
-/// Àû Ä³¸¯ÅÍ ÄÁÆ®·Ñ·¯
-/// AttackableÀ» »ó¼Ó¹Þ¾Æ ÀüÅõ ·çÇÁ¸¦ °øÀ¯ÇÏ°í,
-/// Ãß°¡ÀûÀ¸·Î Àû Àü¿ë Ç® °ü¸®, ÆäÀÌµå¾Æ¿ô, HP¹Ù °»½Å µîÀ» ´ã´çÇÑ´Ù.
+/// ï¿½ï¿½ Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½Ñ·ï¿½
+/// Attackableï¿½ï¿½ ï¿½ï¿½Ó¹Þ¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½,
+/// ï¿½ß°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ç® ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½Ìµï¿½Æ¿ï¿½, HPï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 /// </summary>
 public class EnemyController : Attackable, IMoveByPlayer
 {
-    private EnemyPool _enemyPool;                  // »ç¸Á ½Ã ¹ÝÈ¯µÉ Ç®
-    private EnemyController[] _enemies;            // ÇöÀç ÀüÅõ¿¡¼­ ÇÔ²² Á¸ÀçÇÏ´Â Àû ¹è¿­
-    private int _indexInArr;                       // ÇØ´ç ¹è¿­¿¡¼­ÀÇ ÀÎµ¦½º
-    private EnemyStatus _status;                   // ÀûÀÇ ½ºÅÈ
-    private SpriteRenderer[] _bodyRendererArr;     // Àû ¸öÃ¼ÀÇ SpriteRenderer ¹è¿­
-    private float deadDuration = 1f;               // Á×´Âµ¥ °É¸®´Â ½Ã°£ (ÆäÀÌµå¾Æ¿ô Æ÷ÇÔ)
+    private EnemyPool _enemyPool;                  // ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½È¯ï¿½ï¿½ Ç®
+    private EnemyController[] _enemies;            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô²ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ ï¿½è¿­
+    private int _indexInArr;                       // ï¿½Ø´ï¿½ ï¿½è¿­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½
+    private EnemyStatus _status;                   // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    private SpriteRenderer[] _bodyRendererArr;     // ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ SpriteRenderer ï¿½è¿­
+    private float deadDuration = 1f;               // ï¿½×´Âµï¿½ ï¿½É¸ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ (ï¿½ï¿½ï¿½Ìµï¿½Æ¿ï¿½ ï¿½ï¿½ï¿½ï¿½)
 
-    public EnemyHpBar enemyHpBar;                  // HP UI ¹Ù
+    public EnemyHpBar enemyHpBar;                  // HP UI ï¿½ï¿½
     private float attackTerm = 1f;
 
     private void Start()
     {
-        // Ä³¸¯ÅÍ ÀÌµ¿À» ÁßÀçÀÚ(Mediator)¿¡ µî·Ï
+        // Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(Mediator)ï¿½ï¿½ ï¿½ï¿½ï¿½
         MediatorManager<IMoveByPlayer>.RegisterMediator(this);
 
         anim = GetComponentInChildren<Animator>();
@@ -32,7 +32,7 @@ public class EnemyController : Attackable, IMoveByPlayer
         SetDefaultAttack();
     }
     /// <summary>
-    /// Attackable Ãß»ó ¸Þ¼­µå ±¸Çö: ÀûÀÇ ½ºÅÈ ¹ÝÈ¯
+    /// Attackable ï¿½ß»ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
     /// </summary>
     public override ICharacterStatus GetStatus()
     {
@@ -40,7 +40,7 @@ public class EnemyController : Attackable, IMoveByPlayer
     }
 
     /// <summary>
-    /// Àû Á¤º¸ ¼¼ÆÃ (Ç®, ½ºÅÈ µî)
+    /// ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (Ç®, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½)
     /// </summary>
     public void InitEnemyInfo(EnemyPool pool, EnemyStatus status)
     {
@@ -49,7 +49,7 @@ public class EnemyController : Attackable, IMoveByPlayer
     }
 
     /// <summary>
-    /// Àû »ç¸Á Ã³¸®
+    /// ï¿½ï¿½ ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
     /// </summary>
     protected override void OnDead()
     {
@@ -67,7 +67,7 @@ public class EnemyController : Attackable, IMoveByPlayer
     }
 
     /// <summary>
-    /// »ç¸Á ÈÄ ÆäÀÌµå¾Æ¿ô ¡æ ÃÊ±âÈ­
+    /// ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Ìµï¿½Æ¿ï¿½ ï¿½ï¿½ ï¿½Ê±ï¿½È­
     /// </summary>
     private IEnumerator OnDeadCoroutine()
     {
@@ -76,7 +76,7 @@ public class EnemyController : Attackable, IMoveByPlayer
     }
 
     /// <summary>
-    /// ¸ðµç ·»´õ·¯¸¦ ÆäÀÌµå¾Æ¿ô ½ÃÅ²´Ù.
+    /// ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìµï¿½Æ¿ï¿½ ï¿½ï¿½Å²ï¿½ï¿½.
     /// </summary>
     private IEnumerator FadeOutAllRenderer()
     {
@@ -88,7 +88,7 @@ public class EnemyController : Attackable, IMoveByPlayer
     }
 
     /// <summary>
-    /// °³º° ·»´õ·¯¸¦ ÀÏÁ¤ ½Ã°£ µ¿¾È Åõ¸íÈ­
+    /// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½È­
     /// </summary>
     private IEnumerator FadeOutEachRenderer(SpriteRenderer renderer, float fadeSecond)
     {
@@ -106,7 +106,7 @@ public class EnemyController : Attackable, IMoveByPlayer
     }
 
     /// <summary>
-    /// »ç¸Á ÈÄ Ç® ¹ÝÈ¯ ¹× »óÅÂ ÃÊ±âÈ­
+    /// ï¿½ï¿½ï¿½ ï¿½ï¿½ Ç® ï¿½ï¿½È¯ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
     /// </summary>
     private void InitAfterDead()
     {
@@ -118,7 +118,7 @@ public class EnemyController : Attackable, IMoveByPlayer
 
         isDead = false;
 
-        // »ö»ó ÃÊ±âÈ­ (´Ù½Ã ¼ÒÈ¯µÉ ¶§ Á¤»óÀûÀ¸·Î º¸ÀÌµµ·Ï)
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ (ï¿½Ù½ï¿½ ï¿½ï¿½È¯ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìµï¿½ï¿½ï¿½)
         foreach (SpriteRenderer renderer in _bodyRendererArr)
         {
             Color color = renderer.color;
@@ -127,7 +127,7 @@ public class EnemyController : Attackable, IMoveByPlayer
     }
 
     /// <summary>
-    /// ÇöÀç ÀûÀÌ ¼ÓÇÑ ¹è¿­°ú ¹è¿­ ³» ÀÎµ¦½º ¼¼ÆÃ
+    /// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½è¿­ï¿½ï¿½ ï¿½è¿­ ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     public void SetCurrentInfo(EnemyController[] enemies, int indexInPool)
     {
@@ -136,7 +136,7 @@ public class EnemyController : Attackable, IMoveByPlayer
     }
 
     /// <summary>
-    /// ÇÃ·¹ÀÌ¾î ÀÌµ¿¿¡ ¸ÂÃç Àûµµ ÀÌµ¿ (¹è°æ°ú ÇÔ²² ½ºÅ©·ÑµÇ´Â È¿°ú)
+    /// ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½Ìµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½Ô²ï¿½ ï¿½ï¿½Å©ï¿½ÑµÇ´ï¿½ È¿ï¿½ï¿½)
     /// </summary>
     public void MoveByPlayer(Vector3 translation)
     {
@@ -144,7 +144,7 @@ public class EnemyController : Attackable, IMoveByPlayer
     }
 
     /// <summary>
-    /// ½ºÅ³ ÇÇ°Ý Ã³¸® (HP ºñÀ² °è»ê ¡æ UI/Boss HP ¹Ý¿µ)
+    /// ï¿½ï¿½Å³ ï¿½Ç°ï¿½ Ã³ï¿½ï¿½ (HP ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ UI/Boss HP ï¿½Ý¿ï¿½)
     /// </summary>
     protected override void OnReceiveSkill()
     {
@@ -154,7 +154,7 @@ public class EnemyController : Attackable, IMoveByPlayer
         double logDifference = logValue1 - logValue2;
         float ratio = (float)Math.Exp(logDifference);
 
-        // Æ¯Á¤ ÀüÅõ Å¸ÀÔ¿¡¼­´Â Boss HP UI °»½Å
+        // Æ¯ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½Ô¿ï¿½ï¿½ï¿½ï¿½ï¿½ Boss HP UI ï¿½ï¿½ï¿½ï¿½
         var battleType = BattleBroker.GetBattleType();
         if (battleType == BattleType.Boss || battleType == BattleType.CompanionTech ||
             battleType == BattleType.Adventure || battleType == BattleType.Dungeon
@@ -179,7 +179,7 @@ public class EnemyController : Attackable, IMoveByPlayer
     }
 
     /// <summary>
-    /// HP¹Ù À§Ä¡¸¦ ÀûÀÇ È­¸é ÁÂÇ¥¿¡ ¸ÂÃç °»½Å
+    /// HPï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     public void SetHpBarPosition()
     {
@@ -191,8 +191,8 @@ public class EnemyController : Attackable, IMoveByPlayer
     }
 
     /// <summary>
-    /// Attackable ±âº» °ø°Ý ·çÇÁ¸¦ ¿À¹ö¶óÀÌµåÇÏ¿©
-    /// °£´ÜÈ÷ ÁÖ±âÀûÀ¸·Î µ¥¹ÌÁö¸¦ ÁÖ´Â ÇüÅÂ·Î ±¸Çö
+    /// Attackable ï¿½âº» ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìµï¿½ï¿½Ï¿ï¿½
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½Â·ï¿½ ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     
     protected override IEnumerator AttackLoop()
@@ -210,14 +210,7 @@ public class EnemyController : Attackable, IMoveByPlayer
             {
                 yield break;
             }
-
-            if (target.skillActive.TryGetValue(SkillType.Paralyzation, out bool isActive) && isActive)
-            {
-                yield return null;
-                continue;
-            }
-
-            yield return new WaitForSeconds(attackTerm);
+yield return new WaitForSeconds(attackTerm);
 
             if (target == null || target.isDead)
                 yield break;

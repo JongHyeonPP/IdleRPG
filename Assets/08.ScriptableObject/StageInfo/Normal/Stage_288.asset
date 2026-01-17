@@ -16,6 +16,7 @@ MonoBehaviour:
   stageName: "\uBD88\uC758\uC2EC\uC7A5\u2162"
   background: 14
   recommendLevel: 0
+  battleType: 0
   goldBonusValue: 0
   expBonusValue: 0
   weaponDropId: Staff_200
@@ -24,16 +25,13 @@ MonoBehaviour:
   boss: {fileID: 11400000, guid: f7313c1ac55930347a2baf0e370abb84, type: 2}
   enemyNum: 4
   enemyStatusFromStage:
-    maxHp: 100
-    resist: 0
+    maxHp: 31969
   bossStatusFromStage:
-    maxHp: 100
-    resist: 0
-    power: 10
-    penetration: 0
+    maxHp: 265343
+    resist: 0.4
+    power: 346
   chestStatusFromStage:
     maxHp: 
-    resist: 0
   companionTechInfo:
     companionNum: 0
     techIndex_0: 0

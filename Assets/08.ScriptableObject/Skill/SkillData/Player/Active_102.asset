@@ -27,17 +27,17 @@ MonoBehaviour:
   projectileSpeed: 15
   effectLifeTime: 5
   value:
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
+  - 1.2
+  - 1.32
+  - 1.44
+  - 1.56
+  - 1.68
+  - 1.8
+  - 1.95
+  - 2.1
+  - 2.25
+  - 2.4
+  - 2.5
   type: 0
   target: 1
   targetNum: 1

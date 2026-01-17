@@ -14,10 +14,10 @@ public class StageInfo : ScriptableObject, IListViewItem
     public BattleType battleType;
 
     [Header("Drop Info")]
-    public float goldBonusValue;    // ¿¹: 0.2f ¡æ +20%
-    public float expBonusValue;     // ¿¹: 0.15f ¡æ +15%
-    public (Rarity rarity, int count)? fragmentDropInfo;
-    public string weaponDropId; // nullÀÌ¸é ¹«±â µå·Ó ¾øÀ½
+    [HideInInspector] public float goldBonusValue;    // Remote Configì—ì„œ runtime í• ë‹¹
+    [HideInInspector] public float expBonusValue;     // Remote Configì—ì„œ runtime í• ë‹¹
+    [HideInInspector] public (Rarity rarity, int count)? fragmentDropInfo;
+    [HideInInspector] public string weaponDropId; // nullì´ë©´ ë¬´ê¸° ë“œë¡­ ì—†ìŒ
 
     [Header("Enemy Info")]
     public EnemyStatus enemy_0;
@@ -34,7 +34,7 @@ public class StageInfo : ScriptableObject, IListViewItem
     [Serializable]
     public class EnemyStatusFromStage
     {
-        //ÀÏ¹İ¸÷°ú º¸½º¸÷ÀÌ °®´Â ½ºÅÈ
+        //ì¼ë°˜ëª¹ê³¼ ë³´ìŠ¤ëª¹ì´ ê°–ëŠ” ìŠ¤íƒ¯
         public string maxHp;
     }
     [Serializable]
@@ -45,21 +45,21 @@ public class StageInfo : ScriptableObject, IListViewItem
     [Serializable]
     public class BossStatusFromStage
     {
-        //CompanionÀº Boss Status¸¦ Àû¿ëÇÑ´Ù.
+        //Companionì€ Boss Statusë¥¼ ì ìš©í•œë‹¤.
         [Header("Status")]
-        //ÀÏ¹İ¸÷°ú º¸½º¸÷ÀÌ °®´Â ½ºÅÈ
+        //ì¼ë°˜ëª¹ê³¼ ë³´ìŠ¤ëª¹ì´ ê°–ëŠ” ìŠ¤íƒ¯
         public string maxHp;
         public float resist;
 
-        //º¸½º¸÷¿¡°Ô¸¸ ÀÇ¹ÌÀÖ´Â ½ºÅÈ
+        //ë³´ìŠ¤ëª¹ì—ê²Œë§Œ ì˜ë¯¸ìˆëŠ” ìŠ¤íƒ¯
         public string power;
     }
     [Serializable]
     public class CompanionTechInfo
     {
         public int companionNum;
-        public int techIndex_0;//Çà
-        public int techIndex_1;//¿­
+        public int techIndex_0;//í–‰
+        public int techIndex_1;//ì—´
         public int recommendLevel;
     }
     [Serializable]

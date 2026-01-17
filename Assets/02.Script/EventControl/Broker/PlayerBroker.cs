@@ -1,34 +1,34 @@
-using EnumCollection;
+ï»¿using EnumCollection;
 using System;
 using UnityEngine;
 
 public static class PlayerBroker
 {
-    //PlayerController¿¡¼­ ´É·ÂÄ¡ ¾ò¾î¿È - PlayerController
+    //PlayerControllerï¿½ï¿½ï¿½ï¿½ ï¿½É·ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½ - PlayerController
 
-    //°ñµå·Î ¿Ã¸° ½ºÅÈ Àû¿ë
+    //ï¿½ï¿½ï¿½ï¿½ ï¿½Ã¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public static Action<StatusType, int> OnGoldStatusLevelSet;
-    //½ºÅÈ Æ÷ÀÎÆ®·Î ¿Ã¸° ½ºÅÈ Àû¿ë
+    //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ã¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public static Action<StatusType, int> OnStatPointStatusLevelSet;
-    //¹«±âÀåÂø
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     public static Action<object, WeaponType> OnEquipWeapon;//object = WeaponData
-    //¹«±â ·¹º§ º¯°æ
+    //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public static Action<string, int> OnWeaponLevelSet;
-    //¹«±â °³¼ö º¯°æ
+    //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public static Action<string, int> OnWeaponCountSet;
-    //ÇÃ·¹ÀÌ¾î HP º¯°æ ½Ã ºñÀ² Àü´Þ
+    //ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ HP ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public static Action<float> OnPlayerHpChanged;
-    //ÇÃ·¹ÀÌ¾î ½ºÅ³ ½ÃÀü ½Ã MPÀÇ ºñÀ² Àü´Þ
+    //ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½Å³ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ MPï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public static Action<float> OnPlayerMpChanged;
-    //ÇÃ·¹ÀÌ¾î°¡ Á×¾úÀ» ¶§
+    //ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½×¾ï¿½ï¿½ï¿½ ï¿½ï¿½
     public static Action OnPlayerDead;
-    //ÀÌ¸§ ¹Ù²åÀ» ¶§
+    //ï¿½Ì¸ï¿½ ï¿½Ù²ï¿½ï¿½ï¿½ ï¿½ï¿½
     public static Action<string> OnSetName;
-    //½ºÅ³¾÷ ÇßÀ» ¶§, <½ºÅ³ ID, ÀåÂø ÀÎµ¦½º>
+    //ï¿½ï¿½Å³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½, <ï¿½ï¿½Å³ ID, ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½>
     public static Action<string, int> OnSkillChanged;
-    //½ºÅ³ ·¹º§ ¹Ù²¼À» ¶§
+    //ï¿½ï¿½Å³ ï¿½ï¿½ï¿½ï¿½ ï¿½Ù²ï¿½ï¿½ï¿½ ï¿½ï¿½
     public static Action<string, int> OnSkillLevelSet;//Skill Id, Skill Level
-    //½ºÅ³ ÆÄÆí °³¼ö ¹Ù²¼À» ¶§
+    //ï¿½ï¿½Å³ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ù²ï¿½ï¿½ï¿½ ï¿½ï¿½
 
     public static Action OnFragmentSet;//Skill Id, Skill Level
     public static Action OnGoldSet;
@@ -40,8 +40,8 @@ public static class PlayerBroker
     public static Action OnMaxStageSet;
     public static Action<int> OnCompanionExpSet;
 
-    public static Action OnPromoteRankSet;//½Â±Þ
-    public static Action<StatusType, float> OnPromoteStatusSet;//½Â±ÞÀ¸·Î ´É·ÂÄ¡ Àû¿ë
+    public static Action OnPromoteRankSet;//ï¿½Â±ï¿½
+    public static Action<StatusType, float> OnPromoteStatusSet;//ï¿½Â±ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½É·ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
     public static Action<int, int, (StatusType, Rarity)?> OnCompanionPromoteEffectSet;// CompanionIndex, EffectIndex, Value
     public static Action<int, int, int> OnCompanionPromoteTechSet;//CompanionIndex, TechIndex, Value
     public static Action<int> CompanionTechRenderSet;
@@ -63,4 +63,5 @@ public static class PlayerBroker
     public static Action StartScrollTimer;
 
     public static Func< SkillType, float> GetPWValue;
+    public static Action OnEnemyKilled;
 }

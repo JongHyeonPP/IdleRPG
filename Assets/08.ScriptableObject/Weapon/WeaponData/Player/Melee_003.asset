@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _weaponType: 0
   _weaponRarity: 0
-  _power: 1
+  _power: 5
   _maxHp: 0
-  _criticalDamage: 1
+  _criticalDamage: 5
   _critical: 1
   _resist: 0
   _penetration: 0
@@ -25,7 +25,7 @@ MonoBehaviour:
   _textureScale: 1
   _uID: Melee_003
   _weaponName: "\uCCAD\uB3D9 \uC0BC\uC9C0\uCC3D"
-  _powerPerUpgrade: 0
-  _critDmgPerUpgrade: 0
+  _powerPerUpgrade: 1
+  _critDmgPerUpgrade: 1
   _critPerUpgrade: 0
   weaponEffects: []

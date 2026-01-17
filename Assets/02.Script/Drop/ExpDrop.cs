@@ -5,7 +5,7 @@ public class ExpDrop : DropBase
 {
     void Awake()
     {
-        dropType = DropType.Gold;
+        dropType = DropType.Exp;
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -28,6 +28,6 @@ public class ExpDrop : DropBase
     public override void SetValue()
     {
         value = CurrencyManager.instance.currentExpValue;
-        //value *= (int)PlayerBroker.GetPWValue(SkillType.ExpPlus);
+        value = Mathf.FloorToInt(value * (1 + PlayerBroker.GetPWValue(SkillType.ExpPlus)));
     }
 }

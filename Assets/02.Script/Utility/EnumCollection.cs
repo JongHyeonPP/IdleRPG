@@ -1,4 +1,4 @@
-namespace EnumCollection
+ï»¿namespace EnumCollection
 {
     public enum StoryAction
     {
@@ -23,7 +23,16 @@ namespace EnumCollection
 
         AttBuff, SpeedBuff,Durability,
         healOnHit, DoubleHit, ExpPlus, Revive, Invincible, Paralyzation,SuperArmor, GoldPlus,
-        MoveSpeed,AttackSpeed,MaxHpPer,MpRecover,MaxMP,Penetration
+        MoveSpeed,AttackSpeed,MaxHpPer,MpRecover,MaxMP,Penetration,
+        // ìƒˆë¡œ ì¶”ê°€ëœ íš¨ê³¼
+        Lifesteal,      // 18: ë°ë¯¸ì§€ì˜ X% HP íšŒë³µ
+        CritDmgBuff,    // 19: í¬ë¦¬í‹°ì»¬ ë°ë¯¸ì§€ +X%
+        BossSlayer,     // 20: ë³´ìŠ¤ì—ê²Œ ì¶”ê°€ ë°ë¯¸ì§€ +X%
+        Thorns,         // 21: ë°›ëŠ” ë°ë¯¸ì§€ X% ë°˜ì‚¬
+        Berserker,      // 22: HP ë‚®ì„ìˆ˜ë¡ ê³µê²©ë ¥ ì¦ê°€
+        Execution,      // 23: HP 10% ì´í•˜ ì  ì¦‰ì‚¬ í™•ë¥ 
+        AreaDamage,     // 24: ê³µê²© ì‹œ ì£¼ë³€ ì ì—ê²Œ X% ê´‘ì—­
+        Rage            // 25: í‚¬ ì‹œ ì¼ì •ì‹œê°„ ê³µê²©ë ¥ ë²„í”„
 
     }
     public enum SkillTarget
@@ -32,11 +41,8 @@ namespace EnumCollection
     }
     public enum StatusType
     {
-        //°ñµå, ¹«±â·Î Âï´Â ½ºÅÈ
         MaxHp, Power, HpRecover, Critical, CriticalDamage,
-        //ÄÚ½ºÆ¬ È¿°ú
         GoldAscend, ExpAscend,
-        //µüÈ÷ ÂïÀ» ÀÏ ¾øÀ½
         MaxMp, MpRecover,
         AttBuff, DefBuff
     }
@@ -88,7 +94,6 @@ namespace EnumCollection
     }
     public enum Resource
     {
-        //ÀçÈ­ Á¾·ù
         Gold, Exp, Dia, Clover, Scroll,
         Fragment,
         None,
@@ -96,13 +101,11 @@ namespace EnumCollection
     }
     public enum Source
     {
-        //ÀçÈ­ È¹µæÃ³
         Battle, Adventure, Companion, Dungeon,
         Advertise, Attendance
     }
     public enum SpendType
     {
-        //ÀçÈ­ »ç¿ëÃ³
         Status
     }
     public enum GachaType

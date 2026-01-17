@@ -1,4 +1,4 @@
-%YAML 1.1
+﻿%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!114 &11400000
 MonoBehaviour:
@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _weaponType: 3
   _weaponRarity: 6
-  _power: 1
+  _power: 380
   _maxHp: 0
-  _criticalDamage: 1
-  _critical: 1
+  _criticalDamage: 130
+  _critical: 38
   _attackSpeed: 0
   _weaponSprite: {fileID: 21300000, guid: de9222b87b71c4b4c98b8b862c5548b9, type: 3}
   _textureSize: {x: 1, y: 1}
@@ -29,5 +29,7 @@ MonoBehaviour:
   _critPerUpgrade: 0
   _attackSpeedPerUpgrade: 0
   _weaponEffects:
-  - type: 9
-    value: 0
+  - type: 24
+    value: 0.25
+  - type: 5
+    value: 0.15

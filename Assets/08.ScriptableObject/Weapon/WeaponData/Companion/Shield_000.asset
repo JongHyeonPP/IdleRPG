@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _weaponType: 2
   _weaponRarity: 0
-  _power: 1
+  _power: 5
   _maxHp: 0
-  _criticalDamage: 1
+  _criticalDamage: 5
   _critical: 1
   _resist: 0
   _penetration: 0

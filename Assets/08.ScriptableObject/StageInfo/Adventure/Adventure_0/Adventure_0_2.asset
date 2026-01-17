@@ -16,21 +16,20 @@ MonoBehaviour:
   stageName: "\uAC08\uC0C9 \uC950 \uCC98\uCE58"
   background: 0
   recommendLevel: 0
-
-  battleType: 4
+  battleType: 0
   goldBonusValue: 0
   expBonusValue: 0
   weaponDropId: 
   enemy_0: {fileID: 0}
   enemy_1: {fileID: 0}
-  boss: {fileID: 11400000, guid: db9dfcadd6a5acb478fc10155c85544b, type: 2}
+  boss: {fileID: 0}
   enemyNum: 0
   enemyStatusFromStage:
-    maxHp: 10
+    maxHp: 30
   bossStatusFromStage:
-    maxHp: 100
-    resist: 100
-    power: 10
+    maxHp: 249
+    resist: 0
+    power: 
   chestStatusFromStage:
     maxHp: 
   companionTechInfo:
@@ -40,6 +39,6 @@ MonoBehaviour:
     recommendLevel: 0
   adventrueInfo:
     adventureIndex_0: 0
-    adventureIndex_1: 2
+    adventureIndex_1: 0
     imageLeft: 0
     imageScale: 1

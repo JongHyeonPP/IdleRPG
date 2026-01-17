@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _weaponType: 3
   _weaponRarity: 0
-  _power: 1
-  _criticalDamage: 1
+  _power: 5
+  _criticalDamage: 5
   _critical: 1
   _weaponSprite: {fileID: 21300000, guid: 334b3f278ed6db643a8dbb6bcd691418, type: 3}
   _textureSize: {x: 1, y: 1}

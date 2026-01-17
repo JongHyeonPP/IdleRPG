@@ -25,11 +25,11 @@ MonoBehaviour:
   boss: {fileID: 11400000, guid: 473ff8db5bf46f34d831d21014b8deef, type: 2}
   enemyNum: 0
   enemyStatusFromStage:
-    maxHp: 10
+    maxHp: 30
   bossStatusFromStage:
-    maxHp: 100
-    resist: 0
-    power: 10
+    maxHp: 249
+    resist: 0.14
+    power: 144
   chestStatusFromStage:
     maxHp: 
   companionTechInfo:

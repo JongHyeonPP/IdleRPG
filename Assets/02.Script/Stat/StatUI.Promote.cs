@@ -39,37 +39,37 @@ public partial class StatUI
         switch (rank)
         {
             case Rank.Stone:
-                name = "½ºÅæ";
-                ability = "°ø°İ·Âx1 Ã¼·Âx1";
-                recommand = "±ÇÀå ·¹º§ 1";
+                name = "ìŠ¤í†¤";
+                ability = "ê³µê²©ë ¥x1 ì²´ë ¥x1";
+                recommand = "ê¶Œì¥ ë ˆë²¨ 1";
                 sprite = stoneSprite;
                 break;
 
             case Rank.Bronze:
-                name = "ºê·ĞÁî";
-                ability = "°ø°İ·Âx2 Ã¼·Âx2";
-                recommand = "±ÇÀå ·¹º§ 50";
+                name = "ë¸Œë¡ ì¦ˆ";
+                ability = "ê³µê²©ë ¥x1.5 ì²´ë ¥x1.5";
+                recommand = "ê¶Œì¥ ë ˆë²¨ 30";
                 sprite = bronzeSprite;
                 break;
 
             case Rank.Iron:
-                name = "¾ÆÀÌ¾ğ";
-                ability = "°ø°İ·Âx5 Ã¼·Âx5";
-                recommand = "±ÇÀå ·¹º§ 90";
+                name = "ì•„ì´ì–¸";
+                ability = "ê³µê²©ë ¥x3 ì²´ë ¥x3";
+                recommand = "ê¶Œì¥ ë ˆë²¨ 60";
                 sprite = ironSprite;
                 break;
 
             case Rank.Silver:
-                name = "½Ç¹ö";
-                ability = "°ø°İ·Âx18 Ã¼·Âx18";
-                recommand = "±ÇÀå ·¹º§ 180";
+                name = "ì‹¤ë²„";
+                ability = "ê³µê²©ë ¥x8 ì²´ë ¥x8";
+                recommand = "ê¶Œì¥ ë ˆë²¨ 120";
                 sprite = silverSprite;
                 break;
 
             case Rank.Gold:
-                name = "°ñµå";
-                ability = "°ø°İ·Âx25 Ã¼·Âx25";
-                recommand = "±ÇÀå ·¹º§ 300";
+                name = "ê³¨ë“œ";
+                ability = "ê³µê²©ë ¥x15 ì²´ë ¥x15";
+                recommand = "ê¶Œì¥ ë ˆë²¨ 200";
                 sprite = goldSprite;
                 break;
         }
