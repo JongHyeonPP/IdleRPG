@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5649e372f42bd3740b2d096fb0b450af, type: 3}
+  m_Name: Shoes_6003
+  m_EditorClassIdentifier: 
+  Uid: 6003
+  Name: "\uB2EC\uB9AC\uAE30\uC2EB\uC740 \uC2E0\uBC1C3"
+  Description: "\uB6F0\uBA74 \uC090\uC9D1\uB2C8\uB2E4"
+  IconTexture: {fileID: 2800000, guid: 34579f1a546a3e9459379827dbd8a09c, type: 3}
+  IconXTexture: {fileID: 0}
+  IconColor: {r: 1, g: 1, b: 1, a: 1}
+  CostumeType: 5
+  Parts:
+  - Part: 7
+    CostumeSprite: {fileID: 4488402338830534301, guid: 34579f1a546a3e9459379827dbd8a09c, type: 3}
+    CostumeColor: {r: 1, g: 1, b: 1, a: 1}
+  _costumeRarity: 0

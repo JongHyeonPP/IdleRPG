@@ -55,7 +55,7 @@ public partial class TotalStatusUI : MonoBehaviour
         {
             SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
             UIBroker.InactiveCurrentUI?.Invoke();
-            CostumeManager.Instance.UpdateGameAppearanceData();
+            CostumeManager.Instance.UpdateAppearanceData();
 
             NetworkBroker.SaveServerData(); // 필요없을시 삭제 // 삐용
             ParticleFxManager.Instance.Stop("CostumeEffect");

@@ -1,0 +1,425 @@
+﻿id,info
+# 파일토큰 | #hex | 이름 | (선택)설명 | CostumePart | (선택)BodyPart,
+# -----------------------------,
+# Hair,
+# -----------------------------,
+1001,New_Hair_01.png | #1f1f1f | 야근 블랙컷 | 티 안 나게 강해집니다 | Hair | Hair
+1002,New_Hair_02.png | #6b3f2a | 군밤 러프펌 | 고소한 분위기입니다 | Hair | Hair
+1003,New_Hair_03.png | #d7b46a | 바나나머리 | 보면 웃음 납니다 | Hair | Hair
+1004,New_Hair_04.png | #b71c1c | 토마토컷 | 빨개도 당당합니다 | Hair | Hair
+1005,New_Hair_05.png | #ff6f91 | 딸기우유펌 | 달달해 보입니다 | Hair | Hair
+1006,New_Hair_06.png | #7e57c2 | 보라물결 | 신비해 보입니다 | Hair | Hair
+1007,New_Hair_07.png | #1565c0 | 새벽블루컷 | 차분해 보입니다 | Hair | Hair
+1008,New_Hair_08.png | #00897b | 민트초코컷 | 호불호를 부릅니다 | Hair | Hair
+1009,New_Hair_09.png | #2e7d32 | 풀숲잠복펌 | 숨어도 들킵니다 | Hair | Hair
+1010,New_Hair_10.png | #f9a825 | 레몬번쩍 | 눈에 확 띕니다 | Hair | Hair
+1011,New_Hair_11.png | #c0c0c0 | 은빛컷 | 쿨해 보입니다 | Hair | Hair
+1012,New_Hair_12.png | #8d6e63 | 라떼단정컷 | 무난한 정석입니다 | Hair | Hair
+1013,New_Hair_13.png | #00acc1 | 바다소금컷 | 시원해 보입니다 | Hair | Hair
+1014,New_Hair_14.png | #ff8f00 | 귤상큼펌 | 기분 좋아집니다 | Hair | Hair
+1015,New_Hair_15.png | #455a64 | 비오는날펌 | 조용해 보입니다 | Hair | Hair
+1016,New_Hair_16.png | #4e342e | 초코덤덤컷 | 무표정에 강합니다 | Hair | Hair
+1017,New_Hair_17.png | #fdd835 | 꿀벌경고컷 | 다가오지 마세요 | Hair | Hair
+1018,New_Hair_18.png | #ad1457 | 루비펌 | 존재감이 납니다 | Hair | Hair
+1019,New_Hair_19.png | #3949ab | 밤샘마나컷 | 커피가 필요합니다 | Hair | Hair
+1020,New_Hair_20.png | #00e676 | 형광슬라임컷 | 어둠에서 빛납니다 | Hair | Hair
+1021,Orc_Hair_01.png | #263238 | 오크그을음컷 | 거칠게 멋집니다 | Hair | Hair
+1022,Orc_Hair_02.png | #7cb342 | 오크이끼컷 | 자연산 느낌입니다 | Hair | Hair
+1023,Orc_Hair_03.png | #8e24aa | 오크보라컷 | 위압감이 납니다 | Hair | Hair
+1024,Hair_1.png | #3e2723 | 다크초코컷 | 든든해 보입니다 | Hair | Hair
+1025,Hair_2.png | #bf360c | 칠리컷 | 매콤해 보입니다 | Hair | Hair
+1026,Hair_3.png | #1b5e20 | 숲길펌 | 편안해 보입니다 | Hair | Hair
+1027,Hair_4.png | #0d47a1 | 심해컷 | 말이 없어 보입니다 | Hair | Hair
+1028,Hair_5.png | #f48fb1 | 벚꽃컷 | 봄 느낌입니다 | Hair | Hair
+1029,Hair_6.png | #9e9e9e | 회색중립컷 | 어디든 어울립니다 | Hair | Hair
+1030,Hair_7.png | #ffcc80 | 모래바람펌 | 사막 감성입니다 | Hair | Hair
+1031,Hair_8.png | #5d4037 | 흑설탕펌 | 포근해 보입니다 | Hair | Hair
+1032,Hair_9.png | #283593 | 푸른기억컷 | 분위기 잡습니다 | Hair | Hair
+1033,Hair_Archer_1.png | #2f2f2f | 아처고요컷 | 조준이 좋아집니다 | Hair | Hair
+1034,Hair_Archer_2.png | #caa472 | 아처햇살펌 | 시선이 모입니다 | Hair | Hair
+1035,Hair_Healer_1.png | #e0f2f1 | 힐러비누컷 | 깨끗해 보입니다 | Hair | Hair
+1036,Hair_Healer_2.png | #80cbc4 | 힐러민트컷 | 상쾌해 보입니다 | Hair | Hair
+1037,Hair_Knight_1.png | #424242 | 나이트철갑컷 | 단단해 보입니다 | Hair | Hair
+1038,Hair_Knight_2.png | #b0bec5 | 나이트은강철펌 | 반짝여 보입니다 | Hair | Hair
+1039,Hair_Rogue_1.png | #212121 | 로그그림자컷 | 존재감이 줄어듭니다 | Hair | Hair
+1040,Hair_Rogue_2.png | #5e35b1 | 로그야광펌 | 숨기기 어렵습니다 | Hair | Hair
+1041,Hair_Sorcerer.png | #512da8 | 소서러주문컷 | 마법사 같아집니다 | Hair | Hair
+1042,Hair_Sorceress.png | #d81b60 | 소서리스장미펌 | 화려해 보입니다 | Hair | Hair
+1043,Normal_Hair1.png | #2b2b2b | 노말기본컷 | 기본이 최고입니다 | Hair | Hair
+1044,Normal_Hair2.png | #795548 | 노말토스트컷 | 따뜻해 보입니다 | Hair | Hair
+1045,Normal_Hair3.png | #a1887f | 노말먼지펌 | 모험가 느낌입니다 | Hair | Hair
+1046,Normal_Hair4.png | #ffca28 | 노말황금컷 | 운 좋아 보입니다 | Hair | Hair
+1047,Normal_Hair5.png | #ef5350 | 노말분노컷 | 강해 보입니다 | Hair | Hair
+1048,Normal_Hair6.png | #26a69a | 노말청량컷 | 시원해 보입니다 | Hair | Hair
+1049,Normal_Hair7.png | #42a5f5 | 노말하늘컷 | 가벼워 보입니다 | Hair | Hair
+1050,Normal_Hair8.png | #ab47bc | 노말보라펌 | 묘하게 끌립니다 | Hair | Hair
+1051,Normal_Hair9.png | #66bb6a | 노말초록컷 | 믿음직해 보입니다 | Hair | Hair
+1052,Normal_Hair10.png | #ffa726 | 노말주황컷 | 활기 있어 보입니다 | Hair | Hair
+1053,Normal_Hair11.png | #bdbdbd | 노말현자컷 | 똑똑해 보입니다 | Hair | Hair
+1054,Normal_Hair12.png | #ec407a | 노말핑크펌 | 친근해 보입니다 | Hair | Hair
+1055,Normal_Hair13.png | #8d6e63 | 노말흑당컷 | 안정감 있습니다 | Hair | Hair
+
+,
+# -----------------------------,
+# Helmet,
+# -----------------------------,
+2001,New_Helmet_01.png | #ffffff | 냄비뚜껑 헬멧 | 급할 때 가장 강합니다 | Helmet | Head
+2002,New_Helmet_02.png | #ffffff | 모서리조심 헬멧 | 문턱에 자주 부딪힙니다 | Helmet | Head
+2003,New_Helmet_03.png | #ffffff | 의심많은 헬멧 | 뒤를 자꾸 돌아봅니다 | Helmet | Head
+2004,New_Helmet_04.png | #ffffff | 할인스티커 헬멧 | 왠지 싸 보입니다 | Helmet | Head
+2005,New_Helmet_05.png | #ffffff | 대장포스 헬멧 | 말 안 해도 따라옵니다 | Helmet | Head
+2006,New_Helmet_06.png | #ffffff | 과몰입 헬멧 | 진지함이 과합니다 | Helmet | Head
+2007,New_Helmet_07.png | #ffffff | 물티슈 헬멧 | 닦고 나면 자신감이 납니다 | Helmet | Head
+2008,New_Helmet_08.png | #ffffff | 세탁완료 헬멧 | 뽀송한 기세입니다 | Helmet | Head
+2009,New_Helmet_09.png | #ffffff | 충전중 헬멧 | 아직 완충은 아닙니다 | Helmet | Head
+2010,New_Helmet_10.png | #ffffff | 오늘만산다 헬멧 | 계획은 내일 합니다 | Helmet | Head
+2011,F_SR_Helmet.png | #ffffff | F_SR 비밀헬멧 | 정체를 묻지 마세요 | Helmet | Head
+2012,Helmet_1.png | #ffffff | 기본중의기본 헬멧 | 무난하게 막아줍니다 | Helmet | Head
+2013,Helmet_2.png | #ffffff | 반짝반짝 헬멧 | 시선은 잘 끕니다 | Helmet | Head
+2014,Helmet_3.png | #ffffff | 묵직한 헬멧 | 생각도 무거워집니다 | Helmet | Head
+2015,Helmet_4.png | #ffffff | 가벼운척 헬멧 | 사실 꽤 단단합니다 | Helmet | Head
+2016,Helmet_5.png | #ffffff | 눈치게임 헬멧 | 타이밍을 봅니다 | Helmet | Head
+2017,Helmet_6.png | #ffffff | 단호박 헬멧 | 흔들리지 않습니다 | Helmet | Head
+2018,Helmet_7.png | #ffffff | 새벽감성 헬멧 | 밤에 더 멋져 보입니다 | Helmet | Head
+2019,Helmet_8.png | #ffffff | 점검중 헬멧 | 안전이 최우선입니다 | Helmet | Head
+2020,Helmet_9.png | #ffffff | 출근거부 헬멧 | 집에 가고 싶습니다 | Helmet | Head
+2021,Helmet_Archer_1.png | #ffffff | 아처 조준헬멧 | 눈이 진지해집니다 | Helmet | Head
+2022,Helmet_Archer_1_RedHair.png | #ffffff | 아처 조준헬멧 레드 | 더 눈에 띕니다 | Helmet | Head
+2023,Helmet_Archer_2.png | #ffffff | 아처 바람헬멧 | 바람을 타는 척합니다 | Helmet | Head
+2024,Helmet_Healer_1.png | #ffffff | 힐러 비누헬멧 | 깨끗해 보입니다 | Helmet | Head
+2025,Helmet_Healer_2.png | #ffffff | 힐러 긴장헬멧 | 실수 안 하려 합니다 | Helmet | Head
+2026,Helmet_Knight_1.png | #ffffff | 나이트 철벽헬멧 | 마음도 막아줍니다 | Helmet | Head
+2027,Helmet_Knight_2.png | #ffffff | 나이트 광택헬멧 | 빛이 잘 튑니다 | Helmet | Head
+2028,Helmet_Rogue_1.png | #ffffff | 로그 잠입헬멧 | 숨어도 티 납니다 | Helmet | Head
+2029,Helmet_Rogue_2.png | #ffffff | 로그 도망헬멧 | 발이 먼저 움직입니다 | Helmet | Head
+2030,Helmet_Rogue_RedHair.png | #ffffff | 로그 도망헬멧 레드 | 숨기기 더 어렵습니다 | Helmet | Head
+2031,Helmet_Sorcerer.png | #ffffff | 소서러 주문헬멧 | 중얼거림이 늘어납니다 | Helmet | Head
+2032,Helmet_Sorceress.png | #ffffff | 소서리스 화려헬멧 | 존재감이 커집니다 | Helmet | Head
+2033,Normal_Helmet1.png | #ffffff | 노말 무난헬멧 1 | 그냥 믿고 씁니다 | Helmet | Head
+2034,Normal_Helmet2.png | #ffffff | 노말 무난헬멧 2 | 딱 적당합니다 | Helmet | Head
+2035,Normal_Helmet3.png | #ffffff | 노말 무난헬멧 3 | 선택장애를 줄입니다 | Helmet | Head
+2036,Orc_Helmet_02.png | #ffffff | 오크 투박헬멧 02 | 거칠게 멋집니다 | Helmet | Head
+2037,Orc_Helmet_03.png | #ffffff | 오크 분노헬멧 03 | 말 걸기 어렵습니다 | Helmet | Head
+2038,Orc_Helmet_04.png | #ffffff | 오크 돌진헬멧 04 | 앞만 봅니다 | Helmet | Head
+2039,Orc_Helmet_05.png | #ffffff | 오크 깡패헬멧 05 | 괜히 강해 보입니다 | Helmet | Head
+2040,Orc_Helmet_06.png | #ffffff | 오크 보스헬멧 06 | 보스처럼 서게 됩니다 | Helmet | Head
+,
+# -----------------------------,
+# Cloth (Body + LeftArm + RightArm),
+# -----------------------------,
+3001,New_Cloth_01.png@Body | #ffffff | 출근거부 셔츠 | 오늘은 집이 최고입니다 | Cloth | Body
+3001,New_Cloth_01.png@Left | #ffffff | 출근거부 셔츠 | 오늘은 집이 최고입니다 | Cloth | LeftArm
+3001,New_Cloth_01.png@Right | #ffffff | 출근거부 셔츠 | 오늘은 집이 최고입니다 | Cloth | RightArm
+
+3002,New_Cloth_02.png@Body | #ffffff | 과자부스러기 티 | 주머니에서 소리가 납니다 | Cloth | Body
+3002,New_Cloth_02.png@Left | #ffffff | 과자부스러기 티 | 주머니에서 소리가 납니다 | Cloth | LeftArm
+3002,New_Cloth_02.png@Right | #ffffff | 과자부스러기 티 | 주머니에서 소리가 납니다 | Cloth | RightArm
+
+3003,New_Cloth_03.png@Body | #ffffff | 심야편의점 후드 | 새벽에 더 강해집니다 | Cloth | Body
+3003,New_Cloth_03.png@Left | #ffffff | 심야편의점 후드 | 새벽에 더 강해집니다 | Cloth | LeftArm
+3003,New_Cloth_03.png@Right | #ffffff | 심야편의점 후드 | 새벽에 더 강해집니다 | Cloth | RightArm
+
+3004,New_Cloth_04.png@Body | #ffffff | 세탁미룸 스웨터 | 언젠가 빨 겁니다 | Cloth | Body
+3004,New_Cloth_04.png@Left | #ffffff | 세탁미룸 스웨터 | 언젠가 빨 겁니다 | Cloth | LeftArm
+3004,New_Cloth_04.png@Right | #ffffff | 세탁미룸 스웨터 | 언젠가 빨 겁니다 | Cloth | RightArm
+
+3005,New_Cloth_05.png@Body | #ffffff | 회의용 단정상의 | 말은 적게 하겠습니다 | Cloth | Body
+3005,New_Cloth_05.png@Left | #ffffff | 회의용 단정상의 | 말은 적게 하겠습니다 | Cloth | LeftArm
+3005,New_Cloth_05.png@Right | #ffffff | 회의용 단정상의 | 말은 적게 하겠습니다 | Cloth | RightArm
+
+3006,New_Cloth_06.png@Body | #ffffff | 길잃음 안내셔츠 | 지도는 마음속에 있습니다 | Cloth | Body
+3006,New_Cloth_06.png@Left | #ffffff | 길잃음 안내셔츠 | 지도는 마음속에 있습니다 | Cloth | LeftArm
+3006,New_Cloth_06.png@Right | #ffffff | 길잃음 안내셔츠 | 지도는 마음속에 있습니다 | Cloth | RightArm
+
+3007,New_Cloth_07.png@Body | #ffffff | 눈치게임 니트 | 분위기만 읽습니다 | Cloth | Body
+3007,New_Cloth_07.png@Left | #ffffff | 눈치게임 니트 | 분위기만 읽습니다 | Cloth | LeftArm
+3007,New_Cloth_07.png@Right | #ffffff | 눈치게임 니트 | 분위기만 읽습니다 | Cloth | RightArm
+
+3008,New_Cloth_08.png@Body | #ffffff | 튼튼한척 상의 | 사실 약간 떱니다 | Cloth | Body
+3008,New_Cloth_08.png@Left | #ffffff | 튼튼한척 상의 | 사실 약간 떱니다 | Cloth | LeftArm
+3008,New_Cloth_08.png@Right | #ffffff | 튼튼한척 상의 | 사실 약간 떱니다 | Cloth | RightArm
+
+3009,New_Cloth_09.png@Body | #ffffff | 간식대장 유니폼 | 배고프면 성능이 떨어집니다 | Cloth | Body
+3009,New_Cloth_09.png@Left | #ffffff | 간식대장 유니폼 | 배고프면 성능이 떨어집니다 | Cloth | LeftArm
+3009,New_Cloth_09.png@Right | #ffffff | 간식대장 유니폼 | 배고프면 성능이 떨어집니다 | Cloth | RightArm
+
+3010,New_Cloth_10.png@Body | #ffffff | 대충멋 상의 | 자세히 보면 대충입니다 | Cloth | Body
+3010,New_Cloth_10.png@Left | #ffffff | 대충멋 상의 | 자세히 보면 대충입니다 | Cloth | LeftArm
+3010,New_Cloth_10.png@Right | #ffffff | 대충멋 상의 | 자세히 보면 대충입니다 | Cloth | RightArm
+
+3011,New_Cloth_11.png@Body | #ffffff | 한숨저장 셔츠 | 숨 쉬면 쌓입니다 | Cloth | Body
+3011,New_Cloth_11.png@Left | #ffffff | 한숨저장 셔츠 | 숨 쉬면 쌓입니다 | Cloth | LeftArm
+3011,New_Cloth_11.png@Right | #ffffff | 한숨저장 셔츠 | 숨 쉬면 쌓입니다 | Cloth | RightArm
+
+3012,New_Cloth_12.png@Body | #ffffff | 복권기원 상의 | 될 사람은 됩니다 | Cloth | Body
+3012,New_Cloth_12.png@Left | #ffffff | 복권기원 상의 | 될 사람은 됩니다 | Cloth | LeftArm
+3012,New_Cloth_12.png@Right | #ffffff | 복권기원 상의 | 될 사람은 됩니다 | Cloth | RightArm
+3013,Cloth_1.png@Body | #ffffff | 기본중의기본 티 | 아무 데나 입습니다 | Cloth | Body
+3013,Cloth_1.png@Left | #ffffff | 기본중의기본 티 | 아무 데나 입습니다 | Cloth | LeftArm
+3013,Cloth_1.png@Right | #ffffff | 기본중의기본 티 | 아무 데나 입습니다 | Cloth | RightArm
+3014,Cloth_2.png@Body | #ffffff | 오늘만산다 셔츠 | 계획은 내일 합니다 | Cloth | Body
+3014,Cloth_2.png@Left | #ffffff | 오늘만산다 셔츠 | 계획은 내일 합니다 | Cloth | LeftArm
+3014,Cloth_2.png@Right | #ffffff | 오늘만산다 셔츠 | 계획은 내일 합니다 | Cloth | RightArm
+3015,Cloth_3.png@Body | #ffffff | 점심약속 상의 | 배고프면 예민합니다 | Cloth | Body
+3015,Cloth_3.png@Left | #ffffff | 점심약속 상의 | 배고프면 예민합니다 | Cloth | LeftArm
+3015,Cloth_3.png@Right | #ffffff | 점심약속 상의 | 배고프면 예민합니다 | Cloth | RightArm
+3016,Cloth_4.png@Body | #ffffff | 기분좋은척 상의 | 웃음은 연습입니다 | Cloth | Body
+3016,Cloth_4.png@Left | #ffffff | 기분좋은척 상의 | 웃음은 연습입니다 | Cloth | LeftArm
+3016,Cloth_4.png@Right | #ffffff | 기분좋은척 상의 | 웃음은 연습입니다 | Cloth | RightArm
+3017,Cloth_5.png@Body | #ffffff | 파티모집 셔츠 | 사람을 부르는 느낌입니다 | Cloth | Body
+3017,Cloth_5.png@Left | #ffffff | 파티모집 셔츠 | 사람을 부르는 느낌입니다 | Cloth | LeftArm
+3017,Cloth_5.png@Right | #ffffff | 파티모집 셔츠 | 사람을 부르는 느낌입니다 | Cloth | RightArm
+3018,Cloth_6.png@Body | #ffffff | 냉장고지킴 상의 | 야식에 최적화입니다 | Cloth | Body
+3018,Cloth_6.png@Left | #ffffff | 냉장고지킴 상의 | 야식에 최적화입니다 | Cloth | LeftArm
+3018,Cloth_6.png@Right | #ffffff | 냉장고지킴 상의 | 야식에 최적화입니다 | Cloth | RightArm
+3019,Cloth_7.png@Body | #ffffff | 알람무시 후드 | 5분만 더입니다 | Cloth | Body
+3019,Cloth_7.png@Left | #ffffff | 알람무시 후드 | 5분만 더입니다 | Cloth | LeftArm
+3019,Cloth_7.png@Right | #ffffff | 알람무시 후드 | 5분만 더입니다 | Cloth | RightArm
+3020,Cloth_8.png@Body | #ffffff | 평화주의 상의 | 싸움은 피곤합니다 | Cloth | Body
+3020,Cloth_8.png@Left | #ffffff | 평화주의 상의 | 싸움은 피곤합니다 | Cloth | LeftArm
+3020,Cloth_8.png@Right | #ffffff | 평화주의 상의 | 싸움은 피곤합니다 | Cloth | RightArm
+3021,Cloth_9.png@Body | #ffffff | 웃음참기 셔츠 | 진지한 척합니다 | Cloth | Body
+3021,Cloth_9.png@Left | #ffffff | 웃음참기 셔츠 | 진지한 척합니다 | Cloth | LeftArm
+3021,Cloth_9.png@Right | #ffffff | 웃음참기 셔츠 | 진지한 척합니다 | Cloth | RightArm
+3022,Cloth_10.png@Body | #ffffff | 감성폭발 상의 | 이유는 모르겠습니다 | Cloth | Body
+3022,Cloth_10.png@Left | #ffffff | 감성폭발 상의 | 이유는 모르겠습니다 | Cloth | LeftArm
+3022,Cloth_10.png@Right | #ffffff | 감성폭발 상의 | 이유는 모르겠습니다 | Cloth | RightArm
+3023,Cloth_11.png@Body | #ffffff | 긴장한 단추셔츠 | 손이 자꾸 갑니다 | Cloth | Body
+3023,Cloth_11.png@Left | #ffffff | 긴장한 단추셔츠 | 손이 자꾸 갑니다 | Cloth | LeftArm
+3023,Cloth_11.png@Right | #ffffff | 긴장한 단추셔츠 | 손이 자꾸 갑니다 | Cloth | RightArm
+3024,Cloth_12.png@Body | #ffffff | 대화회피 상의 | 먼저 말 걸지 마세요 | Cloth | Body
+3024,Cloth_12.png@Left | #ffffff | 대화회피 상의 | 먼저 말 걸지 마세요 | Cloth | LeftArm
+3024,Cloth_12.png@Right | #ffffff | 대화회피 상의 | 먼저 말 걸지 마세요 | Cloth | RightArm
+3025,Cloth_Archer_1.png@Body | #ffffff | 아처 바람셔츠 | 자세가 곧아집니다 | Cloth | Body
+3025,Cloth_Archer_1.png@Left | #ffffff | 아처 바람셔츠 | 자세가 곧아집니다 | Cloth | LeftArm
+3025,Cloth_Archer_1.png@Right | #ffffff | 아처 바람셔츠 | 자세가 곧아집니다 | Cloth | RightArm
+3026,Cloth_Archer_2.png@Body | #ffffff | 아처 조용상의 | 소리 없이 맞춥니다 | Cloth | Body
+3026,Cloth_Archer_2.png@Left | #ffffff | 아처 조용상의 | 소리 없이 맞춥니다 | Cloth | LeftArm
+3026,Cloth_Archer_2.png@Right | #ffffff | 아처 조용상의 | 소리 없이 맞춥니다 | Cloth | RightArm
+3027,Cloth_Healer_1.png@Body | #ffffff | 힐러 말랑상의 | 마음이 먼저 회복됩니다 | Cloth | Body
+3027,Cloth_Healer_1.png@Left | #ffffff | 힐러 말랑상의 | 마음이 먼저 회복됩니다 | Cloth | LeftArm
+3027,Cloth_Healer_1.png@Right | #ffffff | 힐러 말랑상의 | 마음이 먼저 회복됩니다 | Cloth | RightArm
+3028,Cloth_Healer_2.png@Body | #ffffff | 힐러 청결상의 | 깨끗해 보이면 이깁니다 | Cloth | Body
+3028,Cloth_Healer_2.png@Left | #ffffff | 힐러 청결상의 | 깨끗해 보이면 이깁니다 | Cloth | LeftArm
+3028,Cloth_Healer_2.png@Right | #ffffff | 힐러 청결상의 | 깨끗해 보이면 이깁니다 | Cloth | RightArm
+3029,Cloth_Knight_1.png@Body | #ffffff | 나이트 철벽상의 | 마음 단단히 먹습니다 | Cloth | Body
+3029,Cloth_Knight_1.png@Left | #ffffff | 나이트 철벽상의 | 마음 단단히 먹습니다 | Cloth | LeftArm
+3029,Cloth_Knight_1.png@Right | #ffffff | 나이트 철벽상의 | 마음 단단히 먹습니다 | Cloth | RightArm
+3030,Cloth_Knight_2.png@Body | #ffffff | 나이트 결심상의 | 물러나지 않습니다 | Cloth | Body
+3030,Cloth_Knight_2.png@Left | #ffffff | 나이트 결심상의 | 물러나지 않습니다 | Cloth | LeftArm
+3030,Cloth_Knight_2.png@Right | #ffffff | 나이트 결심상의 | 물러나지 않습니다 | Cloth | RightArm
+3031,Cloth_Rogue_1.png@Body | #ffffff | 로그 잠입상의 | 존재감이 얇아집니다 | Cloth | Body
+3031,Cloth_Rogue_1.png@Left | #ffffff | 로그 잠입상의 | 존재감이 얇아집니다 | Cloth | LeftArm
+3031,Cloth_Rogue_1.png@Right | #ffffff | 로그 잠입상의 | 존재감이 얇아집니다 | Cloth | RightArm
+3032,Cloth_Rogue_2.png@Body | #ffffff | 로그 도주상의 | 발이 먼저 갑니다 | Cloth | Body
+3032,Cloth_Rogue_2.png@Left | #ffffff | 로그 도주상의 | 발이 먼저 갑니다 | Cloth | LeftArm
+3032,Cloth_Rogue_2.png@Right | #ffffff | 로그 도주상의 | 발이 먼저 갑니다 | Cloth | RightArm
+3033,Cloth_Sorcerer.png@Body | #ffffff | 소서러 주문상의 | 중얼거림이 늘어납니다 | Cloth | Body
+3033,Cloth_Sorcerer.png@Left | #ffffff | 소서러 주문상의 | 중얼거림이 늘어납니다 | Cloth | LeftArm
+3033,Cloth_Sorcerer.png@Right | #ffffff | 소서러 주문상의 | 중얼거림이 늘어납니다 | Cloth | RightArm
+3034,Cloth_Sorceress.png@Body | #ffffff | 소서리스 무드상의 | 분위기로 압도합니다 | Cloth | Body
+3034,Cloth_Sorceress.png@Left | #ffffff | 소서리스 무드상의 | 분위기로 압도합니다 | Cloth | LeftArm
+3034,Cloth_Sorceress.png@Right | #ffffff | 소서리스 무드상의 | 분위기로 압도합니다 | Cloth | RightArm
+3035,F_SR_Cloth.png@Body | #ffffff | F_SR 수상한상의 | 이유는 묻지 마세요 | Cloth | Body
+3035,F_SR_Cloth.png@Left | #ffffff | F_SR 수상한상의 | 이유는 묻지 마세요 | Cloth | LeftArm
+3035,F_SR_Cloth.png@Right | #ffffff | F_SR 수상한상의 | 이유는 묻지 마세요 | Cloth | RightArm
+,
+# -----------------------------,
+# Armor (Body + LeftArm + RightArm),
+# -----------------------------,
+4001,New_Armor_01.png@Body | #ffffff | 철판후드 아머 | 맞으면 울림납니다 | Armor | Body
+4001,New_Armor_01.png@Left | #ffffff | 철판후드 아머 | 맞으면 울림납니다 | Armor | LeftArm
+4001,New_Armor_01.png@Right | #ffffff | 철판후드 아머 | 맞으면 울림납니다 | Armor | RightArm
+
+4002,New_Armor_02.png@Body | #ffffff | 과보호 갑주 | 바람도 막아줍니다 | Armor | Body
+4002,New_Armor_02.png@Left | #ffffff | 과보호 갑주 | 바람도 막아줍니다 | Armor | LeftArm
+4002,New_Armor_02.png@Right | #ffffff | 과보호 갑주 | 바람도 막아줍니다 | Armor | RightArm
+
+4003,New_Armor_03.png@Body | #ffffff | 삐걱대는 기사복 | 걷기만 해도 존재감입니다 | Armor | Body
+4003,New_Armor_03.png@Left | #ffffff | 삐걱대는 기사복 | 걷기만 해도 존재감입니다 | Armor | LeftArm
+4003,New_Armor_03.png@Right | #ffffff | 삐걱대는 기사복 | 걷기만 해도 존재감입니다 | Armor | RightArm
+
+4004,New_Armor_04.png@Body | #ffffff | 반짝이 방어구 | 시선도 막아줍니다 | Armor | Body
+4004,New_Armor_04.png@Left | #ffffff | 반짝이 방어구 | 시선도 막아줍니다 | Armor | LeftArm
+4004,New_Armor_04.png@Right | #ffffff | 반짝이 방어구 | 시선도 막아줍니다 | Armor | RightArm
+
+4005,New_Armor_05.png@Body | #ffffff | 귀찮음 장갑옷 | 맞기 전에 귀찮아집니다 | Armor | Body
+4005,New_Armor_05.png@Left | #ffffff | 귀찮음 장갑옷 | 맞기 전에 귀찮아집니다 | Armor | LeftArm
+4005,New_Armor_05.png@Right | #ffffff | 귀찮음 장갑옷 | 맞기 전에 귀찮아집니다 | Armor | RightArm
+
+4006,New_Armor_06.png@Body | #ffffff | 소문난 탱커복 | 책임감이 무겁습니다 | Armor | Body
+4006,New_Armor_06.png@Left | #ffffff | 소문난 탱커복 | 책임감이 무겁습니다 | Armor | LeftArm
+4006,New_Armor_06.png@Right | #ffffff | 소문난 탱커복 | 책임감이 무겁습니다 | Armor | RightArm
+
+4007,New_Armor_07.png@Body | #ffffff | 덕지덕지 아머 | 붙인 만큼 강해집니다 | Armor | Body
+4007,New_Armor_07.png@Left | #ffffff | 덕지덕지 아머 | 붙인 만큼 강해집니다 | Armor | LeftArm
+4007,New_Armor_07.png@Right | #ffffff | 덕지덕지 아머 | 붙인 만큼 강해집니다 | Armor | RightArm
+
+4008,New_Armor_08.png@Body | #ffffff | 초조한 방패복 | 방어는 늘 과합니다 | Armor | Body
+4008,New_Armor_08.png@Left | #ffffff | 초조한 방패복 | 방어는 늘 과합니다 | Armor | LeftArm
+4008,New_Armor_08.png@Right | #ffffff | 초조한 방패복 | 방어는 늘 과합니다 | Armor | RightArm
+
+4009,New_Armor_09.png@Body | #ffffff | 마감임박 갑옷 | 급하게 만든 티가 납니다 | Armor | Body
+4009,New_Armor_09.png@Left | #ffffff | 마감임박 갑옷 | 급하게 만든 티가 납니다 | Armor | LeftArm
+4009,New_Armor_09.png@Right | #ffffff | 마감임박 갑옷 | 급하게 만든 티가 납니다 | Armor | RightArm
+
+4010,New_Armor_10.png@Body | #ffffff | 근엄한 갑주 | 표정이 자동으로 굳습니다 | Armor | Body
+4010,New_Armor_10.png@Left | #ffffff | 근엄한 갑주 | 표정이 자동으로 굳습니다 | Armor | LeftArm
+4010,New_Armor_10.png@Right | #ffffff | 근엄한 갑주 | 표정이 자동으로 굳습니다 | Armor | RightArm
+
+4012,New_Armor_12.png@Body | #ffffff | 전설급인척 아머 | 설명만 전설입니다 | Armor | Body
+4012,New_Armor_12.png@Left | #ffffff | 전설급인척 아머 | 설명만 전설입니다 | Armor | LeftArm
+4012,New_Armor_12.png@Right | #ffffff | 전설급인척 아머 | 설명만 전설입니다 | Armor | RightArm
+
+4013,Armor_Archer_1.png@Body | #ffffff | 아처 바람막이갑주 | 화살보다 바람이 빠릅니다 | Armor | Body
+4013,Armor_Archer_1.png@Left | #ffffff | 아처 바람막이갑주 | 화살보다 바람이 빠릅니다 | Armor | LeftArm
+4013,Armor_Archer_1.png@Right | #ffffff | 아처 바람막이갑주 | 화살보다 바람이 빠릅니다 | Armor | RightArm
+
+4014,Armor_Archer_2.png@Body | #ffffff | 아처 은근갑주 | 조용히 강한 척합니다 | Armor | Body
+4014,Armor_Archer_2.png@Left | #ffffff | 아처 은근갑주 | 조용히 강한 척합니다 | Armor | LeftArm
+4014,Armor_Archer_2.png@Right | #ffffff | 아처 은근갑주 | 조용히 강한 척합니다 | Armor | RightArm
+
+4015,Armor_Healer_1.png@Body | #ffffff | 힐러 안전갑주 | 본인부터 지킵니다 | Armor | Body
+4015,Armor_Healer_1.png@Left | #ffffff | 힐러 안전갑주 | 본인부터 지킵니다 | Armor | LeftArm
+4015,Armor_Healer_1.png@Right | #ffffff | 힐러 안전갑주 | 본인부터 지킵니다 | Armor | RightArm
+
+4016,Armor_Healer_2.png@Body | #ffffff | 힐러 정성갑주 | 닦을수록 든든합니다 | Armor | Body
+4016,Armor_Healer_2.png@Left | #ffffff | 힐러 정성갑주 | 닦을수록 든든합니다 | Armor | LeftArm
+4016,Armor_Healer_2.png@Right | #ffffff | 힐러 정성갑주 | 닦을수록 든든합니다 | Armor | RightArm
+
+4017,Armor_Knight_1.png@Body | #ffffff | 나이트 정통갑주 | 고집이 단단합니다 | Armor | Body
+4017,Armor_Knight_1.png@Left | #ffffff | 나이트 정통갑주 | 고집이 단단합니다 | Armor | LeftArm
+4017,Armor_Knight_1.png@Right | #ffffff | 나이트 정통갑주 | 고집이 단단합니다 | Armor | RightArm
+
+4018,Armor_Knight_2.png@Body | #ffffff | 나이트 출정갑주 | 나가기 전에 멋부터입니다 | Armor | Body
+4018,Armor_Knight_2.png@Left | #ffffff | 나이트 출정갑주 | 나가기 전에 멋부터입니다 | Armor | LeftArm
+4018,Armor_Knight_2.png@Right | #ffffff | 나이트 출정갑주 | 나가기 전에 멋부터입니다 | Armor | RightArm
+
+4019,Armor_Rogue_1.png@Body | #ffffff | 로그 은신갑주 | 어두우면 사라집니다 | Armor | Body
+4019,Armor_Rogue_1.png@Left | #ffffff | 로그 은신갑주 | 어두우면 사라집니다 | Armor | LeftArm
+4019,Armor_Rogue_1.png@Right | #ffffff | 로그 은신갑주 | 어두우면 사라집니다 | Armor | RightArm
+
+4020,Armor_Rogue_2.png@Body | #ffffff | 로그 도망갑주 | 뒤돌면 이미 없습니다 | Armor | Body
+4020,Armor_Rogue_2.png@Left | #ffffff | 로그 도망갑주 | 뒤돌면 이미 없습니다 | Armor | LeftArm
+4020,Armor_Rogue_2.png@Right | #ffffff | 로그 도망갑주 | 뒤돌면 이미 없습니다 | Armor | RightArm
+
+4021,Armor_Sorcerer.png@Body | #ffffff | 소서러 주문갑주 | 주문이 먼저 떠오릅니다 | Armor | Body
+4021,Armor_Sorcerer.png@Left | #ffffff | 소서러 주문갑주 | 주문이 먼저 떠오릅니다 | Armor | LeftArm
+4021,Armor_Sorcerer.png@Right | #ffffff | 소서러 주문갑주 | 주문이 먼저 떠오릅니다 | Armor | RightArm
+,
+# -----------------------------,
+# Pant (Body + LeftLeg + RightLeg),
+# -----------------------------,
+5001,New_Pant_01.png@Body | #ffffff | 런닝포기 바지 | 뛰기 싫어집니다 | Pant | Body
+5001,New_Pant_01.png@Left | #ffffff | 런닝포기 바지 | 뛰기 싫어집니다 | Pant | LeftLeg
+5001,New_Pant_01.png@Right | #ffffff | 런닝포기 바지 | 뛰기 싫어집니다 | Pant | RightLeg
+
+5002,New_Pant_02.png@Body | #ffffff | 주머니깊은 하의 | 뭔가 많이 숨깁니다 | Pant | Body
+5002,New_Pant_02.png@Left | #ffffff | 주머니깊은 하의 | 뭔가 많이 숨깁니다 | Pant | LeftLeg
+5002,New_Pant_02.png@Right | #ffffff | 주머니깊은 하의 | 뭔가 많이 숨깁니다 | Pant | RightLeg
+
+5003,New_Pant_03.png@Body | #ffffff | 계단싫어 팬츠 | 엘리베이터만 찾습니다 | Pant | Body
+5003,New_Pant_03.png@Left | #ffffff | 계단싫어 팬츠 | 엘리베이터만 찾습니다 | Pant | LeftLeg
+5003,New_Pant_03.png@Right | #ffffff | 계단싫어 팬츠 | 엘리베이터만 찾습니다 | Pant | RightLeg
+
+5004,New_Pant_04.png@Body | #ffffff | 쿨한척 하의 | 사실 덥습니다 | Pant | Body
+5004,New_Pant_04.png@Left | #ffffff | 쿨한척 하의 | 사실 덥습니다 | Pant | LeftLeg
+5004,New_Pant_04.png@Right | #ffffff | 쿨한척 하의 | 사실 덥습니다 | Pant | RightLeg
+
+5005,New_Pant_05.png@Body | #ffffff | 소파친화 바지 | 앉으면 안 일어납니다 | Pant | Body
+5005,New_Pant_05.png@Left | #ffffff | 소파친화 바지 | 앉으면 안 일어납니다 | Pant | LeftLeg
+5005,New_Pant_05.png@Right | #ffffff | 소파친화 바지 | 앉으면 안 일어납니다 | Pant | RightLeg
+
+5006,New_Pant_06.png@Body | #ffffff | 소리없는 발걸음 | 조용히 다가갑니다 | Pant | Body
+5006,New_Pant_06.png@Left | #ffffff | 소리없는 발걸음 | 조용히 다가갑니다 | Pant | LeftLeg
+5006,New_Pant_06.png@Right | #ffffff | 소리없는 발걸음 | 조용히 다가갑니다 | Pant | RightLeg
+
+5007,New_Pant_07.png@Body | #ffffff | 다이어트결심 팬츠 | 내일이 시작입니다 | Pant | Body
+5007,New_Pant_07.png@Left | #ffffff | 다이어트결심 팬츠 | 내일이 시작입니다 | Pant | LeftLeg
+5007,New_Pant_07.png@Right | #ffffff | 다이어트결심 팬츠 | 내일이 시작입니다 | Pant | RightLeg
+
+5008,New_Pant_08.png@Body | #ffffff | 지각방지 바지 | 뛰어도 늦습니다 | Pant | Body
+5008,New_Pant_08.png@Left | #ffffff | 지각방지 바지 | 뛰어도 늦습니다 | Pant | LeftLeg
+5008,New_Pant_08.png@Right | #ffffff | 지각방지 바지 | 뛰어도 늦습니다 | Pant | RightLeg
+
+5009,New_Pant_09.png@Body | #ffffff | 기분전환 하의 | 입으면 나가고 싶습니다 | Pant | Body
+5009,New_Pant_09.png@Left | #ffffff | 기분전환 하의 | 입으면 나가고 싶습니다 | Pant | LeftLeg
+5009,New_Pant_09.png@Right | #ffffff | 기분전환 하의 | 입으면 나가고 싶습니다 | Pant | RightLeg
+
+5010,New_Pant_10.png@Body | #ffffff | 정리정돈 바지 | 주머니가 비어있습니다 | Pant | Body
+5010,New_Pant_10.png@Left | #ffffff | 정리정돈 바지 | 주머니가 비어있습니다 | Pant | LeftLeg
+5010,New_Pant_10.png@Right | #ffffff | 정리정돈 바지 | 주머니가 비어있습니다 | Pant | RightLeg
+
+5011,New_Pant_11.png@Body | #ffffff | 주말전용 팬츠 | 월요일에 약합니다 | Pant | Body
+5011,New_Pant_11.png@Left | #ffffff | 주말전용 팬츠 | 월요일에 약합니다 | Pant | LeftLeg
+5011,New_Pant_11.png@Right | #ffffff | 주말전용 팬츠 | 월요일에 약합니다 | Pant | RightLeg
+
+5012,New_Pant_12.png@Body | #ffffff | 바람쐬기 하의 | 밖에 나갈 핑계입니다 | Pant | Body
+5012,New_Pant_12.png@Left | #ffffff | 바람쐬기 하의 | 밖에 나갈 핑계입니다 | Pant | LeftLeg
+5012,New_Pant_12.png@Right | #ffffff | 바람쐬기 하의 | 밖에 나갈 핑계입니다 | Pant | RightLeg
+
+5013,Pant_Archer_2.png@Body | #ffffff | 아처 경쾌하의 | 다리가 먼저 나갑니다 | Pant | Body
+5013,Pant_Archer_2.png@Left | #ffffff | 아처 경쾌하의 | 다리가 먼저 나갑니다 | Pant | LeftLeg
+5013,Pant_Archer_2.png@Right | #ffffff | 아처 경쾌하의 | 다리가 먼저 나갑니다 | Pant | RightLeg
+
+5014,Pant_Healer_1.png@Body | #ffffff | 힐러 순한바지 | 말투도 순해집니다 | Pant | Body
+5014,Pant_Healer_1.png@Left | #ffffff | 힐러 순한바지 | 말투도 순해집니다 | Pant | LeftLeg
+5014,Pant_Healer_1.png@Right | #ffffff | 힐러 순한바지 | 말투도 순해집니다 | Pant | RightLeg
+
+5015,Pant_Healer_2.png@Body | #ffffff | 힐러 단정하의 | 넘어져도 단정합니다 | Pant | Body
+5015,Pant_Healer_2.png@Left | #ffffff | 힐러 단정하의 | 넘어져도 단정합니다 | Pant | LeftLeg
+5015,Pant_Healer_2.png@Right | #ffffff | 힐러 단정하의 | 넘어져도 단정합니다 | Pant | RightLeg
+
+5016,Pant_Knight_1.png@Body | #ffffff | 나이트 근엄바지 | 걸음이 무거워집니다 | Pant | Body
+5016,Pant_Knight_1.png@Left | #ffffff | 나이트 근엄바지 | 걸음이 무거워집니다 | Pant | LeftLeg
+5016,Pant_Knight_1.png@Right | #ffffff | 나이트 근엄바지 | 걸음이 무거워집니다 | Pant | RightLeg
+
+5017,Pant_Knight_2.png@Body | #ffffff | 나이트 출정하의 | 나가기만 하면 됩니다 | Pant | Body
+5017,Pant_Knight_2.png@Left | #ffffff | 나이트 출정하의 | 나가기만 하면 됩니다 | Pant | LeftLeg
+5017,Pant_Knight_2.png@Right | #ffffff | 나이트 출정하의 | 나가기만 하면 됩니다 | Pant | RightLeg
+
+5018,Pant_Rogue_1.png@Body | #ffffff | 로그 그림자바지 | 어둠에 잘 섞입니다 | Pant | Body
+5018,Pant_Rogue_1.png@Left | #ffffff | 로그 그림자바지 | 어둠에 잘 섞입니다 | Pant | LeftLeg
+5018,Pant_Rogue_1.png@Right | #ffffff | 로그 그림자바지 | 어둠에 잘 섞입니다 | Pant | RightLeg
+
+5019,Pant_Rogue_2.png@Body | #ffffff | 로그 도망하의 | 발끝이 먼저 살핍니다 | Pant | Body
+5019,Pant_Rogue_2.png@Left | #ffffff | 로그 도망하의 | 발끝이 먼저 살핍니다 | Pant | LeftLeg
+5019,Pant_Rogue_2.png@Right | #ffffff | 로그 도망하의 | 발끝이 먼저 살핍니다 | Pant | RightLeg
+
+5020,Pant_Sorcerer.png@Body | #ffffff | 소서러 마법하의 | 바지에서 주문이 납니다 | Pant | Body
+5020,Pant_Sorcerer.png@Left | #ffffff | 소서러 마법하의 | 바지에서 주문이 납니다 | Pant | LeftLeg
+5020,Pant_Sorcerer.png@Right | #ffffff | 소서러 마법하의 | 바지에서 주문이 납니다 | Pant | RightLeg
+
+5021,Pant_Sorceress.png@Body | #ffffff | 소서리스 무드하의 | 분위기가 먼저입니다 | Pant | Body
+5021,Pant_Sorceress.png@Left | #ffffff | 소서리스 무드하의 | 분위기가 먼저입니다 | Pant | LeftLeg
+5021,Pant_Sorceress.png@Right | #ffffff | 소서리스 무드하의 | 분위기가 먼저입니다 | Pant | RightLeg
+
+5022,Orc_Pant_01.png@Body | #ffffff | 오크 터프하의01 | 세게 걸어도 괜찮습니다 | Pant | Body
+5022,Orc_Pant_01.png@Left | #ffffff | 오크 터프하의01 | 세게 걸어도 괜찮습니다 | Pant | LeftLeg
+5022,Orc_Pant_01.png@Right | #ffffff | 오크 터프하의01 | 세게 걸어도 괜찮습니다 | Pant | RightLeg
+
+5023,Orc_Pant_02.png@Body | #ffffff | 오크 터프하의02 | 먼지에 강합니다 | Pant | Body
+5023,Orc_Pant_02.png@Left | #ffffff | 오크 터프하의02 | 먼지에 강합니다 | Pant | LeftLeg
+5023,Orc_Pant_02.png@Right | #ffffff | 오크 터프하의02 | 먼지에 강합니다 | Pant | RightLeg
+
+5024,Orc_Pant_03.png@Body | #ffffff | 오크 터프하의03 | 주먹에도 버팁니다 | Pant | Body
+5024,Orc_Pant_03.png@Left | #ffffff | 오크 터프하의03 | 주먹에도 버팁니다 | Pant | LeftLeg
+5024,Orc_Pant_03.png@Right | #ffffff | 오크 터프하의03 | 주먹에도 버팁니다 | Pant | RightLeg
+
+5025,Orc_Pant_04.png@Body | #ffffff | 오크 터프하의04 | 표정도 터프해집니다 | Pant | Body
+5025,Orc_Pant_04.png@Left | #ffffff | 오크 터프하의04 | 표정도 터프해집니다 | Pant | LeftLeg
+5025,Orc_Pant_04.png@Right | #ffffff | 오크 터프하의04 | 표정도 터프해집니다 | Pant | RightLeg
+
+5026,F_SR_Pants.png@Body | #ffffff | F_SR 미스터리하의 | 어디서 샀는지 비밀입니다 | Pant | Body
+5026,F_SR_Pants.png@Left | #ffffff | F_SR 미스터리하의 | 어디서 샀는지 비밀입니다 | Pant | LeftLeg
+5026,F_SR_Pants.png@Right | #ffffff | F_SR 미스터리하의 | 어디서 샀는지 비밀입니다 | Pant | RightLeg
+,
+
+#-----------------------------,
+#Shoes (Foot),
+#-----------------------------,
+
+6001,Foot_1.png | #ffffff | 바닥쓸기 신발1 | 먼지가 다 따라옵니다 | Shoes | Foot
+6002,Foot_2.png | #ffffff | 조용한 신발2 | 소리 없이 도망칩니다 | Shoes | Foot
+6003,Foot_3.png | #ffffff | 달리기싫은 신발3 | 뛰면 삐집니다 | Shoes | Foot
+6004,Foot_4.png | #ffffff | 물웅덩이 신발4 | 꼭 물을 찾습니다 | Shoes | Foot

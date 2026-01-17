@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5649e372f42bd3740b2d096fb0b450af, type: 3}
+  m_Name: Armor_4020
+  m_EditorClassIdentifier: 
+  Uid: 4020
+  Name: "\uB85C\uADF8 \uB3C4\uB9DD\uAC11\uC8FC"
+  Description: "\uB4A4\uB3CC\uBA74 \uC774\uBBF8 \uC5C6\uC2B5\uB2C8\uB2E4"
+  IconTexture: {fileID: 2800000, guid: be7f6c23e59754e45abba97827159fab, type: 3}
+  IconXTexture: {fileID: 0}
+  IconColor: {r: 1, g: 1, b: 1, a: 1}
+  CostumeType: 6
+  Parts:
+  - Part: 4
+    CostumeSprite: {fileID: 9212973412628086815, guid: be7f6c23e59754e45abba97827159fab, type: 3}
+    CostumeColor: {r: 1, g: 1, b: 1, a: 1}
+  - Part: 6
+    CostumeSprite: {fileID: 1434601832812514426, guid: be7f6c23e59754e45abba97827159fab, type: 3}
+    CostumeColor: {r: 1, g: 1, b: 1, a: 1}
+  - Part: 5
+    CostumeSprite: {fileID: -3293430866661876501, guid: be7f6c23e59754e45abba97827159fab, type: 3}
+    CostumeColor: {r: 1, g: 1, b: 1, a: 1}
+  _costumeRarity: 0

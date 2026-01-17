@@ -76,6 +76,8 @@ public partial class TotalStatusUI
             appearanceButton.Q<VisualElement>("SelectedPanel").style.display = isStatus ? DisplayStyle.None : DisplayStyle.Flex;
             root.Q<VisualElement>("StatusPanel").style.display = isStatus ? DisplayStyle.Flex : DisplayStyle.None;
             root.Q<VisualElement>("AppearancePanel").style.display = isStatus ? DisplayStyle.None : DisplayStyle.Flex;
+
+            UpdateCostumeUI();
         }
     }
 

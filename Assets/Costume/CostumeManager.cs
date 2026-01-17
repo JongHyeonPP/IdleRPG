@@ -4,11 +4,8 @@ using System.Collections.Generic;
 using EnumCollection;
 using System.Linq;
 
-
-public class CostumeManager : MonoBehaviour
+public class CostumeManager : MonoSingleton<CostumeManager>
 {
-    public static CostumeManager Instance;
-
     [Header("Character Data")]
     [SerializeField] private CostumeCharacterRenderer _characterRenderer;                        // 캐릭터 랜더러
 
@@ -18,76 +15,167 @@ public class CostumeManager : MonoBehaviour
     [Tooltip("0: 헤어, 1: 상의, 2: 하의, 3: 신발")]
     [SerializeField] private CostumeItem[] _defaultItems;                                        // 각 부위별 기본 아이템 설정
 
-    public List<string> EquipedCostumes = new();                                             // 장착한 코스튬들
-    public List<string> OwnedCostumes = new();
+    public List<string> EquipedCostumes = new();                                                 // 장착한 코스튬 UID 리스트
+    public List<string> OwnedCostumes = new();                                                   // 소유한 코스튬 UID 리스트
 
-    private void Awake()
+    // 조회용
+    public Dictionary<string, CostumeItem> ByUid = new Dictionary<string, CostumeItem>();
+
+    #region Unity Lifecycle, Init
+
+    protected override void Awake()
     {
-        Instance = this;
+        base.Awake();
+
+        // 리소스에서 코스튬 데이터 로드
+        LoadAll();
     }
 
     private void Start()
     {
-
-        //저장 로드만 여기서 해보면 될듯 ..?
-
-
-        // 저장된 코스튬 정보 가져오기
+        // 코스튬 서버에서 받아오기
         GameData gameData = StartBroker.GetGameData();
-        OwnedCostumes = gameData.ownedCostumes;
 
-        //Test Code       
-        //OwnedCostumes = new() { "0", "1", "2", "100", "200", "300", "101", "105" };
-        //gameData.ownedCostumes = OwnedCostumes;
-        // gameData.equipedCostumes = EquipedCostumes;
+        // null 처리
+        OwnedCostumes = gameData.ownedCostumes ?? new List<string>();
+        EquipedCostumes = gameData.equipedCostumes ?? new List<string>();
 
-        //  gameData.ownedCostumes = OwnedCostumes;
-        /*        gameData.ownedCostumes = new(){"0", "1", "2","100","200","300"};
-                gameData.equipedCostumes = new(){"100"};*/
-
+        // 캐릭터 렌더러 초기화
         _characterRenderer.Init();
-        if (EquipedCostumes.Count <= 0)
+
+        ClearCostume(gameData);
+    }
+
+    // 기본 세팅
+    public void ClearCostume(GameData gamedata) 
+    {
+        // 장착 정보가 없으면 디폴트 아이템으로 세팅
+        if (EquipedCostumes == null || EquipedCostumes.Count == 0)
         {
-            SetDefaultAll();
-            SetEquipedAll(gameData.equipedCostumes);
-            UpdateGameAppearanceData();
+            // 새 리스트로 초기화
+            EquipedCostumes = new List<string>();
+
+            foreach (var defaultItem in _defaultItems)
+            {
+                if (defaultItem == null) continue;
+
+                // 기본 아이템 적용
+                AddDefaultItem(defaultItem);
+
+                // 장착 리스트 ID 추가
+                if (!string.IsNullOrEmpty(defaultItem.Uid) &&
+                    !EquipedCostumes.Contains(defaultItem.Uid))
+                {
+                    EquipedCostumes.Add(defaultItem.Uid);
+                }
+
+                // 소유 아이템 추가 -> 보고 아니면 빼도 될듯
+                if (!string.IsNullOrEmpty(defaultItem.Uid) &&
+                    !OwnedCostumes.Contains(defaultItem.Uid))
+                {
+                    OwnedCostumes.Add(defaultItem.Uid);
+                }
+            }
+
+            // GameData 현재 반영
+            gamedata.equipedCostumes = new List<string>(EquipedCostumes);
+            gamedata.ownedCostumes = new List<string>(OwnedCostumes);
+
+            // 외형/데이터 동기화
+            UpdateAppearanceData();
+            UpdateCostumeData();
+        }
+        else
+        {
+            // 장착 정보가 있으면 세팅해주기
+            SetEquipedAll(EquipedCostumes);
+            UpdateAppearanceData();
         }
     }
 
-    public void UpdateCostumeData() 
+    // 로컬 코스튬 정보 로드
+    public void LoadAll()
+    {
+        ByUid.Clear();
+
+        // Resources/Costume/CostumeItem
+        // 모든 CostumeItem 로드
+        var loaded = Resources.LoadAll<CostumeItem>("Costume/CostumeItem"); // 하위 폴더까지 전부
+        AllCostumeDatas = loaded != null ? loaded : new CostumeItem[0];
+
+        //CostumeItem 매핑
+        for (int i = 0; i < AllCostumeDatas.Length; i++)
+        {
+            var item = AllCostumeDatas[i];
+            if (item == null) continue;
+
+            if (!string.IsNullOrEmpty(item.Uid) && !ByUid.ContainsKey(item.Uid))
+                ByUid.Add(item.Uid, item);
+        }
+    }
+
+    #endregion
+
+    #region GameData
+
+    // 서버 데이터 업데이트
+    public void UpdateCostumeData()
     {
         GameData gameData = StartBroker.GetGameData();
         gameData.equipedCostumes = EquipedCostumes;
         gameData.ownedCostumes = OwnedCostumes;
     }
 
+    public void UpdateAppearanceData() => _characterRenderer.UpdateGameAppearanceData();
+
+    #endregion
+
+    #region Query Helpers
+
+    // 장착 리스트에 포함되어 있는지 확인
     public bool IsEquipped(string uid)
     {
-        //  return _temporaryCostumes.Any(item => item.Uid == uid);
         return EquipedCostumes.Contains(uid);
-
     }
+
+    // 소유 리스트에 포함되어 있는지 확인
     public bool IsOwned(string uid)
     {
-/*        GameData gameData = StartBroker.GetGameData();
-        return gameData.ownedCostumes.Contains(uid);*/
         return OwnedCostumes.Contains(uid);
     }
 
+    // 장착 코스튬 가져오기
     public List<string> GetOwnedCostumes()
     {
-        GameData gameData = StartBroker.GetGameData();
-        return gameData.ownedCostumes;
-
+        return OwnedCostumes ?? new List<string>();
     }
 
+    // 캐릭터에 장착
     void SetEquipedAll(List<string> equipedItem)
     {
-        foreach (var uid in equipedItem)
+        if (equipedItem == null || equipedItem.Count == 0)
+            return;
+
+        // 원본 리스트는 EquipPartCostume에서 수정되므로, 스냅샷(복사본) 만들어서 순회
+        var snapshot = equipedItem.ToArray();    // 또는 ToList()
+
+        foreach (var uid in snapshot)
         {
-            CostumeItem item = AllCostumeDatas.FirstOrDefault(x => x.Uid == uid);
+            // UID로 코스튬 찾기 (딕셔너리 우선, 없으면 전체 배열에서 탐색)
+            CostumeItem item = null;
+
+            if (!string.IsNullOrEmpty(uid) && ByUid.TryGetValue(uid, out var dicItem))
+            {
+                item = dicItem;
+            }
+            else
+            {
+                item = AllCostumeDatas.FirstOrDefault(x => x.Uid == uid);
+            }
+
             if (item != null)
             {
+                // 부위별로 다시 장착 처리
                 EquipPartCostume(item.Uid, item.CostumeType);
             }
             else
@@ -97,16 +185,25 @@ public class CostumeManager : MonoBehaviour
         }
     }
 
-    void SetDefaultAll()
+    // 디폴트 아이템 적용 
+    private void AddDefaultItem(CostumeItem defaultItem)
     {
-        foreach (var item in _defaultItems)
+        if (defaultItem == null || _characterRenderer == null) return;
+
+        foreach (var partData in defaultItem.Parts)
         {
-            ApplyDefaultItem(item);
+            _characterRenderer.AppItem(partData.Part, partData.CostumeSprite, partData.CostumeColor);
         }
+
+        Debug.Log($"[CostumeManager] 기본 아이템 '{defaultItem.Name}' 적용됨");
     }
-    /// <summary>
-    /// UI 필터 타입에 따라 코스튬 목록 필터링
-    /// </summary>
+
+    #endregion
+
+    #region Filter Methods
+
+
+    // UI 필터 타입에 따라 코스튬 목록 필터링
     public List<CostumeItem> GetCostumesByFilterType(int filterType)
     {
         if (AllCostumeDatas == null || AllCostumeDatas.Length == 0)
@@ -147,9 +244,7 @@ public class CostumeManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 소유한 코스튬 중 필터 타입에 맞는 목록 반환
-    /// </summary>
+    // 소유한 코스튬 중 필터 타입에 맞는 목록 반환
     public List<CostumeItem> GetOwnedCostumesByFilterType(int filterType)
     {
         // 먼저 모든 소유 코스튬 가져오기
@@ -192,10 +287,10 @@ public class CostumeManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 특정 부위의 코스튬만 착용하기
-    /// </summary>
+    #endregion
 
+    #region Equip , Unequip
+    // 특정 부위의 코스튬만 착용하기
     public bool EquipPartCostume(string costumeUid, CostumePart costumeType)
     {
         // UID로 코스튬 찾기
@@ -221,48 +316,26 @@ public class CostumeManager : MonoBehaviour
             return false;
         }
 
-        //// 해당 부위의 기존 코스튬 제거
-        //_temporaryCostumes.RemoveAll(item => item.CostumeType == costumeType);
-
-        //// 해당 부위의 스프라이트 리셋
-        //foreach (CostumeItem costume in _temporaryCostumes)
-        //{
-        //    foreach (var partData in costume.Parts)
-        //    {
-        //        // 같은 부위의 스프라이트를 사용하는 다른 코스튬도 제거
-        //        if (newCostume.Parts.Any(p => p.Part == partData.Part))
-        //        {
-        //            _characterRenderer.ResetPartItem(partData.Part);
-        //        }
-        //    }
-        //}
-
         // 새 코스튬 부위 적용
         foreach (var partData in newCostume.Parts)
         {
             _characterRenderer.AppItem(partData.Part, partData.CostumeSprite, partData.CostumeColor);
         }
 
-        // 새 코스튬 임시 목록에 추가
-        //_temporaryCostumes.Add(newCostume);
-
-        // 임시 장착 목록 업데이트 (UI 테스트용)
+        // 동일 부위 기존 장착 UID 제거 후 새 UID 추가
         EquipedCostumes.RemoveAll(uid =>
             AllCostumeDatas.Any(item => item.Uid == uid && item.CostumeType == costumeType));
         EquipedCostumes.Add(costumeUid);
 
-        //로컬업데이트
-        UpdateGameAppearanceData();
-
-        //서버 데이터 업데이트 
+        //데이터 업데이트
+        UpdateAppearanceData();
         UpdateCostumeData();
 
         return true;
     }
 
-    /// <summary>
-    /// 특정 코스튬 해제하기
-    /// </summary>
+
+    // 특정 코스튬 해제하기
     public bool UnequipCostume(string costumeUid)
     {
         // UID로 코스튬 찾기
@@ -280,15 +353,14 @@ public class CostumeManager : MonoBehaviour
             _characterRenderer.ResetPartItem(partData.Part);
         }
 
-        // 임시 장착 목록 업데이트
+        // 장착 목록에서 제거
         EquipedCostumes.Remove(costumeUid);
 
-        // 이부분이 이상한듯?
         // 기본 아이템 적용
         CostumeItem defaultItem = _defaultItems.FirstOrDefault(item => item.CostumeType == costume.CostumeType);
         if (defaultItem != null)
         {
-            // 헬멧 착용 상태일 경우 기본 헤어 적용 안함
+            // 헤어/헬멧 고려
             if (costume.CostumeType == CostumePart.Hair)
             {
                 bool isHelmetEquipped = EquipedCostumes.Any(uid =>
@@ -299,7 +371,7 @@ public class CostumeManager : MonoBehaviour
 
                 if (!isHelmetEquipped)
                 {
-                    ApplyDefaultItem(defaultItem);
+                    AddDefaultItem(defaultItem);
                 }
                 else
                 {
@@ -308,33 +380,22 @@ public class CostumeManager : MonoBehaviour
             }
             else if (costume.CostumeType == CostumePart.Helmet)
             {
+                // 헬멧 디폴트만 별도로 다시 적용
                 defaultItem = _defaultItems.FirstOrDefault(item => item.CostumeType == CostumePart.Helmet);
-                ApplyDefaultItem(defaultItem);
+                AddDefaultItem(defaultItem);
             }
             else
             {
-                ApplyDefaultItem(defaultItem);
+                AddDefaultItem(defaultItem);
             }
         }
 
-        //서버 데이터 업데이트 
+        //데이터 업데이트
+        UpdateAppearanceData();
         UpdateCostumeData();
 
         return true;
     }
 
-    private void ApplyDefaultItem(CostumeItem defaultItem)
-    {
-        if (defaultItem == null || _characterRenderer == null) return;
-
-        // 아이템의 모든 부위를 캐릭터에 적용
-        foreach (var partData in defaultItem.Parts)
-        {
-            _characterRenderer.AppItem(partData.Part, partData.CostumeSprite, partData.CostumeColor);
-        }
-
-        Debug.Log($"[CostumeManager] 기본 아이템 '{defaultItem.Name}' 적용됨");
-    }
-    public void UpdateGameAppearanceData() => _characterRenderer.UpdateGameAppearanceData();
-
+    #endregion
 }
