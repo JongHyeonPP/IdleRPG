@@ -16,7 +16,7 @@ MonoBehaviour:
   uid: Player_601
   iconSprite: {fileID: -4076519301572637575, guid: 8e216b6acf8301e419f009a38550e818, type: 3}
   simple: 
-  complex: 
+  complex: "내면의 힘을 끌어올려 공격력을 <value*100>% 증가시킨다."
   rarity: 2
   isPlayerSkill: 1
   skillCoolType: 2

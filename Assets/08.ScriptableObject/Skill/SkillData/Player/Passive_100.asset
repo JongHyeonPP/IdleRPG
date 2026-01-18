@@ -16,7 +16,7 @@ MonoBehaviour:
   uid: Player_600
   iconSprite: {fileID: 3309318293321431029, guid: daa438f5ef527a0489ccefe93c87a8a7, type: 3}
   simple: 
-  complex: 
+  complex: "공격 시 준 피해의 <value*100>%만큼 체력을 회복한다."
   rarity: 1
   isPlayerSkill: 1
   skillCoolType: 0

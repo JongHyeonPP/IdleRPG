@@ -16,7 +16,7 @@ MonoBehaviour:
   uid: Player_602
   iconSprite: {fileID: 4015776381438609531, guid: bd0f51f077b81594090d36fabe42d012, type: 3}
   simple: 
-  complex: 
+  complex: "일정 확률로 동시에 두 번 공격한다. 발동 확률 <value*100>%"
   rarity: 3
   isPlayerSkill: 1
   skillCoolType: 2

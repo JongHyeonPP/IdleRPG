@@ -16,7 +16,7 @@ MonoBehaviour:
   uid: Player_603
   iconSprite: {fileID: -6712468798958621713, guid: 7fdff6af5852d8645a1735c37d86d6a6, type: 3}
   simple: 
-  complex: 
+  complex: "사냥꾼의 직감으로 급소를 노린다. 크리티컬 확률 +<value*100>%"
   rarity: 0
   isPlayerSkill: 1
   skillCoolType: 2
