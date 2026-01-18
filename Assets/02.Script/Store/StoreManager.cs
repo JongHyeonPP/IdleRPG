@@ -25,8 +25,7 @@ public class StoreManager : MonoSingleton<StoreManager>
 
     // 자동 참조 (GetComponent로 찾음)
     private GachaController _gachaController;
-    private GachaResultUI _gachaResultUI;
-    private HamsterUI _hamsterUI;
+    private GachaUI _gachaUI;
     private MoneyStoreController _moneyStoreController;
 
     private VisualElement _root;
@@ -50,8 +49,7 @@ public class StoreManager : MonoSingleton<StoreManager>
 
         // 같은 GameObject에서 컴포넌트 자동 찾기
         if (_gachaController == null) _gachaController = GetComponent<GachaController>();
-        if (_gachaResultUI == null) _gachaResultUI = GetComponent<GachaResultUI>();
-        if (_hamsterUI == null) _hamsterUI = GetComponent<HamsterUI>();
+        if (_gachaUI == null) _gachaUI = GetComponent<GachaUI>();
         if (_moneyStoreController == null) _moneyStoreController = GetComponent<MoneyStoreController>();
 
         InitUI();
@@ -108,9 +106,7 @@ public class StoreManager : MonoSingleton<StoreManager>
 
     private void InitComponents(GameData gameData)
     {
-        _gachaController?.Initialize(gameData);
-        _gachaResultUI?.Initialize();
-        _hamsterUI?.Initialize(_root);
+        _gachaController?.Initialize(gameData, _root);
         _moneyStoreController?.RefreshProducts();
     }
 
@@ -153,10 +149,10 @@ public class StoreManager : MonoSingleton<StoreManager>
 
     #region Public API (호환성)
 
-    public void SetHamsterText(string text) => _hamsterUI?.SetText(text);
-    public void ShowErrorPopup(string msg) => _gachaResultUI?.ShowError(msg);
-    public void ClosePopup() => _gachaResultUI?.HideResult();
-    public void CloseErrorPopup() => _gachaResultUI?.HideError();
+    public void SetHamsterText(string text) => _gachaUI?.SetHamsterText(text);
+    public void ShowErrorPopup(string msg) => _gachaUI?.ShowError(msg);
+    public void ClosePopup() => _gachaUI?.HideResult();
+    public void CloseErrorPopup() => _gachaUI?.HideError();
 
     #endregion
 }

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using EnumCollection;
@@ -7,35 +8,44 @@ using UnityEngine.UIElements;
 namespace Store.UI
 {
     /// <summary>
-    /// 가챠 결과 UI 전담
+    /// 가챠 UI 통합 클래스 - 결과 팝업 + 슬롯 애니메이션 + 햄스터 마스코트
     /// </summary>
-    public class GachaResultUI : MonoBehaviour
+    public class GachaUI : MonoBehaviour
     {
         [Header("References")]
         [SerializeField] private UIDocument _popupDocument;
 
-        // 자동 참조 (GetComponent로 찾음)
-        private SlotAnimator _slotAnimator;
+        [Header("Slot Animation")]
+        [SerializeField] private float _appearDuration = 0.35f;
+        [SerializeField] private float _appearStagger = 0.05f;
+        [SerializeField] private float _popScale = 1.08f;
+        [SerializeField] private AnimationCurve _popEase = AnimationCurve.EaseInOut(0, 0, 1, 1);
+        [SerializeField] private float _bobAmplitude = 6f;
+        [SerializeField] private float _bobPeriod = 1.6f;
 
+        // UI Elements
         private VisualElement _popup;
         private VisualElement _errorPopup;
         private Label _errorTxt;
         private Button _popupCloseBtn;
         private Button _errorCloseBtn;
 
+        // Hamster
+        private Label _hamsterText;
+        private static readonly string[] HamsterMessages = { "어서오세요!", "앗!", "좋은 걸 뽑아보자!", "가자~!" };
+
+        // Slots
         private readonly List<VisualElement> _slots = new();
+        private readonly Dictionary<VisualElement, Coroutine> _bobRoutines = new();
+        private readonly Dictionary<Rarity, Vector2> _rarityOffsetMap = new();
 
         private bool _isPopupVisible;
         private bool _isErrorPopupVisible;
 
-        // 등급별 배경 오프셋
-        private readonly Dictionary<Rarity, Vector2> _rarityOffsetMap = new();
+        #region Initialization
 
-        public void Initialize()
+        public void Initialize(VisualElement storeRoot)
         {
-            // 같은 GameObject에서 자동 참조
-            if (_slotAnimator == null) _slotAnimator = GetComponent<SlotAnimator>();
-
             var root = _popupDocument?.rootVisualElement;
             if (root == null) return;
 
@@ -66,10 +76,12 @@ namespace Store.UI
             _errorCloseBtn?.RegisterCallback<ClickEvent>(_ => HideError());
             _errorPopup?.RegisterCallback<PointerDownEvent>(_ => HideError());
 
-            // 오프셋 설정
-            BuildRarityOffsetMap();
+            // 햄스터 (스토어 루트에서 찾음)
+            _hamsterText = storeRoot?.Q<Label>("HamsterText");
+            SetHamsterText(HamsterMessages[0]);
 
-            Debug.Log($"[GachaResultUI] 슬롯 수집 완료: {_slots.Count}개");
+            BuildRarityOffsetMap();
+            Debug.Log($"[GachaUI] 슬롯 수집 완료: {_slots.Count}개");
         }
 
         private void BuildRarityOffsetMap()
@@ -82,9 +94,10 @@ namespace Store.UI
             _rarityOffsetMap[Rarity.Mythic] = new Vector2(-573f, -284f);
         }
 
-        /// <summary>
-        /// 무기 결과 표시
-        /// </summary>
+        #endregion
+
+        #region Result Display
+
         public void ShowWeaponResult(List<WeaponData> weapons)
         {
             if (weapons == null || _slots.Count == 0) return;
@@ -122,14 +135,10 @@ namespace Store.UI
             }
 
             ShowPopup();
-            _slotAnimator?.PlayAppearForSlots(_slots);
-
+            PlayAppearForSlots();
             LogResult("무기", weapons.Select(w => $"{w.name} ({w.WeaponRarity})"));
         }
 
-        /// <summary>
-        /// 코스튬 결과 표시
-        /// </summary>
         public void ShowCostumeResult(List<CostumeItem> costumes)
         {
             HideAllSlots();
@@ -165,14 +174,10 @@ namespace Store.UI
             }
 
             ShowPopup();
-            _slotAnimator?.PlayAppearForSlots(_slots);
-
+            PlayAppearForSlots();
             LogResult("코스튬", costumes.Select(c => c.Name));
         }
 
-        /// <summary>
-        /// 에러 팝업 표시
-        /// </summary>
         public void ShowError(string message)
         {
             HideAllSlots();
@@ -185,6 +190,10 @@ namespace Store.UI
         public void HideResult() => SetPopupVisibility(false);
         public void HideError() => SetErrorVisibility(false);
 
+        #endregion
+
+        #region Popup Visibility
+
         private void ShowPopup() => SetPopupVisibility(true);
 
         private void SetPopupVisibility(bool isVisible)
@@ -194,15 +203,13 @@ namespace Store.UI
             if (isVisible) SetErrorVisibility(false);
 
             _isPopupVisible = isVisible;
-
             SoundManager.instance?.PlaySFX(SoundPath.GachaPopup);
-
             _popup.style.display = isVisible ? DisplayStyle.Flex : DisplayStyle.None;
 
             if (!isVisible)
             {
-                _slotAnimator?.StopAllFx();
-                _slotAnimator?.ResetSlotStyles(_slots);
+                StopAllFx();
+                ResetSlotStyles();
             }
         }
 
@@ -220,17 +227,149 @@ namespace Store.UI
             _errorPopup.style.display = isVisible ? DisplayStyle.Flex : DisplayStyle.None;
 
             if (isVisible)
-            {
-                _slotAnimator?.StopAllFx();
-            }
+                StopAllFx();
         }
 
         private void HideAllSlots()
         {
-            _slotAnimator?.StopAllFx();
+            StopAllFx();
             foreach (var s in _slots)
                 s.style.display = DisplayStyle.None;
         }
+
+        #endregion
+
+        #region Hamster
+
+        public void ShowHamsterProcessing() => SetHamsterText("돌리는 중...");
+        public void ShowHamsterError() => SetHamsterText("문제가 발생했습니다.");
+        public void ShowHamsterWelcome() => SetHamsterText(HamsterMessages[0]);
+
+        public void ShowHamsterRandom()
+        {
+            int idx = Random.Range(1, HamsterMessages.Length);
+            SetHamsterText(HamsterMessages[idx]);
+        }
+
+        public void SetHamsterText(string text)
+        {
+            if (_hamsterText == null) return;
+            _hamsterText.text = text;
+            StartCoroutine(AnimateHamsterText());
+        }
+
+        private IEnumerator AnimateHamsterText()
+        {
+            _hamsterText.style.opacity = 0;
+            _hamsterText.style.translate = new StyleTranslate(new Translate(0, 10f, 0));
+
+            float duration = 0.4f;
+            float elapsed = 0f;
+
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsed / duration);
+                float easedT = t < 0.5f ? 2f * t * t : 1f - Mathf.Pow(-2f * t + 2f, 2f) / 2f;
+
+                _hamsterText.style.opacity = easedT;
+                _hamsterText.style.translate = new StyleTranslate(new Translate(0, 10f * (1 - easedT), 0));
+                yield return null;
+            }
+
+            _hamsterText.style.opacity = 1;
+            _hamsterText.style.translate = new StyleTranslate(new Translate(0, 0, 0));
+        }
+
+        #endregion
+
+        #region Slot Animation
+
+        private void PlayAppearForSlots()
+        {
+            StopAllFx();
+
+            int idx = 0;
+            foreach (var slot in _slots)
+            {
+                if (slot.resolvedStyle.display == DisplayStyle.Flex)
+                {
+                    float delay = _appearStagger * idx++;
+                    StartCoroutine(Co_AppearThenBob(slot, delay));
+                }
+            }
+        }
+
+        private void StopAllFx()
+        {
+            foreach (var kv in _bobRoutines)
+            {
+                if (kv.Value != null)
+                    StopCoroutine(kv.Value);
+            }
+            _bobRoutines.Clear();
+        }
+
+        private void ResetSlotStyles()
+        {
+            foreach (var s in _slots)
+            {
+                s.style.opacity = 1f;
+                s.style.scale = new StyleScale(Vector3.one);
+                s.style.translate = new StyleTranslate(new Translate(0, 0, 0));
+            }
+        }
+
+        private IEnumerator Co_AppearThenBob(VisualElement slot, float delay)
+        {
+            if (delay > 0f)
+                yield return new WaitForSeconds(delay);
+
+            slot.style.opacity = 0f;
+            slot.style.scale = new StyleScale(new Vector3(0.92f, 0.92f, 1f));
+            slot.style.translate = new StyleTranslate(new Translate(0, 8f, 0));
+
+            float t = 0f;
+            while (t < _appearDuration)
+            {
+                t += Time.deltaTime;
+                float e = _popEase.Evaluate(Mathf.Clamp01(t / _appearDuration));
+
+                float y = Mathf.Lerp(8f, 0f, e);
+                float s = Mathf.Lerp(0.92f, _popScale, e);
+
+                slot.style.opacity = e;
+                slot.style.scale = new StyleScale(new Vector3(s, s, 1f));
+                slot.style.translate = new StyleTranslate(new Translate(0, y, 0));
+
+                yield return null;
+            }
+
+            slot.style.scale = new StyleScale(Vector3.one);
+            slot.style.translate = new StyleTranslate(new Translate(0, 0, 0));
+
+            if (!_bobRoutines.ContainsKey(slot))
+                _bobRoutines[slot] = StartCoroutine(Co_Bob(slot, Random.Range(0f, 1f)));
+        }
+
+        private IEnumerator Co_Bob(VisualElement slot, float phaseOffset)
+        {
+            float t = phaseOffset * _bobPeriod;
+
+            while (true)
+            {
+                t += Time.deltaTime;
+                float phase = (t % _bobPeriod) / _bobPeriod;
+                float y = Mathf.Sin(phase * Mathf.PI * 2f) * _bobAmplitude;
+
+                slot.style.translate = new StyleTranslate(new Translate(0, y, 0));
+                yield return null;
+            }
+        }
+
+        #endregion
+
+        #region Utils
 
         private void ResetRarityOffset(VisualElement target, string moverName = "RT_SlotBg")
         {
@@ -273,5 +412,7 @@ namespace Store.UI
         {
             Debug.Log($"뽑기 결과({type}):\n{string.Join("\n", items.Select(i => $"- {i}"))}");
         }
+
+        #endregion
     }
 }

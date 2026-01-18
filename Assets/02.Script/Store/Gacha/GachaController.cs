@@ -13,8 +13,7 @@ namespace Store.Gacha
     public class GachaController : MonoBehaviour
     {
         // 자동 참조 (GetComponent로 찾음)
-        private GachaResultUI _resultUI;
-        private HamsterUI _hamsterUI;
+        private GachaUI _gachaUI;
 
         private GachaService _service;
         private Dictionary<string, WeaponData> _weaponByUid;
@@ -24,12 +23,12 @@ namespace Store.Gacha
         private List<WeaponData> _weaponSaveDatas = new();
         public List<WeaponData> WeaponSaveDatas => _weaponSaveDatas;
 
-        public void Initialize(GameData gameData)
+        public void Initialize(GameData gameData, VisualElement storeRoot)
         {
             // 같은 GameObject에서 자동 참조
-            if (_resultUI == null) _resultUI = GetComponent<GachaResultUI>();
-            if (_hamsterUI == null) _hamsterUI = GetComponent<HamsterUI>();
+            if (_gachaUI == null) _gachaUI = GetComponent<GachaUI>();
 
+            _gachaUI?.Initialize(storeRoot);
             _service = new GachaService(gameData);
 
             // WeaponManager에서 무기 데이터 가져오기
@@ -49,36 +48,36 @@ namespace Store.Gacha
             {
                 SoundManager.instance?.PlaySFX(SoundPath.GachaDraw);
 
-                _hamsterUI?.ShowProcessing();
+                _gachaUI?.ShowHamsterProcessing();
 
                 var result = await _service.CallGacha(type, num);
 
                 if (result == null || !result.Success)
                 {
-                    _hamsterUI?.ShowError();
-                    _resultUI?.ShowError(result?.Message ?? "알 수 없는 오류가 발생했습니다.");
+                    _gachaUI?.ShowHamsterError();
+                    _gachaUI?.ShowError(result?.Message ?? "알 수 없는 오류가 발생했습니다.");
                     return;
                 }
 
-                _hamsterUI?.ShowRandomMessage();
+                _gachaUI?.ShowHamsterRandom();
 
                 if (type == GachaType.Weapon)
                 {
                     var list = MapToWeaponData(result.Items);
                     _weaponSaveDatas = list;
-                    _resultUI?.ShowWeaponResult(list);
+                    _gachaUI?.ShowWeaponResult(list);
                 }
                 else
                 {
                     var list = MapToCostumeData(result.Items);
-                    _resultUI?.ShowCostumeResult(list);
+                    _gachaUI?.ShowCostumeResult(list);
                 }
             }
             catch (System.Exception e)
             {
                 Debug.LogError(e);
-                _hamsterUI?.ShowError();
-                _resultUI?.ShowError("알 수 없는 오류가 발생했습니다.");
+                _gachaUI?.ShowHamsterError();
+                _gachaUI?.ShowError("알 수 없는 오류가 발생했습니다.");
             }
             finally
             {
