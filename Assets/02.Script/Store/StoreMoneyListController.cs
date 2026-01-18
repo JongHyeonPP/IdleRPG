@@ -6,11 +6,11 @@ public class StoreMoneyListController : MonoBehaviour
 {
     [Header("UI Toolkit Bindings")]
     [SerializeField] private UIDocument _ui;
-    [SerializeField] private ScrollView _scrollView;         // ÀÎ½ºÆåÅÍ·Î ÇÒ´ç or ·±Å¸ÀÓ¿¡ Q·Î Ã£±â
-    [SerializeField] private VisualTreeAsset _itemTemplate;  // ¾ÆÀÌÅÛ UXML ÅÛÇÃ¸´
+    [SerializeField] private ScrollView _scrollView;         // ì¸ìŠ¤í™í„°ë¡œ í• ë‹¹ or ëŸ°íƒ€ì„ì— Që¡œ ì°¾ê¸°
+    [SerializeField] private VisualTreeAsset _itemTemplate;  // ì•„ì´í…œ UXML í…œí”Œë¦¿
 
-    // ·çÆ® ¹®¼­¿¡¼­ id·Î °¡Á®¿À·Á¸é »ç¿ë
-    [SerializeField] private string _scrollViewId = "MoneyScrollView"; // ScrollViewÀÇ UXML id
+    // ë£¨íŠ¸ ë¬¸ì„œì—ì„œ idë¡œ ê°€ì ¸ì˜¤ë ¤ë©´ ì‚¬ìš©
+    [SerializeField] private string _scrollViewId = "MoneyScrollView"; // ScrollViewì˜ UXML id
 
     readonly List<ItemView> _items = new();
 
@@ -20,7 +20,7 @@ public class StoreMoneyListController : MonoBehaviour
         if (_scrollView == null && _ui != null)
             _scrollView = _ui.rootVisualElement.Q<ScrollView>(_scrollViewId);
 
-        // ½ºÅ©·Ñºä ÄÜÅÙÃ÷ ÄÁÅ×ÀÌ³Ê ·¹ÀÌ¾Æ¿ô 
+        // ìŠ¤í¬ë¡¤ë·° ì½˜í…ì¸  ì»¨í…Œì´ë„ˆ ë ˆì´ì•„ì›ƒ 
         var content = _scrollView?.contentContainer;
         if (content != null)
         {
@@ -44,7 +44,7 @@ public class StoreMoneyListController : MonoBehaviour
 
         for (int i = 0; i < dataList.Count; i++)
         {
-            // ÅÛÇÃ¸´ ÀÎ½ºÅÏ½º
+            // í…œí”Œë¦¿ ì¸ìŠ¤í„´ìŠ¤
             var ve = _itemTemplate.Instantiate();
             var itemRoot = ve;
 
@@ -62,35 +62,35 @@ public class StoreMoneyListController : MonoBehaviour
         }
     }
 
-    // °³º° ¾ÆÀÌÅÛ ºä ·¡ÆÛ
+    // ê°œë³„ ì•„ì´í…œ ë·° ë˜í¼
     sealed class ItemView
     {
         readonly VisualElement _root;
         readonly Button _btn;                 // #StoreMoneyBtn
-        readonly VisualElement _icon;         // #StoreMoneyBtnIcon (Image ¶Ç´Â VisualElement)
+        readonly VisualElement _icon;         // #StoreMoneyBtnIcon (Image ë˜ëŠ” VisualElement)
         readonly Label _gold;                 // #StoreGlodLabel
         readonly Label _goldExtra;            // #SlotGoldExLabel
         readonly Label _money;                // #SlotMoneyLabel
-        System.Action _onClick;               // ÀÌº¥Æ® ÂüÁ¶ º¸°ü
+        System.Action _onClick;               // ì´ë²¤íŠ¸ ì°¸ì¡° ë³´ê´€
 
         public ItemView(VisualElement root)
         {
             _root = root;
             _btn = root.Q<Button>("StoreMoneyBtn");
             _icon = root.Q<VisualElement>("StoreMoneyBtnIcon");
-            _gold = root.Q<Label>("StoreGlodLabel");   // ¿ø¹® ¿ÀÅ¸ ±×´ë·Î »ç¿ë
+            _gold = root.Q<Label>("StoreGoldLabel");   // ì˜¤íƒ€ ìˆ˜ì •ë¨
             _goldExtra = root.Q<Label>("SlotGoldExLabel");
             _money = root.Q<Label>("SlotMoneyLabel");
         }
 
         public void Bind(StoreMoneyItemData data)
         {
-            // ÅØ½ºÆ® ¹ÙÀÎµù
-            if (_gold != null) _gold.text = data.Gold ?? data.GoldEx; // Á¦¸ñ ÀÚ¸®¿¡ ±İ¾× ÅØ½ºÆ®¸¦ ¾²°í ½Í´Ù¸é Á¶Á¤
+            // í…ìŠ¤íŠ¸ ë°”ì¸ë”©
+            if (_gold != null) _gold.text = data.Gold ?? data.GoldEx; // ì œëª© ìë¦¬ì— ê¸ˆì•¡ í…ìŠ¤íŠ¸ë¥¼ ì“°ê³  ì‹¶ë‹¤ë©´ ì¡°ì •
             if (_goldExtra != null) _goldExtra.text = data.GoldEx ?? string.Empty;
             if (_money != null) _money.text = data.Money ?? string.Empty;
 
-            // ¾ÆÀÌÄÜ ¹ÙÀÎµù (Image ¶Ç´Â VisualElement ¹è°æ Áö¿ø)
+            // ì•„ì´ì½˜ ë°”ì¸ë”© (Image ë˜ëŠ” VisualElement ë°°ê²½ ì§€ì›)
             if (_icon != null && data.Icon != null)
             {
                 var img = _icon as Image;
@@ -105,7 +105,7 @@ public class StoreMoneyListController : MonoBehaviour
                 }
             }
 
-            // ¹öÆ° ÀÌº¥Æ® ±³Ã¼
+            // ë²„íŠ¼ ì´ë²¤íŠ¸ êµì²´
             if (_btn != null)
             {
                 if (_onClick != null) _btn.clicked -= _onClick;
