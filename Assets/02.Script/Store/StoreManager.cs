@@ -23,13 +23,11 @@ public class StoreManager : MonoSingleton<StoreManager>
     [Header("UI Document")]
     [SerializeField] private UIDocument _storeUIDocument;
 
-    [Header("Gacha Components")]
-    [SerializeField] private GachaController _gachaController;
-    [SerializeField] private GachaResultUI _gachaResultUI;
-    [SerializeField] private HamsterUI _hamsterUI;
-
-    [Header("Money Components")]
-    [SerializeField] private MoneyStoreController _moneyStoreController;
+    // 자동 참조 (GetComponent로 찾음)
+    private GachaController _gachaController;
+    private GachaResultUI _gachaResultUI;
+    private HamsterUI _hamsterUI;
+    private MoneyStoreController _moneyStoreController;
 
     private VisualElement _root;
     private Button _weapon1Btn, _weapon10Btn;

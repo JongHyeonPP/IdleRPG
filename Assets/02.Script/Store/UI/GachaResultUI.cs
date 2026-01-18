@@ -13,8 +13,10 @@ namespace Store.UI
     {
         [Header("References")]
         [SerializeField] private UIDocument _popupDocument;
-        [SerializeField] private SlotAnimator _slotAnimator;
         [SerializeField] private AudioClip _popupSound;
+
+        // 자동 참조 (GetComponent로 찾음)
+        private SlotAnimator _slotAnimator;
 
         private VisualElement _popup;
         private VisualElement _errorPopup;

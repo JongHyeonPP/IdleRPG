@@ -14,9 +14,11 @@ namespace Store.Gacha
     {
         [Header("Dependencies")]
         [SerializeField] private WeaponData[] _weaponDatas;
-        [SerializeField] private GachaResultUI _resultUI;
-        [SerializeField] private HamsterUI _hamsterUI;
         [SerializeField] private AudioClip _drawSound;
+
+        // 자동 참조 (GetComponent로 찾음)
+        private GachaResultUI _resultUI;
+        private HamsterUI _hamsterUI;
 
         private GachaService _service;
         private Dictionary<string, WeaponData> _weaponByUid;
