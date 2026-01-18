@@ -23,7 +23,6 @@ namespace Store.UI
         private Button _errorCloseBtn;
 
         private readonly List<VisualElement> _slots = new();
-        private AudioSource _audioSource;
 
         private bool _isPopupVisible;
         private bool _isErrorPopupVisible;
@@ -31,9 +30,8 @@ namespace Store.UI
         // 등급별 배경 오프셋
         private readonly Dictionary<Rarity, Vector2> _rarityOffsetMap = new();
 
-        public void Initialize(AudioSource audioSource)
+        public void Initialize()
         {
-            _audioSource = audioSource;
 
             var root = _popupDocument?.rootVisualElement;
             if (root == null) return;
@@ -194,8 +192,8 @@ namespace Store.UI
 
             _isPopupVisible = isVisible;
 
-            if (_popupSound != null && _audioSource != null)
-                _audioSource.PlayOneShot(_popupSound);
+            if (_popupSound != null)
+                SoundManager.instance?.PlaySFX(_popupSound);
 
             _popup.style.display = isVisible ? DisplayStyle.Flex : DisplayStyle.None;
 

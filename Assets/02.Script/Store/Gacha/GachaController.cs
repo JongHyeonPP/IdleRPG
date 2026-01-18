@@ -20,17 +20,15 @@ namespace Store.Gacha
 
         private GachaService _service;
         private Dictionary<string, WeaponData> _weaponByUid;
-        private AudioSource _audioSource;
         private bool _isProcessing;
 
         // 최근 뽑은 무기 리스트 (외부 참조용)
         private List<WeaponData> _weaponSaveDatas = new();
         public List<WeaponData> WeaponSaveDatas => _weaponSaveDatas;
 
-        public void Initialize(GameData gameData, AudioSource audioSource)
+        public void Initialize(GameData gameData)
         {
             _service = new GachaService(gameData);
-            _audioSource = audioSource;
             BuildWeaponUidIndex();
         }
 
@@ -52,8 +50,8 @@ namespace Store.Gacha
 
             try
             {
-                if (_drawSound != null && _audioSource != null)
-                    _audioSource.PlayOneShot(_drawSound);
+                if (_drawSound != null)
+                    SoundManager.instance?.PlaySFX(_drawSound);
 
                 _hamsterUI?.ShowProcessing();
 

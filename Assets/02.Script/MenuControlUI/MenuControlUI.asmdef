@@ -12,10 +12,10 @@
         "Utility",
         "OfflineReward",
         "Kamgam.UIToolkitBlurredBackground",
-        "StoreUI",
         "Adventure",
         "UIInterface",
-        "Sound"
+        "Sound",
+        "Store"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
