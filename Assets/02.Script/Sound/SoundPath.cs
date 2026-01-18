@@ -3,7 +3,7 @@ using UnityEngine;
 public static class SoundPath
 {
     // ==========================
-    // SFX (»ø∞˙¿Ω)
+    // SFX (Ìö®Í≥ºÏùå)
     // ==========================
     public const string BasicEff = "SFX/BasicEff";
     public const string BasicEff2 = "SFX/BasicEff2";
@@ -17,7 +17,7 @@ public static class SoundPath
     public const string StoreIntro = "SFX/StoreIntro";
     public const string Suc = "SFX/Suc";
 
-    // Sword »ø∞˙¿Ω
+    // Sword Ìö®Í≥ºÏùå
     public const string FireAndKnifeFight = "SFX/Sword/FireAndKnifeFight";
     public const string HittingSound1 = "SFX/Sword/HittingSound1";
     public const string HittingSound2 = "SFX/Sword/HittingSound2";
@@ -37,13 +37,15 @@ public static class SoundPath
     public const string WhipCrack = "SFX/Sword/WhipCrack";
 
     // ==========================
-    // BGM (πË∞Ê¿Ω)
+    // Gacha (Í∞ÄÏ±†)
+    // ==========================
+    public const string GachaDraw = "SFX/GachaDraw";
+    public const string GachaPopup = "SFX/GachaPopup";
+
+    // ==========================
+    // BGM (Î∞∞Í≤ΩÏùå)
     // ==========================
     public const string MainBgm = "BGM/MainBgm";
     public const string StartBgm = "BGM/StartBgm";
     public const string BossBgm = "BGM/BossBgm";
 }
-
-    // Gacha Sounds
-    public const string GachaDraw = ""SFX/GachaDraw"";
-    public const string GachaPopup = ""SFX/GachaPopup"";
