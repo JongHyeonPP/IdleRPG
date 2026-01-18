@@ -984,129 +984,97 @@ DoubleHit 발동 시 → 데미지 × 2
             <li><code>08.ScriptableObject/Weapon/WeaponBook/*.asset</code>: 세트별 데이터</li>
         </ul>
 
-        <h3>3.6 플레이어 무기 전체 목록</h3>
-        <p>총 43종의 플레이어 무기가 존재합니다. 레어도별 기본 스탯은 아래와 같습니다.</p>
+        <h3>3.6 플레이어 무기 전체 목록 (43종)</h3>
+        <p>레어도별로 그룹화된 전체 무기 목록입니다. 스탯은 기본값 기준.</p>
 
-        <h4>레어도별 대표 무기</h4>
         <table>
             <tr>
                 <th>레어도</th>
                 <th>ID</th>
-                <th>무기명</th>
                 <th>Power</th>
                 <th>CritDmg</th>
                 <th>Crit</th>
                 <th>특수효과</th>
             </tr>
             <tr>
-                <td>Common (0)</td>
-                <td>Melee_000</td>
-                <td>초보자용 도끼</td>
+                <td rowspan="2">Common (10종)</td>
+                <td>Melee_000~008, 010</td>
                 <td>5</td>
                 <td>5</td>
                 <td>1%</td>
                 <td>-</td>
             </tr>
             <tr>
-                <td>Uncommon (1)</td>
-                <td>Melee_100</td>
-                <td>전쟁용 창</td>
+                <td colspan="5" style="font-size:0.9em; color:#666;">초보자용 도끼, 녹슨 검, 나무 몽둥이 등 초기 무기</td>
+            </tr>
+            <tr>
+                <td rowspan="2">Uncommon (12종)</td>
+                <td>Melee_100~112</td>
                 <td>12</td>
                 <td>10</td>
                 <td>2%</td>
                 <td>-</td>
             </tr>
             <tr>
-                <td>Rare (2)</td>
-                <td>Melee_200</td>
-                <td>장비의 도끼</td>
+                <td colspan="5" style="font-size:0.9em; color:#666;">전쟁용 창, 용맹한 자의 검, 암살자의 단검 등</td>
+            </tr>
+            <tr>
+                <td rowspan="2">Rare (7종)</td>
+                <td>Melee_200~206</td>
                 <td>25</td>
                 <td>18</td>
                 <td>4%</td>
                 <td>-</td>
             </tr>
             <tr>
-                <td>Unique (3)</td>
-                <td>Melee_300</td>
-                <td>지휘관의 창</td>
+                <td colspan="5" style="font-size:0.9em; color:#666;">장비의 도끼, 마법사의 지팡이 등</td>
+            </tr>
+            <tr>
+                <td rowspan="2">Unique (3종)</td>
+                <td>Melee_300~302</td>
                 <td>50</td>
                 <td>30</td>
                 <td>7%</td>
                 <td>-</td>
             </tr>
             <tr>
-                <td>Legendary (4)</td>
-                <td>Melee_400</td>
-                <td>선택받은 자의 검</td>
+                <td colspan="5" style="font-size:0.9em; color:#666;">지휘관의 창, 영웅의 검 등</td>
+            </tr>
+            <tr>
+                <td rowspan="2">Legendary (5종)</td>
+                <td>Melee_400~404</td>
                 <td>100</td>
                 <td>50</td>
                 <td>12%</td>
-                <td>CriticalDamage +15%</td>
+                <td>CritDmg↑, Penetration</td>
             </tr>
             <tr>
-                <td>Mythic (5)</td>
-                <td>Melee_500</td>
-                <td>드래곤 슬레이어</td>
+                <td colspan="5" style="font-size:0.9em; color:#666;">선택받은 자의 검, 불멸의 창 등 (특수효과 등장)</td>
+            </tr>
+            <tr>
+                <td rowspan="2">Mythic (4종)</td>
+                <td>Melee_500~503</td>
                 <td>200</td>
                 <td>80</td>
                 <td>20%</td>
                 <td>CritDmg +20%, Penetration +8%</td>
             </tr>
             <tr>
-                <td>Ancient (6)</td>
-                <td>Melee_600</td>
-                <td>림신의 검:드리아드</td>
+                <td colspan="5" style="font-size:0.9em; color:#666;">드래곤 슬레이어, 심연의 검 등</td>
+            </tr>
+            <tr>
+                <td rowspan="2">Ancient (2종)</td>
+                <td>Melee_600~601</td>
                 <td>400</td>
                 <td>120</td>
                 <td>35%</td>
                 <td>Execution (처형)</td>
             </tr>
-        </table>
-
-        <h4>무기 개수 분포</h4>
-        <table>
             <tr>
-                <th>레어도</th>
-                <th>개수</th>
-                <th>ID 범위</th>
-            </tr>
-            <tr>
-                <td>Common</td>
-                <td>10개</td>
-                <td>Melee_000 ~ 010</td>
-            </tr>
-            <tr>
-                <td>Uncommon</td>
-                <td>12개</td>
-                <td>Melee_100 ~ 112</td>
-            </tr>
-            <tr>
-                <td>Rare</td>
-                <td>7개</td>
-                <td>Melee_200 ~ 206</td>
-            </tr>
-            <tr>
-                <td>Unique</td>
-                <td>3개</td>
-                <td>Melee_300 ~ 302</td>
-            </tr>
-            <tr>
-                <td>Legendary</td>
-                <td>5개</td>
-                <td>Melee_400 ~ 404</td>
-            </tr>
-            <tr>
-                <td>Mythic</td>
-                <td>4개</td>
-                <td>Melee_500 ~ 503</td>
-            </tr>
-            <tr>
-                <td>Ancient</td>
-                <td>2개</td>
-                <td>Melee_600 ~ 601</td>
+                <td colspan="5" style="font-size:0.9em; color:#666;">림신의 검:드리아드, 카누스 등 최고 티어</td>
             </tr>
         </table>
-        <p class="note">동료(Companion) 무기는 별도로 45종 존재 (Bow/Shield/Staff)</p>
+        <p class="note">동료(Companion) 무기는 별도로 45종 존재 (Bow/Shield/Staff 각 ~15종)</p>
         <h2 id="sec4">4. 스킬 시스템</h2>
 
         <h3>4.1 스킬 개요</h3>
