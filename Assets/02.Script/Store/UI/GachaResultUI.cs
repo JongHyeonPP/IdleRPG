@@ -32,6 +32,8 @@ namespace Store.UI
 
         public void Initialize()
         {
+            // 같은 GameObject에서 자동 참조
+            if (_slotAnimator == null) _slotAnimator = GetComponent<SlotAnimator>();
 
             var root = _popupDocument?.rootVisualElement;
             if (root == null) return;

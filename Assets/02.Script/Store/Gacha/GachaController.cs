@@ -28,6 +28,10 @@ namespace Store.Gacha
 
         public void Initialize(GameData gameData)
         {
+            // 같은 GameObject에서 자동 참조
+            if (_resultUI == null) _resultUI = GetComponent<GachaResultUI>();
+            if (_hamsterUI == null) _hamsterUI = GetComponent<HamsterUI>();
+
             _service = new GachaService(gameData);
             BuildWeaponUidIndex();
         }

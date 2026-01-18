@@ -50,6 +50,12 @@ public class StoreManager : MonoSingleton<StoreManager>
     {
         var gameData = StartBroker.GetGameData();
 
+        // 같은 GameObject에서 컴포넌트 자동 찾기
+        if (_gachaController == null) _gachaController = GetComponent<GachaController>();
+        if (_gachaResultUI == null) _gachaResultUI = GetComponent<GachaResultUI>();
+        if (_hamsterUI == null) _hamsterUI = GetComponent<HamsterUI>();
+        if (_moneyStoreController == null) _moneyStoreController = GetComponent<MoneyStoreController>();
+
         InitUI();
         InitComponents(gameData);
     }
