@@ -1,0 +1,66 @@
+=== 무기 이름 목록 ===
+Melee_000: 초보자용 도끼
+Melee_001: 강철 도끼
+Melee_002: 오함마
+Melee_003: 청동 삼지창
+Melee_004: 청동 단검
+Melee_005: 메이스
+Melee_006: 청동 창
+Melee_007: 식칼
+Melee_008: 부러진 단검
+Melee_010: 손도끼
+Melee_100: 전쟁용 창
+Melee_101: 장군전용 도끼
+Melee_102: 기사의 검
+Melee_103: 살상용 도끼
+Melee_104: 근위병의 검
+Melee_106: 강철 창
+Melee_107: 신성한 검
+Melee_108: 용맹한 자의 검
+Melee_109: 암살 성공한 단검
+Melee_110: 암살자의 단검
+Melee_111: 아라비안 소드
+Melee_112: 리븐의 검
+Melee_200: 장비의 도끼
+Melee_201: 강철 대검
+Melee_202: 관우의 창
+Melee_203: 오크장군의 검
+Melee_204: 적룡창
+Melee_205: 친위장군의 검
+Melee_206: 호위무사의 검
+Melee_300: 지휘관의 창
+Melee_301: 오크 대장의 도끼
+Melee_302: 지휘관의 검
+Melee_400: 선택받은 자의 검
+Melee_401: 파멸의 포효
+Melee_402: 뇌검:이니에스타
+Melee_403: 포레스트 가디언
+Melee_404: 룡아
+Melee_500: 드래곤 슬레이어
+Melee_501: 성검:엑스칼리버
+Melee_502: 홍염
+Melee_503: 신을 꿰뚫는 검:베인
+Melee_600: 림신(林神)의 검:드리아드
+Melee_601: 화신(火神)의 검:불카누스
+
+=== 스킬 이름 목록 ===
+Active_000: Cut
+Active_001: Slash
+Active_002: PowerSlash
+Active_100: ReverseSlash
+Active_101: DarkSlash
+Active_102: FireSlash
+Active_200: Accelerator
+Active_201: DoomsDay
+Active_202: FlameSlash
+Active_300: MoonSlash
+Active_301: Fury
+Active_302: ClawSlash
+Active_400: SpinningCut
+Active_401: Hurricane
+Active_500: Burst
+Active_501: Rune
+Passive_000: Hunter
+Passive_100: Lifesteal
+Passive_200: Amplify
+Passive_300: Double Strike

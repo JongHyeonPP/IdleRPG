@@ -15,8 +15,7 @@ MonoBehaviour:
   skillName: DarkSlash
   iconSprite: {fileID: -4287362093729093706, guid: bc50bbdee2fd7cb4097d8d2081ef0481, type: 3}
   simple: 
-  complex: "\uC5B4\uB460\uC758 \uD798\uC73C\uB85C <value*100>%\uC758 \uD53C\uD574\uB97C
-    \uC785\uD799\uB2C8\uB2E4."
+  complex: "그림자 속에서 솟구치는 검기로 <value*100>%의 피해를 입힌다."
   rarity: 1
   isPlayerSkill: 1
   skillCoolType: 0

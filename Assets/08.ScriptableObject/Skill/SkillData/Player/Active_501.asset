@@ -15,8 +15,7 @@ MonoBehaviour:
   skillName: Rune
   iconSprite: {fileID: 6390494112633516482, guid: 43a6f050e8ed2a742a7eb7b6d5042cf7, type: 3}
   simple: 
-  complex: "\uBAA8\uB4E0 \uD798\uC744 \uBC1C\uC0B0\uD558\uC5EC <value*10>%\uB9CC\uD07C
-    \uACF5\uACA9\uB825\uC744 \uC99D\uD3ED\uC2DC\uD0A8\uB2E4."
+  complex: "고대의 룬을 각인하여 공격력을 <value*10>% 증폭시킨다."
   rarity: 5
   isPlayerSkill: 1
   skillCoolType: 0

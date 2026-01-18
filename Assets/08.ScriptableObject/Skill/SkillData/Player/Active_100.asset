@@ -15,8 +15,7 @@ MonoBehaviour:
   skillName: ReverseSlash
   iconSprite: {fileID: -7552014040095215850, guid: 23d096d614b92b9458b83db52d77dca8, type: 3}
   simple: 
-  complex: "\uBC88\uAC1C\uC758 \uD798\uC73C\uB85C <value*100>%\uC758 \uD53C\uD574\uB97C
-    \uC785\uD799\uB2C8\uB2E4."
+  complex: "전광석화의 역베기로 <value*100>%의 피해를 입힌다."
   rarity: 1
   isPlayerSkill: 1
   skillCoolType: 0

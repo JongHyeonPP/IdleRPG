@@ -15,8 +15,7 @@ MonoBehaviour:
   skillName: PowerSlash
   iconSprite: {fileID: 6275201323515650913, guid: 6127843d056ede34da2fd9fc776a0290, type: 3}
   simple: 
-  complex: "\uD53C\uB97C \uC81C\uBB3C\uB85C \uC801\uC5D0\uAC8C <value*100>%\uC758
-    \uD53C\uD574\uB97C \uC785\uD799\uB2C8\uB2E4."
+  complex: "온 힘을 실은 강타로 <value*100>%의 피해를 입힌다."
   rarity: 0
   isPlayerSkill: 1
   skillCoolType: 0
