@@ -212,8 +212,8 @@ namespace Store.UI
 
             _isErrorPopupVisible = isVisible;
 
-            if (_popupSound != null && _audioSource != null && isVisible)
-                _audioSource.PlayOneShot(_popupSound);
+            if (_popupSound != null && isVisible)
+                SoundManager.instance?.PlaySFX(_popupSound);
 
             _errorPopup.style.display = isVisible ? DisplayStyle.Flex : DisplayStyle.None;
 
