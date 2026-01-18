@@ -33,7 +33,7 @@ namespace Store.Gacha
             _service = new GachaService(gameData);
 
             // WeaponManager에서 무기 데이터 가져오기
-            _weaponByUid = WeaponManager.Instance?.weaponDict
+            _weaponByUid = WeaponManager.instance?.weaponDict
                 ?? new Dictionary<string, WeaponData>();
         }
 
