@@ -984,7 +984,129 @@ DoubleHit 발동 시 → 데미지 × 2
             <li><code>08.ScriptableObject/Weapon/WeaponBook/*.asset</code>: 세트별 데이터</li>
         </ul>
 
-        <!-- ========== 섹션 4 ========== -->
+        <h3>3.6 플레이어 무기 전체 목록</h3>
+        <p>총 43종의 플레이어 무기가 존재합니다. 레어도별 기본 스탯은 아래와 같습니다.</p>
+
+        <h4>레어도별 대표 무기</h4>
+        <table>
+            <tr>
+                <th>레어도</th>
+                <th>ID</th>
+                <th>무기명</th>
+                <th>Power</th>
+                <th>CritDmg</th>
+                <th>Crit</th>
+                <th>특수효과</th>
+            </tr>
+            <tr>
+                <td>Common (0)</td>
+                <td>Melee_000</td>
+                <td>초보자용 도끼</td>
+                <td>5</td>
+                <td>5</td>
+                <td>1%</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>Uncommon (1)</td>
+                <td>Melee_100</td>
+                <td>전쟁용 창</td>
+                <td>12</td>
+                <td>10</td>
+                <td>2%</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>Rare (2)</td>
+                <td>Melee_200</td>
+                <td>장비의 도끼</td>
+                <td>25</td>
+                <td>18</td>
+                <td>4%</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>Unique (3)</td>
+                <td>Melee_300</td>
+                <td>지휘관의 창</td>
+                <td>50</td>
+                <td>30</td>
+                <td>7%</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>Legendary (4)</td>
+                <td>Melee_400</td>
+                <td>선택받은 자의 검</td>
+                <td>100</td>
+                <td>50</td>
+                <td>12%</td>
+                <td>CriticalDamage +15%</td>
+            </tr>
+            <tr>
+                <td>Mythic (5)</td>
+                <td>Melee_500</td>
+                <td>드래곤 슬레이어</td>
+                <td>200</td>
+                <td>80</td>
+                <td>20%</td>
+                <td>CritDmg +20%, Penetration +8%</td>
+            </tr>
+            <tr>
+                <td>Ancient (6)</td>
+                <td>Melee_600</td>
+                <td>림신의 검:드리아드</td>
+                <td>400</td>
+                <td>120</td>
+                <td>35%</td>
+                <td>Execution (처형)</td>
+            </tr>
+        </table>
+
+        <h4>무기 개수 분포</h4>
+        <table>
+            <tr>
+                <th>레어도</th>
+                <th>개수</th>
+                <th>ID 범위</th>
+            </tr>
+            <tr>
+                <td>Common</td>
+                <td>10개</td>
+                <td>Melee_000 ~ 010</td>
+            </tr>
+            <tr>
+                <td>Uncommon</td>
+                <td>12개</td>
+                <td>Melee_100 ~ 112</td>
+            </tr>
+            <tr>
+                <td>Rare</td>
+                <td>7개</td>
+                <td>Melee_200 ~ 206</td>
+            </tr>
+            <tr>
+                <td>Unique</td>
+                <td>3개</td>
+                <td>Melee_300 ~ 302</td>
+            </tr>
+            <tr>
+                <td>Legendary</td>
+                <td>5개</td>
+                <td>Melee_400 ~ 404</td>
+            </tr>
+            <tr>
+                <td>Mythic</td>
+                <td>4개</td>
+                <td>Melee_500 ~ 503</td>
+            </tr>
+            <tr>
+                <td>Ancient</td>
+                <td>2개</td>
+                <td>Melee_600 ~ 601</td>
+            </tr>
+        </table>
+        <p class="note">동료(Companion) 무기는 별도로 45종 존재 (Bow/Shield/Staff)</p>
         <h2 id="sec4">4. 스킬 시스템</h2>
 
         <h3>4.0 스킬 습득 및 강화</h3>
@@ -1116,6 +1238,115 @@ DoubleHit 발동 시 → 데미지 × 2
             </tr>
         </table>
         <p class="note">Lv10 MAX까지 총 510개 동일 레어도 Fragment 필요 (상세 → 6.5 조각 참조)</p>
+
+        <h4>액티브 스킬 레벨별 효과</h4>
+        <p>스킬 레벨에 따라 효과 배율이 증가합니다. 아래는 주요 스킬의 레벨별 배율입니다.</p>
+        <table>
+            <tr>
+                <th>스킬명</th>
+                <th>레어도</th>
+                <th>타입</th>
+                <th>Lv1</th>
+                <th>Lv5</th>
+                <th>Lv10</th>
+                <th>쿨타임</th>
+                <th>MP</th>
+            </tr>
+            <tr>
+                <td>Cut</td>
+                <td>Common</td>
+                <td>데미지</td>
+                <td>100%</td>
+                <td>140%</td>
+                <td>200%</td>
+                <td>2타</td>
+                <td>15</td>
+            </tr>
+            <tr>
+                <td>ReverseSlash</td>
+                <td>Uncommon</td>
+                <td>데미지</td>
+                <td>120%</td>
+                <td>168%</td>
+                <td>250%</td>
+                <td>3타</td>
+                <td>15</td>
+            </tr>
+            <tr>
+                <td>Accelerator</td>
+                <td>Rare</td>
+                <td>공속 버프</td>
+                <td>+1.5%</td>
+                <td>+2.18%</td>
+                <td>+3.2%</td>
+                <td>3타</td>
+                <td>15</td>
+            </tr>
+            <tr>
+                <td>MoonSlash</td>
+                <td>Unique</td>
+                <td>데미지</td>
+                <td>200%</td>
+                <td>300%</td>
+                <td>450%</td>
+                <td>3타</td>
+                <td>15</td>
+            </tr>
+            <tr>
+                <td>Hurricane</td>
+                <td>Legendary</td>
+                <td>데미지</td>
+                <td>300%</td>
+                <td>450%</td>
+                <td>600%</td>
+                <td>4타</td>
+                <td>20</td>
+            </tr>
+            <tr>
+                <td>Burst</td>
+                <td>Mythic</td>
+                <td>데미지</td>
+                <td>500%</td>
+                <td>750%</td>
+                <td>1200%</td>
+                <td>5타</td>
+                <td>25</td>
+            </tr>
+        </table>
+
+        <h4>패시브 스킬 효과</h4>
+        <table>
+            <tr>
+                <th>스킬명</th>
+                <th>효과</th>
+                <th>Lv1</th>
+                <th>Lv10</th>
+            </tr>
+            <tr>
+                <td>Hunter</td>
+                <td>크리티컬 확률</td>
+                <td>+2%</td>
+                <td>+10%</td>
+            </tr>
+            <tr>
+                <td>Lifesteal</td>
+                <td>흡혈</td>
+                <td>+1%</td>
+                <td>+5%</td>
+            </tr>
+            <tr>
+                <td>Amplify</td>
+                <td>공격력 증폭</td>
+                <td>+5%</td>
+                <td>+25%</td>
+            </tr>
+            <tr>
+                <td>Double Strike</td>
+                <td>이중 타격 확률</td>
+                <td>+3%</td>
+                <td>+15%</td>
+            </tr>
+        </table>
 
         <h3>4.1 스킬 분류 (총 51개)</h3>
 
