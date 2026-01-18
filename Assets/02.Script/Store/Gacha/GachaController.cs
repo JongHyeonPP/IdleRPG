@@ -12,9 +12,6 @@ namespace Store.Gacha
     /// </summary>
     public class GachaController : MonoBehaviour
     {
-        [Header("Dependencies")]
-        [SerializeField] private WeaponData[] _weaponDatas;
-
         // 자동 참조 (GetComponent로 찾음)
         private GachaResultUI _resultUI;
         private HamsterUI _hamsterUI;
@@ -34,14 +31,9 @@ namespace Store.Gacha
             if (_hamsterUI == null) _hamsterUI = GetComponent<HamsterUI>();
 
             _service = new GachaService(gameData);
-            BuildWeaponUidIndex();
-        }
 
-        private void BuildWeaponUidIndex()
-        {
-            _weaponByUid = _weaponDatas?
-                .Where(w => w != null && !string.IsNullOrEmpty(w.UID))
-                .ToDictionary(w => w.UID, w => w)
+            // WeaponManager에서 무기 데이터 가져오기
+            _weaponByUid = WeaponManager.Instance?.weaponDict
                 ?? new Dictionary<string, WeaponData>();
         }
 
