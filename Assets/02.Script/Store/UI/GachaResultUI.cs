@@ -13,7 +13,6 @@ namespace Store.UI
     {
         [Header("References")]
         [SerializeField] private UIDocument _popupDocument;
-        [SerializeField] private AudioClip _popupSound;
 
         // 자동 참조 (GetComponent로 찾음)
         private SlotAnimator _slotAnimator;
@@ -196,8 +195,7 @@ namespace Store.UI
 
             _isPopupVisible = isVisible;
 
-            if (_popupSound != null)
-                SoundManager.instance?.PlaySFX(_popupSound);
+            SoundManager.instance?.PlaySFX(SoundPath.GachaPopup);
 
             _popup.style.display = isVisible ? DisplayStyle.Flex : DisplayStyle.None;
 
@@ -216,8 +214,8 @@ namespace Store.UI
 
             _isErrorPopupVisible = isVisible;
 
-            if (_popupSound != null && isVisible)
-                SoundManager.instance?.PlaySFX(_popupSound);
+            if (isVisible)
+                SoundManager.instance?.PlaySFX(SoundPath.GachaPopup);
 
             _errorPopup.style.display = isVisible ? DisplayStyle.Flex : DisplayStyle.None;
 

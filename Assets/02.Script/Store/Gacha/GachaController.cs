@@ -14,7 +14,6 @@ namespace Store.Gacha
     {
         [Header("Dependencies")]
         [SerializeField] private WeaponData[] _weaponDatas;
-        [SerializeField] private AudioClip _drawSound;
 
         // 자동 참조 (GetComponent로 찾음)
         private GachaResultUI _resultUI;
@@ -56,8 +55,7 @@ namespace Store.Gacha
 
             try
             {
-                if (_drawSound != null)
-                    SoundManager.instance?.PlaySFX(_drawSound);
+                SoundManager.instance?.PlaySFX(SoundPath.GachaDraw);
 
                 _hamsterUI?.ShowProcessing();
 

@@ -43,3 +43,7 @@ public static class SoundPath
     public const string StartBgm = "BGM/StartBgm";
     public const string BossBgm = "BGM/BossBgm";
 }
+
+    // Gacha Sounds
+    public const string GachaDraw = ""SFX/GachaDraw"";
+    public const string GachaPopup = ""SFX/GachaPopup"";
