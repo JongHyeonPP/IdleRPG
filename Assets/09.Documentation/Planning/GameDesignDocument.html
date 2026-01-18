@@ -5431,12 +5431,17 @@ CompanionMultiplier:
             function updateActiveLink() {
                 let current = '';
 
-                for (const id of sections) {
-                    const section = document.getElementById(id);
-                    if (section) {
-                        const rect = section.getBoundingClientRect();
-                        if (rect.top <= 100) {
-                            current = id;
+                // 페이지 맨 아래 도달 시 마지막 섹션 활성화
+                if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 10) {
+                    current = sections[sections.length - 1];
+                } else {
+                    for (const id of sections) {
+                        const section = document.getElementById(id);
+                        if (section) {
+                            const rect = section.getBoundingClientRect();
+                            if (rect.top <= 100) {
+                                current = id;
+                            }
                         }
                     }
                 }
