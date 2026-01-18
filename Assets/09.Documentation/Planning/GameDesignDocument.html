@@ -1109,102 +1109,163 @@ DoubleHit 발동 시 → 데미지 × 2
         <p class="note">동료(Companion) 무기는 별도로 45종 존재 (Bow/Shield/Staff)</p>
         <h2 id="sec4">4. 스킬 시스템</h2>
 
-        <h3>4.0 스킬 습득 및 강화</h3>
+        <h3>4.1 스킬 개요</h3>
+        <p>플레이어 레벨에 따라 스킬이 해금됩니다. <strong>액티브 16개 + 패시브 4개</strong> = 총 20개 스킬.</p>
 
-        <h4>스킬 습득</h4>
-        <p>
-            플레이어 레벨에 따라 스킬이 해금됩니다. 해금된 스킬을 클릭하면 즉시 습득(skillLevel = 1)됩니다.
-        </p>
-        <ul>
-            <li>레벨당 액티브 스킬 1개 + 패시브 스킬 1개 해금</li>
-            <li>SkillAcquireInfo.acquireLevel로 해금 레벨 정의</li>
-        </ul>
-
-        <h4>스킬 해금 테이블</h4>
+        <h4>액티브 스킬 (16종)</h4>
         <table>
             <tr>
-                <th>해금 레벨</th>
-                <th>액티브 스킬</th>
                 <th>레어도</th>
-                <th>패시브 스킬</th>
+                <th>스킬명</th>
+                <th>해금 Lv</th>
+                <th>효과</th>
+                <th>쿨타임</th>
             </tr>
             <tr>
+                <td rowspan="3">Common</td>
+                <td>Cut</td>
                 <td>10</td>
-                <td>Cut, Slash, PowerSlash</td>
-                <td>Common</td>
-                <td>Hunter (크리티컬 확률)</td>
+                <td>100~200% 데미지</td>
+                <td>2타</td>
             </tr>
             <tr>
-                <td>15</td>
+                <td>Slash</td>
+                <td>10</td>
+                <td>100~200% 데미지</td>
+                <td>2타</td>
+            </tr>
+            <tr>
+                <td>PowerSlash</td>
+                <td>10</td>
+                <td>100~200% 데미지</td>
+                <td>2타</td>
+            </tr>
+            <tr>
+                <td rowspan="4">Uncommon</td>
                 <td>ReverseSlash</td>
-                <td>Uncommon</td>
-                <td>-</td>
+                <td>15</td>
+                <td>120~250% 데미지</td>
+                <td>3타</td>
             </tr>
             <tr>
-                <td>20</td>
                 <td>DarkSlash</td>
-                <td>Uncommon</td>
-                <td>-</td>
+                <td>20</td>
+                <td>120~250% 데미지</td>
+                <td>3타</td>
             </tr>
             <tr>
-                <td>25</td>
                 <td>FireSlash</td>
-                <td>Uncommon</td>
-                <td>-</td>
+                <td>25</td>
+                <td>120~250% 데미지</td>
+                <td>3타</td>
             </tr>
             <tr>
-                <td>30</td>
+                <td>기타 (3종)</td>
+                <td>-</td>
+                <td>-</td>
+                <td>3타</td>
+            </tr>
+            <tr>
+                <td rowspan="3">Rare</td>
                 <td>Accelerator</td>
-                <td>Rare</td>
-                <td>-</td>
+                <td>30</td>
+                <td>+1.5~3.2% 공속</td>
+                <td>3타</td>
             </tr>
             <tr>
-                <td>35</td>
                 <td>DoomsDay</td>
-                <td>Rare</td>
-                <td>-</td>
+                <td>35</td>
+                <td>150~350% 데미지</td>
+                <td>3타</td>
             </tr>
             <tr>
-                <td>40</td>
                 <td>FlameSlash</td>
-                <td>Rare</td>
-                <td>-</td>
+                <td>40</td>
+                <td>150~350% 데미지</td>
+                <td>3타</td>
             </tr>
             <tr>
+                <td rowspan="3">Unique</td>
+                <td>MoonSlash</td>
                 <td>60</td>
-                <td>MoonSlash, Fury, ClawSlash</td>
-                <td>Unique</td>
-                <td>Lifesteal (흡혈)</td>
+                <td>200~450% 데미지</td>
+                <td>3타</td>
             </tr>
             <tr>
-                <td>80</td>
+                <td>Fury</td>
+                <td>60</td>
+                <td>200~450% 데미지</td>
+                <td>3타</td>
+            </tr>
+            <tr>
+                <td>ClawSlash</td>
+                <td>60</td>
+                <td>200~450% 데미지</td>
+                <td>3타</td>
+            </tr>
+            <tr>
+                <td rowspan="2">Legendary</td>
                 <td>SpinningCut</td>
-                <td>Legendary</td>
-                <td>-</td>
+                <td>80</td>
+                <td>300~600% 데미지</td>
+                <td>4타</td>
             </tr>
             <tr>
-                <td>100</td>
                 <td>Hurricane</td>
-                <td>Legendary</td>
-                <td>Amplify (공격력 증폭)</td>
+                <td>100</td>
+                <td>300~600% 데미지</td>
+                <td>4타</td>
             </tr>
             <tr>
-                <td>120</td>
+                <td rowspan="2">Mythic</td>
                 <td>Burst</td>
-                <td>Mythic</td>
-                <td>Double Strike (이중 타격)</td>
+                <td>120</td>
+                <td>500~1200% 데미지</td>
+                <td>5타</td>
             </tr>
             <tr>
-                <td>150</td>
                 <td>Rune</td>
-                <td>Mythic</td>
-                <td>-</td>
+                <td>150</td>
+                <td>500~1200% 데미지</td>
+                <td>5타</td>
             </tr>
         </table>
-        <p class="note">총 16개 액티브 스킬, 4개 패시브 스킬. 레어도별 배율: Common(1.0x) → Mythic(5.0x~12.0x)</p>
 
+        <h4>패시브 스킬 (4종)</h4>
+        <table>
+            <tr>
+                <th>스킬명</th>
+                <th>해금 Lv</th>
+                <th>효과</th>
+                <th>Lv1 → Lv10</th>
+            </tr>
+            <tr>
+                <td>Hunter</td>
+                <td>10</td>
+                <td>크리티컬 확률</td>
+                <td>+2% → +10%</td>
+            </tr>
+            <tr>
+                <td>Lifesteal</td>
+                <td>60</td>
+                <td>흡혈</td>
+                <td>+1% → +5%</td>
+            </tr>
+            <tr>
+                <td>Amplify</td>
+                <td>100</td>
+                <td>공격력 증폭</td>
+                <td>+5% → +25%</td>
+            </tr>
+            <tr>
+                <td>Double Strike</td>
+                <td>120</td>
+                <td>이중 타격</td>
+                <td>+3% → +15%</td>
+            </tr>
+        </table>
 
-        <h4>스킬 강화</h4>
+        <h3>4.2 스킬 강화</h3>
         <p>
             스킬 조각(Fragment)을 소모하여 스킬 레벨을 1→10까지 올립니다.
             레어도별 비용은 <code>PriceInfo.[rarity]SkillPrice[level]</code> 배열에서 정의됩니다.
@@ -1239,116 +1300,7 @@ DoubleHit 발동 시 → 데미지 × 2
         </table>
         <p class="note">Lv10 MAX까지 총 510개 동일 레어도 Fragment 필요 (상세 → 6.5 조각 참조)</p>
 
-        <h4>액티브 스킬 레벨별 효과</h4>
-        <p>스킬 레벨에 따라 효과 배율이 증가합니다. 아래는 주요 스킬의 레벨별 배율입니다.</p>
-        <table>
-            <tr>
-                <th>스킬명</th>
-                <th>레어도</th>
-                <th>타입</th>
-                <th>Lv1</th>
-                <th>Lv5</th>
-                <th>Lv10</th>
-                <th>쿨타임</th>
-                <th>MP</th>
-            </tr>
-            <tr>
-                <td>Cut</td>
-                <td>Common</td>
-                <td>데미지</td>
-                <td>100%</td>
-                <td>140%</td>
-                <td>200%</td>
-                <td>2타</td>
-                <td>15</td>
-            </tr>
-            <tr>
-                <td>ReverseSlash</td>
-                <td>Uncommon</td>
-                <td>데미지</td>
-                <td>120%</td>
-                <td>168%</td>
-                <td>250%</td>
-                <td>3타</td>
-                <td>15</td>
-            </tr>
-            <tr>
-                <td>Accelerator</td>
-                <td>Rare</td>
-                <td>공속 버프</td>
-                <td>+1.5%</td>
-                <td>+2.18%</td>
-                <td>+3.2%</td>
-                <td>3타</td>
-                <td>15</td>
-            </tr>
-            <tr>
-                <td>MoonSlash</td>
-                <td>Unique</td>
-                <td>데미지</td>
-                <td>200%</td>
-                <td>300%</td>
-                <td>450%</td>
-                <td>3타</td>
-                <td>15</td>
-            </tr>
-            <tr>
-                <td>Hurricane</td>
-                <td>Legendary</td>
-                <td>데미지</td>
-                <td>300%</td>
-                <td>450%</td>
-                <td>600%</td>
-                <td>4타</td>
-                <td>20</td>
-            </tr>
-            <tr>
-                <td>Burst</td>
-                <td>Mythic</td>
-                <td>데미지</td>
-                <td>500%</td>
-                <td>750%</td>
-                <td>1200%</td>
-                <td>5타</td>
-                <td>25</td>
-            </tr>
-        </table>
-
-        <h4>패시브 스킬 효과</h4>
-        <table>
-            <tr>
-                <th>스킬명</th>
-                <th>효과</th>
-                <th>Lv1</th>
-                <th>Lv10</th>
-            </tr>
-            <tr>
-                <td>Hunter</td>
-                <td>크리티컬 확률</td>
-                <td>+2%</td>
-                <td>+10%</td>
-            </tr>
-            <tr>
-                <td>Lifesteal</td>
-                <td>흡혈</td>
-                <td>+1%</td>
-                <td>+5%</td>
-            </tr>
-            <tr>
-                <td>Amplify</td>
-                <td>공격력 증폭</td>
-                <td>+5%</td>
-                <td>+25%</td>
-            </tr>
-            <tr>
-                <td>Double Strike</td>
-                <td>이중 타격 확률</td>
-                <td>+3%</td>
-                <td>+15%</td>
-            </tr>
-        </table>
-
-        <h3>4.1 스킬 분류 (총 51개)</h3>
+        <h3>4.3 스킬 분류 (총 51개)</h3>
 
         <table>
             <tr>
