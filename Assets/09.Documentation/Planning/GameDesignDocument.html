@@ -2226,6 +2226,62 @@ DoubleHit 발동 시 → 데미지 × 2
             </tr>
         </table>
 
+        <h4>클로버 패키지</h4>
+        <table>
+            <tr>
+                <th>티어</th>
+                <th>가격 (₩)</th>
+                <th>클로버</th>
+                <th>용도</th>
+            </tr>
+            <tr>
+                <td>소</td>
+                <td>₩1,200</td>
+                <td>50</td>
+                <td>효과 재굴림 10회</td>
+            </tr>
+            <tr>
+                <td>중</td>
+                <td>₩4,500</td>
+                <td>200</td>
+                <td>효과 재굴림 40회</td>
+            </tr>
+            <tr>
+                <td>대</td>
+                <td>₩9,900</td>
+                <td>500</td>
+                <td>효과 재굴림 100회</td>
+            </tr>
+        </table>
+
+        <h4>골드 패키지</h4>
+        <table>
+            <tr>
+                <th>티어</th>
+                <th>가격 (₩)</th>
+                <th>골드</th>
+                <th>용도</th>
+            </tr>
+            <tr>
+                <td>소</td>
+                <td>₩1,200</td>
+                <td>50,000</td>
+                <td>스탯 강화 ~50회</td>
+            </tr>
+            <tr>
+                <td>중</td>
+                <td>₩4,500</td>
+                <td>200,000</td>
+                <td>스탯 강화 ~200회</td>
+            </tr>
+            <tr>
+                <td>대</td>
+                <td>₩9,900</td>
+                <td>500,000</td>
+                <td>스탯 강화 ~500회</td>
+            </tr>
+        </table>
+
         <h4>지역별 가격 정책</h4>
         <table>
             <tr>
@@ -2347,71 +2403,45 @@ DoubleHit 발동 시 → 데미지 × 2
         </ul>
 
         <h3>7.2 상점 시스템</h3>
-        <p>가챠, 재화 구매, 광고 보상을 통합 관리하는 스토어 UI입니다.</p>
+        <p>가챠, 재화 구매, 광고 보상을 통합 관리하는 시스템입니다.</p>
 
-        <h4>상점 구조</h4>
-        <ul>
-            <li><strong>가챠 탭</strong>: 무기/코스튬 1회/10회 뽑기
-                <ul>
-                    <li>가격은 Remote Config <code>GACHA_INFO.cost</code>에서 로드</li>
-                    <li>뽑기 결과는 CloudCode <code>PurchaseProcessor.ProcessGacha</code>에서 처리</li>
-                    <li>결과 팝업에 최대 10개 슬롯 + 등급별 이펙트 표시</li>
-                </ul>
-            </li>
-            <li><strong>재화 탭</strong>: 현금 결제 패키지
-                <ul>
-                    <li>Starter Pack: 1000 Clover</li>
-                    <li>Gold Pack: 3000 Gold</li>
-                    <li>Pro Pack: 5000 Gold</li>
-                </ul>
-            </li>
-            <li><strong>광고 탭</strong>: 리워드 광고 시청 → 다이아/클로버 보상</li>
-        </ul>
-
-        <h4>UI 요소</h4>
-        <ul>
-            <li><strong>햄스터 NPC</strong>: 상점 마스코트, 상태별 멘트 표시 ("어서오세요!", "돌리는 중...", "앗!")</li>
-            <li><strong>결과 팝업</strong>: 2행×5열 슬롯, 등급별 配色/오프셋, 등장 애니(팝+보브)</li>
-            <li><strong>에러 팝업</strong>: 서버 오류/재화 부족 시 표시</li>
-        </ul>
-
-        <h4>등급별 슬롯 오프셋</h4>
+        <h4>가챠 탭</h4>
         <table>
             <tr>
-                <th>등급</th>
-                <th>Offset (top, left)</th>
+                <th>가챠 종류</th>
+                <th>1회 비용</th>
+                <th>10회 비용</th>
             </tr>
             <tr>
-                <td>Common</td>
-                <td>(-214, 329)</td>
+                <td>무기 가챠</td>
+                <td>300 다이아</td>
+                <td>3,000 다이아</td>
             </tr>
             <tr>
-                <td>Uncommon</td>
-                <td>(-214, -2)</td>
+                <td>코스튬 가챠</td>
+                <td>1 다이아</td>
+                <td>10 다이아</td>
+            </tr>
+        </table>
+
+        <h4>광고 탭</h4>
+        <table>
+            <tr>
+                <th>광고 종류</th>
+                <th>보상</th>
+                <th>제한</th>
             </tr>
             <tr>
-                <td>Rare</td>
-                <td>(-214, -334)</td>
-            </tr>
-            <tr>
-                <td>Unique</td>
-                <td>(-564, 329)</td>
-            </tr>
-            <tr>
-                <td>Legendary</td>
-                <td>(-564, -2)</td>
-            </tr>
-            <tr>
-                <td>Mythic</td>
-                <td>(-564, -334)</td>
+                <td>리워드 광고</td>
+                <td>30 다이아 또는 10 클로버</td>
+                <td>일 5회</td>
             </tr>
         </table>
 
         <h4>관련 코드</h4>
         <ul>
             <li><code>StoreManager.cs</code>: 상점 전체 로직 (829줄)</li>
-            <li><code>StoreUI.cs</code>: UI 관리</li>
-            <li><code>StoreMoneyListController.cs</code>: 재화 구매 목록 스크롤</li>
+            <li><code>StoreMoneyListController.cs</code>: 재화 구매 목록</li>
             <li><code>StoreMoneyItemData.cs</code>: 구매 아이템 모델</li>
         </ul>
 
