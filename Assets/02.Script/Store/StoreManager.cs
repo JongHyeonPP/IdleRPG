@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using EnumCollection;
 using Store.Gacha;
@@ -22,6 +23,9 @@ public class StoreManager : MonoSingleton<StoreManager>
 
     [Header("UI Document")]
     [SerializeField] private UIDocument _storeUIDocument;
+    
+    [Header("Money Store Icons")]
+    [SerializeField] private List<ProductIconEntry> _iconEntries = new();
 
     // 자동 참조 (GetComponent로 찾음)
     private GachaController _gachaController;
@@ -110,7 +114,16 @@ public class StoreManager : MonoSingleton<StoreManager>
         
         // StoreMoneyListController 찾아서 전달
         var moneyListController = GetComponent<StoreMoneyListController>();
-        _moneyStoreController?.Initialize(moneyListController);
+        
+        // 아이콘 딕셔너리 빌드
+        var iconDic = new Dictionary<string, Texture2D>();
+        foreach (var entry in _iconEntries)
+        {
+            if (!string.IsNullOrWhiteSpace(entry.key) && entry.iconTex != null)
+                iconDic[entry.key] = entry.iconTex;
+        }
+        
+        _moneyStoreController?.Initialize(moneyListController, iconDic);
         _moneyStoreController?.RefreshProducts();
     }
 

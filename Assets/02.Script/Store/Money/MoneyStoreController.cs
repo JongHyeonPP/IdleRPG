@@ -9,7 +9,7 @@ namespace Store.Money
 {
     /// <summary>
     /// 상점 상품(Money) 목록 관리
-    /// 인스펙터 노출 없이 내부에서 처리
+    /// 아이콘 딕셔너리는 Initialize에서 전달받음
     /// </summary>
     public class MoneyStoreController : MonoBehaviour
     {
@@ -17,9 +17,10 @@ namespace Store.Money
         private StoreMoneyListController _listController;
         private Dictionary<string, Texture2D> _iconDic;
 
-        public void Initialize(StoreMoneyListController listController)
+        public void Initialize(StoreMoneyListController listController, Dictionary<string, Texture2D> iconDic)
         {
             _listController = listController;
+            _iconDic = iconDic ?? new Dictionary<string, Texture2D>();
         }
 
         public void RefreshProducts()
@@ -42,12 +43,17 @@ namespace Store.Money
                 bool isAd = pm.IsAdvertise(p.productId) || p.source == "advertise";
                 string moneyLabel = isAd ? "광고보기" : priceString;
 
+                // 아이콘 조회
+                Texture2D icon = null;
+                if (!string.IsNullOrEmpty(p.productId) && _iconDic.TryGetValue(p.productId, out var tex))
+                    icon = tex;
+
                 items.Add(new StoreMoneyItemData
                 {
                     Gold = p.grant.amt.ToString(),
                     GoldEx = p.grant.res.ToString(),
                     Money = moneyLabel,
-                    Icon = null,
+                    Icon = icon,
                     OnClick = () => TriggerProduct(p.productId)
                 });
             }
