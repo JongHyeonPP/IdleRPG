@@ -7,13 +7,6 @@ using Store.UI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-[System.Serializable]
-public struct ProductIconEntry
-{
-    public string key;
-    public Texture2D iconTex;
-}
-
 /// <summary>
 /// 상점 관리자 - 초기화 및 조율만 담당
 /// </summary>
@@ -25,7 +18,8 @@ public class StoreManager : MonoSingleton<StoreManager>
     [SerializeField] private UIDocument _storeUIDocument;
     
     [Header("Money Store Icons")]
-    [SerializeField] private List<ProductIconEntry> _iconEntries = new();
+    [SerializeField] private Texture2D _diaIcon;
+    [SerializeField] private Texture2D _cloverIcon;
 
     // 자동 참조 (GetComponent로 찾음)
     private GachaController _gachaController;
@@ -115,13 +109,10 @@ public class StoreManager : MonoSingleton<StoreManager>
         // StoreMoneyListController 찾아서 전달
         var moneyListController = GetComponent<StoreMoneyListController>();
         
-        // 아이콘 딕셔너리 빌드
+        // 아이콘 딕셔너리 빌드 (재화 타입별)
         var iconDic = new Dictionary<string, Texture2D>();
-        foreach (var entry in _iconEntries)
-        {
-            if (!string.IsNullOrWhiteSpace(entry.key) && entry.iconTex != null)
-                iconDic[entry.key] = entry.iconTex;
-        }
+        if (_diaIcon != null) iconDic["Dia"] = _diaIcon;
+        if (_cloverIcon != null) iconDic["Clover"] = _cloverIcon;
         
         _moneyStoreController?.Initialize(moneyListController, iconDic);
         _moneyStoreController?.RefreshProducts();

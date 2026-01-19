@@ -43,9 +43,10 @@ namespace Store.Money
                 bool isAd = pm.IsAdvertise(p.productId) || p.source == "advertise";
                 string moneyLabel = isAd ? "광고보기" : priceString;
 
-                // 아이콘 조회
+                // 아이콘 조회 (재화 타입으로)
                 Texture2D icon = null;
-                if (!string.IsNullOrEmpty(p.productId) && _iconDic.TryGetValue(p.productId, out var tex))
+                var resKey = p.grant.res.ToString();
+                if (_iconDic.TryGetValue(resKey, out var tex))
                     icon = tex;
 
                 items.Add(new StoreMoneyItemData
