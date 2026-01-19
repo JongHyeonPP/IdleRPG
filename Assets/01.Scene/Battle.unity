@@ -58116,6 +58116,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: StoreManager
       objectReference: {fileID: 0}
+    - target: {fileID: 6407971641414001673, guid: 6078fdaccab6d1e4baa1eb3eea721bed, type: 3}
+      propertyPath: _storeUIDocument
+      value: 
+      objectReference: {fileID: 7343326414271773527}
     - target: {fileID: 8419400227236927125, guid: 6078fdaccab6d1e4baa1eb3eea721bed, type: 3}
       propertyPath: m_LocalPosition.x
       value: -24.0169
@@ -58195,36 +58199,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55246de2656409f46bde810b6050c8df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _popupDocument: {fileID: 0}
-  _appearDuration: 0.35
-  _appearStagger: 0.05
-  _popScale: 1.08
-  _popEase:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  _bobAmplitude: 6
-  _bobPeriod: 1.6
 --- !u!114 &723827587
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58237,7 +58211,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7260d4dd147eba2438de799ae89725e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ui: {fileID: 0}
+  _ui: {fileID: 7343326414271773527}
   _itemTemplate: {fileID: 9197481963319205126, guid: a2d0bf72f85988f498fcec0b6cd28a6b, type: 3}
   _scrollViewId: MoneyScrollView
 --- !u!114 &723827588
@@ -58252,10 +58226,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50f341cefbd9f8d44a90c75cfb567c95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _listController: {fileID: 723827587}
-  _iconEntries:
-  - key: 
-    iconTex: {fileID: 0}
 --- !u!114 &723827589
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -189015,6 +188985,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: StoreUI
       objectReference: {fileID: 0}
+    - target: {fileID: 4125742167055461256, guid: 2d84bc3479e1c3a4e8620b478156df9b, type: 3}
+      propertyPath: sourceAsset
+      value: 
+      objectReference: {fileID: 9197481963319205126, guid: 925dfdf0a1f312346b93aa912318883c, type: 3}
     - target: {fileID: 6546754839126924561, guid: 2d84bc3479e1c3a4e8620b478156df9b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -189060,6 +189034,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2d84bc3479e1c3a4e8620b478156df9b, type: 3}
+--- !u!114 &7343326414271773527 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4125742167055461256, guid: 2d84bc3479e1c3a4e8620b478156df9b, type: 3}
+  m_PrefabInstance: {fileID: 7343326414271773526}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &7350021189014569156
 MonoBehaviour:
   m_ObjectHideFlags: 0

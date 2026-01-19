@@ -9,14 +9,18 @@ namespace Store.Money
 {
     /// <summary>
     /// 상점 상품(Money) 목록 관리
+    /// 인스펙터 노출 없이 내부에서 처리
     /// </summary>
     public class MoneyStoreController : MonoBehaviour
     {
-        [Header("References")]
-        [SerializeField] private StoreMoneyListController _listController;
-        [SerializeField] private List<ProductIconEntry> _iconEntries = new();
-
+        // 자동 참조 (Initialize에서 설정)
+        private StoreMoneyListController _listController;
         private Dictionary<string, Texture2D> _iconDic;
+
+        public void Initialize(StoreMoneyListController listController)
+        {
+            _listController = listController;
+        }
 
         public void RefreshProducts()
         {
@@ -37,14 +41,13 @@ namespace Store.Money
                 string priceString = string.IsNullOrEmpty(p.priceString) ? "-" : p.priceString;
                 bool isAd = pm.IsAdvertise(p.productId) || p.source == "advertise";
                 string moneyLabel = isAd ? "광고보기" : priceString;
-                var icon = GetIconTex(p.productId);
 
                 items.Add(new StoreMoneyItemData
                 {
                     Gold = p.grant.amt.ToString(),
                     GoldEx = p.grant.res.ToString(),
                     Money = moneyLabel,
-                    Icon = icon,
+                    Icon = null,
                     OnClick = () => TriggerProduct(p.productId)
                 });
             }
@@ -68,19 +71,6 @@ namespace Store.Money
                 return;
             }
             PlayerBroker.PurchaseCurrency.Invoke(productId);
-        }
-
-        private Texture2D GetIconTex(string productId)
-        {
-            if (_iconDic == null)
-            {
-                _iconDic = new Dictionary<string, Texture2D>(StringComparer.OrdinalIgnoreCase);
-                foreach (var e in _iconEntries)
-                    if (!string.IsNullOrWhiteSpace(e.key) && e.iconTex != null)
-                        _iconDic[e.key] = e.iconTex;
-            }
-
-            return !string.IsNullOrEmpty(productId) && _iconDic.TryGetValue(productId, out var tex) ? tex : null;
         }
 
         private static int CurrencyRank(Resource r) => r switch

@@ -4,52 +4,52 @@ using UnityEngine.UIElements;
 
 public class StoreUI : MonoBehaviour, IMenuUI
 {
-    // UI ·çÆ®
+    // UI ë£¨íŠ¸
     public VisualElement root { get; private set; }
 
-    // Panel ÂüÁ¶
+    // Panel ì°¸ì¡°
     private VisualElement _storePanel;
     private VisualElement _moneyPanel;
 
-    // ¹öÆ° ÂüÁ¶
+    // ë²„íŠ¼ ì°¸ì¡°
     private Button _storeButton;
     private Button _mainButton;
 
-    // »ö»ó »óÅÂ
+    // ìƒ‰ìƒ ìƒíƒœ
     private readonly Color inactiveColor = new(0.3f, 0.3f, 0.3f);
     private readonly Color activeColor = new(0.7f, 0.7f, 0.7f);
 
-    // ¾Ö´Ï¸ŞÀÌ¼Ç¿ë
+    // ì• ë‹ˆë©”ì´ì…˜ìš©
     private VisualElement _rootChild;
-    private float _targetHeight;            // ÇöÀç ¸ñÇ¥ ³ôÀÌ
-    private float _duration = 0.2f;         // È®Àå ½Ã°£
-    private float _shrinkDuration = 0.8f;   // ¼öÃà ½Ã°£
-    private float _overshootFactor = 1.01f; // Æ¨±è È¿°ú ¹èÀ²
+    private float _targetHeight;            // í˜„ì¬ ëª©í‘œ ë†’ì´
+    private float _duration = 0.2f;         // í™•ì¥ ì‹œê°„
+    private float _shrinkDuration = 0.8f;   // ìˆ˜ì¶• ì‹œê°„
+    private float _overshootFactor = 1.01f; // íŠ•ê¹€ íš¨ê³¼ ë°°ìœ¨
 
-    // ÆĞ³Îº° Å©±â
+    // íŒ¨ë„ë³„ í¬ê¸°
     private const float STORE_HEIGHT = 1000f;
     private const float MONEY_HEIGHT = 1900f;
 
     private void Awake()
     {
-        // UI ·çÆ® °¡Á®¿À±â
+        // UI ë£¨íŠ¸ ê°€ì ¸ì˜¤ê¸°
         root = GetComponent<UIDocument>().rootVisualElement;
 
-        // ÆĞ³Î Ã£±â
+        // íŒ¨ë„ ì°¾ê¸°
         _storePanel = root.Q<VisualElement>("StorePanel");
         _moneyPanel = root.Q<VisualElement>("MoneyPanel");
 
-        // ¹öÆ° Ã£±â
+        // ë²„íŠ¼ ì°¾ê¸°
         _storeButton = root.Q<Button>("StoreButton");
         _mainButton = root.Q<Button>("MoneyButton");
 
         _rootChild = root.Q<VisualElement>("StoreUI");
 
-        // ¹öÆ° ÀÌº¥Æ® ¿¬°á
+        // ë²„íŠ¼ ì´ë²¤íŠ¸ ì—°ê²°
         _storeButton?.RegisterCallback<ClickEvent>(_ => OnClickPanelButton(_storePanel, _storeButton, STORE_HEIGHT));
         _mainButton?.RegisterCallback<ClickEvent>(_ => OnClickPanelButton(_moneyPanel, _mainButton, MONEY_HEIGHT));
 
-        // ÃÊ±â »óÅÂ: StorePanel ¿­±â
+        // ì´ˆê¸° ìƒíƒœ: StorePanel ì—´ê¸°
         OnClickPanelButton(_storePanel, _storeButton, STORE_HEIGHT);
     }
 
@@ -59,7 +59,7 @@ public class StoreUI : MonoBehaviour, IMenuUI
         StoreManager.Instance.OpenStore();
        // StoreManagerRe.Instance.OpenStore();
 
-        // »óÁ¡ ¿­¸± ¶§ FX ¹× ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+        // ìƒì  ì—´ë¦´ ë•Œ FX ë° ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
         ParticleFxManager.Instance.Play("StoreOpen");
         StartCoroutine(AnimateUI());
     }
@@ -71,22 +71,22 @@ public class StoreUI : MonoBehaviour, IMenuUI
     }
 
     /// <summary>
-    /// ¹öÆ° Å¬¸¯ ½Ã ÆĞ³Î ÀüÈ¯ ¹× ¹öÆ° »ö»ó ¾÷µ¥ÀÌÆ®
+    /// ë²„íŠ¼ í´ë¦­ ì‹œ íŒ¨ë„ ì „í™˜ ë° ë²„íŠ¼ ìƒ‰ìƒ ì—…ë°ì´íŠ¸
     /// </summary>
     private void OnClickPanelButton(VisualElement targetPanel, Button targetButton, float height)
     {
-        // ¸ñÇ¥ ³ôÀÌ °»½Å
+        // ëª©í‘œ ë†’ì´ ê°±ì‹ 
         _targetHeight = height;
 
-        // ¸ğµç ÆĞ³Î ¼û±â±â
+        // ëª¨ë“  íŒ¨ë„ ìˆ¨ê¸°ê¸°
         _storePanel.style.display = DisplayStyle.None;
         _moneyPanel.style.display = DisplayStyle.None;
 
-        // ¸ğµç ¹öÆ° ºñÈ°¼ºÈ­ »ö»ó
+        // ëª¨ë“  ë²„íŠ¼ ë¹„í™œì„±í™” ìƒ‰ìƒ
         _storeButton.style.unityBackgroundImageTintColor = inactiveColor;
         _mainButton.style.unityBackgroundImageTintColor = inactiveColor;
 
-        // ¼±ÅÃµÈ ÆĞ³Î Ç¥½Ã ¹× ¹öÆ° °­Á¶
+        // ì„ íƒëœ íŒ¨ë„ í‘œì‹œ ë° ë²„íŠ¼ ê°•ì¡°
         targetPanel.style.display = DisplayStyle.Flex;
         targetButton.style.unityBackgroundImageTintColor = activeColor;
         
@@ -95,12 +95,12 @@ public class StoreUI : MonoBehaviour, IMenuUI
         else
             ParticleFxManager.Instance.Stop("StoreOpen");
 
-        // ÆĞ³Î ÀüÈ¯ ½Ã ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+        // íŒ¨ë„ ì „í™˜ ì‹œ ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
         StartCoroutine(AnimateUI());
     }
 
     /// <summary>
-    /// ÆĞ³Î ¿­¸± ¶§ À§·Î Æ¨±âµí È®ÀåµÇ´Â UI ¾Ö´Ï¸ŞÀÌ¼Ç
+    /// íŒ¨ë„ ì—´ë¦´ ë•Œ ìœ„ë¡œ íŠ•ê¸°ë“¯ í™•ì¥ë˜ëŠ” UI ì• ë‹ˆë©”ì´ì…˜
     /// </summary>
     private IEnumerator AnimateUI()
     {
@@ -108,7 +108,7 @@ public class StoreUI : MonoBehaviour, IMenuUI
         _rootChild.style.height = 0;
         float overshootHeight = _targetHeight * _overshootFactor;
 
-        // È®Àå ´Ü°è
+        // í™•ì¥ ë‹¨ê³„
         while (elapsed < _duration)
         {
             elapsed += Time.deltaTime;
@@ -118,7 +118,7 @@ public class StoreUI : MonoBehaviour, IMenuUI
         }
         _rootChild.style.height = overshootHeight;
 
-        // ¼öÃà ´Ü°è (ºÎµå·´°Ô)
+        // ìˆ˜ì¶• ë‹¨ê³„ (ë¶€ë“œëŸ½ê²Œ)
         elapsed = 0f;
         float startHeight = overshootHeight;
 

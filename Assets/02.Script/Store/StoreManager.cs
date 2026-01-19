@@ -107,6 +107,10 @@ public class StoreManager : MonoSingleton<StoreManager>
     private void InitComponents(GameData gameData)
     {
         _gachaController?.Initialize(gameData, _root);
+        
+        // StoreMoneyListController 찾아서 전달
+        var moneyListController = GetComponent<StoreMoneyListController>();
+        _moneyStoreController?.Initialize(moneyListController);
         _moneyStoreController?.RefreshProducts();
     }
 
