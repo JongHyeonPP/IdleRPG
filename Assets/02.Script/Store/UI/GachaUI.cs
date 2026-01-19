@@ -9,21 +9,18 @@ namespace Store.UI
 {
     /// <summary>
     /// 가챠 UI 통합 클래스 - 결과 팝업 + 슬롯 애니메이션 + 햄스터 마스코트
+    /// 원본 StoreManager처럼 인스펙터 노출 없이 내부 처리
     /// </summary>
     public class GachaUI : MonoBehaviour
     {
-        [Header("References")]
-        [SerializeField] private UIDocument _popupDocument;
+        // 애니메이션 상수 (인스펙터 노출 안 함)
+        private const float APPEAR_DURATION = 0.35f;
+        private const float APPEAR_STAGGER = 0.05f;
+        private const float POP_SCALE = 1.08f;
+        private const float BOB_AMPLITUDE = 6f;
+        private const float BOB_PERIOD = 1.6f;
 
-        [Header("Slot Animation")]
-        [SerializeField] private float _appearDuration = 0.35f;
-        [SerializeField] private float _appearStagger = 0.05f;
-        [SerializeField] private float _popScale = 1.08f;
-        [SerializeField] private AnimationCurve _popEase = AnimationCurve.EaseInOut(0, 0, 1, 1);
-        [SerializeField] private float _bobAmplitude = 6f;
-        [SerializeField] private float _bobPeriod = 1.6f;
-
-        // UI Elements
+        // UI Elements (Initialize에서 설정)
         private VisualElement _popup;
         private VisualElement _errorPopup;
         private Label _errorTxt;
@@ -44,18 +41,21 @@ namespace Store.UI
 
         #region Initialization
 
+        /// <summary>
+        /// StoreManager에서 호출 - 모든 UI 참조를 storeRoot에서 찾음
+        /// </summary>
         public void Initialize(VisualElement storeRoot)
         {
-            var root = _popupDocument?.rootVisualElement;
-            if (root == null) return;
+            if (storeRoot == null) return;
 
-            // 결과 팝업
-            _popup = root.Q<VisualElement>("Popup");
-            _popupCloseBtn = root.Q<Button>("PopupCloseBtn");
+            // 결과 팝업 (storeRoot에서 찾음)
+            _popup = storeRoot.Q<VisualElement>("Popup");
+            _popupCloseBtn = storeRoot.Q<Button>("PopupCloseBtn");
 
-            var rowVE1 = root.Q<VisualElement>("RowVE1");
-            var rowVE2 = root.Q<VisualElement>("RowVE2");
+            var rowVE1 = storeRoot.Q<VisualElement>("RowVE1");
+            var rowVE2 = storeRoot.Q<VisualElement>("RowVE2");
 
+            _slots.Clear();
             if (rowVE1 != null)
                 foreach (var child in rowVE1.Children()) _slots.Add(child);
             if (rowVE2 != null)
@@ -67,17 +67,17 @@ namespace Store.UI
             _popup?.RegisterCallback<PointerDownEvent>(_ => HideResult());
 
             // 에러 팝업
-            _errorPopup = root.Q<VisualElement>("ErrorPopup");
-            _errorTxt = root.Q<Label>("ErrorTxt");
-            _errorCloseBtn = root.Q<Button>("ErrorCloseBtn");
+            _errorPopup = storeRoot.Q<VisualElement>("ErrorPopup");
+            _errorTxt = storeRoot.Q<Label>("ErrorTxt");
+            _errorCloseBtn = storeRoot.Q<Button>("ErrorCloseBtn");
 
             if (_errorPopup != null) _errorPopup.style.display = DisplayStyle.None;
 
             _errorCloseBtn?.RegisterCallback<ClickEvent>(_ => HideError());
             _errorPopup?.RegisterCallback<PointerDownEvent>(_ => HideError());
 
-            // 햄스터 (스토어 루트에서 찾음)
-            _hamsterText = storeRoot?.Q<Label>("HamsterText");
+            // 햄스터
+            _hamsterText = storeRoot.Q<Label>("HamsterText");
             SetHamsterText(HamsterMessages[0]);
 
             BuildRarityOffsetMap();
@@ -294,7 +294,7 @@ namespace Store.UI
             {
                 if (slot.resolvedStyle.display == DisplayStyle.Flex)
                 {
-                    float delay = _appearStagger * idx++;
+                    float delay = APPEAR_STAGGER * idx++;
                     StartCoroutine(Co_AppearThenBob(slot, delay));
                 }
             }
@@ -330,13 +330,13 @@ namespace Store.UI
             slot.style.translate = new StyleTranslate(new Translate(0, 8f, 0));
 
             float t = 0f;
-            while (t < _appearDuration)
+            while (t < APPEAR_DURATION)
             {
                 t += Time.deltaTime;
-                float e = _popEase.Evaluate(Mathf.Clamp01(t / _appearDuration));
+                float e = EaseOutBack(Mathf.Clamp01(t / APPEAR_DURATION));
 
                 float y = Mathf.Lerp(8f, 0f, e);
-                float s = Mathf.Lerp(0.92f, _popScale, e);
+                float s = Mathf.Lerp(0.92f, POP_SCALE, e);
 
                 slot.style.opacity = e;
                 slot.style.scale = new StyleScale(new Vector3(s, s, 1f));
@@ -354,17 +354,25 @@ namespace Store.UI
 
         private IEnumerator Co_Bob(VisualElement slot, float phaseOffset)
         {
-            float t = phaseOffset * _bobPeriod;
+            float t = phaseOffset * BOB_PERIOD;
 
             while (true)
             {
                 t += Time.deltaTime;
-                float phase = (t % _bobPeriod) / _bobPeriod;
-                float y = Mathf.Sin(phase * Mathf.PI * 2f) * _bobAmplitude;
+                float phase = (t % BOB_PERIOD) / BOB_PERIOD;
+                float y = Mathf.Sin(phase * Mathf.PI * 2f) * BOB_AMPLITUDE;
 
                 slot.style.translate = new StyleTranslate(new Translate(0, y, 0));
                 yield return null;
             }
+        }
+
+        // 원본 StoreManager의 EaseOutBack
+        private static float EaseOutBack(float t)
+        {
+            const float c1 = 1.70158f;
+            const float c3 = c1 + 1;
+            return 1 + c3 * Mathf.Pow(t - 1, 3) + c1 * Mathf.Pow(t - 1, 2);
         }
 
         #endregion
