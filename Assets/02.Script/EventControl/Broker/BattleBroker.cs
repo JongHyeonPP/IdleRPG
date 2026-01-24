@@ -5,17 +5,11 @@ using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
 public static class BattleBroker
 {
-    //���� �׾��� �� ������ ���. <�� ��ġ>
     public static Action<Vector3> OnEnemyDead;
-    //�������� ����
     public static Action OnStageChange;
-    //���� �������� �ð� �ʰ� ��
     public static Action OnBossTimeLimit;
-    //���� �������� Ŭ���� ��
     public static Action OnBossClear;
-    //BattleManager�� �ִ� BattleType�� ��´�
     public static Func<BattleType> GetBattleType;
-    //���� HP ���� �� ���� ����
     public static Action<float> OnBossHpChanged;
 
     
@@ -28,10 +22,8 @@ public static class BattleBroker
     public static Action<int, int> SwitchToAdventure;
     public static Action<int, int> SwitchToDungeon;
     public static Action<int, (int,int)> SwitchToCompanionBattle;
-    //����
-    public static Action<int> ControllCompanionMove;//0 : ����, 1 : ������, 2 : ����
+    public static Action<int> ControllCompanionMove;//0 : idle 1 :run, 2 : attack
     
-    //�±�
     public static Action<int> SwitchToPromoteBattle;
 
     public static Func<BigInteger> GetNeedExp;
@@ -60,5 +52,5 @@ public static class BattleBroker
     public static Action<string> OnWeaponLevelChanged;
 
     public static Action<BigInteger> OnThornsDamage;
-    public static Action<UnityEngine.Vector3, float> OnAreaDamage;
+    public static Action<Vector3, float> OnAreaDamage;
 }

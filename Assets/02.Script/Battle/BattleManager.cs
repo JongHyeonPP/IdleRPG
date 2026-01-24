@@ -90,6 +90,8 @@ public class BattleManager : MonoBehaviour
             WeaponManager.instance.weaponDict.TryGetValue(arr[2], out staff);
         PlayerBroker.OnEquipWeapon(staff, WeaponType.Staff);
 
+        // 동료 해금 상태 초기화
+        UpdateCompanionUnlockState();
     }
 
     private void FixedUpdate()
@@ -252,6 +254,30 @@ public class BattleManager : MonoBehaviour
         BattleBroker.GetEnemyArray += () => _enemies;
     }
 
+    #region Companion Unlock
+
+    /// <summary>
+    /// maxStageNum 기반 동료 활성화/비활성화
+    /// </summary>
+    private void UpdateCompanionUnlockState()
+    {
+        for (int i = 0; i < _companions.Length; i++)
+        {
+            bool unlocked = IsCompanionUnlocked(i);
+            _companions[i].gameObject.SetActive(unlocked);
+        }
+    }
+
+    private bool IsCompanionUnlocked(int companionIndex) => companionIndex switch
+    {
+        0 => _gameData.maxStageNum >= 20,  // 궁수
+        1 => _gameData.maxStageNum >= 40,  // 전사
+        2 => _gameData.maxStageNum >= 60,  // 법사
+        _ => false
+    };
+
+    #endregion
+
     private void OnSwitchToStory()
     {
         ClearEnemies();
@@ -271,9 +297,15 @@ public class BattleManager : MonoBehaviour
 
     private void OnStageChange()
     {
-        if (true/*_gameData.currentStageNum > _gameData.maxStageNum*/)
+        // 최초 스테이지 진입 시 maxStage 갱신
+        if (_gameData.currentStageNum > _gameData.maxStageNum)
         {
-            //_gameData.maxStageNum = _gameData.currentStageNum;
+            _gameData.maxStageNum = _gameData.currentStageNum;
+            PlayerBroker.OnMaxStageSet?.Invoke();
+            UpdateCompanionUnlockState();
+        }
+
+        {
             UIBroker.RefreshStageSelectUI();
             int storyIndex = -1;
             switch (_gameData.currentStageNum)

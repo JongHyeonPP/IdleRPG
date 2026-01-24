@@ -16,13 +16,14 @@ public class CompanionUI : MonoBehaviour, IMenuUI
     [SerializeField] CompanionTechUI _companionTechUI;
 
     private VisualElement[] _companionClickVeArr;
+    private VisualElement[] _companionLockPanelArr;  // ë™ë£Œ ì ê¸ˆ ì˜¤ë²„ë ˆì´
     private Button[] _techButtonArr;
 
     private int currentTechCompanionIndex;
 
-    // Ãß°¡µÊ : ÇöÀç ¼±ÅÃµÈ ÆĞ³Î(»ó´Ü ÅÇ)
+    // ì¶”ê°€ë¨ : í˜„ì¬ ì„ íƒëœ íŒ¨ë„(ìƒë‹¨ íƒ­)
     private int _currentPanelIndex = -1;
-    // Ãß°¡µÊ : ÇöÀç ¼±ÅÃµÈ Å×Å© ¹öÆ°
+    // ì¶”ê°€ë¨ : í˜„ì¬ ì„ íƒëœ í…Œí¬ ë²„íŠ¼
     private int _currentTechIndex = -1;
 
     private void Awake()
@@ -46,6 +47,7 @@ public class CompanionUI : MonoBehaviour, IMenuUI
         InitTechPanel();
 
         PlayerBroker.OnCompanionExpSet += OnCompanionExpSet;
+        PlayerBroker.OnMaxStageSet += UpdateCompanionUnlockState;
     }
 
     private void InitPanelButton()
@@ -61,7 +63,7 @@ public class CompanionUI : MonoBehaviour, IMenuUI
             _panelButtonArr[i].RegisterCallback<ClickEvent>(evt => OnClickPanelButton(index));
         }
 
-        SetPanel(0); // ÃÊ±â Ç¥½Ã (¼Ò¸® ¾øÀ½)
+        SetPanel(0); // ì´ˆê¸° í‘œì‹œ (ì†Œë¦¬ ì—†ìŒ)
         _currentPanelIndex = 0;
     }
 
@@ -98,11 +100,13 @@ public class CompanionUI : MonoBehaviour, IMenuUI
     {
         VisualElement companionClickVeParent = _panelArr[0].Q<VisualElement>("CompanionClickVeParent");
         _companionClickVeArr = new VisualElement[companionClickVeParent.childCount];
+        _companionLockPanelArr = new VisualElement[companionClickVeParent.childCount];
 
         for (int i = 0; i < companionClickVeParent.childCount; i++)
         {
             int index = i;
             _companionClickVeArr[i] = companionClickVeParent.ElementAt(i);
+            _companionLockPanelArr[i] = _companionClickVeArr[i].Q<VisualElement>("LockPanel");
 
             companionClickVeParent.ElementAt(i).RegisterCallback<ClickEvent>(evt => OnClickCompanionVe(index));
         }
@@ -125,6 +129,9 @@ public class CompanionUI : MonoBehaviour, IMenuUI
             expProgressBar.value = levelExp.Item2 / (float)CompanionManager.EXPINTERVAL;
             expProgressBar.title = $"{levelExp.Item2}/{CompanionManager.EXPINTERVAL}";
         }
+
+        // í•´ê¸ˆ ìƒíƒœ ì´ˆê¸°í™”
+        UpdateCompanionUnlockState();
     }
 
     private void InitTechPanel()
@@ -132,10 +139,10 @@ public class CompanionUI : MonoBehaviour, IMenuUI
         VisualElement techPlankParent = _panelArr[1].Q<VisualElement>("TechPlankParent");
         Label[] plankLabelArr = techPlankParent.Children().Select(item => item.Q<Label>()).ToArray();
 
-        plankLabelArr[0].text = "±âº» Á÷¾÷";
-        plankLabelArr[1].text = "1Â÷ ÀüÁ÷";
-        plankLabelArr[2].text = "2Â÷ ÀüÁ÷";
-        plankLabelArr[3].text = "3Â÷ ÀüÁ÷";
+        plankLabelArr[0].text = "ê¸°ë³¸ ì§ì—…";
+        plankLabelArr[1].text = "1ì°¨ ì „ì§";
+        plankLabelArr[2].text = "2ì°¨ ì „ì§";
+        plankLabelArr[3].text = "3ì°¨ ì „ì§";
 
         currentTechCompanionIndex = 0;
 
@@ -163,11 +170,18 @@ public class CompanionUI : MonoBehaviour, IMenuUI
         }
 
         _currentTechIndex = 0;
-        OnTechButtonClick(0); // ÃÊ±â Ç¥½Ã (¼Ò¸® ¾øÀ½)
+        OnTechButtonClick(0); // ì´ˆê¸° í‘œì‹œ (ì†Œë¦¬ ì—†ìŒ)
     }
 
     private void OnTechButtonClick(int techCompanionIndex)
     {
+        if (!IsCompanionUnlocked(techCompanionIndex))
+        {
+            int required = GetRequiredStage(techCompanionIndex);
+            UIBroker.ShowPopUpInBattle($"ìŠ¤í…Œì´ì§€ {required} ë„ë‹¬ ì‹œ í•´ê¸ˆë©ë‹ˆë‹¤.");
+            return;
+        }
+
         if (_currentTechIndex != techCompanionIndex)
             SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
 
@@ -234,6 +248,13 @@ public class CompanionUI : MonoBehaviour, IMenuUI
 
     private void OnClickCompanionVe(int companionIndex)
     {
+        if (!IsCompanionUnlocked(companionIndex))
+        {
+            int required = GetRequiredStage(companionIndex);
+            UIBroker.ShowPopUpInBattle($"ìŠ¤í…Œì´ì§€ {required} ë„ë‹¬ ì‹œ í•´ê¸ˆë©ë‹ˆë‹¤.");
+            return;
+        }
+
         SoundManager.instance.PlaySFX(SoundPath.BtnClick2);
         _companionInfoUI.ActiveUI(companionIndex);
     }
@@ -256,6 +277,61 @@ public class CompanionUI : MonoBehaviour, IMenuUI
         root.style.display = DisplayStyle.Flex;
         OnTechButtonClick(currentTechCompanionIndex);
     }
+
+    #region Companion Unlock
+
+    private bool IsCompanionUnlocked(int companionIndex) => companionIndex switch
+    {
+        0 => _gameData.maxStageNum >= 20,
+        1 => _gameData.maxStageNum >= 40,
+        2 => _gameData.maxStageNum >= 60,
+        _ => false
+    };
+
+    private int GetRequiredStage(int companionIndex) => companionIndex switch
+    {
+        0 => 20,
+        1 => 40,
+        2 => 60,
+        _ => 999
+    };
+
+    private void UpdateCompanionUnlockState()
+    {
+        for (int i = 0; i < _companionClickVeArr.Length; i++)
+        {
+            bool unlocked = IsCompanionUnlocked(i);
+            ApplyCompanionVisualState(i, unlocked);
+        }
+
+        for (int i = 0; i < _techButtonArr.Length; i++)
+        {
+            bool unlocked = IsCompanionUnlocked(i);
+            ApplyTechButtonVisualState(i, unlocked);
+        }
+    }
+
+    private void ApplyCompanionVisualState(int index, bool unlocked)
+    {
+        if (_companionLockPanelArr[index] != null)
+            _companionLockPanelArr[index].style.display = unlocked ? DisplayStyle.None : DisplayStyle.Flex;
+
+        VisualElement statusParent = _panelArr[0].Q<VisualElement>("StatusParent");
+        if (statusParent != null && index < statusParent.childCount)
+        {
+            VisualElement statusElement = statusParent.ElementAt(index);
+            statusElement.style.opacity = new StyleFloat(unlocked ? 1f : 0.4f);
+        }
+    }
+
+    private void ApplyTechButtonVisualState(int index, bool unlocked)
+    {
+        if (index >= _techButtonArr.Length) return;
+        _techButtonArr[index].SetEnabled(unlocked);
+        _techButtonArr[index].style.opacity = new StyleFloat(unlocked ? 1f : 0.4f);
+    }
+
+    #endregion
 
     void IMenuUI.InactiveUI()
     {
