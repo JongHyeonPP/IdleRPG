@@ -46,6 +46,9 @@ public class CompanionUI : MonoBehaviour, IMenuUI
         InitCompanionPanel();
         InitTechPanel();
 
+        // 해금 상태 초기화 (InitTechPanel 이후에 호출)
+        UpdateCompanionUnlockState();
+
         PlayerBroker.OnCompanionExpSet += OnCompanionExpSet;
         PlayerBroker.OnMaxStageSet += UpdateCompanionUnlockState;
     }
@@ -129,9 +132,6 @@ public class CompanionUI : MonoBehaviour, IMenuUI
             expProgressBar.value = levelExp.Item2 / (float)CompanionManager.EXPINTERVAL;
             expProgressBar.title = $"{levelExp.Item2}/{CompanionManager.EXPINTERVAL}";
         }
-
-        // 해금 상태 초기화
-        UpdateCompanionUnlockState();
     }
 
     private void InitTechPanel()
@@ -298,11 +298,15 @@ public class CompanionUI : MonoBehaviour, IMenuUI
 
     private void UpdateCompanionUnlockState()
     {
+        if (_companionClickVeArr == null) return;
+
         for (int i = 0; i < _companionClickVeArr.Length; i++)
         {
             bool unlocked = IsCompanionUnlocked(i);
             ApplyCompanionVisualState(i, unlocked);
         }
+
+        if (_techButtonArr == null) return;
 
         for (int i = 0; i < _techButtonArr.Length; i++)
         {
